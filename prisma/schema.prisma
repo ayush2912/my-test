@@ -19,7 +19,7 @@ model Organization {
   owner          User?          @relation(fields: [ownerId], references: [id])
   ownerId        Int?
   projects       Project[]
-  collaborations Collaborator[]
+  accessPolicies AccessPolicy[]
 }
 
 model User {
@@ -31,7 +31,7 @@ model User {
   organizations  Organization[]
   projects       Project[]
   files          File[]
-  collaborations Collaborator[]
+  accessPolicies AccessPolicy[]
   countryId      String        @default("IN") // Refers to Country.id 
 }
 
@@ -42,7 +42,7 @@ model Country {
   name          String?       // Country name, e.g. India, Malaysia, United Kingdom, United States of America
 }
 
-model Collaborator {
+model AccessPolicy {
   id             Int           @id @default(autoincrement())
   userId         Int?
   user           User?         @relation(fields: [userId], references: [id])
@@ -70,7 +70,7 @@ model Project {
   stage          String?        // DEVELOPMENT, REGISTERED, PRE_PIN, PIN, APPROVAL_REQUESTED
   registry       String?        // VERRA, GCC, GS, CDM
   files          File[]
-  collaborators  Collaborator[]
+  accessPolicies  AccessPolicy[]
   projectMessages ProjectMessage[]
   isPrivate      Boolean? 
 }
