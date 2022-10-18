@@ -7,97 +7,91 @@ generator typegraphql {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
 }
 
 model Organization {
-  id             Int            @id @default(autoincrement()) @map("_id")
+  id             String         @id @default(auto()) @map("_id") @db.ObjectId
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
   name           String?
   owner          User?          @relation(fields: [ownerId], references: [id])
-  ownerId        Int?
+  ownerId        String?
   projects       Project[]
   accessPolicies AccessPolicy[]
 }
 
 model User {
-  id             Int            @id @default(autoincrement())
+  id             String         @id @default(auto()) @map("_id") @db.ObjectId
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @default(now()) @updatedAt
   email          String         @unique
   name           String?
   organizations  Organization[]
   projects       Project[]
-  files          File[]
+  documents      Document[]
   accessPolicies AccessPolicy[]
-  countryId      String        @default("IN") // Refers to Country.id 
-}
-
-model Country { 
-  id            String        @id
-  a2            String        // ISO-3166 Alpha-2 code, e.g. IN, MY, GB, US
-  a3            String?       // ISO-3166 Alpha-3 code, e.g. IND, MYS, GBR, USA
-  name          String?       // Country name, e.g. India, Malaysia, United Kingdom, United States of America
+  countryId      String        @default("IN") // Refers to ISO-
 }
 
 model AccessPolicy {
-  id             Int           @id @default(autoincrement())
-  userId         Int?
+  id             String           @id @default(auto()) @map("_id") @db.ObjectId
+  userId         String?
   user           User?         @relation(fields: [userId], references: [id])
-  organizationId Int?
+  organizationId String?
   organization   Organization? @relation(fields: [organizationId], references: [id])
-  projectId      Int?
+  projectId      String?
   project        Project?      @relation(fields: [projectId], references: [id])
-  canRead        Boolean       @default(true)
+  canRead        Boolean       @default(true) 
   canCreate      Boolean?
   canUpdate      Boolean?
   canDelete      Boolean?
 }
 
 model Project {
-  id             Int            @id @default(autoincrement())
+  id             String            @id @default(auto()) @map("_id") @db.ObjectId
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
   name           String
   description    String?
   owner          User?          @relation(fields: [ownerId], references: [id])
-  ownerId        Int?
+  ownerId        String?
   organization   Organization?  @relation(fields: [organizationId], references: [id])
-  organizationId Int?
+  organizationId String?
   sector         String?        // MANUFACTURING, CONSTRUCTION, TRANSPORT, ENERGY_DEMAND, ENERGY_TRANSPORT
   stage          String?        // DEVELOPMENT, REGISTERED, PRE_PIN, PIN, APPROVAL_REQUESTED
   registry       String?        // VERRA, GCC, GS, CDM
-  files          File[]
+  documents      Document[]
   accessPolicies  AccessPolicy[]
   projectMessages ProjectMessage[]
   isPrivate      Boolean? 
+  country          String?        @default("IN") 
 }
 
 model ProjectMessage { 
-  id            Int           @id @default(autoincrement())
+  id            String           @id @default(auto()) @map("_id") @db.ObjectId
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
   message       String?
-  creatorId     Int?
-  files         File[]
-  projectId     Int? 
+  creatorId     String?
+  documents     Document[]
+  projectId     String? 
   project       Project?      @relation(fields: [projectId], references: [id])
 }
 
-model File {
-  id        Int      @id @default(autoincrement())
+model Document {
+  id        String      @id @default(auto()) @map("_id") @db.ObjectId
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   name      String
   filename  String?
   filetype  String?
   url       String?
-  projectId Int?
-  project   Project? @relation(fields: [projectId], references: [id])
-  ownerId   Int?
+  ownerId   String?   
   owner     User?    @relation(fields: [ownerId], references: [id])
-  projectMessageId  Int?
-  projectMessage    ProjectMessage? @relation(fields: [projectMessageId], references: [id])
+  projectId String? 
+  project   Project?  @relation(fields: [projectId], references: [id])
+  projectMessageId  String?
+  projectMessage  ProjectMessage? @relation(fields: [projectMessageId], references: [id])
 }
