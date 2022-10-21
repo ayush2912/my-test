@@ -32,6 +32,7 @@ model User {
   projects       Project[]
   documents      Document[]
   accessPolicies AccessPolicy[]
+  projectsUpdated  Project[]   @relation("ProjectUpdatedByUser")
   chat           Chat[]
   country        String?        @default("IN")
 }
@@ -54,6 +55,8 @@ model Project {
   id             String         @id @default(auto()) @map("_id") @db.ObjectId
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
+  updatedByUserId    String?
+  updatedByUser  User?          @relation(name: "ProjectUpdatedByUser", fields: [updatedByUserId], references: [id])
   name           String
   description    String?
   owner          User?          @relation(fields: [ownerId], references: [id])
