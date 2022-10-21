@@ -70,6 +70,7 @@ model Project {
   documents          Document[]
   accessPolicies     AccessPolicy[]
   chats              Chat[]
+  notifications      Notification[]
   isPrivate          Boolean?
   country            String?        @default("IN")
   registryProjectUrl String?
@@ -83,38 +84,34 @@ model Registry {
 }
 
 model Chat {
-  id        String     @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  message   String?
-  creatorId String?
-  creator   User?      @relation(fields: [creatorId], references: [id])
-  documents Document[]
-  projectId String?
-  project   Project?   @relation(fields: [projectId], references: [id])
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  message       String?
+  creatorId     String?
+  creator       User?          @relation(fields: [creatorId], references: [id])
+  documents     Document[]
+  notifications Notification[]
+  projectId     String?
+  project       Project?       @relation(fields: [projectId], references: [id])
 }
 
 model Document {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  name       String
-  filename   String?
-  filetype   String?
-  storageKey String?
-  url        String?
-  ownerId    String?
-  owner      User?    @relation(fields: [ownerId], references: [id])
-  projectId  String?
-  project    Project? @relation(fields: [projectId], references: [id])
-  chatId     String?
-  chat       Chat?    @relation(fields: [chatId], references: [id])
-}
-
-type NotificationMetadata {
-  projectId  String?
-  chatId     String?
-  documentId String?
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  name          String
+  filename      String?
+  filetype      String?
+  storageKey    String?
+  url           String?
+  ownerId       String?
+  owner         User?          @relation(fields: [ownerId], references: [id])
+  projectId     String?
+  project       Project?       @relation(fields: [projectId], references: [id])
+  chatId        String?
+  chat          Chat?          @relation(fields: [chatId], references: [id])
+  notifications Notification[]
 }
 
 model NotificationReceivers {
@@ -131,6 +128,11 @@ model Notification {
   updatedAt             DateTime                @updatedAt
   creatorId             String?
   type                  String?
-  metadata              NotificationMetadata?
+  projectId             String?
+  project               Project?                @relation(fields: [projectId], references: [id])
+  chatId                String?
+  chat                  Chat?                   @relation(fields: [chatId], references: [id])
+  documentId            String?
+  document              Document?               @relation(fields: [documentId], references: [id])
   notificationReceivers NotificationReceivers[]
 }
