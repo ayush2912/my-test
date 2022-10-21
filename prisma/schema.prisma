@@ -23,18 +23,18 @@ model Organization {
 }
 
 model User {
-  id             String         @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @default(now()) @updatedAt
-  email          String         @unique
-  name           String?
-  organizations  Organization[]
-  projects       Project[]
-  documents      Document[]
-  accessPolicies AccessPolicy[]
-  projectsUpdated  Project[]   @relation("ProjectUpdatedByUser")
-  chat           Chat[]
-  country        String?        @default("IN")
+  id              String         @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @default(now()) @updatedAt
+  email           String         @unique
+  name            String?
+  organizations   Organization[]
+  projects        Project[]
+  documents       Document[]
+  accessPolicies  AccessPolicy[]
+  projectsUpdated Project[]      @relation("ProjectUpdatedByUser")
+  chat            Chat[]
+  country         String?        @default("IN")
 }
 
 model AccessPolicy {
@@ -52,25 +52,34 @@ model AccessPolicy {
 }
 
 model Project {
-  id             String         @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
+  id                 String         @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
   updatedByUserId    String?
-  updatedByUser  User?          @relation(name: "ProjectUpdatedByUser", fields: [updatedByUserId], references: [id])
-  name           String
-  description    String?
-  owner          User?          @relation(fields: [ownerId], references: [id])
-  ownerId        String?
-  organization   Organization?  @relation(fields: [organizationId], references: [id])
-  organizationId String?
-  sector         String?
-  stage          String?
-  registry       String?
-  documents      Document[]
-  accessPolicies AccessPolicy[]
-  chats          Chat[]
-  isPrivate      Boolean?
-  country        String?        @default("IN")
+  updatedByUser      User?          @relation(name: "ProjectUpdatedByUser", fields: [updatedByUserId], references: [id])
+  name               String
+  description        String?
+  owner              User?          @relation(fields: [ownerId], references: [id])
+  ownerId            String?
+  organization       Organization?  @relation(fields: [organizationId], references: [id])
+  organizationId     String?
+  sector             String?
+  stage              String?
+  registryId         String?
+  registry           Registry?      @relation(fields: [registryId], references: [id])
+  documents          Document[]
+  accessPolicies     AccessPolicy[]
+  chats              Chat[]
+  isPrivate          Boolean?
+  country            String?        @default("IN")
+  registryProjectUrl String?
+  registryProjectId  String?
+}
+
+model Registry {
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  projects Project[]
 }
 
 model Chat {
