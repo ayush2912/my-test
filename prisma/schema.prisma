@@ -23,18 +23,19 @@ model Organization {
 }
 
 model User {
-  id              String         @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @default(now()) @updatedAt
-  email           String         @unique
+  id              String                  @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt       DateTime                @default(now())
+  updatedAt       DateTime                @default(now()) @updatedAt
+  email           String                  @unique
   name            String?
   organizations   Organization[]
   projects        Project[]
   documents       Document[]
   accessPolicies  AccessPolicy[]
-  projectsUpdated Project[]      @relation("ProjectUpdatedByUser")
+  projectsUpdated Project[]               @relation("ProjectUpdatedByUser")
   chat            Chat[]
-  country         String?        @default("IN")
+  notifications   NotificationReceivers[]
+  country         String?                 @default("IN")
 }
 
 model AccessPolicy {
@@ -116,7 +117,10 @@ model Document {
 
 model NotificationReceivers {
   id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
   receiverId     String?
+  receiver       User?         @relation(fields: [receiverId], references: [id])
   isRead         Boolean?
   notificationId String?
   notification   Notification? @relation(fields: [notificationId], references: [id])
