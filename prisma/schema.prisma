@@ -50,6 +50,7 @@ model AccessPolicy {
   canCreate      Boolean?
   canUpdate      Boolean?
   canDelete      Boolean?
+  type           String?       // CLIENT or HANDLER 
 }
 
 model Project {
