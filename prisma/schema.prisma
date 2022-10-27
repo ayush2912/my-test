@@ -8,7 +8,7 @@ generator typegraphql {
 
 datasource db {
   provider = "mongodb"
-  url      = env("DATABASE_URL")
+  url      = "mongodb+srv://atlasAdmin:m9yrCL1hikEj8BUU@offsetmaxsandbox.6zak4.mongodb.net/offsetmaxsandbox"
 }
 
 model Organization {
