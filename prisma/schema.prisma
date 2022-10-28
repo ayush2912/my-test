@@ -17,7 +17,7 @@ model Organization {
   updatedAt      DateTime       @updatedAt
   name           String?
   owner          User?          @relation(fields: [ownerId], references: [id])
-  ownerId        String?
+  ownerId        String?        @db.ObjectId
   projects       Project[]
   accessPolicies AccessPolicy[]
 }
@@ -43,11 +43,11 @@ model User {
 
 model AccessPolicy {
   id             String        @id @default(auto()) @map("_id") @db.ObjectId
-  userId         String?
+  userId         String?       @db.ObjectId
   user           User?         @relation(fields: [userId], references: [id])
-  organizationId String?
+  organizationId String?       @db.ObjectId
   organization   Organization? @relation(fields: [organizationId], references: [id])
-  projectId      String?
+  projectId      String?       @db.ObjectId
   project        Project?      @relation(fields: [projectId], references: [id])
   canRead        Boolean       @default(true)
   canCreate      Boolean?
@@ -58,28 +58,28 @@ model AccessPolicy {
 }
 
 model Project {
-  id                  String                @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt           DateTime              @default(now())
-  updatedAt           DateTime              @updatedAt
-  updatedByUserId     String?
-  updatedByUser       User?                 @relation(name: "ProjectUpdatedByUser", fields: [updatedByUserId], references: [id])
+  id                  String               @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  updatedByUserId     String?              @db.ObjectId
+  updatedByUser       User?                @relation(name: "ProjectUpdatedByUser", fields: [updatedByUserId], references: [id])
   name                String
   description         String?
-  owner               User?                 @relation(fields: [ownerId], references: [id])
-  ownerId             String?
-  organization        Organization?         @relation(fields: [organizationId], references: [id])
+  owner               User?                @relation(fields: [ownerId], references: [id])
+  ownerId             String?              @db.ObjectId
+  organization        Organization?        @relation(fields: [organizationId], references: [id])
   organizationId      String?
   sector              String?
   stage               String?
-  registryId          String?
-  registry            Registry?             @relation(fields: [registryId], references: [id])
+  registryId          String?              @db.ObjectId
+  registry            Registry?            @relation(fields: [registryId], references: [id])
   documents           Document[]
   accessPolicies      AccessPolicy[]
   chats               Chat[]
   notifications       Notification[]
-  registryProjectData RegistryProjectData[] @relation("RegistryProjectData")
+  registryProjectData RegistryProjectData? @relation("RegistryProjectData")
   isPrivate           Boolean?
-  country             String?               @default("IN")
+  country             String?              @default("IN")
   registryProjectUrl  String? /// Registry Project URL
   registryProjectId   String? /// Registry Project ID, e.g. 1805
 }
@@ -88,7 +88,7 @@ model RegistryProjectData {
   id                                String    @id @default(auto()) @map("_id") @db.ObjectId
   createdAt                         DateTime  @default(now())
   updatedAt                         DateTime  @updatedAt
-  projectId                         String?
+  projectId                         String?   @unique @db.ObjectId
   project                           Project?  @relation(name: "RegistryProjectData", fields: [projectId], references: [id])
   metadata                          String?
   creditingPeriodStartDate          DateTime?
@@ -100,7 +100,7 @@ model RegistryProjectData {
   projectStatus                     String?
   sectorialScope                    String?
   registryProjectId                 String?
-  registryId                        String?
+  registryId                        String?   @db.ObjectId
   registry                          Registry? @relation(fields: [registryId], references: [id])
 }
 
@@ -116,11 +116,11 @@ model Chat {
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   message       String?
-  creatorId     String?
+  creatorId     String?        @db.ObjectId
   creator       User?          @relation(fields: [creatorId], references: [id])
   documents     Document[]
   notifications Notification[]
-  projectId     String?
+  projectId     String?        @db.ObjectId
   project       Project?       @relation(fields: [projectId], references: [id])
 }
 
@@ -129,18 +129,18 @@ model Document {
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
   lastOpenedAt   DateTime?
-  lastOpenedById String?
+  lastOpenedById String?        @db.ObjectId
   lastOpenedBy   User?          @relation(name: "DocumentLastOpenedBy", fields: [lastOpenedById], references: [id])
   name           String
   filename       String?
   filetype       String?
   storageKey     String?
   url            String?
-  ownerId        String?
+  ownerId        String?        @db.ObjectId
   owner          User?          @relation(fields: [ownerId], references: [id])
-  projectId      String?
+  projectId      String?        @db.ObjectId
   project        Project?       @relation(fields: [projectId], references: [id])
-  chatId         String?
+  chatId         String?        @db.ObjectId
   chat           Chat?          @relation(fields: [chatId], references: [id])
   notifications  Notification[]
 }
@@ -149,10 +149,10 @@ model NotificationReceivers {
   id             String        @id @default(auto()) @map("_id") @db.ObjectId
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
-  receiverId     String?
+  receiverId     String?       @db.ObjectId
   receiver       User?         @relation(fields: [receiverId], references: [id])
   isRead         Boolean?
-  notificationId String?
+  notificationId String?       @db.ObjectId
   notification   Notification? @relation(fields: [notificationId], references: [id])
 }
 
@@ -160,13 +160,13 @@ model Notification {
   id                    String                  @id @default(auto()) @map("_id") @db.ObjectId
   createdAt             DateTime                @default(now())
   updatedAt             DateTime                @updatedAt
-  creatorId             String?
+  creatorId             String?                 @db.ObjectId
   type                  String?
-  projectId             String?
+  projectId             String?                 @db.ObjectId
   project               Project?                @relation(fields: [projectId], references: [id])
-  chatId                String?
+  chatId                String?                 @db.ObjectId
   chat                  Chat?                   @relation(fields: [chatId], references: [id])
-  documentId            String?
+  documentId            String?                 @db.ObjectId
   document              Document?               @relation(fields: [documentId], references: [id])
   notificationReceivers NotificationReceivers[]
 }
