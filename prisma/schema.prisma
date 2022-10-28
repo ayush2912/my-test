@@ -28,6 +28,8 @@ model User {
   updatedAt           DateTime                @default(now()) @updatedAt
   email               String                  @unique
   name                String?
+  firstName           String?
+  lastName            String?
   organizations       Organization[]
   projects            Project[]
   documents           Document[]
@@ -84,6 +86,8 @@ model Project {
 
 model RegistryProjectData {
   id                                String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt                         DateTime  @default(now())
+  updatedAt                         DateTime  @updatedAt
   projectId                         String?
   project                           Project?  @relation(name: "RegistryProjectData", fields: [projectId], references: [id])
   metadata                          String?
@@ -96,12 +100,15 @@ model RegistryProjectData {
   projectStatus                     String?
   sectorialScope                    String?
   registryProjectId                 String?
+  registryId                        String?
+  registry                          Registry? @relation(fields: [registryId], references: [id])
 }
 
 model Registry {
-  id       String    @id @default(auto()) @map("_id") @db.ObjectId
-  name     String /// GCC, Verra
-  projects Project[]
+  id                   String                @id @default(auto()) @map("_id") @db.ObjectId
+  name                 String /// GCC, Verra
+  projects             Project[]
+  registryProjectDatas RegistryProjectData[]
 }
 
 model Chat {
