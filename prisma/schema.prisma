@@ -49,12 +49,15 @@ model AccessPolicy {
   organization   Organization? @relation(fields: [organizationId], references: [id])
   projectId      String?       @db.ObjectId
   project        Project?      @relation(fields: [projectId], references: [id])
+  documentId     String?       @db.ObjectId
+  document       Document?     @relation(fields: [documentId], references: [id])
   canRead        Boolean       @default(true)
   canCreate      Boolean?
   canUpdate      Boolean?
   canDelete      Boolean?
-  isHandler      Boolean? /// Handlers have access to the Carbon Desk view
-  entity         String? /// The entity level that this user has access to
+  isHandler      Boolean?     /// Handlers have access to the Carbon Desk view
+  entity         String?      /// The entity level that this user has access to, PROJECT/ORGANIZATION/DOCUMENT
+  role           String?      /// Role of the user in relatio to the entity, USER/ADMIN/SUPER ADMIN
 }
 
 model Project {
@@ -80,8 +83,8 @@ model Project {
   registryProjectData RegistryProjectData? @relation("RegistryProjectData")
   isPrivate           Boolean?
   country             String?              @default("IN")
-  registryProjectUrl  String? /// Registry Project URL
-  registryProjectId   String? /// Registry Project ID, e.g. 1805
+  registryProjectUrl  String?              /// Registry Project URL
+  registryProjectId   String?              /// Registry Project ID, e.g. 1805
 }
 
 model RegistryProjectData {
@@ -143,6 +146,7 @@ model Document {
   chatId         String?        @db.ObjectId
   chat           Chat?          @relation(fields: [chatId], references: [id])
   notifications  Notification[]
+  accessPolicy   AccessPolicy[]
 }
 
 model NotificationReceivers {
