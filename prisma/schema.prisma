@@ -66,13 +66,13 @@ model Project {
   updatedAt           DateTime             @updatedAt
   updatedByUserId     String?              @db.ObjectId
   updatedByUser       User?                @relation(name: "ProjectUpdatedByUser", fields: [updatedByUserId], references: [id])
-  name                String
+  name                String?
   description         String?
   owner               User?                @relation(fields: [ownerId], references: [id])
   ownerId             String?              @db.ObjectId
   organization        Organization?        @relation(fields: [organizationId], references: [id])
   organizationId      String?
-  sector              String?
+  sectoralScope       String?
   stage               String?
   registryId          String?              @db.ObjectId
   registry            Registry?            @relation(fields: [registryId], references: [id])
@@ -101,7 +101,7 @@ model RegistryProjectData {
   estimatedAnnualEmissionReductions String?
   methodology                       String?
   projectStatus                     String?
-  sectorialScope                    String?
+  sectoralScope                     String?
   registryProjectId                 String?
   registryId                        String?   @db.ObjectId
   registry                          Registry? @relation(fields: [registryId], references: [id])
