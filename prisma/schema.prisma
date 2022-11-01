@@ -39,6 +39,7 @@ model User {
   notifications       NotificationReceivers[]
   country             String?                 @default("IN")
   lastOpenedDocuments Document[]              @relation("DocumentLastOpenedBy")
+  accessToken         String?                 @unique
 }
 
 model AccessPolicy {
