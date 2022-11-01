@@ -72,7 +72,7 @@ model Project {
   owner               User?                @relation(fields: [ownerId], references: [id])
   ownerId             String?              @db.ObjectId
   organization        Organization?        @relation(fields: [organizationId], references: [id])
-  organizationId      String?
+  organizationId      String?              @db.ObjectId
   sectoralScope       String?
   stage               String?
   registryId          String?              @db.ObjectId
