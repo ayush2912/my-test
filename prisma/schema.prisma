@@ -140,6 +140,7 @@ model Document {
   filetype       String?
   storageKey     String?
   url            String?
+  status         String?        /// Status of the document, such as APPROVED or PENDNG or REJECTED
   ownerId        String?        @db.ObjectId
   owner          User?          @relation(fields: [ownerId], references: [id])
   projectId      String?        @db.ObjectId
