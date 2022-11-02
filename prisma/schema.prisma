@@ -42,6 +42,8 @@ model User {
   accessToken         String?                 @unique
 }
 
+
+
 model AccessPolicy {
   id             String        @id @default(auto()) @map("_id") @db.ObjectId
   userId         String?       @db.ObjectId
@@ -57,6 +59,7 @@ model AccessPolicy {
   canUpdate      Boolean?
   canDelete      Boolean?
   isHandler      Boolean?     /// Handlers have access to the Carbon Desk view
+  relationType   String?      /// USER_ORGANIZATION, USER_PROJECT, USER_DOCUMENT
   entity         String?      /// The entity level that this user has access to, PROJECT/ORGANIZATION/DOCUMENT
   role           String?      /// Role of the user in relatio to the entity, USER/ADMIN/SUPER ADMIN
 }
@@ -83,6 +86,7 @@ model Project {
   notifications       Notification[]
   registryProjectData RegistryProjectData? @relation("RegistryProjectData")
   isPrivate           Boolean?
+  isArchived          Boolean?
   country             String?              @default("IN")
   registryProjectUrl  String?              /// Registry Project URL
   registryProjectId   String?              /// Registry Project ID, e.g. 1805
