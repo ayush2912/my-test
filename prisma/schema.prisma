@@ -90,6 +90,7 @@ model Project {
   country             String?              @default("IN")
   registryProjectUrl  String?              /// Registry Project URL
   registryProjectId   String?              /// Registry Project ID, e.g. 1805
+  projectRiskScore    ProjectRiskScore?    @relation("ProjectRiskScore")
 }
 
 model RegistryProjectData {
@@ -110,6 +111,30 @@ model RegistryProjectData {
   registryProjectId                 String?
   registryId                        String?   @db.ObjectId
   registry                          Registry? @relation(fields: [registryId], references: [id])
+  point1Lat                         String?
+  point2Lat                         String?
+  point3Lat                         String?
+  point4Lat                         String?
+  point1Long                        String?
+  point2Long                        String?
+  point3Long                        String?
+  point4Long                        String?
+  direction1Lat                     String?
+  direction2Lat                     String?
+  direction3Lat                     String?
+  direction4Lat                     String?
+  direction1Long                    String?
+  direction2Long                    String?
+  direction3Long                    String?
+  direction4Long                    String?
+}
+
+model ProjectRiskScore {
+  id                               String    @id @default(auto()) @map("_id") @db.ObjectId
+  projectId                        String   @unique @db.ObjectId
+  project                          Project  @relation(name: "ProjectRiskScore", fields: [projectId], references: [id])
+  startDateRiskScore               Float?
+  geographyRiskScore               Float?
 }
 
 model Registry {
