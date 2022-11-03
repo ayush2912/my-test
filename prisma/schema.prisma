@@ -99,6 +99,7 @@ model RegistryProjectData {
   updatedAt                         DateTime  @updatedAt
   projectId                         String?   @unique @db.ObjectId
   project                           Project?  @relation(name: "RegistryProjectData", fields: [projectId], references: [id])
+  projectName                       String?
   metadata                          String?
   creditingPeriodStartDate          DateTime?
   creditingPeriodEndDate            DateTime?
