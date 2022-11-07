@@ -42,26 +42,43 @@ model User {
   accessToken         String?                 @unique
 }
 
-
-
 model AccessPolicy {
-  id             String        @id @default(auto()) @map("_id") @db.ObjectId
-  userId         String?       @db.ObjectId
-  user           User?         @relation(fields: [userId], references: [id])
-  organizationId String?       @db.ObjectId
-  organization   Organization? @relation(fields: [organizationId], references: [id])
-  projectId      String?       @db.ObjectId
-  project        Project?      @relation(fields: [projectId], references: [id])
-  documentId     String?       @db.ObjectId
-  document       Document?     @relation(fields: [documentId], references: [id])
-  canRead        Boolean       @default(true)
-  canCreate      Boolean?
-  canUpdate      Boolean?
-  canDelete      Boolean?
-  isHandler      Boolean?     /// Handlers have access to the Carbon Desk view
-  relationType   String?      /// USER_ORGANIZATION, USER_PROJECT, USER_DOCUMENT
-  entity         String?      /// The entity level that this user has access to, PROJECT/ORGANIZATION/DOCUMENT
-  role           String?      /// Role of the user in relatio to the entity, USER/ADMIN/SUPER ADMIN
+  id                       String        @id @default(auto()) @map("_id") @db.ObjectId
+  userId                   String?       @db.ObjectId
+  user                     User?         @relation(fields: [userId], references: [id])
+  organizationId           String?       @db.ObjectId
+  organization             Organization? @relation(fields: [organizationId], references: [id])
+  projectId                String?       @db.ObjectId
+  project                  Project?      @relation(fields: [projectId], references: [id])
+  documentId               String?       @db.ObjectId
+  document                 Document?     @relation(fields: [documentId], references: [id])
+  canRead                  Boolean       @default(true) /// DEPRECIATED
+  canCreate                Boolean? /// DEPRECIATED
+  canUpdate                Boolean? /// DEPRECIATED
+  canDelete                Boolean? /// DEPRECIATED
+  isHandler                Boolean? /// Handlers have access to the Carbon Desk view
+  relationType             String? /// USER_ORGANIZATION, USER_PROJECT, USER_DOCUMENT
+  entity                   String? /// DEPRECIATED: The entity level that this user has access to, PROJECT/ORGANIZATION/DOCUMENT
+  role                     String? /// Role of the user in relatio to the entity, USER/ADMIN/SUPER ADMIN
+  resource                 String? /// Type of resource such as PROJECT, ORGANIZATIONS, ORGANIZATION. Formerly known as entity
+  list                     Boolean?
+  listProjects             Boolean?
+  read                     Boolean?
+  readDocuments            Boolean?
+  readChat                 Boolean?
+  create                   Boolean?
+  createUser               Boolean?
+  createProject            Boolean?
+  createDocumentsAsHandler Boolean?
+  createChatAsHandler      Boolean?
+  createDocumentsAsClient  Boolean?
+  createChatAsClient       Boolean?
+  update                   Boolean?
+  updateUser               Boolean?
+  updateProject            Boolean?
+  updateDocumentsAsHandler Boolean?
+  updateDocumentsAsClient  Boolean?
+  delete                   Boolean?
 }
 
 model Project {
@@ -170,7 +187,7 @@ model Document {
   filetype       String?
   storageKey     String?
   url            String?
-  status         String?        /// Status of the document, such as APPROVED or PENDNG or REJECTED
+  status         String? /// Status of the document, such as APPROVED or PENDNG or REJECTED
   ownerId        String?        @db.ObjectId
   owner          User?          @relation(fields: [ownerId], references: [id])
   projectId      String?        @db.ObjectId
