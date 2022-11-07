@@ -39,6 +39,7 @@ model User {
   notifications       NotificationReceivers[]
   country             String?                 @default("IN")
   lastOpenedDocuments Document[]              @relation("DocumentLastOpenedBy")
+  updatedDocuments    Document[]              @relation("DocumentUpdatedBy")
   accessToken         String?                 @unique
 }
 
@@ -179,6 +180,8 @@ model Document {
   id             String         @id @default(auto()) @map("_id") @db.ObjectId
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
+  updatedById    String         @db.ObjectId
+  updatedBy      User?          @relation(name: "DocumentUpdatedBy", fields: [updatedById], references: [id])
   lastOpenedAt   DateTime?
   lastOpenedById String?        @db.ObjectId
   lastOpenedBy   User?          @relation(name: "DocumentLastOpenedBy", fields: [lastOpenedById], references: [id])
@@ -187,7 +190,8 @@ model Document {
   filetype       String?
   storageKey     String?
   url            String?
-  status         String? /// Status of the document, such as APPROVED or PENDNG or REJECTED
+  stage          String?        /// Stage of the document, such as REQUESTED, APPROVED or PENDNG or REJECTED
+  ownerType      String?        /// Type of Owner, such as Project Handler (PH) or Project Client (PC)
   ownerId        String?        @db.ObjectId
   owner          User?          @relation(fields: [ownerId], references: [id])
   projectId      String?        @db.ObjectId
