@@ -95,7 +95,7 @@ model Project {
   organization        Organization?        @relation(fields: [organizationId], references: [id])
   organizationId      String?              @db.ObjectId
   sectoralScope       String?
-  stage               String?              /// Current stage of the project, such as Stage
+  stage               String? /// Current stage of the project, such as Stage
   registryId          String?              @db.ObjectId
   registry            Registry?            @relation(fields: [registryId], references: [id])
   documents           Document[]
@@ -162,6 +162,7 @@ model Registry {
   name                 String /// GCC, Verra
   projects             Project[]
   registryProjectDatas RegistryProjectData[]
+  issuance             Issuance[]
 }
 
 model Chat {
@@ -191,9 +192,9 @@ model Document {
   filetype       String?
   storageKey     String?
   url            String?
-  status         String?        /// DEPRECIATED: Status of the document
-  stage          String?        /// Stage of the document, such as REQUESTED_BY_HANDLER, PENDING_VERIFICATION_BY_CLIENT
-  ownerType      String?        /// Type of Owner, such as Project Handler (PH) or Project Client (PC)
+  status         String? /// DEPRECIATED: Status of the document
+  stage          String? /// Stage of the document, such as REQUESTED_BY_HANDLER, PENDING_VERIFICATION_BY_CLIENT
+  ownerType      String? /// Type of Owner, such as Project Handler (PH) or Project Client (PC)
   ownerId        String?        @db.ObjectId
   owner          User?          @relation(fields: [ownerId], references: [id])
   projectId      String?        @db.ObjectId
@@ -242,7 +243,10 @@ model Issuance {
   vintagaePeriod   DateRange?
   monitoringPeriod DateRange?
   quantityIssued   Int?
+  issuanceStatus   String?
   issuanceDate     DateTime?
   projectId        String?    @db.ObjectId
   project          Project?   @relation(fields: [projectId], references: [id])
+  registryId       String?    @db.ObjectId
+  registry         Registry?  @relation(fields: [registryId], references: [id])
 }
