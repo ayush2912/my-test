@@ -102,12 +102,13 @@ model Project {
   accessPolicies      AccessPolicy[]
   chats               Chat[]
   notifications       Notification[]
+  issuanceLots        Issuance[]
   registryProjectData RegistryProjectData? @relation("RegistryProjectData")
   isPrivate           Boolean?
   isArchived          Boolean?
   country             String?              @default("IN")
-  registryProjectUrl  String?              /// Registry Project URL
-  registryProjectId   String?              /// Registry Project ID, e.g. 1805
+  registryProjectUrl  String? /// Registry Project URL
+  registryProjectId   String? /// Registry Project ID, e.g. 1805
   projectRiskScore    ProjectRiskScore?    @relation("ProjectRiskScore")
 }
 
@@ -149,11 +150,11 @@ model RegistryProjectData {
 }
 
 model ProjectRiskScore {
-  id                               String    @id @default(auto()) @map("_id") @db.ObjectId
-  projectId                        String   @unique @db.ObjectId
-  project                          Project  @relation(name: "ProjectRiskScore", fields: [projectId], references: [id])
-  startDateRiskScore               Float?
-  geographyRiskScore               Float?
+  id                 String  @id @default(auto()) @map("_id") @db.ObjectId
+  projectId          String  @unique @db.ObjectId
+  project            Project @relation(name: "ProjectRiskScore", fields: [projectId], references: [id])
+  startDateRiskScore Float?
+  geographyRiskScore Float?
 }
 
 model Registry {
@@ -227,4 +228,21 @@ model Notification {
   documentId            String?                 @db.ObjectId
   document              Document?               @relation(fields: [documentId], references: [id])
   notificationReceivers NotificationReceivers[]
+}
+
+type DateRange {
+  startDate DateTime
+  endDate   DateTime
+}
+
+model Issuance {
+  id               String     @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  vintagaePeriod   DateRange?
+  monitoringPeriod DateRange?
+  quantityIssued   Int?
+  issuanceDate     DateTime?
+  projectId        String?    @db.ObjectId
+  project          Project?   @relation(fields: [projectId], references: [id])
 }
