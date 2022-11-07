@@ -190,6 +190,7 @@ model Document {
   filetype       String?
   storageKey     String?
   url            String?
+  status         String?        /// DEPRECIATED: Status of the document
   stage          String?        /// Stage of the document, such as REQUESTED_BY_HANDLER, PENDING_VERIFICATION_BY_CLIENT
   ownerType      String?        /// Type of Owner, such as Project Handler (PH) or Project Client (PC)
   ownerId        String?        @db.ObjectId
