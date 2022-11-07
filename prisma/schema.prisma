@@ -182,7 +182,7 @@ model Document {
   id             String         @id @default(auto()) @map("_id") @db.ObjectId
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
-  updatedById    String         @db.ObjectId
+  updatedById    String?         @db.ObjectId
   updatedBy      User?          @relation(name: "DocumentUpdatedBy", fields: [updatedById], references: [id])
   lastOpenedAt   DateTime?
   lastOpenedById String?        @db.ObjectId
