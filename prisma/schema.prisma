@@ -11,6 +11,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+type DateRange {
+  startDate DateTime
+  endDate   DateTime
+}
+
 model Organization {
   id             String         @id @default(auto()) @map("_id") @db.ObjectId
   createdAt      DateTime       @default(now())
@@ -82,6 +87,18 @@ model AccessPolicy {
   delete                   Boolean?
 }
 
+model ProjectStage {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  type      String
+  startDate DateTime?
+  endDate   DateTime?
+  dueDate   DateTime?
+  projectId String  @db.ObjectId
+  project   Project?  @relation(fields: [projectId], references: [id])
+}
+
 model Project {
   id                  String               @id @default(auto()) @map("_id") @db.ObjectId
   createdAt           DateTime             @default(now())
@@ -96,6 +113,7 @@ model Project {
   organizationId      String?              @db.ObjectId
   sectoralScope       String?
   stage               String? /// Current stage of the project, such as Stage
+  stages              ProjectStage[]
   registryId          String?              @db.ObjectId
   registry            Registry?            @relation(fields: [registryId], references: [id])
   documents           Document[]
@@ -182,7 +200,7 @@ model Document {
   id             String         @id @default(auto()) @map("_id") @db.ObjectId
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
-  updatedById    String?         @db.ObjectId
+  updatedById    String?        @db.ObjectId
   updatedBy      User?          @relation(name: "DocumentUpdatedBy", fields: [updatedById], references: [id])
   lastOpenedAt   DateTime?
   lastOpenedById String?        @db.ObjectId
@@ -229,11 +247,6 @@ model Notification {
   documentId            String?                 @db.ObjectId
   document              Document?               @relation(fields: [documentId], references: [id])
   notificationReceivers NotificationReceivers[]
-}
-
-type DateRange {
-  startDate DateTime
-  endDate   DateTime
 }
 
 model Issuance {
