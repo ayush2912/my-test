@@ -25,6 +25,7 @@ model Organization {
   ownerId        String?        @db.ObjectId
   projects       Project[]
   accessPolicies AccessPolicy[]
+  Issuance       Issuance[]
 }
 
 model User {
@@ -256,16 +257,18 @@ model Notification {
 }
 
 model Issuance {
-  id               String     @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt        DateTime   @default(now())
-  updatedAt        DateTime   @updatedAt
+  id               String        @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
   vintagaePeriod   DateRange?
   monitoringPeriod DateRange?
   quantityIssued   Int?
   issuanceStatus   String?
   issuanceDate     DateTime?
-  projectId        String?    @db.ObjectId
-  project          Project?   @relation(fields: [projectId], references: [id])
-  registryId       String?    @db.ObjectId
-  registry         Registry?  @relation(fields: [registryId], references: [id])
+  projectId        String?       @db.ObjectId
+  project          Project?      @relation(fields: [projectId], references: [id])
+  registryId       String?       @db.ObjectId
+  registry         Registry?     @relation(fields: [registryId], references: [id])
+  organization     Organization? @relation(fields: [organizationId], references: [id])
+  organizationId   String?       @db.ObjectId
 }
