@@ -49,42 +49,50 @@ model User {
 }
 
 model AccessPolicy {
-  id                       String        @id @default(auto()) @map("_id") @db.ObjectId
-  userId                   String?       @db.ObjectId
-  user                     User?         @relation(fields: [userId], references: [id])
-  organizationId           String?       @db.ObjectId
-  organization             Organization? @relation(fields: [organizationId], references: [id])
-  projectId                String?       @db.ObjectId
-  project                  Project?      @relation(fields: [projectId], references: [id])
-  documentId               String?       @db.ObjectId
-  document                 Document?     @relation(fields: [documentId], references: [id])
-  canRead                  Boolean       @default(true) /// DEPRECIATED
-  canCreate                Boolean? /// DEPRECIATED
-  canUpdate                Boolean? /// DEPRECIATED
-  canDelete                Boolean? /// DEPRECIATED
-  isHandler                Boolean? /// Handlers have access to the Carbon Desk view
-  relationType             String? /// USER_ORGANIZATION, USER_PROJECT, USER_DOCUMENT
-  entity                   String? /// DEPRECIATED: The entity level that this user has access to, PROJECT/ORGANIZATION/DOCUMENT
-  role                     String? /// Role of the user in relatio to the entity, USER/ADMIN/SUPER ADMIN
-  resource                 String? /// Type of resource such as PROJECT, ORGANIZATIONS, ORGANIZATION. Formerly known as entity
-  list                     Boolean?
-  listProjects             Boolean?
-  read                     Boolean?
-  readDocuments            Boolean?
-  readChat                 Boolean?
-  create                   Boolean?
-  createUser               Boolean?
-  createProject            Boolean?
-  createDocumentsAsHandler Boolean?
-  createChatAsHandler      Boolean?
-  createDocumentsAsClient  Boolean?
-  createChatAsClient       Boolean?
-  update                   Boolean?
-  updateUser               Boolean?
-  updateProject            Boolean?
-  updateDocumentsAsHandler Boolean?
-  updateDocumentsAsClient  Boolean?
-  delete                   Boolean?
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  userId         String?       @db.ObjectId
+  user           User?         @relation(fields: [userId], references: [id])
+  organizationId String?       @db.ObjectId
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  role           String? /// Role of the user in relatio to the entity, USER/ADMIN/SUPER ADMIN
+
+  listAllOrganizations  String?
+  createAnyOrganization String?
+  readAnyOrganization   String?
+  updateAnyOrganization String?
+  deleteAnyOrganization String?
+
+  listAllProjects  String?
+  readAnyProject   String?
+  createAnyProject String?
+  updateAnyProject String?
+  deleteAnyProject String?
+
+  readAnyDocument String?
+  readAnyChat     String?
+
+  readOrganization String?
+
+  listUsers  String?
+  createUser String?
+  updateUser String?
+  deleteUser String?
+
+  listProjects  String?
+  readProject   String?
+  createProject String?
+  updateProject String?
+  deleteProject String?
+
+  readDocument            String?
+  createDocumentAsHandler String?
+  updateDocumentAsHandler String?
+  deleteDocument          String?
+  readChat                String?
+  createChatAsHandler     String?
+  createDocumentAsClient  String?
+  updateDocumentAsClient  String?
+  createChatAsClient      String?
 }
 
 model ProjectStage {
@@ -95,7 +103,7 @@ model ProjectStage {
   startDate DateTime?
   endDate   DateTime?
   dueDate   DateTime?
-  projectId String  @db.ObjectId
+  projectId String    @db.ObjectId
   project   Project?  @relation(fields: [projectId], references: [id])
 }
 
