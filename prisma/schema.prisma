@@ -56,43 +56,43 @@ model AccessPolicy {
   organization   Organization? @relation(fields: [organizationId], references: [id])
   role           String? /// Role of the user in relatio to the entity, USER/ADMIN/SUPER ADMIN
 
-  listAllOrganizations  String?
-  createAnyOrganization String?
-  readAnyOrganization   String?
-  updateAnyOrganization String?
-  deleteAnyOrganization String?
+  listAllOrganizations  Boolean?
+  createAnyOrganization Boolean?
+  readAnyOrganization   Boolean?
+  updateAnyOrganization Boolean?
+  deleteAnyOrganization Boolean?
 
-  listAllProjects  String?
-  readAnyProject   String?
-  createAnyProject String?
-  updateAnyProject String?
-  deleteAnyProject String?
+  listAllProjects  Boolean?
+  readAnyProject   Boolean?
+  createAnyProject Boolean?
+  updateAnyProject Boolean?
+  deleteAnyProject Boolean?
 
-  readAnyDocument String?
-  readAnyChat     String?
+  readAnyDocument Boolean?
+  readAnyChat     Boolean?
 
-  readOrganization String?
+  readOrganization Boolean?
 
-  listUsers  String?
-  createUser String?
-  updateUser String?
-  deleteUser String?
+  listUsers  Boolean?
+  createUser Boolean?
+  updateUser Boolean?
+  deleteUser Boolean?
 
-  listProjects  String?
-  readProject   String?
-  createProject String?
-  updateProject String?
-  deleteProject String?
+  listProjects  Boolean?
+  readProject   Boolean?
+  createProject Boolean?
+  updateProject Boolean?
+  deleteProject Boolean?
 
-  readDocument            String?
-  createDocumentAsHandler String?
-  updateDocumentAsHandler String?
-  deleteDocument          String?
-  readChat                String?
-  createChatAsHandler     String?
-  createDocumentAsClient  String?
-  updateDocumentAsClient  String?
-  createChatAsClient      String?
+  readDocument            Boolean?
+  createDocumentAsHandler Boolean?
+  updateDocumentAsHandler Boolean?
+  deleteDocument          Boolean?
+  readChat                Boolean?
+  createChatAsHandler     Boolean?
+  createDocumentAsClient  Boolean?
+  updateDocumentAsClient  Boolean?
+  createChatAsClient      Boolean?
 }
 
 model ProjectStage {
