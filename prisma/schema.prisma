@@ -21,8 +21,7 @@ model Organization {
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
   name           String?
-  owner          User?          @relation(fields: [ownerId], references: [id])
-  ownerId        String?        @db.ObjectId
+  members        User[]         
   projects       Project[]
   accessPolicies AccessPolicy[]
   Issuance       Issuance[]
@@ -36,7 +35,8 @@ model User {
   name                String?
   firstName           String?
   lastName            String?
-  organizations       Organization[]
+  organizationId      String?
+  organization        Organization?           @relation(fields: [organizationId], references: [id])
   projects            Project[]
   documents           Document[]
   accessPolicies      AccessPolicy[]
