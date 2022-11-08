@@ -22,10 +22,10 @@ model Organization {
   updatedAt          DateTime       @updatedAt
   name               String?
   url                String?
-  type               String? /// ACTIVE, DISABLED
+  type               String? /// INVESTOR, PROJECT_AGGREGATOR, THIRD_PARTY, PROJECT_DEVELOPER
   estimatedPortfolio Int?
   expiryDate         DateTime?
-  status             String? /// INVESTOR, PROJECT_AGGREGATOR, THIRD PARTY, PROJECT DEVELOPER
+  status             String? /// ACTIVE, DISABLED
   members            User[]
   projects           Project[]
   accessPolicies     AccessPolicy[]
