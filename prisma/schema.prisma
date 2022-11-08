@@ -125,7 +125,6 @@ model Project {
   registryId          String?              @db.ObjectId
   registry            Registry?            @relation(fields: [registryId], references: [id])
   documents           Document[]
-  accessPolicies      AccessPolicy[]
   chats               Chat[]
   notifications       Notification[]
   issuanceLots        Issuance[]
@@ -228,7 +227,6 @@ model Document {
   chatId         String?        @db.ObjectId
   chat           Chat?          @relation(fields: [chatId], references: [id])
   notifications  Notification[]
-  accessPolicy   AccessPolicy[]
 }
 
 model NotificationReceivers {
