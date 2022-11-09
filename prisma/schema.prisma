@@ -64,6 +64,8 @@ model AccessPolicy {
   role           String? /// Role of the user in relatio to the entity, USER/ADMIN/SUPER ADMIN
   isPrimary      Boolean?
 
+  permissions    String[] /// List of permissions to be granted to the user in this access policy.
+
   listAllOrganizations  Boolean?
   createAnyOrganization Boolean?
   readAnyOrganization   Boolean?
