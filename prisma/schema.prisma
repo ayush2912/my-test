@@ -17,14 +17,19 @@ type DateRange {
 }
 
 model Organization {
-  id             String         @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-  name           String?
-  members        User[]
-  projects       Project[]
-  accessPolicies AccessPolicy[]
-  Issuance       Issuance[]
+  id                 String         @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+  name               String?
+  url                String?
+  type               String? /// INVESTOR, PROJECT_AGGREGATOR, THIRD_PARTY, PROJECT_DEVELOPER
+  estimatedPortfolio Int?
+  expiryDate         DateTime?
+  status             String? /// ACTIVE, DISABLED
+  members            User[]
+  projects           Project[]
+  accessPolicies     AccessPolicy[]
+  Issuance           Issuance[]
 }
 
 model User {
@@ -35,6 +40,7 @@ model User {
   name                String?
   firstName           String?
   lastName            String?
+  status              String? /// ACTIVE, DISABLED
   organizationId      String?
   organization        Organization?           @relation(fields: [organizationId], references: [id])
   projects            Project[]
@@ -56,6 +62,9 @@ model AccessPolicy {
   organizationId String?       @db.ObjectId
   organization   Organization? @relation(fields: [organizationId], references: [id])
   role           String? /// Role of the user in relatio to the entity, USER/ADMIN/SUPER ADMIN
+  isPrimary      Boolean?
+
+  permissions    String[] /// List of permissions to be granted to the user in this access policy.
 
   listAllOrganizations  Boolean?
   createAnyOrganization Boolean?
