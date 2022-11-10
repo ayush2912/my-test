@@ -23,7 +23,7 @@ model Organization {
   name               String?
   url                String?
   logoUrl            String?
-  type               String? /// INVESTOR, PROJECT_AGGREGATOR, THIRD_PARTY, PROJECT_DEVELOPER
+  type               String? ///  
   estimatedPortfolio Int?
   expiryDate         DateTime?
   status             String? /// ACTIVE, DISABLED
@@ -68,6 +68,7 @@ model AccessPolicy {
   isPrimary      Boolean?
 
   permissions    String[] /// List of permissions to be granted to the user in this access policy.
+  notifications  Notification[]
 
   listAllOrganizations  Boolean?
   createAnyOrganization Boolean?
@@ -267,7 +268,10 @@ model Notification {
   chat                  Chat?                   @relation(fields: [chatId], references: [id])
   documentId            String?                 @db.ObjectId
   document              Document?               @relation(fields: [documentId], references: [id])
+  accessPolicyId        String?                 @db.ObjectId
+  accessPolicy          AccessPolicy?               @relation(fields: [accessPolicyId], references: [id])
   notificationReceivers NotificationReceivers[]
+  metadata              Json
 }
 
 model Issuance {
