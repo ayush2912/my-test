@@ -22,6 +22,7 @@ model Organization {
   updatedAt          DateTime       @updatedAt
   name               String?
   url                String?
+  logoUrl            String?
   type               String? /// INVESTOR, PROJECT_AGGREGATOR, THIRD_PARTY, PROJECT_DEVELOPER
   estimatedPortfolio Int?
   expiryDate         DateTime?
@@ -40,6 +41,7 @@ model User {
   name                String?
   firstName           String?
   lastName            String?
+  avatarUrl           String?
   status              String? /// ACTIVE, DISABLED
   organizationId      String?
   organization        Organization?           @relation(fields: [organizationId], references: [id])
