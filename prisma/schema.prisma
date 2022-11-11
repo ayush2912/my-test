@@ -70,6 +70,8 @@ model AccessPolicy {
   permissions    String[] /// List of permissions to be granted to the user in this access policy.
   notifications  Notification[]
 
+  notificationsDisabledProjectIds String[]      @db.ObjectId
+
   listAllOrganizations  Boolean?
   createAnyOrganization Boolean?
   readAnyOrganization   Boolean?
