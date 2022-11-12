@@ -22,6 +22,7 @@ model Organization {
   updatedAt          DateTime       @updatedAt
   name               String?
   url                String?
+  logo               String?  /// Base64 Representation of the logo image 
   logoUrl            String?
   type               String? ///  
   estimatedPortfolio Int?
@@ -41,6 +42,7 @@ model User {
   name                String?
   firstName           String?
   lastName            String?
+  avatar              String? /// Base64 representation of the avatar image buffer
   avatarUrl           String?
   status              String? /// ACTIVE, DISABLED
   timezone            String?
