@@ -192,7 +192,7 @@ const handlerMemberSecondaryOrgAccessPolicies: Prisma.AccessPolicyCreateInput[] 
 
 //   })));
 
-console.log(usersData, handlerMemberPrimaryOrgAccessPolicies, handlerMemberSecondaryOrgAccessPolicies);
+// console.log(usersData, handlerMemberPrimaryOrgAccessPolicies, handlerMemberSecondaryOrgAccessPolicies);
 
 const sectoralScopes = [
   "RE_NRE",
@@ -480,27 +480,36 @@ const countries = [
   "ZW",
 ];
 
-// const gccProjectsData: Prisma.ProjectCreateInput[] = Array.from({
-//   length: 24,
-// }).map(() => ({
-//   id: faker.database.mongodbObjectId(),
-//   name: faker.company.name(),
-//   estimatedAnnualEmissionReductions: faker.datatype.number({
-//     min: 10000,
-//     max: 100000,
-//   }),
-//   createdAt: faker.date.recent(60),
-//   registryId: "635ba952a04bfb3853bc2a41",
-//   stage: faker.helpers.arrayElement(stages),
-//   sectoralScope: faker.helpers.arrayElement(sectoralScopes),
-//   country: faker.helpers.arrayElement(countries),
-//   projectStatus: faker.helpers.arrayElement([
-//     "Submitted",
-//     "Approved",
-//     "Approved Carbon Credit",
-//   ]),
-//   organizationId: "634d1d62616a36bb9d27b330",
-// }));
+const gccProjectsData = Array.from({
+  length: 24,
+}).map(() => ({
+  id: faker.database.mongodbObjectId(),
+  name: faker.company.name(),
+  estimatedAnnualEmissionReductions: faker.datatype.number({
+    min: 10000,
+    max: 100000,
+  }),
+  createdAt: faker.date.recent(60),
+  registryId: "635ba952a04bfb3853bc2a41",
+  stage: faker.helpers.arrayElement(stages),
+  sectoralScope: faker.helpers.arrayElement(sectoralScopes),
+  country: faker.helpers.arrayElement(countries),
+  projectStatus: faker.helpers.arrayElement([
+    "Submitted",
+    "Approved",
+    "Approved Carbon Credit",
+  ]),
+  organizationId: "634d1d62616a36bb9d27b330",
+}));
+
+const projectStagesData = gccProjectsData.map((project) => ({
+  projectId: project.id,
+  type: project.stage,
+  startDate: project.createdAt,
+  dueDate: faker.date.soon(90)
+}))
+
+
 
 // const verraProjectsData: Prisma.ProjectCreateInput[] = Array.from({
 //   length: 37,
@@ -559,8 +568,8 @@ const countries = [
 //   });
 
 Promise.all([
-  prisma.user.createMany({ data: usersData }),
-  prisma.accessPolicy.createMany({ data: [...handlerMemberPrimaryOrgAccessPolicies, ...handlerMemberSecondaryOrgAccessPolicies] }),
+  prisma.project.createMany({data: gccProjectsData}),
+  prisma.projectStage.createMany({data: projectStagesData})
 ])
   .then((results) => console.log(results))
   .then(async () => {
@@ -571,6 +580,20 @@ Promise.all([
     await prisma.$disconnect();
     process.exit(1);
   });
+
+// Promise.all([
+//   prisma.user.createMany({ data: usersData }),
+//   prisma.accessPolicy.createMany({ data: [...handlerMemberPrimaryOrgAccessPolicies, ...handlerMemberSecondaryOrgAccessPolicies] }),
+// ])
+//   .then((results) => console.log(results))
+//   .then(async () => {
+//     await prisma.$disconnect();
+//   })
+//   .catch(async (e) => {
+//     console.error(e);
+//     await prisma.$disconnect();
+//     process.exit(1);
+//   });
 
 // createProjects()
 //   .then((results) => console.log(results))
