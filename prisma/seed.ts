@@ -24,6 +24,109 @@ const prisma = new PrismaClient();
 //   status: faker.helpers.arrayElement(["ACTIVE", "DISABLED"]),
 // }));
 
+const getHandlerMemberPermissions = (): string[] =>
+  Array.prototype.concat(
+    faker.helpers.arrayElements([
+      [],
+      ["createUser", "updateUser"],
+      ["createProject"],
+      [
+        "updateProject",
+        "createDocumentAsHandler",
+        "updateDocumentAsHandler",
+        "createChatAsHandler",
+      ],
+    ])
+  );
+
+const getClientMemberAccessPolicy = (): string[] =>
+  faker.helpers.arrayElement([
+    [],
+    ["createDocumentAsClient", "updateDocumentAsClient", "createChatAsClient"],
+  ]);
+
+const getHandlerAccessPolicy = () =>
+  faker.helpers.arrayElement([
+    {
+      role: "HANDLER_ADMIN",
+      permissions: [
+        "listAllOrganizations",
+        "createAnyOrganization",
+        "readAnyOrganization",
+        "updateAnyOrganization ",
+        "deleteAnyOrganization",
+        "listAllUsers",
+        "readAnyUser",
+        "createAnyUser",
+        "updateAnyUser",
+        "deleteAnyUser",
+        "listAllProjects",
+        "readAnyProject",
+        "createAnyProject",
+        "updateAnyProject",
+        "deleteAnyProject ",
+        "readAnyDocument",
+        "readAnyChat",
+        "createDocumentAsHandler ",
+        "updateDocumentAsHandler",
+        "deleteDocument",
+        "readChat",
+        "createChatAsHandler",
+      ],
+    },
+    {
+      role: "HANDLER_MEMBER",
+      permissions: Array.prototype.concat(
+        [
+          "readOrganization",
+          "listUsers",
+          "listProjects",
+          "readProject",
+          "readDocument",
+          "readChat",
+        ],
+        ...getHandlerMemberPermissions()
+      ),
+    },
+  ]);
+
+const getClientAccessPolicy = () =>
+  faker.helpers.arrayElement([
+    {
+      role: "CLIENT_ADMIN",
+      permissions: [
+        "readOrganization",
+        "createUser",
+        "updateUser",
+        "deleteUser",
+        "listProjects",
+        "createProject",
+        "updateProject",
+        "deleteProject",
+        "readDocument",
+        "createDocumentAsClient",
+        "updateDocumentAsClient",
+        "deleteDocument",
+        "readChat",
+        "createChatAsClient",
+      ],
+    },
+    {
+      role: "CLIENT_MEMBER",
+      permissions: Array.prototype.concat(
+        [
+          "readOrganization",
+          "listUsers",
+          "listProjects",
+          "readProject",
+          "readDocument",
+          "readChat",
+        ],
+        getClientMemberAccessPolicy()
+      ),
+    },
+  ]);
+
 const usersData: Prisma.UserCreateInput[] = Array.from({ length: 100 }).map(
   () => ({
     id: faker.database.mongodbObjectId(),
@@ -31,12 +134,65 @@ const usersData: Prisma.UserCreateInput[] = Array.from({ length: 100 }).map(
     lastName: faker.name.lastName(),
     timezone: faker.address.timeZone(),
     email: faker.internet.email(),
-    status: faker.helpers.arrayElement(["ACTIVE", "DISABLED"]),
-    avatarUrl: faker.image.avatar(),
+    status: "ACTIVE",
+    // avatarUrl: faker.image.avatar(),
     // organizationId: faker.helpers.arrayElement(organizationsData).id,
-    organizationId: 
+    organizationId: "634d1d32616a36bb9d27b32f"
   })
 );
+
+const handlerMemberPrimaryOrgAccessPolicies: Prisma.AccessPolicyCreateInput[] = usersData.map(
+  (user) => ({
+    userId: user.id,
+    organizationId: "634d1d32616a36bb9d27b32f",
+    role: "HANDLER_MEMBER",
+    permissions: Array.prototype.concat(
+      [
+        "readOrganization",
+        "listUsers",
+        "listProjects",
+        "readProject",
+        "readDocument",
+        "readChat",
+      ],
+      ...getHandlerMemberPermissions()
+    )
+  })
+);
+
+const handlerMemberSecondaryOrgAccessPolicies: Prisma.AccessPolicyCreateInput[] = usersData.map(
+  (user) => ({
+    userId: user.id,
+    organizationId: "634d1d62616a36bb9d27b330",
+    role: "HANDLER_MEMBER",
+    permissions: Array.prototype.concat(
+      [
+        "readOrganization",
+        "listUsers",
+        "listProjects",
+        "readProject",
+        "readDocument",
+        "readChat",
+      ],
+      ...getHandlerMemberPermissions()
+    )
+  })
+);
+
+
+// const getAccessPolicies = async () =>
+//   await prisma.accessPolicy.findMany({
+//     where: {
+//       role: { equals: "HANDLER_MEMBER" },
+//     },
+//     select: {
+//       userId: true,
+//     },  
+//   }).then((results) => results.map((r) => ({
+
+//   })));
+
+console.log(usersData, handlerMemberPrimaryOrgAccessPolicies, handlerMemberSecondaryOrgAccessPolicies);
 
 const sectoralScopes = [
   "RE_NRE",
@@ -75,7 +231,254 @@ const stages = [
   "CP_REN",
 ];
 
-const countries = ["AF","AX","AL","DZ","AS","AD","AO","AI","AQ","AG","AR","AM","AW","AU","AT","AZ","BS","BH","BD","BB","BY","BE","BZ","BJ","BM","BT","BO","BA","BW","BV","BR","IO","BN","BG","BF","BI","KH","CM","CA","CV","KY","CF","TD","CL","CN","CX","CC","CO","KM","CG","CD","CK","CR","CI","HR","CU","CY","CZ","DK","DJ","DM","DO","EC","EG","SV","GQ","ER","EE","ET","FK","FO","FJ","FI","FR","GF","PF","TF","GA","GM","GE","DE","GH","GI","GR","GL","GD","GP","GU","GT","GG","GN","GW","GY","HT","HM","VA","HN","HK","HU","IS","IN","ID","IR","IQ","IE","IM","IL","IT","JM","JP","JE","JO","KZ","KE","KI","KR","KP","KW","KG","LA","LV","LB","LS","LR","LY","LI","LT","LU","MO","MK","MG","MW","MY","MV","ML","MT","MH","MQ","MR","MU","YT","MX","FM","MD","MC","MN","ME","MS","MA","MZ","MM","NA","NR","NP","NL","AN","NC","NZ","NI","NE","NG","NU","NF","MP","NO","OM","PK","PW","PS","PA","PG","PY","PE","PH","PN","PL","PT","PR","QA","RE","RO","RU","RW","BL","SH","KN","LC","MF","PM","VC","WS","SM","ST","SA","SN","RS","SC","SL","SG","SK","SI","SB","SO","ZA","GS","ES","LK","SD","SR","SJ","SZ","SE","CH","SY","TW","TJ","TZ","TH","TL","TG","TK","TO","TT","TN","TR","TM","TC","TV","UG","UA","AE","GB","US","UM","UY","UZ","VU","VE","VN","VG","VI","WF","EH","YE","ZM","ZW"]
+const countries = [
+  "AF",
+  "AX",
+  "AL",
+  "DZ",
+  "AS",
+  "AD",
+  "AO",
+  "AI",
+  "AQ",
+  "AG",
+  "AR",
+  "AM",
+  "AW",
+  "AU",
+  "AT",
+  "AZ",
+  "BS",
+  "BH",
+  "BD",
+  "BB",
+  "BY",
+  "BE",
+  "BZ",
+  "BJ",
+  "BM",
+  "BT",
+  "BO",
+  "BA",
+  "BW",
+  "BV",
+  "BR",
+  "IO",
+  "BN",
+  "BG",
+  "BF",
+  "BI",
+  "KH",
+  "CM",
+  "CA",
+  "CV",
+  "KY",
+  "CF",
+  "TD",
+  "CL",
+  "CN",
+  "CX",
+  "CC",
+  "CO",
+  "KM",
+  "CG",
+  "CD",
+  "CK",
+  "CR",
+  "CI",
+  "HR",
+  "CU",
+  "CY",
+  "CZ",
+  "DK",
+  "DJ",
+  "DM",
+  "DO",
+  "EC",
+  "EG",
+  "SV",
+  "GQ",
+  "ER",
+  "EE",
+  "ET",
+  "FK",
+  "FO",
+  "FJ",
+  "FI",
+  "FR",
+  "GF",
+  "PF",
+  "TF",
+  "GA",
+  "GM",
+  "GE",
+  "DE",
+  "GH",
+  "GI",
+  "GR",
+  "GL",
+  "GD",
+  "GP",
+  "GU",
+  "GT",
+  "GG",
+  "GN",
+  "GW",
+  "GY",
+  "HT",
+  "HM",
+  "VA",
+  "HN",
+  "HK",
+  "HU",
+  "IS",
+  "IN",
+  "ID",
+  "IR",
+  "IQ",
+  "IE",
+  "IM",
+  "IL",
+  "IT",
+  "JM",
+  "JP",
+  "JE",
+  "JO",
+  "KZ",
+  "KE",
+  "KI",
+  "KR",
+  "KP",
+  "KW",
+  "KG",
+  "LA",
+  "LV",
+  "LB",
+  "LS",
+  "LR",
+  "LY",
+  "LI",
+  "LT",
+  "LU",
+  "MO",
+  "MK",
+  "MG",
+  "MW",
+  "MY",
+  "MV",
+  "ML",
+  "MT",
+  "MH",
+  "MQ",
+  "MR",
+  "MU",
+  "YT",
+  "MX",
+  "FM",
+  "MD",
+  "MC",
+  "MN",
+  "ME",
+  "MS",
+  "MA",
+  "MZ",
+  "MM",
+  "NA",
+  "NR",
+  "NP",
+  "NL",
+  "AN",
+  "NC",
+  "NZ",
+  "NI",
+  "NE",
+  "NG",
+  "NU",
+  "NF",
+  "MP",
+  "NO",
+  "OM",
+  "PK",
+  "PW",
+  "PS",
+  "PA",
+  "PG",
+  "PY",
+  "PE",
+  "PH",
+  "PN",
+  "PL",
+  "PT",
+  "PR",
+  "QA",
+  "RE",
+  "RO",
+  "RU",
+  "RW",
+  "BL",
+  "SH",
+  "KN",
+  "LC",
+  "MF",
+  "PM",
+  "VC",
+  "WS",
+  "SM",
+  "ST",
+  "SA",
+  "SN",
+  "RS",
+  "SC",
+  "SL",
+  "SG",
+  "SK",
+  "SI",
+  "SB",
+  "SO",
+  "ZA",
+  "GS",
+  "ES",
+  "LK",
+  "SD",
+  "SR",
+  "SJ",
+  "SZ",
+  "SE",
+  "CH",
+  "SY",
+  "TW",
+  "TJ",
+  "TZ",
+  "TH",
+  "TL",
+  "TG",
+  "TK",
+  "TO",
+  "TT",
+  "TN",
+  "TR",
+  "TM",
+  "TC",
+  "TV",
+  "UG",
+  "UA",
+  "AE",
+  "GB",
+  "US",
+  "UM",
+  "UY",
+  "UZ",
+  "VU",
+  "VE",
+  "VN",
+  "VG",
+  "VI",
+  "WF",
+  "EH",
+  "YE",
+  "ZM",
+  "ZW",
+];
 
 // const gccProjectsData: Prisma.ProjectCreateInput[] = Array.from({
 //   length: 24,
@@ -149,10 +552,24 @@ const countries = ["AF","AX","AL","DZ","AS","AD","AO","AI","AQ","AG","AR","AM","
 
 // console.log(inspect(projectsData, {depth: null, colors: true}))
 
-const getOrganizations = async () => await prisma.organization.findMany();
-const createProjects = async () =>
-  await prisma.project.createMany({
-    data: [...gccProjectsData, ...verraProjectsData, ...gsProjectsData],
+// const getOrganizations = async () => await prisma.organization.findMany();
+// const createProjects = async () =>
+//   await prisma.project.createMany({
+//     data: [...gccProjectsData, ...verraProjectsData, ...gsProjectsData],
+//   });
+
+Promise.all([
+  prisma.user.createMany({ data: usersData }),
+  prisma.accessPolicy.createMany({ data: [...handlerMemberPrimaryOrgAccessPolicies, ...handlerMemberSecondaryOrgAccessPolicies] }),
+])
+  .then((results) => console.log(results))
+  .then(async () => {
+    await prisma.$disconnect();
+  })
+  .catch(async (e) => {
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
   });
 
 // createProjects()
