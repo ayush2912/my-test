@@ -275,7 +275,7 @@ model Notification {
   accessPolicyId        String?                 @db.ObjectId
   accessPolicy          AccessPolicy?               @relation(fields: [accessPolicyId], references: [id])
   notificationReceivers NotificationReceivers[]
-  metadata              Json
+  metadata              Json?
 }
 
 model Issuance {
