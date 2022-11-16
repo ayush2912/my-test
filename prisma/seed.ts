@@ -1,8 +1,9 @@
-import { inspect } from "util";
-
 import { PrismaClient, Prisma } from "@prisma/client";
 
 import { faker } from "@faker-js/faker";
+
+import { flattenDeep, compact } from "lodash/fp";
+import { result } from "lodash";
 
 const prisma = new PrismaClient();
 
@@ -12,7 +13,7 @@ const prisma = new PrismaClient();
 //   id: faker.database.mongodbObjectId(),
 //   name: faker.company.name(),
 //   url: faker.internet.url(),
-//   logo: faker.internet.avatar(),
+//   // logo: faker.internet.avatar(),
 //   type: faker.helpers.arrayElement([
 //     "INVESTOR",
 //     "PROJECT_AGGREGATOR",
@@ -21,11 +22,11 @@ const prisma = new PrismaClient();
 //   ]),
 //   estimatedPortfolio: faker.datatype.number({ min: 100000, max: 1000000 }),
 //   expiryDate: faker.date.future(10),
-//   status: faker.helpers.arrayElement(["ACTIVE", "DISABLED"]),
+//   status: "ACTIVE",
 // }));
 
 const getHandlerMemberPermissions = (): string[] =>
-  Array.prototype.concat(
+  flattenDeep(
     faker.helpers.arrayElements([
       [],
       ["createUser", "updateUser"],
@@ -127,58 +128,79 @@ const getClientAccessPolicy = () =>
     },
   ]);
 
-const usersData: Prisma.UserCreateInput[] = Array.from({ length: 100 }).map(
-  () => ({
-    id: faker.database.mongodbObjectId(),
-    firstName: faker.name.firstName(),
-    lastName: faker.name.lastName(),
-    timezone: faker.address.timeZone(),
-    email: faker.internet.email(),
-    status: "ACTIVE",
-    // avatarUrl: faker.image.avatar(),
-    // organizationId: faker.helpers.arrayElement(organizationsData).id,
-    organizationId: "634d1d32616a36bb9d27b32f"
-  })
-);
+// const usersData = Array.from({ length: 100 }).map(() => ({
+//   id: faker.database.mongodbObjectId(),
+//   firstName: faker.name.firstName(),
+//   lastName: faker.name.lastName(),
+//   timezone: faker.address.timeZone(),
+//   email: faker.internet.email(),
+//   status: "ACTIVE",
+//   organizationId: faker.helpers.arrayElement(organizationsData).id,
+// }));
 
-const handlerMemberPrimaryOrgAccessPolicies: Prisma.AccessPolicyCreateInput[] = usersData.map(
-  (user) => ({
-    userId: user.id,
-    organizationId: "634d1d32616a36bb9d27b32f",
-    role: "HANDLER_MEMBER",
-    permissions: Array.prototype.concat(
-      [
-        "readOrganization",
-        "listUsers",
-        "listProjects",
-        "readProject",
-        "readDocument",
-        "readChat",
-      ],
-      ...getHandlerMemberPermissions()
-    )
-  })
-);
+// const handlerMemberPrimaryOrgAccessPoliciesData = usersData.map((user) => ({
+//   userId: user.id,
+//   organizationId: user.organizationId,
+//   role: "HANDLER_MEMBER",
+//   permissions: Array.prototype.concat(
+//     [
+//       "readOrganization",
+//       "listUsers",
+//       "listProjects",
+//       "readProject",
+//       "readDocument",
+//       "readChat",
+//     ],
+//     ...getHandlerMemberPermissions()
+//   ),
+// }));
 
-const handlerMemberSecondaryOrgAccessPolicies: Prisma.AccessPolicyCreateInput[] = usersData.map(
-  (user) => ({
-    userId: user.id,
-    organizationId: "634d1d62616a36bb9d27b330",
-    role: "HANDLER_MEMBER",
-    permissions: Array.prototype.concat(
-      [
-        "readOrganization",
-        "listUsers",
-        "listProjects",
-        "readProject",
-        "readDocument",
-        "readChat",
-      ],
-      ...getHandlerMemberPermissions()
-    )
-  })
-);
+// const handlerMemberSecondaryOrgAccessPoliciesData = compact(
+//   flattenDeep(
+//     faker.helpers.arrayElements(organizationsData).map((organization) =>
+//       faker.helpers.arrayElements(usersData).map((user) =>
+//         user.organizationId != organization.id
+//           ? {
+//               userId: user.id,
+//               organizationId: organization.id,
+//               role: "HANDLER_MEMBER",
+//               permissions: Array.prototype.concat(
+//                 [
+//                   "readOrganization",
+//                   "listUsers",
+//                   "listProjects",
+//                   "readProject",
+//                   "readDocument",
+//                   "readChat",
+//                 ],
+//                 ...getHandlerMemberPermissions()
+//               ),
+//             }
+//           : undefined
+//       )
+//     )
+//   )
+// );
 
+// const clientUsersData = flattenDeep(
+//   faker.helpers.arrayElements(organizationsData).map((organization) =>
+//     Array.from({ length: 30 }).map(() => ({
+//       id: faker.database.mongodbObjectId(),
+//       firstName: faker.name.firstName(),
+//       lastName: faker.name.lastName(),
+//       timezone: faker.address.timeZone(),
+//       email: faker.internet.email(),
+//       status: "ACTIVE",
+//       organizationId: organization.id,
+//     }))
+//   )
+// );
+
+// const clientAccessPolicyData = clientUsersData.map((user) => ({
+//   userId: user.id,
+//   organizationId: user.organizationId,
+//   ...getClientAccessPolicy(),
+// }));
 
 // const getAccessPolicies = async () =>
 //   await prisma.accessPolicy.findMany({
@@ -187,7 +209,7 @@ const handlerMemberSecondaryOrgAccessPolicies: Prisma.AccessPolicyCreateInput[] 
 //     },
 //     select: {
 //       userId: true,
-//     },  
+//     },
 //   }).then((results) => results.map((r) => ({
 
 //   })));
@@ -480,36 +502,81 @@ const countries = [
   "ZW",
 ];
 
-const gccProjectsData = Array.from({
-  length: 24,
-}).map(() => ({
-  id: faker.database.mongodbObjectId(),
-  name: faker.company.name(),
-  estimatedAnnualEmissionReductions: faker.datatype.number({
-    min: 10000,
-    max: 100000,
-  }),
-  createdAt: faker.date.recent(60),
-  registryId: "635ba952a04bfb3853bc2a41",
-  stage: faker.helpers.arrayElement(stages),
-  sectoralScope: faker.helpers.arrayElement(sectoralScopes),
-  country: faker.helpers.arrayElement(countries),
-  projectStatus: faker.helpers.arrayElement([
-    "Submitted",
-    "Approved",
-    "Approved Carbon Credit",
-  ]),
-  organizationId: "634d1d62616a36bb9d27b330",
-}));
+const getProjectsData = () =>
+  prisma.organization
+    .findMany({
+      select: {
+        id: true,
+      },
+    })
+    .then((results) => results)
+    .then((organizations) =>
+      organizations.map((org) =>
+        Array.from({
+          length: faker.datatype.number({ min: 1, max: 20 }),
+        }).map(() => ({
+          id: faker.database.mongodbObjectId(),
+          name: faker.company.name(),
+          estimatedAnnualEmissionReductions: faker.datatype.number({
+            min: 10000,
+            max: 100000,
+          }),
+          createdAt: faker.date.recent(60),
+          // registryId: "635ba952a04bfb3853bc2a41",
+          stage: faker.helpers.arrayElement(stages),
+          sectoralScope: faker.helpers.arrayElement(sectoralScopes),
+          country: faker.helpers.arrayElement(countries),
+          organizationId: org.id,
+        }))
+      )
+    );
 
-const projectStagesData = gccProjectsData.map((project) => ({
-  projectId: project.id,
-  type: project.stage,
-  startDate: project.createdAt,
-  dueDate: faker.date.soon(90)
-}))
+// const gccProjectsData = Array.from({
+//   length: faker.datatype.number({min:1, max:20}),
+// }).map(() => ({
+//   id: faker.database.mongodbObjectId(),
+//   name: faker.company.name(),
+//   estimatedAnnualEmissionReductions: faker.datatype.number({
+//     min: 10000,
+//     max: 100000,
+//   }),
+//   createdAt: faker.date.recent(60),
+//   // registryId: "635ba952a04bfb3853bc2a41",
+//   stage: faker.helpers.arrayElement(stages),
+//   sectoralScope: faker.helpers.arrayElement(sectoralScopes),
+//   country: faker.helpers.arrayElement(countries),
+//   // projectStatus: faker.helpers.arrayElement([
+//   //   "Submitted",
+//   //   "Approved",
+//   //   "Approved Carbon Credit",
+//   // ]),
+//   organizationId: "634d1d62616a36bb9d27b330",
+// }));
 
+async function main() {
+  const projects = flattenDeep(await getProjectsData());
+  const projectStages = projects.map((project) => ({
+    projectId: project.id,
+    type: project.stage,
+    startDate: project.createdAt,
+    dueDate: faker.date.soon(90),
+  }));
 
+  return Promise.all([
+    prisma.project.createMany({ data: projects }),
+    prisma.projectStage.createMany({ data: projectStages }),
+  ]).then((results) => console.log(results));
+}
+
+main()
+  .then(async () => {
+    await prisma.$disconnect();
+  })
+  .catch(async (e) => {
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+  });
 
 // const verraProjectsData: Prisma.ProjectCreateInput[] = Array.from({
 //   length: 37,
@@ -567,23 +634,30 @@ const projectStagesData = gccProjectsData.map((project) => ({
 //     data: [...gccProjectsData, ...verraProjectsData, ...gsProjectsData],
 //   });
 
-Promise.all([
-  prisma.project.createMany({data: gccProjectsData}),
-  prisma.projectStage.createMany({data: projectStagesData})
-])
-  .then((results) => console.log(results))
-  .then(async () => {
-    await prisma.$disconnect();
-  })
-  .catch(async (e) => {
-    console.error(e);
-    await prisma.$disconnect();
-    process.exit(1);
-  });
+// Promise.all([
+//   prisma.project.createMany({ data: gccProjectsData }),
+//   prisma.projectStage.createMany({ data: projectStagesData }),
+// ])
+//   .then((results) => console.log(results))
+//   .then(async () => {
+//     await prisma.$disconnect();
+//   })
+//   .catch(async (e) => {
+//     console.error(e);
+//     await prisma.$disconnect();
+//     process.exit(1);
+//   });
 
 // Promise.all([
-//   prisma.user.createMany({ data: usersData }),
-//   prisma.accessPolicy.createMany({ data: [...handlerMemberPrimaryOrgAccessPolicies, ...handlerMemberSecondaryOrgAccessPolicies] }),
+//   prisma.organization.createMany({ data: organizationsData }),
+//   prisma.user.createMany({ data: flattenDeep([usersData, clientUsersData]) }),
+//   prisma.accessPolicy.createMany({
+//     data: [
+//       ...handlerMemberPrimaryOrgAccessPoliciesData,
+//       ...handlerMemberSecondaryOrgAccessPoliciesData,
+//       ...clientAccessPolicyData,
+//     ],
+//   }),
 // ])
 //   .then((results) => console.log(results))
 //   .then(async () => {
