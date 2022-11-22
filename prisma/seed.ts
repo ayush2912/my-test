@@ -502,6 +502,14 @@ const countries = [
   "ZW",
 ];
 
+const getProjectRegistryData = () => faker.helpers.arrayElement([{
+    projectStatus: faker.helpers.arrayElement([
+      "Submitted",
+      "Approved",
+      "Approved Carbon Credit",
+    ])
+}]) 
+
 const getProjectsData = () =>
   prisma.organization
     .findMany({
