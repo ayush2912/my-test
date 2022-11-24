@@ -57,7 +57,7 @@ model User {
   country             String?                 @default("IN")
   lastOpenedDocuments Document[]              @relation("DocumentLastOpenedBy")
   updatedDocuments    Document[]              @relation("DocumentUpdatedBy")
-  accessToken         String?                 @unique
+  accessToken         String?                 
 }
 
 model AccessPolicy {
