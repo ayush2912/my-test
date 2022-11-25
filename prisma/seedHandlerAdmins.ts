@@ -1,12 +1,11 @@
 import { PrismaClient, Prisma } from "@prisma/client";
 
-import { ObjectId, ObjectID } from "bson";
-import { userInfo } from "os";
+import { ObjectId } from "bson";
 
 const prisma = new PrismaClient();
 
 const handlerOrganizationsData = {
-  id: new ObjectID().toString(),
+  id: new ObjectId().toString(),
   name: "Climate Connect Digital",
   url: "https://climateconnect.digital",
   type: "PROJECT_AGGREGATOR",
@@ -86,12 +85,6 @@ const handlerAdminAccessPolicies = handlerAdminUserData.map((user) => ({
     "createChatAsHandler",
   ],
 }));
-
-console.log(
-  handlerOrganizationsData,
-  handlerAdminUserData,
-  handlerAdminAccessPolicies
-);
 
 async function main() {
   return Promise.all([
