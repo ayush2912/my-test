@@ -3,12 +3,12 @@ import { promises as fs } from "fs";
 import { parse } from "csv-parse/sync";
 import { ObjectId } from "bson";
 
-import { isEmpty, omitBy, omit, find, get } from "lodash/fp";;
+import { isEmpty, omitBy, omit, find, get } from "lodash/fp";
 
 const prisma = new PrismaClient();
 
 const permissionsList = {
-  "HANDLER_ADMIN": [
+  HANDLER_ADMIN: [
     "listAllOrganizations",
     "createAnyOrganization",
     "readAnyOrganization",
@@ -32,7 +32,7 @@ const permissionsList = {
     "readChat",
     "createChatAsHandler",
   ],
-  "HANDLER_MEMBER": [
+  HANDLER_MEMBER: [
     "readOrganization",
     "listUsers",
     "listProjects",
@@ -40,7 +40,7 @@ const permissionsList = {
     "readDocument",
     "readChat",
   ],
-  "CLIENT_ADMIN": [
+  CLIENT_ADMIN: [
     "readOrganization",
     "createUser",
     "updateUser",
@@ -56,50 +56,53 @@ const permissionsList = {
     "readChat",
     "createChatAsClient",
   ],
-  "CLIENT_MEMBER": [
+  CLIENT_MEMBER: [
     "readOrganization",
     "listUsers",
     "listProjects",
     "readProject",
     "readDocument",
     "readChat",
-  ]
-}
-
+  ],
+};
 
 const compactObject = omitBy(isEmpty);
 
-type Organization = { 
+type Organization = {
   id?: string;
-  name: string; 
-  url?: string; 
-  type?: string; 
-  estimatedPortfolio?: string; 
-  expiryDate?: string
-}
+  name: string;
+  url?: string;
+  type?: string;
+  estimatedPortfolio?: string;
+  expiryDate?: string;
+};
 
-type User = { 
+type User = {
   id?: string;
   firstName: string;
   lastName: string;
-  role: string; 
+  role: string;
   organization?: string;
-  organizationId?: string;  
+  organizationId?: string;
   email?: string;
-  permissions?: string[]; 
-}
+  permissions?: string[];
+};
 
 const addObjectId = (obj: any) => ({
   id: new ObjectId().toString(),
   ...obj,
 });
 
-const findOrganization = (user: User) => find((org: Organization) => user.organization === org.name )
+const findOrganization = (user: User) =>
+  find((org: Organization) => user.organization === org.name);
 
 async function main() {
-  const organizationsCsv:Organization[] = parse(await fs.readFile("./csv/organizations.csv"), {
-    columns: true,
-  });
+  const organizationsCsv: Organization[] = parse(
+    await fs.readFile("./csv/organizations.csv"),
+    {
+      columns: true,
+    }
+  );
   const usersCsv: User[] = parse(await fs.readFile("./csv/users.csv"), {
     columns: true,
   });
@@ -127,18 +130,21 @@ async function main() {
     role: user.role,
     isPrimary: true,
     permissions: user.permissions,
-  }))
+  }));
 
-  const usersData: any = users.map(omit("permissions")).map(omit("role")).map(omit("organization"))
+  const usersData: any = users
+    .map(omit("permissions"))
+    .map(omit("role"))
+    .map(omit("organization"));
 
   console.log(organizations, usersData, accessPolicies);
 
-  return; 
+  return;
 
   return Promise.all([
     prisma.organization.createMany({ data: organizations }),
     prisma.user.createMany({ data: usersData }),
-    prisma.accessPolicy.createMany({ data: accessPolicies })
+    prisma.accessPolicy.createMany({ data: accessPolicies }),
   ]).then((results) => console.log(results));
 }
 
