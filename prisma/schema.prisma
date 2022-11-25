@@ -27,7 +27,7 @@ model Organization {
   type               String? ///  
   estimatedPortfolio Int?
   expiryDate         DateTime?
-  status             String? /// ACTIVE, DISABLED
+  status             String?        @default("ACTIVE")
   members            User[]
   projects           Project[]
   accessPolicies     AccessPolicy[]
@@ -44,7 +44,7 @@ model User {
   lastName            String?
   avatar              String? /// Base64 representation of the avatar image buffer
   avatarUrl           String?
-  status              String? /// ACTIVE, DISABLED
+  status              String?                 @default("ACTIVE")
   timezone            String?
   organizationId      String?		              
   organization        Organization?           @relation(fields: [organizationId], references: [id])
