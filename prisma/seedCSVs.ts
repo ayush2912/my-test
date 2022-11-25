@@ -33,6 +33,7 @@ const permissionsList = {
     "createChatAsHandler",
   ],
   HANDLER_MEMBER: [
+    "listOrganizations",
     "readOrganization",
     "listUsers",
     "listProjects",
@@ -41,7 +42,9 @@ const permissionsList = {
     "readChat",
   ],
   CLIENT_ADMIN: [
+    "listOrganizations",
     "readOrganization",
+    "listUsers",
     "createUser",
     "updateUser",
     "deleteUser",
@@ -57,6 +60,7 @@ const permissionsList = {
     "createChatAsClient",
   ],
   CLIENT_MEMBER: [
+    "listOrganizations",
     "readOrganization",
     "listUsers",
     "listProjects",
@@ -138,8 +142,6 @@ async function main() {
     .map(omit("organization"));
 
   console.log(organizations, usersData, accessPolicies);
-
-  return;
 
   return Promise.all([
     prisma.organization.createMany({ data: organizations }),
