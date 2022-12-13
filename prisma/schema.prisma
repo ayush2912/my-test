@@ -57,7 +57,7 @@ model User {
   country             String?                 @default("IN")
   lastOpenedDocuments Document[]              @relation("DocumentLastOpenedBy")
   updatedDocuments    Document[]              @relation("DocumentUpdatedBy")
-  accessToken         String?                 @unique   
+  accessToken         String?                 @unique
 }
 
 model AccessPolicy {
@@ -73,44 +73,6 @@ model AccessPolicy {
   notifications  Notification[]
 
   notificationsDisabledProjectIds String[]      @db.ObjectId
-
-  listAllOrganizations  Boolean?
-  createAnyOrganization Boolean?
-  readAnyOrganization   Boolean?
-  updateAnyOrganization Boolean?
-  deleteAnyOrganization Boolean?
-
-  listAllProjects  Boolean?
-  readAnyProject   Boolean?
-  createAnyProject Boolean?
-  updateAnyProject Boolean?
-  deleteAnyProject Boolean?
-
-  readAnyDocument Boolean?
-  readAnyChat     Boolean?
-
-  readOrganization Boolean?
-
-  listUsers  Boolean?
-  createUser Boolean?
-  updateUser Boolean?
-  deleteUser Boolean?
-
-  listProjects  Boolean?
-  readProject   Boolean?
-  createProject Boolean?
-  updateProject Boolean?
-  deleteProject Boolean?
-
-  readDocument            Boolean?
-  createDocumentAsHandler Boolean?
-  updateDocumentAsHandler Boolean?
-  deleteDocument          Boolean?
-  readChat                Boolean?
-  createChatAsHandler     Boolean?
-  createDocumentAsClient  Boolean?
-  updateDocumentAsClient  Boolean?
-  createChatAsClient      Boolean?
 }
 
 model ProjectStage {
