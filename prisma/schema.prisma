@@ -269,7 +269,7 @@ model ProjectCreditsAskPrice {
   updatedAt      DateTime @updatedAt
   projectId      String   @db.ObjectId
   project        Project  @relation(fields: [projectId], references: [id])
-  vintage        DateTime
+  period         DateTime
   creditsIssued  Int?
   updatedCredits Int?
   askPrice       Int?
@@ -294,6 +294,7 @@ model BidCreditsPrice {
   updatedAt    DateTime                 @updatedAt
   bidId        String                   @db.ObjectId
   bid          Bid                      @relation(fields: [bidId], references: [id])
+  period       DateTime
   volume       Int
   price        Int
   expiryDate   DateTime?
@@ -307,6 +308,7 @@ model BidCreditsPriceHistory {
   updatedAt         DateTime        @updatedAt
   bidCreditsPriceId String          @db.ObjectId
   bidCreditsPrice   BidCreditsPrice @relation(fields: [bidCreditsPriceId], references: [id])
+  period            DateTime
   volume            Int?
   price             Int?
 }
