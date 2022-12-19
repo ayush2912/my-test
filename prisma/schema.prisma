@@ -282,32 +282,22 @@ model Bid {
   projectId     String            @db.ObjectId
   project       Project           @relation(fields: [projectId], references: [id])
   status        String?
+  period        DateTime
   expiryDate    DateTime?
-  creditsPrices BidCreditsPrice[]
+  volume        Int
+  price         Float
+  deliveryDate  DateTime?
   chats         Chat[]
   documents     Document[]
+  history       BidPriceHistory[]
 }
 
-model BidCreditsPrice {
-  id           String                   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt    DateTime                 @default(now())
-  updatedAt    DateTime                 @updatedAt
-  bidId        String                   @db.ObjectId
-  bid          Bid                      @relation(fields: [bidId], references: [id])
-  period       DateTime
-  volume       Int
-  price        Int
-  expiryDate   DateTime?
-  deliveryDate DateTime?
-  history      BidCreditsPriceHistory[]
-}
-
-model BidCreditsPriceHistory {
+model BidPriceHistory {
   id                String          @id @default(auto()) @map("_id") @db.ObjectId
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
-  bidCreditsPriceId String          @db.ObjectId
-  bidCreditsPrice   BidCreditsPrice @relation(fields: [bidCreditsPriceId], references: [id])
+  bidPriceId        String          @db.ObjectId
+  bidCreditsPrice   Bid             @relation(fields: [bidPriceId], references: [id])
   period            DateTime
   volume            Int?
   price             Int?
