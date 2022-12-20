@@ -272,7 +272,7 @@ model ProjectCreditsAskPrice {
   period         DateTime
   creditsIssued  Int?
   updatedCredits Int?
-  askPrice       Int?
+  askPrice       Float?
 }
 
 model Bid {
