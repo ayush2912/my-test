@@ -296,9 +296,9 @@ model BidPriceHistory {
   id                String          @id @default(auto()) @map("_id") @db.ObjectId
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
-  bidPriceId        String          @db.ObjectId
-  bidCreditsPrice   Bid             @relation(fields: [bidPriceId], references: [id])
+  bidId             String          @db.ObjectId
+  bid               Bid             @relation(fields: [bidId], references: [id])
   period            DateTime
-  volume            Int?
-  price             Int?
+  volume            Int
+  price             Float
 }
