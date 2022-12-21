@@ -273,6 +273,8 @@ model ProjectCreditsAskPrice {
   creditsIssued  Int?
   updatedCredits Int?
   askPrice       Float?
+  corsiaEligibility Boolean?
+  otherEligibility string?
 }
 
 model Bid {
