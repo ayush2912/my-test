@@ -119,6 +119,8 @@ model Project {
   projectRiskScore                  ProjectRiskScore?        @relation("ProjectRiskScore")
   bids                              Bid[]
   creditsAskPrice                   ProjectCreditsAskPrice[]
+  corsiaEligibility                 Boolean?
+  otherEligibility                  string?
 }
 
 model RegistryProjectData {
@@ -273,8 +275,6 @@ model ProjectCreditsAskPrice {
   creditsIssued  Int?
   updatedCredits Int?
   askPrice       Float?
-  corsiaEligibility Boolean?
-  otherEligibility string?
 }
 
 model Bid {
