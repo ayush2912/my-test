@@ -120,7 +120,7 @@ model Project {
   bids                              Bid[]
   creditsAskPrice                   ProjectCreditsAskPrice[]
   corsiaEligibility                 Boolean?
-  otherEligibility                  string?
+  otherEligibility                  String?
 }
 
 model RegistryProjectData {
