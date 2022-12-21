@@ -119,6 +119,8 @@ model Project {
   projectRiskScore                  ProjectRiskScore?        @relation("ProjectRiskScore")
   bids                              Bid[]
   creditsAskPrice                   ProjectCreditsAskPrice[]
+  corsiaEligibility                 Boolean?
+  otherEligibility                  string?
 }
 
 model RegistryProjectData {
