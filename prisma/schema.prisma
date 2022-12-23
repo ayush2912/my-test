@@ -118,7 +118,7 @@ model Project {
   registryProjectId                 String? /// Registry Project ID, e.g. 1805
   projectRiskScore                  ProjectRiskScore?        @relation("ProjectRiskScore")
   bids                              Bid[]
-  creditsAskPrice                   ProjectCreditsAskPrice?
+  creditsAskPrice                   ProjectCreditsAskPrice?   @relation("ProjectCreditsAskPrice")
 }
 
 model RegistryProjectData {
