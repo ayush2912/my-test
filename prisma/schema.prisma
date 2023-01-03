@@ -265,11 +265,16 @@ model Issuance {
   organizationId   String?       @db.ObjectId
 }
 
-type AskPrice {
-  period         DateTime
+model AskPrice {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  projectCreditsAskPriceId String @db.ObjectId
+  projectCreditsAskPrice ProjectCreditsAskPrice @relation(fields: [projectCreditsAskPriceId], references: [id])
+  period         Int
   creditsIssued  Int?
   updatedCredits Int?
   askPrice       Float?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
 model ProjectCreditsAskPrice {
