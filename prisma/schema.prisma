@@ -285,6 +285,7 @@ model ProjectCreditsAskPrice {
   project        Project  @relation(name: "ProjectCreditsAskPrice", fields: [projectId], references: [id])
   corsiaEligibility   Boolean?
   otherEligibility    String?
+  type                String?
   askPrices      AskPrice[]
 }
 
