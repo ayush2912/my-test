@@ -1,8 +1,7 @@
 email,firstName,lastName,organization,role,canAddEditUsers,canAddProject,canEditProjectAsHandler,canEditProjectAsClient
-"shyamal.majumdar+User_View_Permission@climateconnect.digital
-
-",Shyamal,Majumdar_User_View_Permission,Demo 1,CLIENT_MEMBER,,,,
-shyamal.majumdar+User_Edit_Permission@climateconnect.digital,Ram_User_Edit_Permission,Majumdar_User_Edit_Permission,Demo 1,CLIENT_MEMBER,,,,TRUE
+shyamal.majumdar@climateconnect.digital,Shyamal,Majumdar,Climate Connect Digital,HANDLER_ADMIN,,,,
+shyamal.majumdar+User_View_Permission@climateconnect.digital,Shyam_View,D,Demo 1,CLIENT_MEMBER,,,,
+shyamal.majumdar+User_Edit_Permission@climateconnect.digital,Ram_User_Edit_Permission,A,Demo 1,CLIENT_MEMBER,,,,TRUE
 shyamal.majumdar+TeamMember_View@climateconnect.digital,Sam_TeamMember_View,Paul,Demo 1,HANDLER_MEMBER,,,,
 shyamal.majumdar+TeamMember_Permission1_AddProject@climateconnect.digital,Max_TeamMember_Permission1_AddProject,Joe,Demo 1,HANDLER_MEMBER,,TRUE,,
 shyamal.majumdar+TeamMember_Permission1_EditProject@climateconnect.digital,Amy_TeamMember_Permission1_EditProject,Martin,Demo 1,HANDLER_MEMBER,,,TRUE,
@@ -11,5 +10,4 @@ shyamal.majumdar+TeamMember_Permission2_AddEditUsersEditProjects@climateconnect.
 shyamal.majumdar+TeamMember_Permission2_AddEditUsersAddProject@climateconnect.digital,Dan_TeamMember_Permission2_AddEditUsersAddProject,Gehlot,Demo 1,HANDLER_MEMBER,TRUE,TRUE,,
 shyamal.majumdar+TeamMember_Permission2_EditProjectsAddProject@climateconnect.digital,Ema_TeamMember_Permission2_EditProjectsAddProject,Verma,Demo 1,HANDLER_MEMBER,,TRUE,TRUE,
 shyamal.majumdar+TeamMember_Permission3_All@climateconnect.digital,Felix_TeamMember_Permission3_All,Lin,Demo 1,HANDLER_MEMBER,TRUE,TRUE,TRUE,
-"shyamal.majumdar+Admin@climateconnect.digital
-",Maximus,Walsh,Demo 1,CLIENT_ADMIN,,,,
+shyamal.majumdar+Admin@climateconnect.digital,Maximus,Walsh,Demo 1,CLIENT_ADMIN,,,,

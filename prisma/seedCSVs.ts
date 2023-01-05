@@ -47,7 +47,7 @@ const permissionsList = {
     "listOrganizations",
     "readOrganization",
     "listUsers",
-    "readUser", 
+    "readUser",
     "createUser",
     "updateUser",
     "deleteUser",
@@ -100,7 +100,7 @@ type Organization = {
   name: string;
   url?: string;
   type?: string;
-  estimatedPortfolio?: string;
+  estimatedPortfolio?: string | number;
   expiryDate?: string;
 };
 
@@ -128,17 +128,17 @@ const findOrganization = (user: User) =>
   find((org: Organization) => user.organization === org.name);
 
 async function main() {
-  // const organizationsCsv: Organization[] = parse(
-  //   await fs.readFile("./csv/organizations.csv"),
-  //   {
-  //     columns: true,
-  //   }
-  // );
+  const organizationsCsv: Organization[] = parse(
+    await fs.readFile("./csv/organizations.csv"),
+    {
+      columns: true,
+    }
+  )
   const usersCsv: User[] = parse(await fs.readFile("./csv/users.csv"), {
     columns: true,
   });
 
-  // const organizations = organizationsCsv.map(addObjectId).map(compactObject);
+  const organizations = organizationsCsv.map((o: any) => ({ ...o, estimatedPortfolio: parseInt(o.estimatedPortfolio) })).map(addObjectId).map(compactObject);
 
   const users = usersCsv
     .map(addObjectId)
@@ -147,11 +147,11 @@ async function main() {
       organizationId: findOrganization(user)([
         // ...organizations,
         {
-          id: "637f888f6184c03469ac39fe", // Climate Connect Digital's ID in Staging environment
+          id: "63b51f49115bfb257b75f110", // Climate Connect Digital's ID in Staging environment
           name: "Climate Connect Digital",
         },
         {
-          id: "638e1c6235970056f09465d6",
+          id: "63b57738115bfb257b75f130",
           name: "Demo 1",
         },
       ])?.id,
@@ -195,12 +195,12 @@ async function main() {
     ])
   );
 
-  console.log(usersData, accessPolicies);
+  console.log(organizations, usersData, accessPolicies);
 
   return Promise.all([
-    // prisma.organization.createMany({ data: organizations }),
-    prisma.user.createMany({ data: usersData }),
-    prisma.accessPolicy.createMany({ data: accessPolicies }),
+    prisma.organization.createMany({ data: organizations }),
+    // prisma.user.createMany({ data: usersData }),
+    // prisma.accessPolicy.createMany({ data: accessPolicies }),
   ]).then((results) => console.log(results));
 }
 

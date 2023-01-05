@@ -5,7 +5,8 @@ import { ObjectId } from "bson";
 const prisma = new PrismaClient();
 
 const handlerOrganizationsData = {
-  id: new ObjectId().toString(),
+  // id: new ObjectId().toString(),
+  id: "63b51f49115bfb257b75f110",
   name: "Climate Connect Digital",
   url: "https://climateconnect.digital",
   type: "PROJECT_AGGREGATOR",
@@ -14,14 +15,9 @@ const handlerOrganizationsData = {
 
 const handlerAdminUserData = [
   {
-    email: "steven.neoh@climateconnect.digital", 
-    firstName: "Steven", 
+    email: "steven.neoh@climateconnect.digital",
+    firstName: "Steven",
     lastName: "Neoh",
-  }, 
-  {
-    email: "shyamal.majumdar@climateconnect.digital",
-    firstName: "Shyamal",
-    lastName: "Majumdar",
   },
   {
     email: "ajay.shelar@climateconnect.digital",
@@ -32,11 +28,6 @@ const handlerAdminUserData = [
     email: "sharad.mishra@climateconnect.digital",
     firstName: "Sharad",
     lastName: "Mishra",
-  },
-  {
-    email: "koushik@climateconnect.digital",
-    firstName: "Koushik",
-    lastName: "Sen",
   },
   {
     email: "swapnil.patil@climateconnect.digital",
@@ -66,36 +57,36 @@ const handlerAdminAccessPolicies = handlerAdminUserData.map((user) => ({
   isPrimary: true,
   role: "HANDLER_ADMIN",
   permissions: [
-      "listAllOrganizations",
-      "createAnyOrganization",
-      "readAnyOrganization",
-      "updateAnyOrganization",
-      "deleteAnyOrganization",
-      "listAllUsers",
-      "readAnyUser",
-      "createAnyUser",
-      "updateAnyUser",
-      "deleteAnyUser",
-      "listAllProjects",
-      "readAnyProject",
-      "createAnyProject",
-      "updateAnyProject",
-      "deleteAnyProject",
-      "readAnyDocument",
-      "readAnyChat",
-      "createDocumentAsHandler",
-      "updateDocumentAsHandler",
-      "deleteDocument",
-      "readChat",
-      "createChatAsHandler"
+    "listAllOrganizations",
+    "createAnyOrganization",
+    "readAnyOrganization",
+    "updateAnyOrganization",
+    "deleteAnyOrganization",
+    "listAllUsers",
+    "readAnyUser",
+    "createAnyUser",
+    "updateAnyUser",
+    "deleteAnyUser",
+    "listAllProjects",
+    "readAnyProject",
+    "createAnyProject",
+    "updateAnyProject",
+    "deleteAnyProject",
+    "readAnyDocument",
+    "readAnyChat",
+    "createDocumentAsHandler",
+    "updateDocumentAsHandler",
+    "deleteDocument",
+    "readChat",
+    "createChatAsHandler",
   ],
 }));
 
 async function main() {
   return Promise.all([
-    prisma.organization.createMany({ data: [handlerOrganizationsData] }),
+    // prisma.organization.createMany({ data: [handlerOrganizationsData] }),
     prisma.user.createMany({ data: handlerAdminUserData }),
-    prisma.accessPolicy.createMany({ data: handlerAdminAccessPolicies })
+    prisma.accessPolicy.createMany({ data: handlerAdminAccessPolicies }),
   ]).then((results) => console.log(results));
 }
 
