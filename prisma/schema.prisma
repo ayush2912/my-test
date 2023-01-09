@@ -313,7 +313,5 @@ model BidPriceHistory {
   updatedAt DateTime @updatedAt
   bidId     String   @db.ObjectId
   bid       Bid      @relation(fields: [bidId], references: [id])
-  period    Int
-  volume    Int
   price     Float
 }
