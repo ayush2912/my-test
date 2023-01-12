@@ -145,15 +145,15 @@ async function main() {
     .map((user: User) => ({
       ...user,
       organizationId: findOrganization(user)([
-        // ...organizations,
-        {
-          id: "63b51f49115bfb257b75f110", // Climate Connect Digital's ID in Staging environment
-          name: "Climate Connect Digital",
-        },
-        {
-          id: "63b57738115bfb257b75f130",
-          name: "Demo 1",
-        },
+        ...organizations,
+        // {
+        //   id: "63b51f49115bfb257b75f110", // Climate Connect Digital's ID in Staging environment
+        //   name: "Climate Connect Digital",
+        // },
+        // {
+        //   id: "63b57738115bfb257b75f130",
+        //   name: "Demo 1",
+        // },
       ])?.id,
       permissions: flatten([
         get(user.role)(permissionsList),
@@ -199,8 +199,8 @@ async function main() {
 
   return Promise.all([
     prisma.organization.createMany({ data: organizations }),
-    // prisma.user.createMany({ data: usersData }),
-    // prisma.accessPolicy.createMany({ data: accessPolicies }),
+    prisma.user.createMany({ data: usersData }),
+    prisma.accessPolicy.createMany({ data: accessPolicies }),
   ]).then((results) => console.log(results));
 }
 

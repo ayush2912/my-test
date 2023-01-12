@@ -84,7 +84,7 @@ const handlerAdminAccessPolicies = handlerAdminUserData.map((user) => ({
 
 async function main() {
   return Promise.all([
-    // prisma.organization.createMany({ data: [handlerOrganizationsData] }),
+    prisma.organization.createMany({ data: [handlerOrganizationsData] }),
     prisma.user.createMany({ data: handlerAdminUserData }),
     prisma.accessPolicy.createMany({ data: handlerAdminAccessPolicies }),
   ]).then((results) => console.log(results));
