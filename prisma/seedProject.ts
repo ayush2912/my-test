@@ -83,10 +83,10 @@ async function main() {
     console.log(projectStages);
 
 
-    // return Promise.all([
-    //     prisma.project.createMany({ data: projectsVeryClean }),
-    //     prisma.projectStage.createMany({ data: projectStages }),
-    // ]).then((results) => console.log(results));
+    return Promise.all([
+        prisma.project.createMany({ data: projectsVeryClean }),
+        prisma.projectStage.createMany({ data: projectStages }),
+    ]).then((results) => console.log(results));
 }
 
 main()
