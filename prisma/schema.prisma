@@ -244,8 +244,8 @@ model Notification {
   accessPolicy          AccessPolicy?           @relation(fields: [accessPolicyId], references: [id])
   notificationReceivers NotificationReceivers[]
   metadata              Json?
-  bidId                 String                  @db.ObjectId
-  bid                   Bid                     @relation(fields: [bidId], references: [id])
+  bidId                 String?                  @db.ObjectId
+  bid                   Bid?                     @relation(fields: [bidId], references: [id])
 }
 
 model Issuance {
