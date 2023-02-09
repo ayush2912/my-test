@@ -101,7 +101,7 @@ model Project {
   organizationId                    String?                 @db.ObjectId
   sectoralScope                     String?
   estimatedAnnualEmissionReductions Int?
-  projectStatus                     String?
+  registryStatus                    String?
   status                            String? /// Current stage of the project, such as Stage
   stages                            ProjectStage[]
   registryId                        String?                 @db.ObjectId
@@ -135,7 +135,7 @@ model RegistryProjectData {
   countryOfActivity                 String?
   estimatedAnnualEmissionReductions String?
   methodology                       String?
-  projectStatus                     String?
+  registryStatus                    String?
   sectoralScope                     String?
   registryProjectId                 String?
   registryId                        String?   @db.ObjectId
