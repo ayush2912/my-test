@@ -102,7 +102,7 @@ model Project {
   sectoralScope                     String?
   estimatedAnnualEmissionReductions Int?
   projectStatus                     String?
-  stage                             String? /// Current stage of the project, such as Stage
+  status                            String? /// Current stage of the project, such as Stage
   stages                            ProjectStage[]
   registryId                        String?                 @db.ObjectId
   registry                          Registry?               @relation(fields: [registryId], references: [id])
