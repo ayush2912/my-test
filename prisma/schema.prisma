@@ -109,7 +109,7 @@ model Project {
   estimatedAnnualEmissionReductions Int?
   registryStatus                    String?
   status                            String? /// Current status of the project, such as status
-  statusLog                          ProjectStage[]
+  statusLog                         ProjectStage[]
   registryId                        String?                 @db.ObjectId
   registry                          Registry?               @relation(fields: [registryId], references: [id])
   documents                         Document[]
