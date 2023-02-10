@@ -91,6 +91,7 @@ model Project {
   id                                String                  @id @default(auto()) @map("_id") @db.ObjectId
   proposedMethodology               String?
   prospectiveRegistry               String?
+  creditingPeriod                   DateRange?
   projectType                       String?
   projectStartDate                  DateTime?
   projectResigtrationDate           DateTime?
