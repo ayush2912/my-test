@@ -94,7 +94,7 @@ model Project {
   creditingPeriod                   DateRange?
   projectType                       String?
   projectStartDate                  DateTime?
-  projectResigtrationDate           DateTime?
+  projectRegistrationDate           DateTime?
   createdAt                         DateTime                @default(now())
   updatedAt                         DateTime                @updatedAt
   updatedByUserId                   String?                 @db.ObjectId
