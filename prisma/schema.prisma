@@ -95,7 +95,7 @@ model Project {
   projectType                       String?
   projectStartDate                  DateTime?
   projectRegistrationDate           DateTime?
-  estimatedProjectResistrationDate  DateTime?
+  estimatedProjectRegistrationDate  DateTime?
   createdAt                         DateTime                @default(now())
   updatedAt                         DateTime                @updatedAt
   updatedByUserId                   String?                 @db.ObjectId
