@@ -5,10 +5,9 @@
   "main": "build/index.js",
   "scripts": {
     "build": "tsc",
-    "prestart": "npm run build",
-    "compile": "node ./build/index.js",
     "test": "jest",
-    "clean": "rm -rf ./build"
+    "clean": "rm -rf ./build",
+    "start": "npx ts-node build/index.js"
   },
   "author": "",
   "license": "ISC",
