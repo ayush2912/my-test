@@ -1,0 +1,33 @@
+{
+  "name": "ts-express-jest_boilerplate",
+  "version": "1.0.0",
+  "description": "A boilerplate for apps with express, typescript and jest",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "tsc",
+    "prestart": "npm run build",
+    "compile": "node ./build/index.js",
+    "test": "jest",
+    "clean": "rm -rf ./build"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/jest": "^29.4.0",
+    "@types/node": "^18.13.0",
+    "concurrently": "^7.6.0",
+    "eslint": "^8.34.0",
+    "nodemon": "^2.0.20",
+    "prettier": "^2.8.4",
+    "ts-jest": "^29.0.5",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.5"
+  }
+}
