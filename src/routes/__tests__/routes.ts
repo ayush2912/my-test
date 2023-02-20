@@ -1,27 +1,100 @@
 import httpMocks from "node-mocks-http";
 
-import { routeHandler, asyncRouteHandler } from "../routes";
+import { routeHandler, asyncRouteHandler, createPetHandler } from "../routes";
 
-test("Test routeHandler", () => {
-  const { req, res } = httpMocks.createMocks({
-    method: "GET",
-    url: "/",
+describe("Basic route handlers", () => {
+  test("Test routeHandler", () => {
+    const { req, res } = httpMocks.createMocks({
+      method: "GET",
+      url: "/",
+    });
+
+    routeHandler(req, res);
+
+    expect(res._getData()).toMatch(/sheldon-cooper-bazinga-tbbt-gif/);
   });
 
-  routeHandler(req, res);
+  test("Test asyncRouteHandler", async () => {
+    const { req, res } = httpMocks.createMocks({
+      method: "GET",
+      url: "/async",
+    });
 
-  expect(res._getData()).toMatch(/sheldon-cooper-bazinga-tbbt-gif/);
+    await asyncRouteHandler(req, res);
+
+    expect(res._getJSONData()).toEqual({
+      data: "Hello world!",
+    });
+  });
 });
 
-test("Test asyncRouteHandler", async () => {
-  const { req, res } = httpMocks.createMocks({
-    method: "GET",
-    url: "/async",
+describe("Test schema validation", () => {
+  test("createPetHandler() with description", () => {
+    const { req, res } = httpMocks.createMocks({
+      method: "POST",
+      url: "/pet",
+      body: {
+        name: "Artemis",
+        type: "Cat",
+        dateOfBirth: "2023-01-15T00:00:00",
+        description: "Artemis is a good boy",
+      },
+    });
+
+    createPetHandler(req, res);
+
+    const results = res._getJSONData();
+
+    expect(results.name).toMatch("Artemis");
+    expect(results.type).toMatch("Cat");
+    expect(new Date(results.dateOfBirth)).toEqual(
+      new Date("2023-01-15T00:00:00")
+    );
+    expect(results.description).toMatch("Artemis is a good boy");
   });
 
-  await asyncRouteHandler(req, res);
+  test("createPetHandler() without description", () => {
+    const { req, res } = httpMocks.createMocks({
+      method: "POST",
+      url: "/pet",
+      body: {
+        name: "Artemis",
+        type: "Cat",
+        dateOfBirth: "2023-01-15T00:00:00",
+      },
+    });
 
-  expect(res._getJSONData()).toEqual({
-    data: "Hello world!",
+    createPetHandler(req, res);
+
+    const results = res._getJSONData();
+
+    expect(results.name).toMatch("Artemis");
+    expect(results.type).toMatch("Cat");
+    expect(new Date(results.dateOfBirth)).toEqual(
+      new Date("2023-01-15T00:00:00")
+    );
+  });
+
+  test("createPetHandler() with error", () => {
+    const { req, res } = httpMocks.createMocks({
+      method: "POST",
+      url: "/pet",
+      body: {
+        type: "Cat",
+      },
+    });
+
+    createPetHandler(req, res);
+
+    expect(res._getJSONData().error).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          code: "invalid_type",
+        }),
+        expect.objectContaining({
+          code: "invalid_date",
+        }),
+      ])
+    );
   });
 });

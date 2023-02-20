@@ -23,13 +23,14 @@ app.use("/", router);
 
 routes(router);
 
-const PORT = process.env.APP_PORT;
+app.use((err, req, res, next) => {
+  res.json(err.error);
+});
 
-const server: Server = app.listen(
-  process.env["NODE_PORT"] || process.env["APP_PORT"],
-  () => {
-    console.log(`App is active at ${PORT}!`);
-  }
-);
+const port = process.env.APP_PORT || process.env.NODE_PORT || 3000;
+
+const server: Server = app.listen(port, () => {
+  console.log(`App is active at ${port}!`);
+});
 
 export default app;
