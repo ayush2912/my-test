@@ -23,10 +23,6 @@ app.use("/", router);
 
 routes(router);
 
-app.use((err, req, res, next) => {
-  res.json(err.error);
-});
-
 const port = process.env.APP_PORT || process.env.NODE_PORT || 3000;
 
 const server: Server = app.listen(port, () => {
