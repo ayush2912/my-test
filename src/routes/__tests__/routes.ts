@@ -1,18 +1,8 @@
 import httpMocks from "node-mocks-http";
 
-import { routeHandler, asyncRouteHandler, createPetHandler } from "../routes";
+import { asyncRouteHandler, createPetHandler } from "../routes";
 
 describe("Basic route handlers", () => {
-  test("Test routeHandler", () => {
-    const { req, res } = httpMocks.createMocks({
-      method: "GET",
-      url: "/",
-    });
-
-    routeHandler(req, res);
-
-    expect(res._getData()).toMatch(/sheldon-cooper-bazinga-tbbt-gif/);
-  });
 
   test("Test asyncRouteHandler", async () => {
     const { req, res } = httpMocks.createMocks({

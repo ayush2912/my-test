@@ -131,3 +131,6 @@ dist
 
 # Jest coverage files
 coverage
+
+#js compiled files
+build
