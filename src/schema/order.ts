@@ -1,6 +1,4 @@
-const mongoose = require('mongoose');
-
-const { Schema } = mongoose;
+import { Schema } from "mongoose";
 
 //Create orderschema interface and associate type here
 const OrderSchema = new Schema({
