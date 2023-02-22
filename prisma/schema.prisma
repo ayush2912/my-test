@@ -88,37 +88,45 @@ model ProjectStage {
 }
 
 model Project {
-  id                                String                   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt                         DateTime                 @default(now())
-  updatedAt                         DateTime                 @updatedAt
-  updatedByUserId                   String?                  @db.ObjectId
-  updatedByUser                     User?                    @relation(name: "ProjectUpdatedByUser", fields: [updatedByUserId], references: [id])
+  id                                String                  @id @default(auto()) @map("_id") @db.ObjectId
+  proposedMethodology               String?
+  prospectiveRegistry               String?
+  creditingPeriodStartDate          DateTime?
+  creditingPeriodEndDate            DateTime?
+  projectType                       String?
+  projectStartDate                  DateTime?
+  projectRegistrationDate           DateTime?
+  estimatedProjectRegistrationDate  DateTime?
+  createdAt                         DateTime                @default(now())
+  updatedAt                         DateTime                @updatedAt
+  updatedByUserId                   String?                 @db.ObjectId
+  updatedByUser                     User?                   @relation(name: "ProjectUpdatedByUser", fields: [updatedByUserId], references: [id])
   name                              String?
   description                       String?
-  owner                             User?                    @relation(fields: [ownerId], references: [id])
-  ownerId                           String?                  @db.ObjectId
-  organization                      Organization?            @relation(fields: [organizationId], references: [id])
-  organizationId                    String?                  @db.ObjectId
+  owner                             User?                   @relation(fields: [ownerId], references: [id])
+  ownerId                           String?                 @db.ObjectId
+  organization                      Organization?           @relation(fields: [organizationId], references: [id])
+  organizationId                    String?                 @db.ObjectId
   sectoralScope                     String?
   estimatedAnnualEmissionReductions Int?
-  projectStatus                     String?
-  stage                             String? /// Current stage of the project, such as Stage
-  stages                            ProjectStage[]
-  registryId                        String?                  @db.ObjectId
-  registry                          Registry?                @relation(fields: [registryId], references: [id])
+  registryStatus                    String?
+  status                            String? /// Current status of the project, such as status
+  statusLog                         ProjectStage[]
+  registryId                        String?                 @db.ObjectId
+  registry                          Registry?               @relation(fields: [registryId], references: [id])
   documents                         Document[]
   chats                             Chat[]
   notifications                     Notification[]
   issuanceLots                      Issuance[]
-  registryProjectData               RegistryProjectData?     @relation("RegistryProjectData")
+  registryProjectData               RegistryProjectData?    @relation("RegistryProjectData")
   isPrivate                         Boolean?
   isArchived                        Boolean?
-  country                           String?                  @default("IN")
+  country                           String?                 @default("IN")
   registryProjectUrl                String? /// Registry Project URL
   registryProjectId                 String? /// Registry Project ID, e.g. 1805
-  projectRiskScore                  ProjectRiskScore?        @relation("ProjectRiskScore")
+  projectRiskScore                  ProjectRiskScore?       @relation("ProjectRiskScore")
   bids                              Bid[]
-  creditsAskPrice                   ProjectCreditsAskPrice[]
+  creditsAskPrice                   ProjectCreditsAskPrice? @relation("ProjectCreditsAskPrice")
 }
 
 model RegistryProjectData {
@@ -135,7 +143,7 @@ model RegistryProjectData {
   countryOfActivity                 String?
   estimatedAnnualEmissionReductions String?
   methodology                       String?
-  projectStatus                     String?
+  registryStatus                    String?
   sectoralScope                     String?
   registryProjectId                 String?
   registryId                        String?   @db.ObjectId
@@ -244,6 +252,8 @@ model Notification {
   accessPolicy          AccessPolicy?           @relation(fields: [accessPolicyId], references: [id])
   notificationReceivers NotificationReceivers[]
   metadata              Json?
+  bidId                 String?                 @db.ObjectId
+  bid                   Bid?                    @relation(fields: [bidId], references: [id])
 }
 
 model Issuance {
@@ -253,6 +263,7 @@ model Issuance {
   vintagePeriod    DateRange?
   monitoringPeriod DateRange?
   quantityIssued   Int?
+  serialNumber     String?
   issuanceStatus   String?
   issuanceDate     DateTime?
   projectId        String?       @db.ObjectId
@@ -263,16 +274,28 @@ model Issuance {
   organizationId   String?       @db.ObjectId
 }
 
+model AskPrice {
+  id                       String                 @id @default(auto()) @map("_id") @db.ObjectId
+  projectCreditsAskPriceId String                 @db.ObjectId
+  projectCreditsAskPrice   ProjectCreditsAskPrice @relation(fields: [projectCreditsAskPriceId], references: [id])
+  period                   Int
+  creditsIssued            Int?
+  updatedCredits           Int?
+  askPrice                 Float?
+  createdAt                DateTime               @default(now())
+  updatedAt                DateTime               @updatedAt
+}
+
 model ProjectCreditsAskPrice {
-  id             String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  projectId      String   @db.ObjectId
-  project        Project  @relation(fields: [projectId], references: [id])
-  period         DateTime
-  creditsIssued  Int?
-  updatedCredits Int?
-  askPrice       Int?
+  id                String     @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+  projectId         String     @unique @db.ObjectId
+  project           Project    @relation(name: "ProjectCreditsAskPrice", fields: [projectId], references: [id])
+  corsiaEligibility Boolean?
+  otherEligibility  String?
+  type              String?
+  askPrices         AskPrice[]
 }
 
 model Bid {
@@ -282,7 +305,7 @@ model Bid {
   projectId     String            @db.ObjectId
   project       Project           @relation(fields: [projectId], references: [id])
   status        String?
-  period        DateTime
+  period        Int
   expiryDate    DateTime?
   volume        Int
   price         Float
@@ -290,15 +313,14 @@ model Bid {
   chats         Chat[]
   documents     Document[]
   history       BidPriceHistory[]
+  notifications Notification[]
 }
 
 model BidPriceHistory {
-  id                String          @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt         DateTime        @default(now())
-  updatedAt         DateTime        @updatedAt
-  bidId             String          @db.ObjectId
-  bid               Bid             @relation(fields: [bidId], references: [id])
-  period            DateTime
-  volume            Int
-  price             Float
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  bidId     String   @db.ObjectId
+  bid       Bid      @relation(fields: [bidId], references: [id])
+  price     Float
 }
