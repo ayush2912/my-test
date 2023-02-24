@@ -89,6 +89,15 @@ model ProjectStage {
 
 model Project {
   id                                String                  @id @default(auto()) @map("_id") @db.ObjectId
+  proposedMethodology               String?
+  prospectiveRegistry               String?
+  creditingPeriodStartDate          DateTime?
+  creditingPeriodEndDate            DateTime?
+  projectType                       String?
+  projectStartDate                  DateTime?
+  projectRegistrationDate           DateTime?
+  estimatedProjectRegistrationDate  DateTime?
+  stageUpdatedAt                    DateTime?
   createdAt                         DateTime                @default(now())
   updatedAt                         DateTime                @updatedAt
   updatedByUserId                   String?                 @db.ObjectId
@@ -101,9 +110,9 @@ model Project {
   organizationId                    String?                 @db.ObjectId
   sectoralScope                     String?
   estimatedAnnualEmissionReductions Int?
-  projectStatus                     String?
-  stage                             String? /// Current stage of the project, such as Stage
-  stages                            ProjectStage[]
+  registryStatus                    String?
+  status                            String? /// Current status of the project, such as status
+  statusLog                         ProjectStage[]
   registryId                        String?                 @db.ObjectId
   registry                          Registry?               @relation(fields: [registryId], references: [id])
   documents                         Document[]
@@ -135,7 +144,7 @@ model RegistryProjectData {
   countryOfActivity                 String?
   estimatedAnnualEmissionReductions String?
   methodology                       String?
-  projectStatus                     String?
+  registryStatus                    String?
   sectoralScope                     String?
   registryProjectId                 String?
   registryId                        String?   @db.ObjectId
