@@ -128,9 +128,9 @@ model Project {
   projectRiskScore                  ProjectRiskScore?       @relation("ProjectRiskScore")
   bids                              Bid[]
   creditsAskPrice                   ProjectCreditsAskPrice? @relation("ProjectCreditsAskPrice")
-  timeLag                           String?
+  timeLag                           Int?
   successPercentage                 Float?
-  issuanceBehaviour                 String?
+  issuanceBehaviour                 Float?
   expectedDateOfIssuance            DateTime?
   expectedNumberOfCredits           Int?
 }
