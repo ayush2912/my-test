@@ -194,6 +194,7 @@ model Registry {
   projects             Project[]
   registryProjectDatas RegistryProjectData[]
   issuance             Issuance[]
+  SectoralScope        SectoralScope[]
 }
 
 model Chat {
@@ -337,4 +338,27 @@ model BidPriceHistory {
   bidId     String   @db.ObjectId
   bid       Bid      @relation(fields: [bidId], references: [id])
   price     Float
+}
+
+model SectoralScope {
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  registryId  String        @db.ObjectId
+  registry    Registry      @relation(fields: [registryId], references: [id])
+  Methodology Methodology[]
+}
+
+model Methodology {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  SectoralScopeId String        @db.ObjectId
+  SectoralScope   SectoralScope @relation(fields: [SectoralScopeId], references: [id])
+  Country         Country[]
+}
+
+model Country {
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  MethodologyId String      @db.ObjectId
+  Methodology   Methodology @relation(fields: [MethodologyId], references: [id])
 }
