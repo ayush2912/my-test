@@ -87,6 +87,17 @@ model ProjectStage {
   project   Project?  @relation(fields: [projectId], references: [id])
 }
 
+model RegistryRiskInfo {
+  id                      String    @id @default(auto()) @map("_id") @db.ObjectId
+  timeLag                 Int?
+  successPercentage       Float?
+  issuanceBehaviour       Float?
+  expectedDateOfIssuance  DateTime?
+  expectedNumberOfCredits Int?
+  projectId               String    @unique @db.ObjectId
+  project                 Project?  @relation(name: "RegistryRiskInfo", fields: [projectId], references: [id])
+}
+
 model Project {
   id                                String                  @id @default(auto()) @map("_id") @db.ObjectId
   proposedMethodology               String?
@@ -128,11 +139,8 @@ model Project {
   projectRiskScore                  ProjectRiskScore?       @relation("ProjectRiskScore")
   bids                              Bid[]
   creditsAskPrice                   ProjectCreditsAskPrice? @relation("ProjectCreditsAskPrice")
-  timeLag                           Int?
-  successPercentage                 Float?
-  issuanceBehaviour                 Float?
-  expectedDateOfIssuance            DateTime?
-  expectedNumberOfCredits           Int?
+  registryRiskId                    String?
+  registryRiskInfo                  RegistryRiskInfo?       @relation("RegistryRiskInfo")
 }
 
 model RegistryProjectData {
