@@ -87,6 +87,17 @@ model ProjectStage {
   project   Project?  @relation(fields: [projectId], references: [id])
 }
 
+model RegistryRiskInfo {
+  id                      String    @id @default(auto()) @map("_id") @db.ObjectId
+  timeLag                 Int?
+  successPercentage       Float?
+  issuanceBehaviour       Float?
+  expectedDateOfIssuance  DateTime?
+  expectedNumberOfCredits Int?
+  projectId               String    @unique @db.ObjectId
+  project                 Project?  @relation(name: "RegistryRiskInfo", fields: [projectId], references: [id])
+}
+
 model Project {
   id                                String                  @id @default(auto()) @map("_id") @db.ObjectId
   proposedMethodology               String?
@@ -128,6 +139,8 @@ model Project {
   projectRiskScore                  ProjectRiskScore?       @relation("ProjectRiskScore")
   bids                              Bid[]
   creditsAskPrice                   ProjectCreditsAskPrice? @relation("ProjectCreditsAskPrice")
+  registryRiskId                    String?
+  registryRiskInfo                  RegistryRiskInfo?       @relation("RegistryRiskInfo")
 }
 
 model RegistryProjectData {
@@ -181,6 +194,7 @@ model Registry {
   projects             Project[]
   registryProjectDatas RegistryProjectData[]
   issuance             Issuance[]
+  SectoralScope        SectoralScope[]
 }
 
 model Chat {
@@ -324,4 +338,27 @@ model BidPriceHistory {
   bidId     String   @db.ObjectId
   bid       Bid      @relation(fields: [bidId], references: [id])
   price     Float
+}
+
+model SectoralScope {
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  registryId  String        @db.ObjectId
+  registry    Registry      @relation(fields: [registryId], references: [id])
+  Methodology Methodology[]
+}
+
+model Methodology {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  SectoralScopeId String        @db.ObjectId
+  SectoralScope   SectoralScope @relation(fields: [SectoralScopeId], references: [id])
+  Country         Country[]
+}
+
+model Country {
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  MethodologyId String      @db.ObjectId
+  Methodology   Methodology @relation(fields: [MethodologyId], references: [id])
 }
