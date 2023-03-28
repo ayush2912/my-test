@@ -1,32 +1,9 @@
-import express from "express";
-import { Server } from "http";
-import dotenv from "dotenv";
+import App from "./app";
 
-import bodyParser from "body-parser";
+const { httpServer } = App();
 
-import routes from "./routes/routes";
+const port = process.env.PORT || 3000;
 
-dotenv.config();
-
-//initialise express router
-const router = express.Router();
-
-const bodyParserJSON = bodyParser.json();
-const bodyParserURLEncoded = bodyParser.urlencoded({ extended: true });
-
-const app = express();
-
-app.use(bodyParserJSON);
-app.use(bodyParserURLEncoded);
-
-app.use("/", router);
-
-routes(router);
-
-const port = process.env.APP_PORT || process.env.NODE_PORT || 3000;
-
-const server: Server = app.listen(port, () => {
-  console.log(`App is active at ${port}!`);
-});
-
-export default app;
+httpServer.listen(port, () =>
+  console.log(`🚀 Server has started successfully on http://localhost:${port}!`)
+);
