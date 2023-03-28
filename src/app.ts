@@ -43,7 +43,11 @@ const App = () => {
     ServerToClientEvents,
     InterServerEvents,
     SocketData
-  >(httpServer);
+  >(httpServer, {
+    cors: {
+      origin: "*",
+    },
+  });
 
   const notificationsIo = io.of("/notifications");
 
