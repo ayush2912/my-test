@@ -1,3 +1,5 @@
 {
-    "values": {}
+  "values": {
+    "NOTIFICATION_TRANSPORT_API_URL": "https://offsetmax-notification-transport-japrkvsz2a-em.a.run.app/notify"
+  }
 }
