@@ -1,0 +1,10 @@
+{
+    "name": "OffsetMaxCluster0",
+    "type": "mongodb-atlas",
+    "config": {
+        "clusterName": "OffsetMaxCluster0",
+        "readPreference": "primary",
+        "wireProtocolEnabled": false
+    },
+    "version": 1
+}

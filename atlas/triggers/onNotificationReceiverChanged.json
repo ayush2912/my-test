@@ -1,0 +1,29 @@
+{
+    "name": "onNotificationReceiverChanged",
+    "type": "DATABASE",
+    "config": {
+        "operation_types": [
+            "UPDATE",
+            "INSERT",
+            "REPLACE"
+        ],
+        "database": "offsetmaxsandbox",
+        "collection": "NotificationReceivers",
+        "service_name": "OffsetMaxCluster0",
+        "match": {},
+        "project": {},
+        "full_document": true,
+        "full_document_before_change": false,
+        "unordered": false,
+        "skip_catchup_events": false,
+        "tolerate_resume_errors": false
+    },
+    "disabled": false,
+    "event_processors": {
+        "FUNCTION": {
+            "config": {
+                "function_name": "onNotificationReceiverChanged"
+            }
+        }
+    }
+}
