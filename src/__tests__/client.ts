@@ -1,10 +1,62 @@
 import { AddressInfo } from "net";
 import { io as Client } from "socket.io-client";
-import { events } from "../services/events";
 import fetch from "isomorphic-unfetch";
+
+import { events } from "../services/events";
+import { findUserByAccessToken } from "../services/graphql";
 import App from "../app";
 
+const signin = () =>
+  fetch("https://api.offsetmax.digital/dev-auth/signin", {
+    headers: {
+      accept: "application/json, text/plain, */*",
+      "accept-language": "en-US,en;q=0.9",
+      "content-type": "application/json",
+      "sec-ch-ua":
+        '"Google Chrome";v="111", "Not(A:Brand";v="8", "Chromium";v="111"',
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": '"macOS"',
+      "sec-fetch-dest": "empty",
+      "sec-fetch-mode": "cors",
+      "sec-fetch-site": "same-site",
+      "x-api-key": "T6IP0eDgi46xbUpxvQhNA5ssQWWlyE4h3OuDWYCf",
+      Referer: "https://dev-dashboard.offsetmax.digital/",
+      "Referrer-Policy": "strict-origin-when-cross-origin",
+    },
+    body: '{"email":"grey.ang+test.1@climateconnect.digital","password":"HelloWorld123!"}',
+    method: "POST",
+  })
+    .then((res) => res.json())
+    .then((res) => res.data)
+    .then(({ userId, token }) => ({
+      id: userId,
+      accessToken: token,
+    }));
+
+type User = {
+  id: string;
+  accessToken: string;
+};
+
 describe("Socket.io Client", () => {
+  const testUser: User = {
+    id: "",
+    accessToken: "",
+  };
+
+  /* 
+    Signin user so that we can have a userId and access token that we can test with
+  */
+  beforeAll(async () => {
+    const results = await signin();
+    Object.assign(testUser, results);
+  });
+
+  test("Find user by access token", async () => {
+    const user: User = await findUserByAccessToken(testUser.accessToken);
+    expect(user.id).toBe(testUser.id);
+  });
+
   test("Connect socket.io client to server without auth", (done) => {
     const { httpServer } = App();
     httpServer.listen(() => {
@@ -27,7 +79,7 @@ describe("Socket.io Client", () => {
 
       const socket = Client(`http://localhost:${address.port}/notifications`, {
         auth: {
-          userId: "64229683d32a0a8bea10e4de",
+          token: testUser.accessToken,
         },
       });
 
@@ -50,16 +102,15 @@ describe("Socket.io Client", () => {
 
       const socket = Client(`http://localhost:${address.port}/notifications`, {
         auth: {
-          userId: "6422a06cd32a0a8bea10e4df",
+          token: testUser.accessToken,
         },
       });
 
       socket.on("connect", () => {
-        events.emit("notify", { userId: "6422a06cd32a0a8bea10e4df" });
+        events.emit("notify", { userId: testUser.id });
       });
 
       socket.on("new", () => {
-        console.log("Client socket received new notification");
         socket.disconnect();
       });
 
@@ -78,7 +129,7 @@ describe("Socket.io Client", () => {
 
       const socket = Client(`http://localhost:${address.port}/notifications`, {
         auth: {
-          userId: "6422a06cd32a0a8bea10e4df",
+          token: testUser.accessToken,
         },
       });
 
@@ -86,14 +137,13 @@ describe("Socket.io Client", () => {
         await fetch(`http://localhost:${address.port}/notify`, {
           method: "post",
           body: JSON.stringify({
-            userId: "6422a06cd32a0a8bea10e4df",
+            userId: testUser.id,
           }),
           headers: { "Content-Type": "application/json" },
         });
       });
 
       socket.on("new", () => {
-        console.log("Client socket received new notification");
         socket.disconnect();
       });
 
