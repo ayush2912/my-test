@@ -1,8 +1,8 @@
 {
-  "name": "OffsetMaxCluster0",
+  "name": "offsetmax-staging",
   "type": "mongodb-atlas",
   "config": {
-    "clusterName": "OffsetMaxCluster0",
+    "clusterName": "offsetmax-staging",
     "readPreference": "primary",
     "wireProtocolEnabled": false
   },

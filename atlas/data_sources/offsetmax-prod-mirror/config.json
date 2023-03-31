@@ -1,8 +1,8 @@
 {
-  "name": "OffsetMaxCluster0",
+  "name": "offsetmax-prod-mirror",
   "type": "mongodb-atlas",
   "config": {
-    "clusterName": "OffsetMaxCluster0",
+    "clusterName": "offsetmax-prod-mirror",
     "readPreference": "primary",
     "wireProtocolEnabled": false
   },
