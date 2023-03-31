@@ -1,7 +1,7 @@
 {
-  "name": "ts-express-jest_boilerplate",
+  "name": "offsetmax-notification-transport",
   "version": "1.0.0",
-  "description": "A boilerplate for apps with express, typescript and jest",
+  "description": "OffsetMax Notification Transport Service built on top of Socket.io and MongoDB Atlas App Services",
   "main": "build/index.js",
   "scripts": {
     "build": "tsc",
