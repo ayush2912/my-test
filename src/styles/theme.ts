@@ -66,7 +66,62 @@ export const theme = {
     },
   },
   typography: {
+    heading1: {
+      weight: "600",
+      size: 28,
+      lineHeight: 32,
+    },
+    heading2: {
+      weight: "600",
+      size: 16,
+      lineHeight: 24,
+    },
+    heading3: {
+      weight: "600",
+      size: 16,
+      lineHeight: 24,
+    },
     button: {
+      weight: "600",
+      size: 16,
+      lineHeight: 24,
+    },
+    body: {
+      weight: "600",
+      size: 16,
+      lineHeight: 24,
+    },
+    bodyBold: {
+      weight: "600",
+      size: 16,
+      lineHeight: 24,
+    },
+    caption: {
+      weight: "600",
+      size: 16,
+      lineHeight: 24,
+    },
+    captionBold: {
+      weight: "600",
+      size: 16,
+      lineHeight: 24,
+    },
+    smallText: {
+      weight: "600",
+      size: 16,
+      lineHeight: 24,
+    },
+    smallTextBold: {
+      weight: "600",
+      size: 16,
+      lineHeight: 24,
+    },
+    linkText: {
+      weight: "600",
+      size: 16,
+      lineHeight: 24,
+    },
+    linkTextBold: {
       weight: "600",
       size: 16,
       lineHeight: 24,
