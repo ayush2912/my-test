@@ -52,6 +52,9 @@ export const theme = {
         default: "#0084F4",
         subdued: "#D5E9FA",
       },
+      disabled: {
+        default: "#C4C9D1",
+      },
     },
   },
   shadow: {
