@@ -21,9 +21,11 @@ export const Normal: Story = {
           height: "200px",
         }}
       >
-        <StatusTag name="In Progress" type="information"></StatusTag>
-        <StatusTag name="In Progress" type="information"></StatusTag>
-        <StatusTag name="In Progress" type="information"></StatusTag>
+        <StatusTag name="IN PROGRESS" type="information"></StatusTag>
+        <StatusTag name="OVERDUE" type="warning"></StatusTag>
+        <StatusTag name="COMPLETED" type="success"></StatusTag>
+        <StatusTag name="DISCONTINUED" type="error"></StatusTag>
+        <StatusTag name="NOT STARTED" type="disabled"></StatusTag>
       </div>
     );
   },

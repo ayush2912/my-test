@@ -1,8 +1,13 @@
 import styled from "styled-components";
 
+import Text from "./Text";
+
 const StyledStatusTag = styled.div<{
   type: "error" | "warning" | "success" | "information" | "disabled";
 }>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: fit-content;
   border-radius: 8px;
   padding: 4px 8px;
@@ -19,7 +24,9 @@ export default function StatusTag({
 }) {
   return (
     <StyledStatusTag type={type}>
-      <span>{name}</span>
+      <Text type="smallTextBold" color="white">
+        {name}
+      </Text>
     </StyledStatusTag>
   );
 }

@@ -16,7 +16,7 @@ const preview: Preview = {
   decorators: [
     (Story) => (
       <ThemeProvider theme={theme}>
-        <div style={{ margin: "16px" }}>
+        <div style={{ margin: "16px", fontFamily: "Open Sans" }}>
           <Story />
         </div>
       </ThemeProvider>
