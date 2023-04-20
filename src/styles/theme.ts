@@ -54,6 +54,12 @@ export const theme = {
       },
     },
   },
+  shadow: {
+    sm: "0px 6px 6px -6px rgba(0, 0, 0, 0.16)",
+    md: "0px 8px 24px -6px rgba(0, 0, 0, 0.16)",
+    xl: "0px 32px 32px -8px rgba(0, 0, 0, 0.08), 0px 0px 32px -8px rgba(0, 0, 0, 0.12)",
+    card: "0px 8px 64px rgba(15, 34, 67, 0.06), 0px 0px 1px rgba(15, 34, 67, 0.08)",
+  },
   spacing: {
     padding: {
       small: 10,

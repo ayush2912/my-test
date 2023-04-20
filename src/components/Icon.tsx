@@ -1,0 +1,46 @@
+import styled, { CSSObject } from "styled-components";
+
+import { ReactComponent as SuccessIcon } from "@/assets/icons/feedback/success.svg";
+import { ReactComponent as FileIcon } from "@/assets/icons/generic/file.svg";
+import { ReactComponent as HomeIcon } from "@/assets/icons/generic/home.svg";
+import { ReactComponent as MessageIcon } from "@/assets/icons/generic/message.svg";
+
+interface IconProps {
+  size?: number;
+  color?: string;
+  hoverColor?: string;
+}
+
+interface IconMap {
+  [name: string]: React.FunctionComponent;
+}
+
+const svgStyles = ({ size, color, hoverColor }: IconProps): CSSObject => {
+  return {
+    height: `${size || 24}px`,
+    width: `${size || 24}px`,
+    "& path": {
+      stroke: color,
+    },
+    "&:hover path": {
+      stroke: hoverColor,
+    },
+  };
+};
+
+const icons: IconMap = {
+  home: HomeIcon,
+  success: SuccessIcon,
+  message: MessageIcon,
+  file: FileIcon,
+};
+
+export default function Icon({ name }: { name: string }) {
+  const selectedIcon = icons[name];
+
+  const StyledIcon = styled(selectedIcon)<IconProps>`
+    ${(props) => svgStyles(props)};
+  `;
+
+  return <StyledIcon />;
+}
