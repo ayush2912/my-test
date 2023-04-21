@@ -22,8 +22,15 @@ name_prefix = "ayush-new"
     from_port   = 0
     to_port     = 65535
     protocol    = "tcp"
+    security_groups = ["sg-04c53a4831e9f6ff8"]
+ }
+
+ingress {
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
-  }
+ }
 #some
  egress {
    from_port   = 0
