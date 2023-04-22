@@ -54,8 +54,8 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
   family                   = "my-ecs-task"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
-  cpu                      = "2 vCPU"
-  memory                   = "4096"
+  cpu                      = "1 vCPU"
+  memory                   = "2048"
   execution_role_arn       = "arn:aws:iam::168933414344:role/ecsTaskExecutionRole"
   container_definitions = <<DEFINITION
 [
