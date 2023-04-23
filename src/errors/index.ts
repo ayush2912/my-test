@@ -16,7 +16,7 @@ let OffsetMaxServiceFatalError: any;
  * @param {number} errDesc.statusCode default status code
  * @param {number} errDesc.customCode default custom code
  * @throws {TypeError} JSON.stringify of circular object
- * @returns 
+ * @returns
  */
 function OffsetMaxServiceError(msg: string, errDesc: any, data: any) {
     const error: any = new Error();
@@ -39,10 +39,10 @@ function OffsetMaxServiceError(msg: string, errDesc: any, data: any) {
     }
 
     /**
-    * add multiple errors to Error Object
-    * @param {string} msg error description or Error object
-    * @param {number} custom error code 
-    */
+     * add multiple errors to Error Object
+     * @param {string} msg error description or Error object
+     * @param {number} custom error code
+     */
     function push(msg: any, code: any) {
         if (msg && typeof errors[msg.name] !== 'undefined') {
             error.errors = error.errors.concat(msg.errors);
@@ -83,10 +83,10 @@ function OffsetMaxServiceError(msg: string, errDesc: any, data: any) {
 }
 
 /**
-  * Factory to create new Errors:
-  * @param {string} errName nase
-  * @param {Object} errDesc - description of error
-  */
+ * Factory to create new Errors:
+ * @param {string} errName nase
+ * @param {Object} errDesc - description of error
+ */
 function errorFactory(errName: string, errDesc: any) {
     if (!errDesc.statusCode && !errDesc.customCode) {
         throw new Error(`Invalid error definition for ${errName}`);
@@ -134,8 +134,6 @@ function registerErrors(obj: any) {
             if (typeof errors[i] !== 'undefined') {
                 throw new OffsetMaxServiceFatalError(`${i} already exists.`);
             }
-            console.log();
-
             errors[i] = errorFactory(i, obj[i]);
         }
     }

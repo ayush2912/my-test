@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import constants from './utility/constants/StatusConstants';
 import errors from './errors';
 
-
 /**
  * response using successfull result of service
  * @param {object} serviceResult
@@ -43,8 +42,8 @@ function constructErrorResponse(err: any) {
         console.warn(
             'WARNING: Expecting Error',
             JSON.stringify(err) ||
-            (err.tostring && err.toString()) ||
-            'invalid argument'
+                (err.tostring && err.toString()) ||
+                'invalid argument'
         );
     }
 
