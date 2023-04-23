@@ -13,7 +13,7 @@ async function getPostData(id: string) {
         const getData = await getPost(id);
 
         if (!getData) {
-            throw new Errors.BadRequest();
+            throw new Errors.BadRequest('Invalid Post Id');
         }
 
         return getData;
