@@ -99,7 +99,7 @@ resource "aws_ecs_service" "my_service" {
   }
  load_balancer {
     target_group_arn = "arn:aws:elasticloadbalancing:ap-south-1:168933414344:targetgroup/my-ecs-tg/0aabec2861010b51"
-    container_name   = "my-container"
+    container_name   = "my-graphql-container"
     container_port   = 4000
   }
 }
