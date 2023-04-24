@@ -35,7 +35,7 @@ name_prefix = "ayush-new"
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
-resource "aws_ecr_repository" "my_repository" {
+data "aws_ecr_repository" "my_repository" {
   name = "my-personal-repository"
   
 }
@@ -56,7 +56,7 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
 [
   {
     "name": "my-graphql-container",
-    "image": "${aws_ecr_repository.my_repository.repository_url}",
+    "image": "${data.aws_ecr_repository.my_repository.repository_url}",
     "portMappings": [
       {
         "containerPort": 4000,
