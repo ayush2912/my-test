@@ -97,4 +97,9 @@ resource "aws_ecs_service" "my_service" {
     subnets         = [data.aws_subnet.my_subnet_ids.id]
     assign_public_ip = true
   }
+ load_balancer {
+    target_group_arn = "arn:aws:elasticloadbalancing:ap-south-1:168933414344:targetgroup/my-ecs-tg/0aabec2861010b51"
+    container_name   = "my-container"
+    container_port   = 4000
+  }
 }
