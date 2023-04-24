@@ -15,13 +15,8 @@ data "aws_subnet" "my_subnet_ids" {
 resource "aws_security_group" "ecs_security_group" {
 name_prefix = "ayush-new"
  vpc_id      = data.aws_vpc.existing_vpc.id
+  
   ingress {
-    from_port   = 0
-    to_port     = 65535
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-   ingress {
     from_port   = 0
     to_port     = 65535
     protocol    = "tcp"
@@ -98,7 +93,7 @@ resource "aws_ecs_service" "my_service" {
     assign_public_ip = true
   }
  load_balancer {
-    target_group_arn = "arn:aws:elasticloadbalancing:ap-south-1:168933414344:targetgroup/my-ecs-tg/0aabec2861010b51"
+    target_group_arn = "arn:aws:elasticloadbalancing:ap-south-1:168933414344:targetgroup/ecs-graphql-tg/b08e382d8da8347d"
     container_name   = "my-graphql-container"
     container_port   = 4000
   }
