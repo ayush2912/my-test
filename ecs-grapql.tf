@@ -25,7 +25,7 @@ name_prefix = "ayush-new"
 ingress { 
    from_port   = 80
    to_port     = 80
-    protocol    = "HTTP"
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 #some
