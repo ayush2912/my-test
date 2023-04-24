@@ -20,7 +20,7 @@ name_prefix = "ayush-new"
     from_port   = 0
     to_port     = 65535
     protocol    = "tcp"
-    security_groups = ["sg-0a2496c771a087d79"]
+    security_groups = ["sg-09a357d37bbade8fc"]
   }
 ingress {
     from_port   = 0
@@ -99,7 +99,7 @@ resource "aws_ecs_service" "my_service" {
     assign_public_ip = true
   }
  load_balancer {
-    target_group_arn = "arn:aws:elasticloadbalancing:ap-south-1:168933414344:targetgroup/ecs-tg/343fe380bd638607"
+    target_group_arn = "arn:aws:elasticloadbalancing:ap-south-1:168933414344:targetgroup/ecs-test/7d4e8185893e0867"
     container_name   = "my-graphql-container"
     container_port   = 4000
   }
