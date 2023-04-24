@@ -36,7 +36,7 @@ name_prefix = "ayush-new"
   }
 }
 resource "aws_ecr_repository" "my_repository" {
-  name = "my-personal-test"
+  name = "my-personal-repository"
   
 }
 # Define the ECS cluster
