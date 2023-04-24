@@ -17,16 +17,14 @@ name_prefix = "ayush-new"
  vpc_id      = data.aws_vpc.existing_vpc.id
   
   ingress {
-    from_port   = 4000
-    to_port     = 4000
+    port     = 4000
     protocol    = "tcp"
     security_groups = ["sg-0a2496c771a087d79"]
   }
 ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "http"
-    security_groups = ["sg-0a2496c771a087d79"]
+    port   = 80
+    protocol    = "HTTP"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 #some
  egress {
