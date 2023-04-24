@@ -20,7 +20,7 @@ name_prefix = "ayush-new"
     from_port   = 0
     to_port     = 65535
     protocol    = "tcp"
-    security_groups = ["sg-04c53a4831e9f6ff8"]
+    security_groups = ["sg-0a2496c771a087d79"]
   }
 #some
  egress {
