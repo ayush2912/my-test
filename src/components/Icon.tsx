@@ -1,5 +1,7 @@
 import styled, { CSSObject } from "styled-components";
 
+import { ReactComponent as InProgressIcon } from "@/assets/icons/feedback/in-progress.svg";
+import { ReactComponent as NotStartedIcon } from "@/assets/icons/feedback/not-started.svg";
 import { ReactComponent as SuccessIcon } from "@/assets/icons/feedback/success.svg";
 import { ReactComponent as FileIcon } from "@/assets/icons/generic/file.svg";
 import { ReactComponent as HomeIcon } from "@/assets/icons/generic/home.svg";
@@ -33,6 +35,8 @@ const icons: IconMap = {
   success: SuccessIcon,
   message: MessageIcon,
   file: FileIcon,
+  notStarted: NotStartedIcon,
+  inProgress: InProgressIcon,
 };
 
 export default function Icon({ name }: { name: string }) {
