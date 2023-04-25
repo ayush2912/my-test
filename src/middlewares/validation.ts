@@ -37,7 +37,7 @@ const validateRequest =
 
 const validateProjectIdParamsSchema = validateRequest(
     z.object({
-        id: z.string().length(24, ProjectConstants.INVALID_PROJECT_ID),
+        projectId: z.string().length(24, ProjectConstants.INVALID_PROJECT_ID),
     }),
     'params'
 );
