@@ -1,3 +1,4 @@
+import { useState } from "react";
 import styled from "styled-components";
 
 import Button from "@/components/Button";
@@ -42,39 +43,32 @@ const CellContent = styled.div`
   }
 `;
 
-const TableWidthCell = styled.td`
-  padding: 0px;
-`;
 const Divider = styled.div`
   height: 1px;
   background-color: ${(props) => props.theme.colors.neutral[100]};
   width: 100%;
 `;
 
-const cellContentMapper = (v: any) => {
-  return {
-    engagements: <Text type="bodyBold">{v.name}</Text>,
-    startDate: (
-      <Text type="bodyBold">{convertToEuropeanDateFormat(v.startDate)}</Text>
-    ),
-    dueDate: (
-      <Text type="bodyBold">{convertToEuropeanDateFormat(v.dueDate)}</Text>
-    ),
-    state: <StatusTag name="IN PROGRESS" type="information" />,
-    note: (
-      <Button type="ghost">
-        <Icon name="message" />
-      </Button>
-    ),
-    documents: (
-      <Button type="ghost">
-        <Icon name="file" />
-        <Text type="bodyBold">{20}</Text>
-      </Button>
-    ),
-    chevronButton: <Icon name="chevronButton" />,
-  };
-};
+const ColumnWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const DividerCell = styled.td`
+  padding: 0px;
+`;
+
+const TaskListCell = styled.td`
+  padding: 0px;
+  padding-bottom: 16px;
+`;
+
+const ChevronButtonIconWrapper = styled.div<{ isExpanded: boolean }>`
+  width: 24px;
+  height: 24px;
+  transform: ${(props) => (props.isExpanded ? `rotate(180deg)` : "")};
+  cursor: pointer;
+`;
 
 function EngagementTable({
   headers,
@@ -83,6 +77,65 @@ function EngagementTable({
   headers: Array<any>;
   tableData: Array<any>;
 }) {
+  const cellContentMapper = (v: any) => {
+    const [showTasks, setShowTasks] = useState(false);
+    const toggleTasks = () => setShowTasks(!showTasks);
+    return {
+      engagements: (
+        <ColumnWrapper>
+          <Text type="bodyBold">{`engagement name`}</Text>
+          <Text type="caption" color="subdued">
+            3 tasks
+          </Text>
+        </ColumnWrapper>
+      ),
+      startDate: (
+        <Text type="body" color={"subdued"}>
+          {convertToEuropeanDateFormat(v.startDate)}
+        </Text>
+      ),
+      dueDate: (
+        <Text type="body" color={"subdued"}>
+          {convertToEuropeanDateFormat(v.dueDate)}
+        </Text>
+      ),
+      state: <StatusTag name="IN PROGRESS" type="information" />,
+      note: (
+        <Button type="ghost">
+          <Icon name="message" />
+        </Button>
+      ),
+      documents: (
+        <Button type="ghost">
+          <Icon name="file" />
+          <Text type="bodyBold">{20}</Text>
+        </Button>
+      ),
+      chevronButton: (
+        <ChevronButtonIconWrapper isExpanded={showTasks} onClick={toggleTasks}>
+          <Icon name="chevronButton" />
+        </ChevronButtonIconWrapper>
+      ),
+      taskList: showTasks && (
+        <TaskListCell colSpan={headers.length}>
+          <TaskList
+            name="Task 1"
+            startDate={new Date()}
+            dueDate={new Date()}
+            status="COMPLETED"
+          />
+
+          <TaskList
+            name="Task 1"
+            startDate={new Date()}
+            dueDate={new Date()}
+            status="COMPLETED"
+          />
+        </TaskListCell>
+      ),
+    };
+  };
+
   return (
     <Card width={850}>
       <StyledTable>
@@ -116,23 +169,14 @@ function EngagementTable({
                   ))}
                 </tr>
 
-                {/* <tr>
-                  <TableWidthCell colSpan={headers.length}>
-                    <TaskList
-                      name="Task 1"
-                      startDate="DD/MM/YYY"
-                      dueDate="DD/MM/YYY"
-                      status="COMPLETED"
-                    />
-                  </TableWidthCell>
-                </tr> */}
+                {rowItem.taskList}
 
                 {/* Divider */}
                 {rowIndex !== tableData.length - 1 && (
                   <tr>
-                    <TableWidthCell colSpan={headers.length}>
+                    <DividerCell colSpan={headers.length}>
                       <Divider />
-                    </TableWidthCell>
+                    </DividerCell>
                   </tr>
                 )}
               </>
