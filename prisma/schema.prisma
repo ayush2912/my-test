@@ -13,14 +13,14 @@ type DateRange {
 }
 
 type EngagementAttribute {
-  name      String
-  type      String
-  value     String
+  name  String
+  type  String
+  value String
 }
 
 type StateHistory {
-  state              String
-  datetime           DateTime
+  state    String
+  datetime DateTime
 }
 
 model Organization {
@@ -38,11 +38,12 @@ model Organization {
   members            User[]
   projects           Project[]
   portfolioProjects  Project[]      @relation("PortfolioOwnerOrganisations")
+  // assetProjects      Project[]      @relation("AssetOwnerOrganisations")
   accessPolicies     AccessPolicy[]
   Issuance           Issuance[]
   chat               Chat[]
-  Project            Project?       @relation("AssetOwnerOrganisations", fields: [projectId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  projectId          String?        @db.ObjectId
+  // Project            Project?       @relation("AssetOwnerOrganisations", fields: [projectId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  // projectId          String?        @db.ObjectId
 }
 
 model User {
@@ -153,7 +154,7 @@ model Project {
   registryRiskInfo                  RegistryRiskInfo?       @relation("RegistryRiskInfo")
   countries                         Country[]
   state                             String
-  methodology                       Methodology[]
+  methodologies                     Methodology[]
   type                              ProjectType?            @relation(fields: [typeId], references: [id])
   typeId                            String?                 @db.ObjectId
   subType                           ProjectType?            @relation("ProjectWithSubProjectType", fields: [subTypeId], references: [id])
@@ -163,39 +164,39 @@ model Project {
   annualApproximateCreditVolume     BigInt?
   portfolioOwner                    Organization?           @relation("PortfolioOwnerOrganisations", fields: [portfolioOwnerId], references: [id])
   portfolioOwnerId                  String?                 @db.ObjectId
-  assetOwner                        Organization[]          @relation("AssetOwnerOrganisations")
+  // assetOwners                       Organization[]          @relation("AssetOwnerOrganisations")
   engagements                       Engagement[]
 }
 
 model Engagement {
-  id                                String    @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt                         DateTime  @default(now())
-  updatedAt                         DateTime  @updatedAt
-  type                              String
-  startDate                         DateTime
-  dueDate                           DateTime
-  completedDate                     DateTime?
-  state                             String?  @default("NOT_STARTED")
-  notes                             String?
-  projectId                         String   @db.ObjectId
-  project                           Project  @relation(fields: [projectId], references: [id])       
-  attributes                        EngagementAttribute[]
-  stateHistory                      StateHistory[]
-  tasks                             Task[]
+  id            String                @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt     DateTime              @default(now())
+  updatedAt     DateTime              @updatedAt
+  type          String
+  startDate     DateTime
+  dueDate       DateTime
+  completedDate DateTime?
+  state         String?               @default("NOT_STARTED")
+  notes         String?
+  projectId     String                @db.ObjectId
+  project       Project               @relation(fields: [projectId], references: [id])
+  attributes    EngagementAttribute[]
+  stateHistory  StateHistory[]
+  tasks         Task[]
 }
 
 model Task {
-  id                                String        @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt                         DateTime      @default(now())
-  updatedAt                         DateTime      @updatedAt
-  engagementId                      String        @db.ObjectId
-  engagement                        Engagement?   @relation(fields: [engagementId], references: [id], onDelete: Cascade)
-  type                              String
-  startDate                         DateTime
-  dueDate                           DateTime
-  completedDate                     DateTime?
-  state                             String?       @default("NOT_STARTED")
-  stateHistory                      StateHistory[]
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  engagementId  String         @db.ObjectId
+  engagement    Engagement?    @relation(fields: [engagementId], references: [id], onDelete: Cascade)
+  type          String
+  startDate     DateTime
+  dueDate       DateTime
+  completedDate DateTime?
+  state         String?        @default("NOT_STARTED")
+  stateHistory  StateHistory[]
 }
 
 model RegistryProjectData {
@@ -415,7 +416,7 @@ model Methodology {
 }
 
 model Country {
-  id        String   @id @map("_id")
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
   name      String
   iso2Name  String   @unique
   iso3Name  String

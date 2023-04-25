@@ -1,6 +1,6 @@
 import Errors from '../errors';
 import { getProject } from '../actions/projects';
-import ProjectConstants from '../utility/constants/ProjectConstants'
+import ProjectConstants from '../utility/constants/ProjectConstants';
 
 /**
  * This method get project details from project id.
@@ -9,7 +9,9 @@ import ProjectConstants from '../utility/constants/ProjectConstants'
  */
 async function getProjectDetails(projectId: string) {
     try {
-        console.info('-----In getProjectDetails method of ProjectService ------');
+        console.info(
+            '-----In getProjectDetails method of ProjectService ------'
+        );
 
         const getProjectData = await getProject(projectId);
 
