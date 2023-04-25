@@ -15,33 +15,27 @@ export const Primary: Story = {
     <>
       <TaskList
         name="Task 1"
-        startDate="DD/MM/YYY"
-        dueDate="DD/MM/YYY"
+        startDate="2023-01-10T06:20:44.069Z"
+        dueDate="2030-01-05T08:52:29.962Z"
         status="COMPLETED"
       />
       <TaskList
         name="Task 2"
-        startDate="DD/MM/YYY"
-        dueDate="DD/MM/YYY"
+        startDate="2023-01-10T06:20:44.069Z"
+        dueDate="2030-01-05T08:52:29.962Z"
         status="NOT_STARTED"
       />
       <TaskList
         name="Task 3"
-        startDate="DD/MM/YYY"
-        dueDate="DD/MM/YYY"
+        startDate="2023-01-10T06:20:44.069Z"
+        dueDate="2030-01-05T08:52:29.962Z"
         status="IN_PROGRESS"
       />
       <TaskList
         name="Task 4"
-        startDate="DD/MM/YYY"
-        dueDate="DD/MM/YYY"
-        status="COMPLETED"
-      />
-      <TaskList
-        name="Task 5"
-        startDate="DD/MM/YYY"
-        dueDate="DD/MM/YYY"
-        status="COMPLETED"
+        startDate="2023-01-10T06:20:44.069Z"
+        dueDate="2030-01-05T08:52:29.962Z"
+        status="DISCONTINUED"
       />
     </>
   ),

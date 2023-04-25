@@ -1,7 +1,8 @@
 import styled from "styled-components";
 
-import Icon from "@/components/Icon";
+import Icon, { IconNameType } from "@/components/Icon";
 import Text from "@/components/Text";
+import { convertToEuropeanDateFormat } from "@/utils/dateTimeFormatter";
 
 export default function TaskList({
   name,
@@ -10,9 +11,9 @@ export default function TaskList({
   status,
 }: {
   name: string;
-  startDate: string;
-  dueDate: string;
-  status: "IN_PROGRESS" | "COMPLETED" | "NOT_STARTED";
+  startDate: Date;
+  dueDate: Date;
+  status: "IN_PROGRESS" | "COMPLETED" | "NOT_STARTED" | "DISCONTINUED";
 }) {
   const StyledTaskContainer = styled.div`
     border-top: 1px solid #e1e4e8;
@@ -44,13 +45,22 @@ export default function TaskList({
     margin-bottom: 4px;
   `;
 
+  const selectedIconName = {
+    IN_PROGRESS: "inProgress",
+    COMPLETED: "success",
+    NOT_STARTED: "notStarted",
+    DISCONTINUED: "discontinued",
+  }[status] as IconNameType;
+
   return (
     <StyledTaskContainer>
-      <Icon name="notStarted" />
+      <Icon name={selectedIconName} />
       <ColumnWrapper>
         <TextWithMarginBottom type="body">{name}</TextWithMarginBottom>
         <Text type="body" color="subdued">
-          {`${startDate} - ${dueDate}`}
+          {`${convertToEuropeanDateFormat(
+            startDate,
+          )} - ${convertToEuropeanDateFormat(dueDate)}`}
         </Text>
       </ColumnWrapper>
     </StyledTaskContainer>
