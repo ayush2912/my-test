@@ -20,7 +20,7 @@ name_prefix = "ayush-new"
     from_port   = 0
     to_port     = 65535
     protocol    = "tcp"
-    security_groups = ["sg-09a357d37bbade8fc"]
+    security_groups = ["sg-04c7c1d9653fad1cb"]
   }
 ingress {
     from_port   = 0
