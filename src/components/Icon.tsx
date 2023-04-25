@@ -13,10 +13,6 @@ interface IconProps {
   hoverColor?: string;
 }
 
-interface IconMap {
-  [name: string]: React.FunctionComponent;
-}
-
 const svgStyles = ({ size, color, hoverColor }: IconProps): CSSObject => {
   return {
     height: `${size || 24}px`,
@@ -30,7 +26,7 @@ const svgStyles = ({ size, color, hoverColor }: IconProps): CSSObject => {
   };
 };
 
-const icons: IconMap = {
+const icons = {
   home: HomeIcon,
   success: SuccessIcon,
   message: MessageIcon,
@@ -39,7 +35,7 @@ const icons: IconMap = {
   inProgress: InProgressIcon,
 };
 
-export default function Icon({ name }: { name: string }) {
+export default function Icon({ name }: { name: keyof typeof icons }) {
   const selectedIcon = icons[name];
 
   const StyledIcon = styled(selectedIcon)<IconProps>`
