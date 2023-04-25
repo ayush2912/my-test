@@ -2,7 +2,7 @@ import express, { Express, Request, Response, NextFunction } from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
 
-import routes from './routes/postRoute';
+import routes from './routes/projectRoute';
 
 import { responseMiddleware } from './middlewares/customMiddleware';
 
@@ -30,7 +30,12 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 const whitelist = [
-    'http://localhost:3000'
+    'http://localhost:3000',
+    'https://dev-dashboard.offsetmax.digital/',
+    'https://staging-dashboard.offsetmax.digital/',
+    'https://demo.offsetmax.digital/',
+    'https://mirror.offsetmax.digital/',
+    'https://app.offsetmax.digital/'
 ];
 const corsOptions = {
     origin: (origin: any, callback: any) => {
