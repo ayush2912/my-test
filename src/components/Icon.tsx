@@ -1,5 +1,6 @@
 import styled, { CSSObject } from "styled-components";
 
+import { ReactComponent as ChevronButtonIcon } from "@/assets/icons/arrows/chevron-button.svg";
 import { ReactComponent as Discontinued } from "@/assets/icons/feedback/discontinued.svg";
 import { ReactComponent as InProgressIcon } from "@/assets/icons/feedback/in-progress.svg";
 import { ReactComponent as NotStartedIcon } from "@/assets/icons/feedback/not-started.svg";
@@ -35,6 +36,7 @@ const icons = {
   notStarted: NotStartedIcon,
   inProgress: InProgressIcon,
   discontinued: Discontinued,
+  chevronButton: ChevronButtonIcon,
 };
 
 export default function Icon({ name }: { name: keyof typeof icons }) {

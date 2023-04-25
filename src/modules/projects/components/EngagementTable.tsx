@@ -1,9 +1,12 @@
 import styled from "styled-components";
 
+import Button from "@/components/Button";
 import Card from "@/components/Card";
+import Icon from "@/components/Icon";
 import StatusTag from "@/components/StatusTag";
 import Text from "@/components/Text";
 
+import TaskList from "./TaskList";
 import { convertToEuropeanDateFormat } from "../../../utils/dateTimeFormatter";
 
 const StyledTable = styled.table`
@@ -20,8 +23,6 @@ const HeaderContent = styled.div`
   display: flex;
   white-space: nowrap;
 `;
-
-const TableRow = styled.tr``;
 
 const TableCell = styled.td`
   padding: 16px 0px;
@@ -41,7 +42,7 @@ const CellContent = styled.div`
   }
 `;
 
-const DividerTableCell = styled.td`
+const TableWidthCell = styled.td`
   padding: 0px;
 `;
 const Divider = styled.div`
@@ -60,8 +61,18 @@ const cellContentMapper = (v: any) => {
       <Text type="bodyBold">{convertToEuropeanDateFormat(v.dueDate)}</Text>
     ),
     state: <StatusTag name="IN PROGRESS" type="information" />,
-    note: <div>note</div>,
-    documents: <div>documents</div>,
+    note: (
+      <Button type="ghost">
+        <Icon name="message" />
+      </Button>
+    ),
+    documents: (
+      <Button type="ghost">
+        <Icon name="file" />
+        <Text type="bodyBold">{20}</Text>
+      </Button>
+    ),
+    chevronButton: <Icon name="chevronButton" />,
   };
 };
 
@@ -97,18 +108,31 @@ function EngagementTable({
             .map(cellContentMapper)
             .map((rowItem: any, rowIndex: number) => (
               <>
-                <TableRow key={rowItem.rowId}>
+                <tr key={rowItem.rowId}>
                   {headers.map(({ fieldName }) => (
                     <TableCell key={fieldName}>
                       <CellContent>{rowItem[fieldName]}</CellContent>
                     </TableCell>
                   ))}
-                </TableRow>
+                </tr>
+
+                {/* <tr>
+                  <TableWidthCell colSpan={headers.length}>
+                    <TaskList
+                      name="Task 1"
+                      startDate="DD/MM/YYY"
+                      dueDate="DD/MM/YYY"
+                      status="COMPLETED"
+                    />
+                  </TableWidthCell>
+                </tr> */}
+
+                {/* Divider */}
                 {rowIndex !== tableData.length - 1 && (
                   <tr>
-                    <DividerTableCell colSpan={headers.length}>
+                    <TableWidthCell colSpan={headers.length}>
                       <Divider />
-                    </DividerTableCell>
+                    </TableWidthCell>
                   </tr>
                 )}
               </>
