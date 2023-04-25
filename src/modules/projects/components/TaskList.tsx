@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import Icon from "@/components/Icon";
+import Icon, { IconNameType } from "@/components/Icon";
 import Text from "@/components/Text";
 import { convertToEuropeanDateFormat } from "@/utils/dateTimeFormatter";
 
@@ -45,16 +45,16 @@ export default function TaskList({
     margin-bottom: 4px;
   `;
 
-  const iconName = {
+  const selectedIconName = {
     IN_PROGRESS: "inProgress",
     COMPLETED: "success",
     NOT_STARTED: "notStarted",
     DISCONTINUED: "discontinued",
-  }[status];
+  }[status] as IconNameType;
 
   return (
     <StyledTaskContainer>
-      <Icon name={iconName} />
+      <Icon name={selectedIconName} />
       <ColumnWrapper>
         <TextWithMarginBottom type="body">{name}</TextWithMarginBottom>
         <Text type="body" color="subdued">

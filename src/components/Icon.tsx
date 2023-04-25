@@ -39,7 +39,9 @@ const icons = {
   chevronButton: ChevronButtonIcon,
 };
 
-export default function Icon({ name }: { name: keyof typeof icons }) {
+export type IconNameType = keyof typeof icons;
+
+export default function Icon({ name }: { name: IconNameType }) {
   const selectedIcon = icons[name];
 
   const StyledIcon = styled(selectedIcon)<IconProps>`
