@@ -23,4 +23,8 @@ export const EngagementTableHeaders = [
     name: "DOCUMENT(S)",
     fieldName: "documents",
   },
+  {
+    name: "",
+    fieldName: "chevronButton",
+  },
 ];

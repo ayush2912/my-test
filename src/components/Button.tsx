@@ -52,6 +52,11 @@ const StyledButton = styled.button<ButtonProps>`
     `}
 `;
 
+const ButtonContentWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 export default function Button({
   children,
   disabled,
@@ -89,7 +94,7 @@ export default function Button({
 
   return (
     <StyledButton large={large} disabled={disabled} {...selectedButtonStyles}>
-      {children}
+      <ButtonContentWrapper>{children}</ButtonContentWrapper>
     </StyledButton>
   );
 }
