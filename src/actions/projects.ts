@@ -23,12 +23,4 @@ const getProject = async (projectId: string) =>
         },
     });
 
-async function name() {
-
-    console.log("hoefoifee",JSON.stringify(await getProject("6446591277702d34031408ca"), null, 2));
-}
-
-name();
-
-
 export { getProject };
