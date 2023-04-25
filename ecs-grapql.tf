@@ -99,7 +99,7 @@ resource "aws_ecs_service" "my_service" {
     assign_public_ip = true
   }
  load_balancer {
-    target_group_arn = "arn:aws:elasticloadbalancing:ap-south-1:168933414344:targetgroup/ecs-1-tg/70c4608ddd0dec9c"
+    target_group_arn = "arn:aws:elasticloadbalancing:ap-south-1:168933414344:targetgroup/ecs-2-tg/282081939bdddef6"
     container_name   = "my-graphql-container"
     container_port   = 4000
   }
