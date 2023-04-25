@@ -9,6 +9,7 @@
     "compile": "node build/app.js",
     "clean": "rm -rf ./build",
     "lint": "eslint --ext .ts .",
+    "prisma": "npx prisma generate",
     "format:check": "prettier --check src/**/*",
     "lint:fix": "eslint --fix 'src/**/*.ts'",
     "start": "npx ts-node ./src/app.ts",
