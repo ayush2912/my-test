@@ -1,5 +1,6 @@
 import styled, { CSSObject } from "styled-components";
 
+import { ReactComponent as Discontinued } from "@/assets/icons/feedback/discontinued.svg";
 import { ReactComponent as InProgressIcon } from "@/assets/icons/feedback/in-progress.svg";
 import { ReactComponent as NotStartedIcon } from "@/assets/icons/feedback/not-started.svg";
 import { ReactComponent as SuccessIcon } from "@/assets/icons/feedback/success.svg";
@@ -33,6 +34,7 @@ const icons = {
   file: FileIcon,
   notStarted: NotStartedIcon,
   inProgress: InProgressIcon,
+  discontinued: Discontinued,
 };
 
 export default function Icon({ name }: { name: keyof typeof icons }) {

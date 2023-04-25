@@ -17,23 +17,23 @@ type Story = StoryObj<typeof EngagementTable>;
 const projectEngagementsTableData = [
   {
     name: "Engagement 1",
-    startDate: "hello",
-    dueData: "yay",
+    startDate: "2023-01-10T06:20:44.069Z",
+    dueData: "2030-01-05T08:52:29.962Z",
   },
   {
     name: "Engagement 1",
-    startDate: "hello",
-    dueData: "yay",
+    startDate: "2023-01-10T06:20:44.069Z",
+    dueData: "2030-01-05T08:52:29.962Z",
   },
   {
     name: "Engagement 1",
-    startDate: "hello",
-    dueData: "yay",
+    startDate: "2023-01-10T06:20:44.069Z",
+    dueData: "2030-01-05T08:52:29.962Z",
   },
   {
     name: "Engagement 1",
-    startDate: "hello",
-    dueData: "yay",
+    startDate: "2023-01-10T06:20:44.069Z",
+    dueData: "2030-01-05T08:52:29.962Z",
   },
 ];
 

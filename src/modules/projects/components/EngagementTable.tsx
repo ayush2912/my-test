@@ -4,6 +4,8 @@ import Card from "@/components/Card";
 import StatusTag from "@/components/StatusTag";
 import Text from "@/components/Text";
 
+import { convertToEuropeanDateFormat } from "../../../utils/dateTimeFormatter";
+
 const StyledTable = styled.table`
   table-layout: auto;
   width: 100%;
@@ -50,9 +52,13 @@ const Divider = styled.div`
 
 const cellContentMapper = (v: any) => {
   return {
-    engagements: <Text type="bodyBold">{`task 1`}</Text>,
-    startDate: <Text type="bodyBold">{`start date`}</Text>,
-    dueDate: <Text type="bodyBold">{`end date`}</Text>,
+    engagements: <Text type="bodyBold">{v.name}</Text>,
+    startDate: (
+      <Text type="bodyBold">{convertToEuropeanDateFormat(v.startDate)}</Text>
+    ),
+    dueDate: (
+      <Text type="bodyBold">{convertToEuropeanDateFormat(v.dueDate)}</Text>
+    ),
     state: <StatusTag name="IN PROGRESS" type="information" />,
     note: <div>note</div>,
     documents: <div>documents</div>,
