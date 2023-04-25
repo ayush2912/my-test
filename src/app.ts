@@ -30,9 +30,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 const whitelist = [
-    'http://localhost:3000',
-    'https://dev-dashboard.offsetmax.digital/',
-    'https://staging-dashboard.offsetmax.digital/',
+    'http://localhost:3000'
 ];
 const corsOptions = {
     origin: (origin: any, callback: any) => {
