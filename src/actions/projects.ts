@@ -8,19 +8,27 @@ const getProject = async (projectId: string) =>
         include: {
             engagements: {
                 orderBy: [
-                    { startDate: 'asc' },
-                    { type: 'desc' },
+                    { startDate: 'desc' },
+                    { type: 'asc' },
                 ],
                 include: {
                     tasks: {
                         orderBy: [
-                            { startDate: 'asc' },
-                            { type: 'desc' },
+                            { startDate: 'desc' },
+                            { type: 'asc' },
                         ]
                     }
                 }
             }
         },
     });
+
+async function name() {
+
+    console.log("hoefoifee",JSON.stringify(await getProject("6446591277702d34031408ca"), null, 2));
+}
+
+name();
+
 
 export { getProject };
