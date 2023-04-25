@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import * as z from 'zod';
 
 import Errors from '../errors';
+import PostConstants from '../utility/constants/PostConstants'
 
 const validateRequest =
     (schema: z.ZodType<any>, source: 'body' | 'params') =>
@@ -37,7 +38,7 @@ const validateRequest =
 // Validate request parameters
 const validatePostIdParamsSchema = validateRequest(
     z.object({
-        id: z.string().min(24, 'Invalid ObjectId').max(24),
+        id: z.string().length(24, PostConstants.INVALID_POST_ID),
     }),
     'params'
 );
@@ -46,12 +47,12 @@ const validatePostIdParamsSchema = validateRequest(
 const validateCreatePostSchema = validateRequest(
     z.object({
         title: z.string({
-            required_error: 'title is required',
-            invalid_type_error: 'title must be a string',
+            required_error: PostConstants.TITLE_REQUIRED,
+            invalid_type_error: PostConstants.INVALID_TITLE,
         }),
         content: z.string({
-            required_error: 'content is required',
-            invalid_type_error: 'content must be a string',
+            required_error: PostConstants.CONTENT_REQUIRED,
+            invalid_type_error: PostConstants.INVALID_CONTENT,
         }),
     }),
     'body'
