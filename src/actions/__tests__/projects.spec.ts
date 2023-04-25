@@ -37,9 +37,15 @@ describe('getProject()', () => {
     });
 
     afterAll(async () => {
-        await prisma.task.deleteMany();
-        await prisma.engagement.deleteMany();
-        await prisma.project.deleteMany();
+        await prisma.task.delete({
+            where: { id: '6446591277702d3413142ebc' },
+        });
+        await prisma.engagement.delete({
+            where: { id: '6446591277702d34131427bb' },
+        });
+        await prisma.project.delete({
+            where: { id: '6446591277702d34131426ea' },
+        });
         await prisma.$disconnect();
     });
 
