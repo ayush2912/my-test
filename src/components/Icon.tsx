@@ -1,6 +1,21 @@
 import styled, { CSSObject } from "styled-components";
 
-import { ReactComponent as ChevronButtonIcon } from "@/assets/icons/arrows/chevron-button.svg";
+import { ReactComponent as ArrowDown } from "@/assets/icons/arrows/arrow-down.svg";
+import { ReactComponent as ArrowLeft } from "@/assets/icons/arrows/arrow-left.svg";
+import { ReactComponent as ArrowRight } from "@/assets/icons/arrows/arrow-right.svg";
+import { ReactComponent as ArrowUp } from "@/assets/icons/arrows/arrow-up.svg";
+import { ReactComponent as CaretDown } from "@/assets/icons/arrows/caret-down.svg";
+import { ReactComponent as CaretLeft } from "@/assets/icons/arrows/caret-left.svg";
+// import { ReactComponent as CaretRight } from "@/assets/icons/arrows/caret-right.svg";
+import { ReactComponent as CaretUp } from "@/assets/icons/arrows/caret-up.svg";
+import { ReactComponent as ChevronDown } from "@/assets/icons/arrows/chevron-down.svg";
+import { ReactComponent as ChevronLeft } from "@/assets/icons/arrows/chevron-left.svg";
+import { ReactComponent as ChevronRight } from "@/assets/icons/arrows/chevron-right.svg";
+import { ReactComponent as ChevronUp } from "@/assets/icons/arrows/chevron-up.svg";
+import { ReactComponent as ChevronsDown } from "@/assets/icons/arrows/chevrons-down.svg";
+import { ReactComponent as ChevronsLeft } from "@/assets/icons/arrows/chevrons-left.svg";
+import { ReactComponent as ChevronsRight } from "@/assets/icons/arrows/chevrons-right.svg";
+import { ReactComponent as ChevronsUp } from "@/assets/icons/arrows/chevrons-up.svg";
 import { ReactComponent as Discontinued } from "@/assets/icons/feedback/discontinued.svg";
 import { ReactComponent as ErrorIcon } from "@/assets/icons/feedback/error.svg";
 import { ReactComponent as InProgressIcon } from "@/assets/icons/feedback/in-progress.svg";
@@ -59,6 +74,22 @@ const svgStyles = ({ size, color, hoverColor }: IconProps): CSSObject => {
 };
 
 const icons = {
+  arrowDown: ArrowDown,
+  arrowLeft: ArrowLeft,
+  arrowRight: ArrowRight,
+  arrowUp: ArrowUp,
+  caretDown: CaretDown,
+  caretLeft: CaretLeft,
+  // caretRight: CaretRight,
+  caretUp: CaretUp,
+  chevronDown: ChevronDown,
+  chevronLeft: ChevronLeft,
+  chevronRight: ChevronRight,
+  chevronUp: ChevronUp,
+  chevronsDown: ChevronsDown,
+  chevronsLeft: ChevronsLeft,
+  chevronsRight: ChevronsRight,
+  chevronsUp: ChevronsUp,
   home: HomeIcon,
   success: SuccessIcon,
   message: MessageIcon,
@@ -68,7 +99,6 @@ const icons = {
   discontinued: Discontinued,
   error: ErrorIcon,
   waitingFeedback: WaitingFeedBackIcon,
-  chevronButton: ChevronButtonIcon,
   // alertNotication: AlertNoticationIcon,
   alert: AlertIcon,
   calendarTime: CalendarTimeIcon,
