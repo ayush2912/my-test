@@ -16,11 +16,12 @@ type EngagementAttribute {
   name  String
   type  String
   value String
+  key   String
 }
 
 type StateHistory {
-  state    String
-  datetime DateTime
+  state          String
+  stateUpdatedAt DateTime
 }
 
 model Organization {
