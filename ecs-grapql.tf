@@ -63,7 +63,7 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
     "environment": [
         {
           "name": "DATABASE_URL",
-          "value": "mongodb+srv://atlasAdmin:m9yrCL1hikEj8BUU@offsetmaxcluster0.6zak4.mongodb.net/offsetmaxsandbox"
+          "value": "${var.DATABASE_URL}"
         }
       
       
