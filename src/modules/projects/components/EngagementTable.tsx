@@ -97,7 +97,9 @@ function EngagementTable({
           </RowWrapper>
 
           <Text type="caption" color="subdued">
-            3 tasks
+            {`${3} tasks`}
+            <span> &bull; </span>
+            {`Completed on DD/MM/YYYY`}
           </Text>
         </ColumnWrapper>
       ),
@@ -142,7 +144,7 @@ function EngagementTable({
       taskList: showTasks && (
         <TaskListCell colSpan={headers.length}>
           <TaskList
-            name="Task 1"
+            name="Task 1 "
             startDate={new Date()}
             dueDate={new Date()}
             status="COMPLETED"
