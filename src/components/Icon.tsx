@@ -2,9 +2,11 @@ import styled, { CSSObject } from "styled-components";
 
 import { ReactComponent as ChevronButtonIcon } from "@/assets/icons/arrows/chevron-button.svg";
 import { ReactComponent as Discontinued } from "@/assets/icons/feedback/discontinued.svg";
+import { ReactComponent as ErrorIcon } from "@/assets/icons/feedback/error.svg";
 import { ReactComponent as InProgressIcon } from "@/assets/icons/feedback/in-progress.svg";
 import { ReactComponent as NotStartedIcon } from "@/assets/icons/feedback/not-started.svg";
 import { ReactComponent as SuccessIcon } from "@/assets/icons/feedback/success.svg";
+import { ReactComponent as WaitingFeedBackIcon } from "@/assets/icons/feedback/waiting.svg";
 // import { ReactComponent as AlertNoticationIcon } from "@/assets/icons/generic/alert-notication.svg";
 import { ReactComponent as AlertIcon } from "@/assets/icons/generic/alert.svg";
 import { ReactComponent as CalendarTimeIcon } from "@/assets/icons/generic/calendar-time.svg";
@@ -62,6 +64,8 @@ const icons = {
   notStarted: NotStartedIcon,
   inProgress: InProgressIcon,
   discontinued: Discontinued,
+  error: ErrorIcon,
+  waitingFeedback: WaitingFeedBackIcon,
   chevronButton: ChevronButtonIcon,
   // alertNotication: AlertNoticationIcon,
   alert: AlertIcon,
