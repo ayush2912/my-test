@@ -8,6 +8,7 @@ import { ReactComponent as CaretDown } from "@/assets/icons/arrows/caret-down.sv
 import { ReactComponent as CaretLeft } from "@/assets/icons/arrows/caret-left.svg";
 // import { ReactComponent as CaretRight } from "@/assets/icons/arrows/caret-right.svg";
 import { ReactComponent as CaretUp } from "@/assets/icons/arrows/caret-up.svg";
+import { ReactComponent as ChevronButtonIcon } from "@/assets/icons/arrows/chevron-button.svg";
 import { ReactComponent as ChevronDown } from "@/assets/icons/arrows/chevron-down.svg";
 import { ReactComponent as ChevronLeft } from "@/assets/icons/arrows/chevron-left.svg";
 import { ReactComponent as ChevronRight } from "@/assets/icons/arrows/chevron-right.svg";
@@ -106,6 +107,7 @@ const icons = {
   caretLeft: CaretLeft,
   // caretRight: CaretRight,
   caretUp: CaretUp,
+  chevronButton: ChevronButtonIcon,
   chevronDown: ChevronDown,
   chevronLeft: ChevronLeft,
   chevronRight: ChevronRight,
