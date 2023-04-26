@@ -8,7 +8,7 @@ import Modal from "@/components/Modal";
 import StatusTag from "@/components/StatusTag";
 import Text from "@/components/Text";
 
-import TaskList from "./TaskList";
+import TaskList, { TaskListProps } from "./TaskList";
 import { convertToEuropeanDateFormat } from "../../../utils/dateTimeFormatter";
 
 const StyledTable = styled.table`
@@ -76,14 +76,25 @@ const RowWrapper = styled.div`
   align-items: center;
 `;
 
+export interface EngagementItem {
+  name: string;
+  state: "COMPLETED" | "OVERDUE" | "IN_PROGRESS" | "DISCONTINUED";
+  startDate: Date;
+  dueDate: Date;
+  note: string;
+  document: number;
+  attributes: { label: string; value: string }[];
+  tasks: TaskListProps[];
+}
+
 function EngagementTable({
   headers,
   tableData,
 }: {
-  headers: Array<any>;
-  tableData: Array<any>;
+  headers: { name: string; fieldName: string }[];
+  tableData: EngagementItem[];
 }) {
-  const cellContentMapper = (v: any, i: any) => {
+  const cellContentMapper = (v: EngagementItem) => {
     const [showTasks, setShowTasks] = useState(false);
     const [showNote, setShowNote] = useState(false);
     const toggleTasks = () => setShowTasks(!showTasks);
@@ -92,12 +103,12 @@ function EngagementTable({
       engagements: (
         <ColumnWrapper>
           <RowWrapper>
-            <Text type="bodyBold">{`Verification`}</Text>
+            <Text type="bodyBold">{v.name}</Text>
             <Icon name="information" size="small" />
           </RowWrapper>
 
           <Text type="caption" color="subdued">
-            {`${3} tasks`}
+            {`${v.tasks.length} tasks`}
             <span> &bull; </span>
             {`Completed on DD/MM/YYYY`}
           </Text>
@@ -143,19 +154,15 @@ function EngagementTable({
       ),
       taskList: showTasks && (
         <TaskListCell colSpan={headers.length}>
-          <TaskList
-            name="Task 1 "
-            startDate={new Date()}
-            dueDate={new Date()}
-            status="COMPLETED"
-          />
-
-          <TaskList
-            name="Task 1"
-            startDate={new Date()}
-            dueDate={new Date()}
-            status="COMPLETED"
-          />
+          {v.tasks.map((v) => (
+            <TaskList
+              key={v.name}
+              name={v.name}
+              startDate={v.startDate}
+              dueDate={v.dueDate}
+              status={v.status}
+            />
+          ))}
         </TaskListCell>
       ),
     };
@@ -194,9 +201,8 @@ function EngagementTable({
                   ))}
                 </tr>
 
-                {rowItem.taskList}
+                <tr>{rowItem.taskList}</tr>
 
-                {/* Divider */}
                 {rowIndex !== tableData.length - 1 && (
                   <tr>
                     <DividerCell colSpan={headers.length}>

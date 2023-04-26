@@ -35,17 +35,19 @@ const TextWithMarginBottom = styled(Text)`
   margin-bottom: 4px;
 `;
 
+export type TaskListProps = {
+  name: string;
+  startDate: Date;
+  dueDate: Date;
+  status: "IN_PROGRESS" | "COMPLETED" | "NOT_STARTED" | "DISCONTINUED";
+};
+
 export default function TaskList({
   name,
   startDate,
   dueDate,
   status,
-}: {
-  name: string;
-  startDate: Date;
-  dueDate: Date;
-  status: "IN_PROGRESS" | "COMPLETED" | "NOT_STARTED" | "DISCONTINUED";
-}) {
+}: TaskListProps) {
   const selectedIconName = {
     IN_PROGRESS: "inProgress",
     COMPLETED: "success",
