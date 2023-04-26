@@ -22,6 +22,18 @@ import { ReactComponent as InProgressIcon } from "@/assets/icons/feedback/in-pro
 import { ReactComponent as NotStartedIcon } from "@/assets/icons/feedback/not-started.svg";
 import { ReactComponent as SuccessIcon } from "@/assets/icons/feedback/success.svg";
 import { ReactComponent as WaitingFeedBackIcon } from "@/assets/icons/feedback/waiting.svg";
+import { ReactComponent as AustraliaFlagIcon } from "@/assets/icons/flags/australia.svg";
+import { ReactComponent as BrazilFlagIcon } from "@/assets/icons/flags/brazil.svg";
+import { ReactComponent as CanadaFlagIcon } from "@/assets/icons/flags/canada.svg";
+import { ReactComponent as ChinaFlagIcon } from "@/assets/icons/flags/china.svg";
+import { ReactComponent as ColumbiaFlagIcon } from "@/assets/icons/flags/columbia.svg";
+import { ReactComponent as FranceFlagIcon } from "@/assets/icons/flags/france.svg";
+import { ReactComponent as GermanyFlagIcon } from "@/assets/icons/flags/germany.svg";
+import { ReactComponent as IndiaFlagIcon } from "@/assets/icons/flags/india.svg";
+import { ReactComponent as RussiaFlagIcon } from "@/assets/icons/flags/russia.svg";
+import { ReactComponent as SpainFlagIcon } from "@/assets/icons/flags/spain.svg";
+import { ReactComponent as UnitedKingdomFlagIcon } from "@/assets/icons/flags/united-kingdom.svg";
+import { ReactComponent as UnitedStatesFlagIcon } from "@/assets/icons/flags/united-states.svg";
 // import { ReactComponent as AlertNoticationIcon } from "@/assets/icons/generic/alert-notication.svg";
 import { ReactComponent as AlertIcon } from "@/assets/icons/generic/alert.svg";
 import { ReactComponent as CalendarTimeIcon } from "@/assets/icons/generic/calendar-time.svg";
@@ -74,6 +86,18 @@ const svgStyles = ({ size, color, hoverColor }: IconProps): CSSObject => {
 };
 
 const icons = {
+  australiaFlag: AustraliaFlagIcon,
+  brazilFlag: BrazilFlagIcon,
+  canadaFlag: CanadaFlagIcon,
+  chinaFlag: ChinaFlagIcon,
+  columbiaFlag: ColumbiaFlagIcon,
+  franceFlag: FranceFlagIcon,
+  germanyFlag: GermanyFlagIcon,
+  indiaFlag: IndiaFlagIcon,
+  russiaFlag: RussiaFlagIcon,
+  spainFlag: SpainFlagIcon,
+  unitedKingdomFlag: UnitedKingdomFlagIcon,
+  unitedStatesFlag: UnitedStatesFlagIcon,
   arrowDown: ArrowDown,
   arrowLeft: ArrowLeft,
   arrowRight: ArrowRight,
