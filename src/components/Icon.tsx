@@ -156,6 +156,10 @@ const icons = {
 export const IconNames = Object.keys(icons) as Array<IconNameType>;
 export type IconNameType = keyof typeof icons;
 
+const StyledIcon = styled.svg<IconProps>`
+  ${(props) => svgStyles(props)};
+`;
+
 export default function Icon({
   name,
   size,
@@ -163,11 +167,7 @@ export default function Icon({
   name: IconNameType;
   size?: "small" | "big";
 }) {
-  const selectedIcon = icons[name];
+  const SelectedIcon = icons[name];
 
-  const StyledIcon = styled(selectedIcon)<IconProps>`
-    ${(props) => svgStyles(props)};
-  `;
-
-  return <StyledIcon size={size} />;
+  return <StyledIcon as={SelectedIcon} size={size} />;
 }

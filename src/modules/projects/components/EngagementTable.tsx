@@ -4,6 +4,7 @@ import styled from "styled-components";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
 import Icon from "@/components/Icon";
+import Modal from "@/components/Modal";
 import StatusTag from "@/components/StatusTag";
 import Text from "@/components/Text";
 
@@ -82,8 +83,9 @@ function EngagementTable({
   headers: Array<any>;
   tableData: Array<any>;
 }) {
-  const cellContentMapper = (v: any) => {
+  const cellContentMapper = (v: any, i: any) => {
     const [showTasks, setShowTasks] = useState(false);
+    const [showNote, setShowNote] = useState(false);
     const toggleTasks = () => setShowTasks(!showTasks);
 
     return {
@@ -111,12 +113,23 @@ function EngagementTable({
       ),
       state: <StatusTag name="IN PROGRESS" type="information" />,
       note: (
-        <Button type="ghost">
-          <Icon name="message" />
-        </Button>
+        <>
+          <Button type="ghost" onClick={() => setShowNote(true)}>
+            <Icon name="message" />
+          </Button>
+          <Modal
+            isOpen={showNote}
+            onClose={() => {
+              setShowNote(false);
+            }}
+            title="My Modal"
+          >
+            <p>{`This is the content of my modal.`} </p>
+          </Modal>
+        </>
       ),
       documents: (
-        <Button type="ghost">
+        <Button type="ghost" onClick={() => setShowNote(true)}>
           <Icon name="file" />
           <Text type="bodyBold">{20}</Text>
         </Button>

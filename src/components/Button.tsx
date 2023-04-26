@@ -58,11 +58,13 @@ const ButtonContentWrapper = styled.div`
 `;
 
 export default function Button({
+  onClick,
   children,
   disabled,
   large,
   type = "primary",
 }: {
+  onClick: () => void;
   children: ReactNode;
   disabled?: boolean;
   large?: boolean;
@@ -93,7 +95,12 @@ export default function Button({
   }[type];
 
   return (
-    <StyledButton large={large} disabled={disabled} {...selectedButtonStyles}>
+    <StyledButton
+      large={large}
+      disabled={disabled}
+      {...selectedButtonStyles}
+      onClick={onClick}
+    >
       <ButtonContentWrapper>{children}</ButtonContentWrapper>
     </StyledButton>
   );
