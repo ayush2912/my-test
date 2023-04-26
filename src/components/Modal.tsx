@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import Button from "./Button";
 import Card from "./Card";
+import Text from "./Text";
 
 export interface ModalProps {
   isOpen: boolean;
@@ -28,17 +29,38 @@ const ModalContent = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   width: fit-content;
+  max-width: 414px;
 `;
 
+const FlexBoxRight = styled.div`
+  display: flex;
+  justify-content: end;
+`;
+const BodyText = styled(Text)`
+  margin-top:24px
+  margin-bottom: 24px;
+`;
 const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
   //TODO: update the styles for title and button
   return (
     <Overlay isOpen={isOpen}>
       <ModalContent>
         <Card>
-          {title && <h2>{title}</h2>}
-          {children}
-          <Button onClick={onClose}>Close</Button>
+          {title && (
+            <Text type="heading3" color="default">
+              {title}
+            </Text>
+          )}
+          <BodyText type="body" color="default">
+            {children}
+          </BodyText>
+          <FlexBoxRight>
+            <Button large onClick={onClose}>
+              <Text type="button" color="white">
+                Close
+              </Text>
+            </Button>
+          </FlexBoxRight>
         </Card>
       </ModalContent>
     </Overlay>
