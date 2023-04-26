@@ -122,9 +122,11 @@ function EngagementTable({
             onClose={() => {
               setShowNote(false);
             }}
-            title="My Modal"
+            title="Note"
           >
-            <p>{`This is the content of my modal.`} </p>
+            <p>
+              {`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor in. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiu`}{" "}
+            </p>
           </Modal>
         </>
       ),
