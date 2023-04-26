@@ -7,18 +7,19 @@ import { ReactComponent as NotStartedIcon } from "@/assets/icons/feedback/not-st
 import { ReactComponent as SuccessIcon } from "@/assets/icons/feedback/success.svg";
 import { ReactComponent as FileIcon } from "@/assets/icons/generic/file.svg";
 import { ReactComponent as HomeIcon } from "@/assets/icons/generic/home.svg";
+import { ReactComponent as InformationIcon } from "@/assets/icons/generic/information.svg";
 import { ReactComponent as MessageIcon } from "@/assets/icons/generic/message.svg";
 
 interface IconProps {
-  size?: number;
+  size?: "small" | "big";
   color?: string;
   hoverColor?: string;
 }
 
 const svgStyles = ({ size, color, hoverColor }: IconProps): CSSObject => {
   return {
-    height: `${size || 24}px`,
-    width: `${size || 24}px`,
+    height: `${size === "small" ? 18 : 24}px`,
+    width: `${size === "small" ? 18 : 24}px`,
     "& path": {
       stroke: color,
     },
@@ -37,16 +38,23 @@ const icons = {
   inProgress: InProgressIcon,
   discontinued: Discontinued,
   chevronButton: ChevronButtonIcon,
+  information: InformationIcon,
 };
 
 export type IconNameType = keyof typeof icons;
 
-export default function Icon({ name }: { name: IconNameType }) {
+export default function Icon({
+  name,
+  size,
+}: {
+  name: IconNameType;
+  size?: "small" | "big";
+}) {
   const selectedIcon = icons[name];
 
   const StyledIcon = styled(selectedIcon)<IconProps>`
     ${(props) => svgStyles(props)};
   `;
 
-  return <StyledIcon />;
+  return <StyledIcon size={size} />;
 }

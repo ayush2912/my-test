@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 import Icon, { IconNameType } from "@/components/Icon";
 import Text from "@/components/Text";
+import Tooltip from "@/components/Tooltip";
 import { convertToEuropeanDateFormat } from "@/utils/dateTimeFormatter";
 
 export default function TaskList({
@@ -52,9 +53,19 @@ export default function TaskList({
     DISCONTINUED: "discontinued",
   }[status] as IconNameType;
 
+  const tooltipTextContent = {
+    IN_PROGRESS: "IN PROGRESS",
+    COMPLETED: "Completed on xxx",
+    NOT_STARTED: "NOT STARTED",
+    DISCONTINUED: "discontinued",
+  }[status] as string;
+
   return (
     <StyledTaskContainer>
-      <Icon name={selectedIconName} />
+      <Tooltip text={tooltipTextContent}>
+        <Icon name={selectedIconName} />
+      </Tooltip>
+
       <ColumnWrapper>
         <TextWithMarginBottom type="body">{name}</TextWithMarginBottom>
         <Text type="body" color="subdued">
