@@ -36,15 +36,15 @@ import { ReactComponent as UploadIcon } from "@/assets/icons/generic/upload.svg"
 import { ReactComponent as WaitingIcon } from "@/assets/icons/generic/waiting.svg";
 
 interface IconProps {
-  size?: number;
+  size?: "small" | "big";
   color?: string;
   hoverColor?: string;
 }
 
 const svgStyles = ({ size, color, hoverColor }: IconProps): CSSObject => {
   return {
-    height: `${size || 24}px`,
-    width: `${size || 24}px`,
+    height: `${size === "small" ? 18 : 24}px`,
+    width: `${size === "small" ? 18 : 24}px`,
     "& path": {
       stroke: color,
     },
@@ -93,12 +93,18 @@ const icons = {
 export const IconNames = Object.keys(icons) as Array<IconNameType>;
 export type IconNameType = keyof typeof icons;
 
-export default function Icon({ name }: { name: IconNameType }) {
+export default function Icon({
+  name,
+  size,
+}: {
+  name: IconNameType;
+  size?: "small" | "big";
+}) {
   const selectedIcon = icons[name];
 
   const StyledIcon = styled(selectedIcon)<IconProps>`
     ${(props) => svgStyles(props)};
   `;
 
-  return <StyledIcon />;
+  return <StyledIcon size={size} />;
 }

@@ -70,6 +70,11 @@ const ChevronButtonIconWrapper = styled.div<{ isExpanded: boolean }>`
   cursor: pointer;
 `;
 
+const RowWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 function EngagementTable({
   headers,
   tableData,
@@ -80,10 +85,15 @@ function EngagementTable({
   const cellContentMapper = (v: any) => {
     const [showTasks, setShowTasks] = useState(false);
     const toggleTasks = () => setShowTasks(!showTasks);
+
     return {
       engagements: (
         <ColumnWrapper>
-          <Text type="bodyBold">{`engagement name`}</Text>
+          <RowWrapper>
+            <Text type="bodyBold">{`Verification`}</Text>
+            <Icon name="information" size="small" />
+          </RowWrapper>
+
           <Text type="caption" color="subdued">
             3 tasks
           </Text>
