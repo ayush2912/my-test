@@ -118,7 +118,7 @@ resource "aws_ecs_service" "my_service" {
     assign_public_ip = true
   }
 load_balancer {
-    target_group_arn = "arn:aws:elasticloadbalancing:ap-south-1:168933414344:targetgroup/my-ecs-tg/0aabec2861010b51"
+    target_group_arn = "arn:aws:elasticloadbalancing:ap-south-1:168933414344:targetgroup/notification-tg/aee60ad2f81fe5b1"
     container_name   = "my-container"
     container_port   = 8080
   }
