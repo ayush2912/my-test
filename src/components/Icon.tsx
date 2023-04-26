@@ -36,7 +36,9 @@ import { ReactComponent as TrashIcon } from "@/assets/icons/generic/trash.svg";
 import { ReactComponent as UnarchiveIcon } from "@/assets/icons/generic/unarchive.svg";
 import { ReactComponent as UploadIcon } from "@/assets/icons/generic/upload.svg";
 import { ReactComponent as WaitingIcon } from "@/assets/icons/generic/waiting.svg";
-
+import { ReactComponent as BidsIcon } from "@/assets/icons/menu/bids.svg";
+import { ReactComponent as ProjectsIcon } from "@/assets/icons/menu/projects.svg";
+import { ReactComponent as UserManagementIcon } from "@/assets/icons/menu/user-management.svg";
 interface IconProps {
   size?: "small" | "big";
   color?: string;
@@ -93,6 +95,9 @@ const icons = {
   unarchive: UnarchiveIcon,
   upload: UploadIcon,
   waiting: WaitingIcon,
+  bids: BidsIcon,
+  projects: ProjectsIcon,
+  userManagement: UserManagementIcon,
 };
 export const IconNames = Object.keys(icons) as Array<IconNameType>;
 export type IconNameType = keyof typeof icons;
