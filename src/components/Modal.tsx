@@ -30,6 +30,11 @@ const ModalContent = styled.div`
   width: fit-content;
 `;
 
+const FlexBoxRight = styled.div`
+  display: flex;
+  justify-content: end;
+`;
+
 const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
   //TODO: update the styles for title and button
   return (
@@ -38,7 +43,9 @@ const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
         <Card>
           {title && <h2>{title}</h2>}
           {children}
-          <Button onClick={onClose}>Close</Button>
+          <FlexBoxRight>
+            <Button onClick={onClose}>Close</Button>
+          </FlexBoxRight>
         </Card>
       </ModalContent>
     </Overlay>
