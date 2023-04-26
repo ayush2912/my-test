@@ -137,7 +137,9 @@ function EngagementTable({
             }}
             title="Note"
           >
-            <p>{v.note}</p>
+            <Text type="body" color="default">
+              {v.note}
+            </Text>
           </Modal>
         </>
       ),
