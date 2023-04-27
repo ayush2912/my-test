@@ -1,0 +1,441 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+type DateRange {
+  startDate DateTime
+  endDate   DateTime
+}
+
+type EngagementAttribute {
+  name  String
+  key   String
+  type  String
+  value String
+}
+
+type StateHistory {
+  state    String
+  datetime DateTime
+}
+
+model Organization {
+  id                 String         @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+  name               String?
+  url                String?
+  logo               String? /// Base64 Representation of the logo image 
+  logoUrl            String?
+  type               String? ///  
+  estimatedPortfolio Int?
+  expiryDate         DateTime?
+  status             String?        @default("ACTIVE")
+  members            User[]
+  projects           Project[]
+  portfolioProjects  Project[]      @relation("PortfolioOwnerOrganisations")
+  accessPolicies     AccessPolicy[]
+  Issuance           Issuance[]
+  chat               Chat[]
+  Project            Project[]      @relation("AssetOwnerOrganisations", fields: [projectIDs], references: [id])
+  projectIDs         String[]       @db.ObjectId
+}
+
+model User {
+  id                  String                  @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt           DateTime                @default(now())
+  updatedAt           DateTime                @default(now()) @updatedAt
+  email               String                  @unique
+  name                String?
+  firstName           String?
+  lastName            String?
+  avatar              String? /// Base64 representation of the avatar image buffer
+  avatarUrl           String?
+  status              String?                 @default("ACTIVE")
+  timezone            String?
+  organizationId      String?                 @db.ObjectId
+  organization        Organization?           @relation(fields: [organizationId], references: [id])
+  projects            Project[]
+  documents           Document[]
+  accessPolicies      AccessPolicy[]
+  projectsUpdated     Project[]               @relation("ProjectUpdatedByUser")
+  chat                Chat[]
+  notifications       NotificationReceivers[]
+  country             String?                 @default("IN")
+  lastOpenedDocuments Document[]              @relation("DocumentLastOpenedBy")
+  updatedDocuments    Document[]              @relation("DocumentUpdatedBy")
+  accessToken         String?                 @unique
+}
+
+model AccessPolicy {
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  userId         String?       @db.ObjectId
+  user           User?         @relation(fields: [userId], references: [id])
+  organizationId String?       @db.ObjectId
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  role           String? /// Role of the user in relatio to the entity, USER/ADMIN/SUPER ADMIN
+  isPrimary      Boolean?
+
+  permissions   String[] /// List of permissions to be granted to the user in this access policy.
+  notifications Notification[]
+
+  notificationsDisabledProjectIds String[] @db.ObjectId
+}
+
+model ProjectStage {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  type      String
+  startDate DateTime?
+  endDate   DateTime?
+  dueDate   DateTime?
+  projectId String    @db.ObjectId
+  project   Project?  @relation(fields: [projectId], references: [id])
+}
+
+model RegistryRiskInfo {
+  id                      String    @id @default(auto()) @map("_id") @db.ObjectId
+  timeLag                 Int?
+  successPercentage       Float?
+  issuanceBehaviour       Float?
+  expectedDateOfIssuance  DateTime?
+  expectedNumberOfCredits Int?
+  projectId               String    @unique @db.ObjectId
+  project                 Project?  @relation(name: "RegistryRiskInfo", fields: [projectId], references: [id])
+}
+
+model Project {
+  id                                String                  @id @default(auto()) @map("_id") @db.ObjectId
+  proposedMethodology               String?
+  prospectiveRegistry               String?
+  creditingPeriodStartDate          DateTime?
+  creditingPeriodEndDate            DateTime?
+  projectType                       String?
+  projectStartDate                  DateTime?
+  projectRegistrationDate           DateTime?
+  estimatedProjectRegistrationDate  DateTime?
+  stageUpdatedAt                    DateTime?
+  createdAt                         DateTime                @default(now())
+  updatedAt                         DateTime                @updatedAt
+  updatedByUserId                   String?                 @db.ObjectId
+  updatedByUser                     User?                   @relation(name: "ProjectUpdatedByUser", fields: [updatedByUserId], references: [id])
+  name                              String?
+  owner                             User?                   @relation(fields: [ownerId], references: [id])
+  ownerId                           String?                 @db.ObjectId
+  organization                      Organization?           @relation(fields: [organizationId], references: [id])
+  organizationId                    String?                 @db.ObjectId
+  sectoralScope                     String?
+  estimatedAnnualEmissionReductions Int?
+  registryStatus                    String?
+  status                            String? /// Current status of the project, such as status
+  statusLog                         ProjectStage[]
+  registryId                        String?                 @db.ObjectId
+  registry                        Registry?               @relation(fields: [registryId], references: [id])
+  documents                         Document[]
+  chats                             Chat[]
+  notifications                     Notification[]
+  issuanceLots                      Issuance[]
+  registryProjectData               RegistryProjectData?    @relation("RegistryProjectData")
+  isPrivate                         Boolean?
+  isArchived                        Boolean?
+  country                           String?                 @default("IN")
+  registryUrl                       String? /// Registry Project URL
+  registryProjectId                 String? /// Registry Project ID, e.g. 1805
+  projectRiskScore                  ProjectRiskScore?       @relation("ProjectRiskScore")
+  bids                              Bid[]
+  creditsAskPrice                   ProjectCreditsAskPrice? @relation("ProjectCreditsAskPrice")
+  registryRiskId                    String?
+  registryRiskInfo                  RegistryRiskInfo?       @relation("RegistryRiskInfo")
+  countries                         Country[]               @relation(fields: [countryIDs], references: [id])
+  countryIDs                        String[]                @db.ObjectId
+  states                            String[]
+  methodologies                     Methodology[]           @relation(fields: [methodologyIDs], references: [id])
+  methodologyIDs                    String[]                @db.ObjectId
+  types                             ProjectType[]           @relation("ProjectWithProjectType", fields: [typeIDs], references: [id])
+  typeIDs                           String[]                @db.ObjectId
+  subTypes                          ProjectType[]           @relation("ProjectWithSubProjectType", fields: [subTypeIDs], references: [id])
+  subTypeIDs                        String[]                @db.ObjectId
+  notes                             String?
+  isActive                          Boolean
+  annualApproximateCreditVolume     BigInt?
+  portfolioOwner                    Organization?           @relation("PortfolioOwnerOrganisations", fields: [portfolioOwnerId], references: [id])
+  portfolioOwnerId                  String?                 @db.ObjectId
+  assetOwners                       Organization[]          @relation("AssetOwnerOrganisations", fields: [assetOwnerIDs], references: [id])
+  assetOwnerIDs                     String[]                @db.ObjectId
+  engagements                       Engagement[]
+}
+
+model Engagement {
+  id            String                @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt     DateTime              @default(now())
+  updatedAt     DateTime              @updatedAt
+  type          String
+  startDate     DateTime
+  dueDate       DateTime
+  completedDate DateTime?
+  state         String?               @default("NOT_STARTED")
+  notes         String?
+  projectId     String                @db.ObjectId
+  project       Project               @relation(fields: [projectId], references: [id])
+  attributes    EngagementAttribute[]
+  stateHistory  StateHistory[]
+  tasks         Task[]
+}
+
+model Task {
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  engagementId  String         @db.ObjectId
+  engagement    Engagement?    @relation(fields: [engagementId], references: [id], onDelete: Cascade)
+  type          String
+  startDate     DateTime
+  dueDate       DateTime
+  completedDate DateTime?
+  state         String?        @default("NOT_STARTED")
+  stateHistory  StateHistory[]
+}
+
+model RegistryProjectData {
+  id                                String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt                         DateTime  @default(now())
+  updatedAt                         DateTime  @updatedAt
+  projectId                         String?   @unique @db.ObjectId
+  project                           Project?  @relation(name: "RegistryProjectData", fields: [projectId], references: [id])
+  projectName                       String?
+  metadata                          String?
+  creditingPeriodStartDate          DateTime?
+  creditingPeriodEndDate            DateTime?
+  counterparty                      String?
+  countryOfActivity                 String?
+  estimatedAnnualEmissionReductions String?
+  methodology                       String?
+  registryStatus                    String?
+  sectoralScope                     String?
+  registryProjectId                 String?
+  registryId                        String?   @db.ObjectId
+  registry                          Registry? @relation(fields: [registryId], references: [id])
+  point1Lat                         String?
+  point2Lat                         String?
+  point3Lat                         String?
+  point4Lat                         String?
+  point1Long                        String?
+  point2Long                        String?
+  point3Long                        String?
+  point4Long                        String?
+  direction1Lat                     String?
+  direction2Lat                     String?
+  direction3Lat                     String?
+  direction4Lat                     String?
+  direction1Long                    String?
+  direction2Long                    String?
+  direction3Long                    String?
+  direction4Long                    String?
+}
+
+model ProjectRiskScore {
+  id                 String  @id @default(auto()) @map("_id") @db.ObjectId
+  projectId          String  @unique @db.ObjectId
+  project            Project @relation(name: "ProjectRiskScore", fields: [projectId], references: [id])
+  startDateRiskScore Float?
+  geographyRiskScore Float?
+}
+
+model Registry {
+  id                   String                @id @default(auto()) @map("_id") @db.ObjectId
+  name                 String /// GCC, Verra
+  projects             Project[]
+  registryProjectDatas RegistryProjectData[]
+  issuance             Issuance[]
+  SectoralScope        SectoralScope[]
+  methodologies        Methodology[]         @relation(fields: [methodologyIDs], references: [id])
+  methodologyIDs       String[]              @db.ObjectId
+}
+
+model Chat {
+  id             String         @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  message        String?
+  creatorId      String?        @db.ObjectId
+  creator        User?          @relation(fields: [creatorId], references: [id])
+  documents      Document[]
+  notifications  Notification[]
+  projectId      String?        @db.ObjectId
+  project        Project?       @relation(fields: [projectId], references: [id])
+  bidId          String?        @db.ObjectId
+  bid            Bid?           @relation(fields: [bidId], references: [id])
+  organization   Organization?  @relation(fields: [organizationId], references: [id])
+  organizationId String?        @db.ObjectId
+}
+
+model Document {
+  id             String         @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  updatedById    String?        @db.ObjectId
+  updatedBy      User?          @relation(name: "DocumentUpdatedBy", fields: [updatedById], references: [id])
+  lastOpenedAt   DateTime?
+  lastOpenedById String?        @db.ObjectId
+  lastOpenedBy   User?          @relation(name: "DocumentLastOpenedBy", fields: [lastOpenedById], references: [id])
+  name           String
+  filename       String?
+  filetype       String?
+  storageKey     String?
+  url            String?
+  status         String? /// DEPRECIATED: Status of the document
+  stage          String? /// Stage of the document, such as REQUESTED_BY_HANDLER, PENDING_VERIFICATION_BY_CLIENT
+  ownerType      String? /// Type of Owner, such as Project Handler (PH) or Project Client (PC)
+  ownerId        String?        @db.ObjectId
+  owner          User?          @relation(fields: [ownerId], references: [id])
+  projectId      String?        @db.ObjectId
+  project        Project?       @relation(fields: [projectId], references: [id])
+  chatId         String?        @db.ObjectId
+  chat           Chat?          @relation(fields: [chatId], references: [id])
+  bidId          String?        @db.ObjectId
+  bid            Bid?           @relation(fields: [bidId], references: [id])
+  notifications  Notification[]
+}
+
+model NotificationReceivers {
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  receiverId     String?       @db.ObjectId
+  receiver       User?         @relation(fields: [receiverId], references: [id])
+  isRead         Boolean?
+  notificationId String?       @db.ObjectId
+  notification   Notification? @relation(fields: [notificationId], references: [id])
+}
+
+model Notification {
+  id                    String                  @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  creatorId             String?                 @db.ObjectId
+  type                  String?
+  projectId             String?                 @db.ObjectId
+  project               Project?                @relation(fields: [projectId], references: [id])
+  chatId                String?                 @db.ObjectId
+  chat                  Chat?                   @relation(fields: [chatId], references: [id])
+  documentId            String?                 @db.ObjectId
+  document              Document?               @relation(fields: [documentId], references: [id])
+  accessPolicyId        String?                 @db.ObjectId
+  accessPolicy          AccessPolicy?           @relation(fields: [accessPolicyId], references: [id])
+  notificationReceivers NotificationReceivers[]
+  metadata              Json?
+  bidId                 String?                 @db.ObjectId
+  bid                   Bid?                    @relation(fields: [bidId], references: [id])
+}
+
+model Issuance {
+  id               String        @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  vintagePeriod    DateRange?
+  monitoringPeriod DateRange?
+  quantityIssued   Int?
+  serialNumber     String?
+  issuanceStatus   String?
+  issuanceDate     DateTime?
+  projectId        String?       @db.ObjectId
+  project          Project?      @relation(fields: [projectId], references: [id])
+  registryId       String?       @db.ObjectId
+  registry         Registry?     @relation(fields: [registryId], references: [id])
+  organization     Organization? @relation(fields: [organizationId], references: [id])
+  organizationId   String?       @db.ObjectId
+}
+
+model AskPrice {
+  id                       String                 @id @default(auto()) @map("_id") @db.ObjectId
+  projectCreditsAskPriceId String                 @db.ObjectId
+  projectCreditsAskPrice   ProjectCreditsAskPrice @relation(fields: [projectCreditsAskPriceId], references: [id])
+  period                   Int
+  creditsIssued            Int?
+  updatedCredits           Int?
+  askPrice                 Float?
+  createdAt                DateTime               @default(now())
+  updatedAt                DateTime               @updatedAt
+}
+
+model ProjectCreditsAskPrice {
+  id                String     @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+  projectId         String     @unique @db.ObjectId
+  project           Project    @relation(name: "ProjectCreditsAskPrice", fields: [projectId], references: [id])
+  corsiaEligibility Boolean?
+  otherEligibility  String?
+  type              String?
+  askPrices         AskPrice[]
+}
+
+model Bid {
+  id            String            @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  projectId     String            @db.ObjectId
+  project       Project           @relation(fields: [projectId], references: [id])
+  status        String?
+  period        Int
+  expiryDate    DateTime?
+  volume        Int
+  price         Float
+  deliveryDate  DateTime?
+  chats         Chat[]
+  documents     Document[]
+  history       BidPriceHistory[]
+  notifications Notification[]
+}
+
+model BidPriceHistory {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  bidId     String   @db.ObjectId
+  bid       Bid      @relation(fields: [bidId], references: [id])
+  price     Float
+}
+
+model SectoralScope {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  registryId String   @db.ObjectId
+  registry   Registry @relation(fields: [registryId], references: [id])
+}
+
+model Methodology {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  Registry    Registry[] @relation(fields: [registryIDs], references: [id])
+  registryIDs String[]   @db.ObjectId
+  Projects    Project[]  @relation(fields: [projectIDs], references: [id])
+  projectIDs  String[]   @db.ObjectId
+}
+
+model Country {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  iso2Name  String    @unique
+  iso3Name  String
+  Project   Project[] @relation(fields: [projectId], references: [id])
+  projectId String[]  @db.ObjectId
+}
+
+model ProjectType {
+  id                 String        @id @default(auto()) @map("_id") @db.ObjectId
+  name               String
+  parentType         ProjectType?  @relation("ParentProjectType", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  parentId           String?       @db.ObjectId
+  subTypes           ProjectType[] @relation("ParentProjectType")
+  subTypeProjects    Project[]     @relation("ProjectWithSubProjectType", fields: [subTypeProjectIDs], references: [id])
+  subTypeProjectIDs  String[]      @db.ObjectId
+  mainTypeProject    Project[]     @relation("ProjectWithProjectType", fields: [mainTypeProjectIDs], references: [id])
+  mainTypeProjectIDs String[]      @db.ObjectId
+}
