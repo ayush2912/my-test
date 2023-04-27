@@ -10,23 +10,39 @@ export interface TabData {
 interface TabsInfoType {
   tabs: Array<TabData>;
   selectedTab: string;
+  onSelect: (value: string) => void;
 }
 
-const Tab = styled.div`
+const TabsHolder = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 0px;
+  background: #ffffff;
+  border: 1px solid #eff4fe;
+  border-radius: 8px;
+  width: fit-content;
+`;
+
+const Tab = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 8px 16px;
   border-radius: 8px;
   width: fit-content;
+  border: none;
+  background: #ffffff;
+  cursor: pointer;
 `;
 const ActiveTab = styled(Tab)`
   background: #d8e4fc;
 `;
 
-export default function Tabs({ tabs, selectedTab }: TabsInfoType) {
+export default function Tabs({ tabs, selectedTab, onSelect }: TabsInfoType) {
   return (
-    <>
+    <TabsHolder>
       {tabs.map((tab) => {
         return tab.value == selectedTab ? (
           <ActiveTab>
@@ -35,13 +51,13 @@ export default function Tabs({ tabs, selectedTab }: TabsInfoType) {
             </Text>
           </ActiveTab>
         ) : (
-          <Tab>
+          <Tab onClick={() => onSelect(tab.value)}>
             <Text type="bodyBold" color="subdued">
               {tab.label}
             </Text>
           </Tab>
         );
       })}
-    </>
+    </TabsHolder>
   );
 }

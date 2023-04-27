@@ -25,8 +25,10 @@ export const TabDisplay: Story = {
       },
     ] as Array<TabData>;
 
-    const [selectedTab, setSelectedTab] = useState("PI");
+    const [selectedTab, setSelectedTab] = useState<string>("PI");
 
-    return <Tabs selectedTab={selectedTab} tabs={tabs} />;
+    return (
+      <Tabs selectedTab={selectedTab} tabs={tabs} onSelect={setSelectedTab} />
+    );
   },
 };
