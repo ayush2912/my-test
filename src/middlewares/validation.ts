@@ -2,44 +2,56 @@ import { Request, Response, NextFunction } from 'express';
 import * as z from 'zod';
 
 import Errors from '../errors';
-import ProjectConstants from '../utility/constants/ProjectConstants'
+import ProjectConstants from '../utility/constants/ProjectConstants';
 
 const validateRequest =
-    (schema: z.ZodType<any>, source: 'body' | 'params') =>
-        (req: Request, res: Response, next: NextFunction) => {
-            const requestData = source === 'body' ? req.body : req.params;
+    (bodySchema?: z.ZodType<any>, paramsSchema?: z.ZodType<any>) =>
+    (req: Request, res: Response, next: NextFunction) => {
+        const bodyData = req.body;
+        const paramsData = req.params;
+        const errorResponse = new Errors.PreConditionFailed();
+
+        if (paramsSchema && Object.keys(paramsData).length > 0) {
             try {
-                const validatedData = schema.parse(requestData);
-
-                if (source === 'body') {
-                    req.body = validatedData;
-                } else {
-                    req.params = validatedData;
-                }
-                next();
+                const validatedParamsData = paramsSchema.parse(paramsData);
+                req.params = validatedParamsData;
             } catch (error: any) {
-                const er = new Errors.PreConditionFailed();
-
                 if (error instanceof z.ZodError) {
-                    if (
-                        error?.errors &&
-                        Array.isArray(error.errors) &&
-                        error.errors.length > 0
-                    ) {
-                        error.errors.forEach((error) => {
-                            er.push(new Errors.PreConditionFailed(error.message));
-                        });
-                    }
-                    res.sendError(er);
+                    error.errors.forEach((err) => {
+                        errorResponse.push(
+                            new Errors.PreConditionFailed(err.message)
+                        );
+                    });
                 }
             }
-        };
+        }
+
+        if (bodySchema && Object.keys(bodyData).length > 0) {
+            try {
+                const validatedBodyData = bodySchema.parse(bodyData);
+                req.body = validatedBodyData;
+            } catch (error: any) {
+                if (error instanceof z.ZodError) {
+                    error.errors.forEach((err) => {
+                        errorResponse.push(
+                            new Errors.PreConditionFailed(err.message)
+                        );
+                    });
+                }
+            }
+        }
+
+        if (errorResponse.errors.length > 1) {
+            res.sendError(errorResponse);
+        } else {
+            next();
+        }
+    };
 
 const validateProjectIdParamsSchema = validateRequest(
     z.object({
         projectId: z.string().length(24, ProjectConstants.INVALID_PROJECT_ID),
-    }),
-    'params'
+    })
 );
 
 export { validateProjectIdParamsSchema };

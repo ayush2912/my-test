@@ -1,69 +1,21 @@
-import { count } from 'console';
 import prisma from '../prisma';
-import {
-    getProject,
-    createProject,
-    updateProject,
-    deleteProject,
-} from '../projects';
 import { faker } from '@faker-js/faker';
-import exp from 'constants';
 
-const registries = Array(3)
-    .fill(0)
-    .map(() => ({
-        id: faker.database.mongodbObjectId(),
-        name: faker.company.name(),
-    }));
+import { createProject, getProject, updateProject, deleteProject } from '../projects';
+import { countries, states, methodologies, registries, projectTypes, organizations, engagements } from '../../__mock__/mock.data'
 
-const countries = [
-    { name: 'India', iso3Name: 'IND', iso2Name: 'IN' },
-    {
-        name: 'United Kingdom',
-        iso3Name: 'GBR',
-        iso2Name: 'GB',
-    },
-    {
-        name: 'United States',
-        iso3Name: 'USA',
-        iso2Name: 'US',
-    },
-];
-
-const methodologies = Array(10)
-    .fill(0)
-    .map(() => ({
-        id: faker.database.mongodbObjectId(),
-        name: faker.company.bs(),
-    }));
-
-const projectTypes = Array(10)
-    .fill(0)
-    .map(() => ({
-        id: faker.database.mongodbObjectId(),
-        name: faker.company.catchPhraseNoun(),
-    }));
-
-const organizations = Array(10)
-    .fill(0)
-    .map(() => ({
-        id: faker.database.mongodbObjectId(),
-        name: faker.company.name(),
-    }));
-
-const states = ['UP', 'Maharashtra', 'California']
-
-beforeAll(() =>
+beforeEach(() =>
     Promise.all([
         prisma.registry.createMany({ data: registries }),
         prisma.country.createMany({ data: countries }),
         prisma.methodology.createMany({ data: methodologies }),
         prisma.projectType.createMany({ data: projectTypes }),
         prisma.organization.createMany({ data: organizations }),
+        prisma.engagement.createMany({ data: engagements })
     ])
 );
 
-afterAll(async () => {
+afterEach(async () => {
     await Promise.all([
         prisma.registry.deleteMany({
             where: {
@@ -97,6 +49,13 @@ afterAll(async () => {
             where: {
                 id: {
                     in: organizations.map((r) => r.id),
+                },
+            },
+        }),
+        prisma.engagement.deleteMany({
+            where: {
+                id: {
+                    in: engagements.map((r) => r.id),
                 },
             },
         }),
@@ -175,21 +134,24 @@ describe('createProject()', () => {
 
 describe('getProject()', () => {
     test('it should find the correct project', async () => {
-        // Setup
         const data = {
-            name: 'Renewable Power Project',
+            name: 'Renewable Get Power Project',
             registry: faker.helpers.arrayElement(registries).id,
             registryUrl: 'www.url.com',
             registryProjectId: '1851',
             countries: faker.helpers
                 .arrayElements(countries)
                 .map((c) => c.iso2Name),
-            states: ['UP', 'Maharashtra', 'California'],
+            states: ['UP'],
             methodologies: faker.helpers
                 .arrayElements(methodologies, 1)
                 .map((m) => m.id),
-            type: faker.helpers.arrayElement(projectTypes).id,
-            subType: faker.helpers.arrayElement(projectTypes).id,
+            type: faker.helpers
+                .arrayElements(projectTypes, 1)
+                .map((m) => m.id),
+            subType: faker.helpers
+                .arrayElements(projectTypes, 1)
+                .map((m) => m.id),
             notes: 'Renewable Power project in India',
             isActive: true,
             creditingPeriodStartDate: '2023-04-11T14:15:22Z',
@@ -199,14 +161,16 @@ describe('getProject()', () => {
             assetOwners: faker.helpers
                 .arrayElements(organizations)
                 .map((m) => m.id),
+            engagements: faker.helpers
+                .arrayElements(engagements, 1)
+                .map((m) => m.id),
         };
-
         const project = await createProject(data);
 
-        // Body
         const result = await getProject(project.id);
 
-        expect(result?.name).toBe('Renewable Power Project');
+        expect(typeof result?.id).toBe('string');
+        expect(result?.name).toBe(data.name);
         expect(result?.registry?.id).toBe(data.registry);
         expect(result?.registry?.name).toBe(
             registries.find((r) => r.id === data.registry)?.name
@@ -240,6 +204,12 @@ describe('getProject()', () => {
 
         // Teardown
         await deleteProject(project.id);
+    });
+
+    it('returns null if the project does not exist', async () => {
+        const projectId = '5116591277702d2113142ebc';
+        const result = await getProject(projectId);
+        expect(result).toBeNull();
     });
 });
 
