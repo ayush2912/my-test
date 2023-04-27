@@ -162,7 +162,7 @@ model Project {
   subTypes                          ProjectType[]           @relation("ProjectWithSubProjectType", fields: [subTypeIDs], references: [id])
   subTypeIDs                        String[]                @db.ObjectId
   notes                             String?
-  isActive                          Boolean
+  isActive                          Boolean?
   annualApproximateCreditVolume     BigInt?
   portfolioOwner                    Organization?           @relation("PortfolioOwnerOrganisations", fields: [portfolioOwnerId], references: [id])
   portfolioOwnerId                  String?                 @db.ObjectId
