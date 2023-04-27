@@ -8,7 +8,7 @@ describe('getProject()', () => {
             data: {
                 id: '6446591277702d34131426ea',
                 name: 'Test Project 1',
-                state: 'test_state',
+                states: ['test_state'],
                 isActive: true,
             },
         });
