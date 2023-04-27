@@ -34,6 +34,7 @@ export const theme = {
       subdued: "#8992A3",
       disabled: "#C4C9D1",
       white: "#FFFFFF",
+      warning: "#E0A008",
       primary: "#3C76F1",
     },
     semantic: {
