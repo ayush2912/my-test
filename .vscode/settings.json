@@ -2,5 +2,15 @@
   "editor.codeActionsOnSave": { "source.fixAll.eslint": true },
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "eslint.validate": ["typescript"],
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "files.exclude": {
+    "App.js": true,
+    "App.test.js": true,
+    "main.js": true,
+    "assets": true,
+    "components": true,
+    "modules": true,
+    "styles": true,
+    "utils": true
+  }
 }
