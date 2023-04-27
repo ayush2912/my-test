@@ -15,7 +15,7 @@ type TypeStyle =
   | "linkText"
   | "linkTextBold";
 
-type TextColor = "default" | "subdued" | "disabled" | "white";
+type TextColor = "primary" | "default" | "subdued" | "disabled" | "white";
 
 const StyledText = styled.span<{ type: TypeStyle; color: TextColor }>`
   font-size: ${(props) => props.theme.typography[props.type].size}px;
