@@ -148,14 +148,13 @@ function EngagementTable({
             title="Engagement Attributes"
           >
             <div>
-              <div>
-                <Text type="body" color="subdued">
-                  Registration has the following attributes. As soon as the
-                  Carbon Desk fills out the details, they will be available here
-                  for you to read.
-                </Text>
-                <DividerDiv></DividerDiv>
-              </div>
+              <Text type="body" color="subdued">
+                Registration has the following attributes. As soon as the Carbon
+                Desk fills out the details, they will be available here for you
+                to read.
+              </Text>
+              <DividerDiv></DividerDiv>
+
               {v.attributes.map((attribute, index) => {
                 return (
                   <LabelValue
