@@ -24,9 +24,8 @@ const projectEngagementsTableData: EngagementItem[] = [
     document: 20,
     attributes: [
       {
-        label: "Registration",
-        value:
-          "Registration has the following attributes. As soon as the Carbon Desk fills out the details, they will be available here for you to read.",
+        label: "Date of registration",
+        value: "",
       },
       {
         label: "Registry ID",
