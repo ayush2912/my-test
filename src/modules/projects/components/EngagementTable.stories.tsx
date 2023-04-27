@@ -19,7 +19,20 @@ const projectEngagementsTableData: EngagementItem[] = [
     dueDate: new Date("2030-01-05T08:52:29.962Z"),
     note: "I am a note",
     document: 20,
-    attributes: [{ label: "hello", value: "hi" }],
+    attributes: [
+      {
+        label: "Date of registration",
+        value: "",
+      },
+      {
+        label: "Registry ID",
+        value: "",
+      },
+      {
+        label: "Registry URL",
+        value: "https://registry.goldstandard.org/projects/details/48",
+      },
+    ],
     tasks: [
       {
         name: "Task 1",

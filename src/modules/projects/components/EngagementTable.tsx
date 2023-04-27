@@ -5,6 +5,7 @@ import TaskList, { TaskListProps } from "./TaskList";
 import Button from "../../../components/Button";
 import Card from "../../../components/Card";
 import Icon from "../../../components/Icon";
+import LabelValue from "../../../components/labelValuePair";
 import Modal from "../../../components/Modal";
 import StatusTag, { StatusType } from "../../../components/StatusTag";
 import Text from "../../../components/Text";
@@ -75,6 +76,23 @@ const RowWrapper = styled.div`
   align-items: center;
 `;
 
+const InfoButton = styled.button`
+  background: none;
+  color: inherit;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const DividerDiv = styled.div`
+  height: 1px;
+  background: #e1e4e8;
+  margin: 24px 0px;
+`;
 type EngamentStateTypes =
   | "NOT_STARTED"
   | "IN_PROGRESS"
@@ -108,6 +126,7 @@ function EngagementTable({
   const cellContentMapper = (v: EngagementItem) => {
     const [showTasks, setShowTasks] = useState(false);
     const [showNote, setShowNote] = useState(false);
+    const [showEngagments, setShowEngagments] = useState(false);
     const toggleTasks = () => setShowTasks(!showTasks);
     const statusTag = {
       NOT_STARTED: { label: "NOT STARTED", type: "disabled" },
@@ -119,18 +138,53 @@ function EngagementTable({
     const isEngamentDiscontinued = v.state === "DISCONTINUED";
     return {
       engagements: (
-        <ColumnWrapper>
-          <RowWrapper>
-            <Text type="bodyBold">{v.name}</Text>
-            <Icon name="information" size="small" />
-          </RowWrapper>
+        <>
+          <ColumnWrapper>
+            <RowWrapper>
+              <Text type="bodyBold">{v.name}</Text>
+              <InfoButton
+                onClick={() => {
+                  setShowEngagments(true);
+                }}
+              >
+                <Icon name="information" size="small" />
+              </InfoButton>
+            </RowWrapper>
 
-          <Text type="caption" color="subdued">
-            {`${v.tasks.length} tasks`}
-            <span> &bull; </span>
-            {`Completed on DD/MM/YYYY`}
-          </Text>
-        </ColumnWrapper>
+            <Text type="caption" color="subdued">
+              {`${v.tasks.length} tasks`}
+              <span> &bull; </span>
+              {`Completed on DD/MM/YYYY`}
+            </Text>
+          </ColumnWrapper>
+
+          <Modal
+            isOpen={showEngagments}
+            onClose={() => {
+              setShowEngagments(false);
+            }}
+            title="Engagement Attributes"
+          >
+            <div>
+              <Text type="body" color="subdued">
+                Registration has the following attributes. As soon as the Carbon
+                Desk fills out the details, they will be available here for you
+                to read.
+              </Text>
+              <DividerDiv></DividerDiv>
+
+              {v.attributes.map((attribute, index) => {
+                return (
+                  <LabelValue
+                    key={index}
+                    label={attribute?.label}
+                    value={attribute?.value}
+                  />
+                );
+              })}
+            </div>
+          </Modal>
+        </>
       ),
       startDate: (
         <Text type="body" color={"subdued"}>
