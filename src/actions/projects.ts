@@ -108,7 +108,6 @@ const getProject = async (projectId: string) =>
             registryUrl: true,
             countries: {
                 select: {
-                    id: true,
                     name: true,
                     iso2Name: true,
                     iso3Name: true,
