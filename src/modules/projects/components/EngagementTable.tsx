@@ -6,7 +6,7 @@ import Card from "@/components/Card";
 import Icon from "@/components/Icon";
 import Modal from "@/components/Modal";
 import StatusTag from "@/components/StatusTag";
-import Text from "@/components/Text";
+import Text, { TextColor } from "@/components/Text";
 
 import TaskList, { TaskListProps } from "./TaskList";
 import { convertToEuropeanDateFormat } from "../../../utils/dateTimeFormatter";
@@ -96,7 +96,7 @@ export interface EngagementItem {
 
 interface EngagementStatus {
   label: EngamentStateTypes;
-  type: "error" | "warning" | "success" | "information" | "disabled";
+  type: TextColor;
 }
 
 function EngagementTable({
