@@ -7,6 +7,13 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    environment: notification-test
+    env:
+      TF_VAR_GQL_API: ${{secrets.GQL_API}}
+      TF_VAR_SOCKETIO_MONGO_ADAPTER_COLLECTION: ${{secrets.SOCKETIO_MONGO_ADAPTER_COLLECTION}}
+      TF_VAR_SOCKETIO_MONGO_ADAPTER_DB: ${{secrets.SOCKETIO_MONGO_ADAPTER_DB}}
+      TF_VAR_SOCKETIO_MONGO_ADAPTER_URI: ${{secrets.SOCKETIO_MONGO_ADAPTER_URI}}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
