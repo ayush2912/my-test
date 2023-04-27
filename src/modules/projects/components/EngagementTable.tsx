@@ -7,7 +7,7 @@ import Card from "../../../components/Card";
 import Icon from "../../../components/Icon";
 import LabelValue from "../../../components/labelValuePair";
 import Modal from "../../../components/Modal";
-import StatusTag from "../../../components/StatusTag";
+import StatusTag, { StatusType } from "../../../components/StatusTag";
 import Text from "../../../components/Text";
 import { convertToEuropeanDateFormat } from "../../../utils/dateTimeFormatter";
 
@@ -93,15 +93,27 @@ const DividerDiv = styled.div`
   background: #e1e4e8;
   margin: 24px 0px;
 `;
+type EngamentStateTypes =
+  | "NOT_STARTED"
+  | "IN_PROGRESS"
+  | "DISCONTINUED"
+  | "COMPLETED"
+  | "OVERDUE";
+
 export interface EngagementItem {
   name: string;
-  state: "COMPLETED" | "OVERDUE" | "IN_PROGRESS" | "DISCONTINUED";
+  state: EngamentStateTypes;
   startDate: Date;
   dueDate: Date;
   note: string;
   document: number;
   attributes: { label: string; value: string }[];
   tasks: TaskListProps[];
+}
+
+interface EngagementStatus {
+  label: EngamentStateTypes;
+  type: StatusType;
 }
 
 function EngagementTable({
@@ -116,7 +128,14 @@ function EngagementTable({
     const [showNote, setShowNote] = useState(false);
     const [showEngagments, setShowEngagments] = useState(false);
     const toggleTasks = () => setShowTasks(!showTasks);
-
+    const statusTag = {
+      NOT_STARTED: { label: "NOT STARTED", type: "disabled" },
+      IN_PROGRESS: { label: "IN PROGRESS", type: "information" },
+      DISCONTINUED: { label: "DISCONTINUED", type: "error" },
+      COMPLETED: { label: "COMPLETED", type: "success" },
+      OVERDUE: { label: "OVERDUE", type: "warning" },
+    }[v.state] as EngagementStatus;
+    const isEngamentDiscontinued = v.state === "DISCONTINUED";
     return {
       engagements: (
         <>
@@ -173,11 +192,11 @@ function EngagementTable({
         </Text>
       ),
       dueDate: (
-        <Text type="body" color={"subdued"}>
+        <Text type="body" color={v.state === "OVERDUE" ? "warning" : "subdued"}>
           {convertToEuropeanDateFormat(v.dueDate)}
         </Text>
       ),
-      state: <StatusTag name="IN PROGRESS" type="information" />,
+      state: <StatusTag name={statusTag.label} type={statusTag.type} />,
       note: (
         <>
           <Button type="ghost" onClick={() => setShowNote(true)}>
@@ -213,7 +232,7 @@ function EngagementTable({
               name={v.name}
               startDate={v.startDate}
               dueDate={v.dueDate}
-              status={v.status}
+              status={isEngamentDiscontinued ? "DISCONTINUED" : v.status}
             />
           ))}
         </TaskListCell>
