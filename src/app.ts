@@ -30,12 +30,9 @@ export const App = () => {
     });
 
     const whitelist = [
-        'http://localhost:3000',
-        'https://dev-dashboard.offsetmax.digital/',
-        'https://staging-dashboard.offsetmax.digital/',
-        'https://demo.offsetmax.digital/',
-        'https://mirror.offsetmax.digital/',
-        'https://app.offsetmax.digital/',
+        process.env.LOCAL,
+        process.env.DEV,
+        process.env.STAGING
     ];
     const corsOptions = {
         origin: (origin: any, callback: any) => {

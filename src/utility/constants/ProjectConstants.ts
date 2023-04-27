@@ -1,6 +1,6 @@
 const ProjectConstants = {
     INVALID_PROJECT_ID: 'Invalid Project Id',
-    PROJECT_DETAILS_RETRIVED: 'Project Details Retrived Successfully',
+    PROJECT_DETAILS_RETRIEVED: 'Project Details Retrieved Successfully',
 };
 
 export default ProjectConstants;

@@ -14,7 +14,7 @@ export default function routes(router: Router) {
                 const results = await getProjectDetails(req.params.projectId);
 
                 res.sendSuccess({
-                    msg: ProjectConstants.PROJECT_DETAILS_RETRIVED,
+                    msg: ProjectConstants.PROJECT_DETAILS_RETRIEVED,
                     data: results,
                     custom_code: 'PROJECT_DETAILS_RETRIVED_SUCCESSFULLY',
                 });

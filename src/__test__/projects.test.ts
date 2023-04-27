@@ -13,7 +13,7 @@ describe('/projects/{projectId}', () => {
 
         expect(results.body.status).toBe('Success');
         expect(results.body.message).toBe(
-            'Project Details Retrived Successfully'
+            'Project Details Retrieved Successfully'
         );
     });
 
@@ -24,7 +24,7 @@ describe('/projects/{projectId}', () => {
 
         expect(results.body.errors).toEqual([
             {
-                msg: 'Validation errors/ Invalid arguments',
+                msg: 'Validation errors/Invalid arguments',
                 code: 'VALIDATION_ERROR',
             },
             {
