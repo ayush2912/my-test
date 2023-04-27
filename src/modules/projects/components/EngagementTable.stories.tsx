@@ -1,8 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import StatusTag from "@/components/StatusTag";
-import Text from "@/components/Text";
-
 import EngagementTable, { EngagementItem } from "./EngagementTable";
 import { EngagementTableHeaders } from "../constants/engagementTableHeaders";
 

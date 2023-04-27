@@ -1,0 +1,16 @@
+#!/bin/bash
+
+echo "Removing components folder"
+rm -rf ./components
+
+echo "Removing assets folder"
+rm -rf ./assets
+
+echo "Removing styles folder"
+rm -rf ./styles
+
+echo "Removing modules folder"
+rm -rf ./modules
+
+echo "Removing utils folder"
+rm -rf ./utils

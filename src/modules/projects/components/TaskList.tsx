@@ -1,9 +1,9 @@
 import styled from "styled-components";
 
-import Icon, { IconNameType } from "@/components/Icon";
-import Text from "@/components/Text";
-import Tooltip from "@/components/Tooltip";
-import { convertToEuropeanDateFormat } from "@/utils/dateTimeFormatter";
+import Icon, { IconNameType } from "../../../components/Icon";
+import Text from "../../../components/Text";
+import Tooltip from "../../../components/Tooltip";
+import { convertToEuropeanDateFormat } from "../../../utils/dateTimeFormatter";
 
 const StyledTaskContainer = styled.div`
   border-top: 1px solid #e1e4e8;
