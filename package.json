@@ -1,11 +1,14 @@
 {
-  "name": "offsetmax-web-app",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "name": "@climateconnectdigital/offsetmax-web-app",
+  "private": false,
+  "version": "1.1.0",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "repository": "https://github.com/climateconnectdigital/offsetmax-web-app.git",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "./bin/clean && ./bin/build",
     "test": "vitest",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
