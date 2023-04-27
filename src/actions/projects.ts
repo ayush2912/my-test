@@ -8,18 +8,24 @@ const TaskSchema = {
     dueDate: true,
     completedDate: true,
     state: true,
-    stateHistory: true
+    stateHistory: true,
+    createdAt: true,
+    updatedAt: true,
 }
 
 const ProjectSchema = {
     id: true,
-    createdAt: true,
-    updatedAt: true,
     name: true,
     registry: {
         select: {
             id: true,
             name: true,
+            methodologies: {
+                select: {
+                    id: true,
+                    name: true,
+                },
+            },
         },
     },
     registryProjectId: true,
@@ -63,6 +69,8 @@ const ProjectSchema = {
             notes: true,
             projectId: true,
             stateHistory: true,
+            createdAt: true,
+            updatedAt: true,
             tasks: {
                 select: TaskSchema
             },
@@ -76,7 +84,9 @@ const ProjectSchema = {
             id: true,
             name: true,
         },
-    }
+    },
+    createdAt: true,
+    updatedAt: true,
 };
 
 const getProject = async (projectId: string) =>
@@ -86,22 +96,27 @@ const getProject = async (projectId: string) =>
         },
         select: {
             id: true,
-            createdAt: true,
-            updatedAt: true,
             name: true,
             registry: {
                 select: {
                     id: true,
                     name: true,
+                    methodologies: {
+                        select: {
+                            id: true,
+                            name: true,
+                        },
+                    },
                 },
             },
             registryProjectId: true,
             registryUrl: true,
             countries: {
                 select: {
+                    id: true,
+                    name: true,
                     iso2Name: true,
                     iso3Name: true,
-                    name: true,
                 },
             },
             states: true,
@@ -137,6 +152,8 @@ const getProject = async (projectId: string) =>
                     notes: true,
                     attributes: true,
                     stateHistory: true,
+                    createdAt: true,
+                    updatedAt: true,
                     tasks: {
                         select: TaskSchema,
                         orderBy: [{ startDate: 'asc' }, { type: 'asc' }],
@@ -152,7 +169,9 @@ const getProject = async (projectId: string) =>
                     id: true,
                     name: true,
                 },
-            }
+            },
+            createdAt: true,
+            updatedAt: true,
         },
     });
 
