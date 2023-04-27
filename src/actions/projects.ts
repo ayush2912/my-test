@@ -1,5 +1,16 @@
 import prisma from './prisma';
 
+const TaskSchema = {
+    id: true,
+    engagementId: true,
+    type: true,
+    startDate: true,
+    dueDate: true,
+    completedDate: true,
+    state: true,
+    stateHistory: true
+}
+
 const ProjectSchema = {
     id: true,
     createdAt: true,
@@ -20,20 +31,20 @@ const ProjectSchema = {
             name: true,
         },
     },
-    state: true,
+    states: true,
     methodologies: {
         select: {
             id: true,
             name: true,
         },
     },
-    type: {
+    types: {
         select: {
             id: true,
             name: true,
         },
     },
-    subType: {
+    subTypes: {
         select: {
             id: true,
             name: true,
@@ -53,16 +64,7 @@ const ProjectSchema = {
             projectId: true,
             stateHistory: true,
             tasks: {
-                select: {
-                    id: true,
-                    type: true,
-                    startDate: true,
-                    dueDate: true,
-                    completedDate: true,
-                    state: true,
-                    engagementId: true,
-                    stateHistory: true,
-                },
+                select: TaskSchema
             },
         },
     },
@@ -82,15 +84,75 @@ const getProject = async (projectId: string) =>
         where: {
             id: projectId,
         },
-        include: {
+        select: {
+            id: true,
+            createdAt: true,
+            updatedAt: true,
+            name: true,
+            registry: {
+                select: {
+                    id: true,
+                    name: true,
+                },
+            },
+            registryProjectId: true,
+            registryUrl: true,
+            countries: {
+                select: {
+                    iso2Name: true,
+                    iso3Name: true,
+                    name: true,
+                },
+            },
+            states: true,
+            methodologies: {
+                select: {
+                    id: true,
+                    name: true,
+                },
+            },
+            types: {
+                select: {
+                    id: true,
+                    name: true,
+                },
+            },
+            subTypes: {
+                select: {
+                    id: true,
+                    name: true,
+                },
+            },
+            notes: true,
+            isActive: true,
             engagements: {
-                orderBy: [{ startDate: 'asc' }, { type: 'asc' }],
-                include: {
+                select: {
+                    id: true,
+                    projectId: true,
+                    type: true,
+                    startDate: true,
+                    dueDate: true,
+                    completedDate: true,
+                    state: true,
+                    notes: true,
+                    attributes: true,
+                    stateHistory: true,
                     tasks: {
+                        select: TaskSchema,
                         orderBy: [{ startDate: 'asc' }, { type: 'asc' }],
                     },
                 },
+                orderBy: [{ startDate: 'asc' }, { type: 'asc' }]
             },
+            creditingPeriodStartDate: true,
+            creditingPeriodEndDate: true,
+            annualApproximateCreditVolume: true,
+            portfolioOwner: {
+                select: {
+                    id: true,
+                    name: true,
+                },
+            }
         },
     });
 
