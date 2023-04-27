@@ -5,7 +5,7 @@ import Button from "@/components/Button";
 import Card from "@/components/Card";
 import Icon from "@/components/Icon";
 import Modal from "@/components/Modal";
-import StatusTag from "@/components/StatusTag";
+import StatusTag, { StatusType } from "@/components/StatusTag";
 import Text, { TextColor } from "@/components/Text";
 
 import TaskList, { TaskListProps } from "./TaskList";
@@ -96,7 +96,7 @@ export interface EngagementItem {
 
 interface EngagementStatus {
   label: EngamentStateTypes;
-  type: TextColor;
+  type: StatusType;
 }
 
 function EngagementTable({
