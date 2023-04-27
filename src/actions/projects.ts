@@ -69,6 +69,7 @@ const ProjectSchema = {
             notes: true,
             projectId: true,
             stateHistory: true,
+            attributes: true,
             createdAt: true,
             updatedAt: true,
             tasks: {
@@ -208,6 +209,11 @@ const createProject = (data: any) =>
                 })),
             },
             notes: data.notes,
+            engagements: {
+                connect: data.engagements.map((engagementId: string) => ({
+                    id: engagementId,
+                })),
+            },
             creditingPeriodStartDate: data.creditingPeriodStartDate,
             creditingPeriodEndDate: data.creditingPeriodEndDate,
             portfolioOwner: {
@@ -225,11 +231,28 @@ const createProject = (data: any) =>
         select: ProjectSchema,
     });
 
-const deleteProject = (projectId: string) =>
-    prisma.project.delete({
+const deleteProject = async (projectId: string) => {
+    const engagements = await prisma.engagement.findMany({
+        where: {
+            projectId: projectId,
+        },
+        select: {
+            id: true,
+        },
+    });
+    const engagementIds = engagements.map((engagement) => engagement.id);
+    await prisma.engagement.deleteMany({
+        where: {
+            id: {
+                in: engagementIds,
+            },
+        },
+    });
+    await prisma.project.delete({
         where: {
             id: projectId,
         },
     });
+};
 
 export { getProject, createProject, deleteProject };
