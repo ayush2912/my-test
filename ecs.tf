@@ -75,19 +75,19 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
     "environment": [
         {
           "name": "SOCKETIO_MONGO_ADAPTER_URI",
-          "value": "mongodb+srv://atlasAdmin:m9yrCL1hikEj8BUU@offsetmaxcluster0.6zak4.mongodb.net/offsetmaxsandbox"
+          "value": "${var.SOCKETIO_MONGO_ADAPTER_URI}"
         },
        {
           "name": "SOCKETIO_MONGO_ADAPTER_DB" ,
-          "value": "offsetmaxsandbox"
+          "value": "${var.SOCKETIO_MONGO_ADAPTER_DB}"
         },
         {
           "name": "SOCKETIO_MONGO_ADAPTER_COLLECTION",
-          "value": "SocketIoAdapterEvents"
+          "value": "${var.SOCKETIO_MONGO_ADAPTER_COLLECTION}"
         },
         {
           "name": "GQL_API" ,
-          "value": "https://dev-orm.offsetmax.digital/"
+          "value": "${var.GQL_API}"
         }
       
     ],
