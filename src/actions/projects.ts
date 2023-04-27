@@ -1,14 +1,31 @@
 import prisma from './prisma';
 
-const ProjectSchema = {
+const TaskSchema = {
     id: true,
+    engagementId: true,
+    type: true,
+    startDate: true,
+    dueDate: true,
+    completedDate: true,
+    state: true,
+    stateHistory: true,
     createdAt: true,
     updatedAt: true,
+}
+
+const ProjectSchema = {
+    id: true,
     name: true,
     registry: {
         select: {
             id: true,
             name: true,
+            methodologies: {
+                select: {
+                    id: true,
+                    name: true,
+                },
+            },
         },
     },
     registryProjectId: true,
@@ -20,20 +37,20 @@ const ProjectSchema = {
             name: true,
         },
     },
-    state: true,
+    states: true,
     methodologies: {
         select: {
             id: true,
             name: true,
         },
     },
-    type: {
+    types: {
         select: {
             id: true,
             name: true,
         },
     },
-    subType: {
+    subTypes: {
         select: {
             id: true,
             name: true,
@@ -52,17 +69,11 @@ const ProjectSchema = {
             notes: true,
             projectId: true,
             stateHistory: true,
+            attributes: true,
+            createdAt: true,
+            updatedAt: true,
             tasks: {
-                select: {
-                    id: true,
-                    type: true,
-                    startDate: true,
-                    dueDate: true,
-                    completedDate: true,
-                    state: true,
-                    engagementId: true,
-                    stateHistory: true,
-                },
+                select: TaskSchema
             },
         },
     },
@@ -74,7 +85,9 @@ const ProjectSchema = {
             id: true,
             name: true,
         },
-    }
+    },
+    createdAt: true,
+    updatedAt: true,
 };
 
 const getProject = async (projectId: string) =>
@@ -82,15 +95,84 @@ const getProject = async (projectId: string) =>
         where: {
             id: projectId,
         },
-        include: {
-            engagements: {
-                orderBy: [{ startDate: 'asc' }, { type: 'asc' }],
-                include: {
-                    tasks: {
-                        orderBy: [{ startDate: 'asc' }, { type: 'asc' }],
+        select: {
+            id: true,
+            name: true,
+            registry: {
+                select: {
+                    id: true,
+                    name: true,
+                    methodologies: {
+                        select: {
+                            id: true,
+                            name: true,
+                        },
                     },
                 },
             },
+            registryProjectId: true,
+            registryUrl: true,
+            countries: {
+                select: {
+                    id: true,
+                    name: true,
+                    iso2Name: true,
+                    iso3Name: true,
+                },
+            },
+            states: true,
+            methodologies: {
+                select: {
+                    id: true,
+                    name: true,
+                },
+            },
+            types: {
+                select: {
+                    id: true,
+                    name: true,
+                },
+            },
+            subTypes: {
+                select: {
+                    id: true,
+                    name: true,
+                },
+            },
+            notes: true,
+            isActive: true,
+            engagements: {
+                select: {
+                    id: true,
+                    projectId: true,
+                    type: true,
+                    startDate: true,
+                    dueDate: true,
+                    completedDate: true,
+                    state: true,
+                    notes: true,
+                    attributes: true,
+                    stateHistory: true,
+                    createdAt: true,
+                    updatedAt: true,
+                    tasks: {
+                        select: TaskSchema,
+                        orderBy: [{ startDate: 'asc' }, { type: 'asc' }],
+                    },
+                },
+                orderBy: [{ startDate: 'asc' }, { type: 'asc' }]
+            },
+            creditingPeriodStartDate: true,
+            creditingPeriodEndDate: true,
+            annualApproximateCreditVolume: true,
+            portfolioOwner: {
+                select: {
+                    id: true,
+                    name: true,
+                },
+            },
+            createdAt: true,
+            updatedAt: true,
         },
     });
 
@@ -127,6 +209,11 @@ const createProject = (data: any) =>
                 })),
             },
             notes: data.notes,
+            engagements: {
+                connect: data.engagements.map((engagementId: string) => ({
+                    id: engagementId,
+                })),
+            },
             creditingPeriodStartDate: data.creditingPeriodStartDate,
             creditingPeriodEndDate: data.creditingPeriodEndDate,
             portfolioOwner: {
@@ -144,11 +231,28 @@ const createProject = (data: any) =>
         select: ProjectSchema,
     });
 
-const deleteProject = (projectId: string) =>
-    prisma.project.delete({
+const deleteProject = async (projectId: string) => {
+    const engagements = await prisma.engagement.findMany({
+        where: {
+            projectId: projectId,
+        },
+        select: {
+            id: true,
+        },
+    });
+    const engagementIds = engagements.map((engagement) => engagement.id);
+    await prisma.engagement.deleteMany({
+        where: {
+            id: {
+                in: engagementIds,
+            },
+        },
+    });
+    await prisma.project.delete({
         where: {
             id: projectId,
         },
     });
+};
 
 export { getProject, createProject, deleteProject };
