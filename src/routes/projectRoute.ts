@@ -16,7 +16,7 @@ export default function routes(router: Router) {
                 res.sendSuccess({
                     msg: ProjectConstants.PROJECT_DETAILS_RETRIEVED,
                     data: results,
-                    customCode: 'PROJECT_DETAILS_RETRIVED_SUCCESSFULLY',
+                    customCode: 'PROJECT_DETAILS_RETRIEVED_SUCCESSFULLY',
                 });
             } catch (error) {
                 res.sendError(error);
