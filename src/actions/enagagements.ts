@@ -41,6 +41,7 @@ const EngagementSchema: Prisma.EngagementSelect = {
                 },
             },
         },
+        orderBy: [{ startDate: 'asc' }, { type: 'asc' }],
     },
 };
 
