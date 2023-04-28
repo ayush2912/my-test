@@ -1,6 +1,8 @@
-import { Prisma } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 
-import prisma from './prisma';
+// import prisma from './prisma';
+
+const prisma = new PrismaClient();
 
 const TaskSchema: Prisma.TaskSelect = {
     id: true,
@@ -24,18 +26,13 @@ const ProjectSchema: Prisma.ProjectSelect = {
         select: {
             id: true,
             name: true,
-            methodologies: {
-                select: {
-                    id: true,
-                    name: true,
-                },
-            },
         },
     },
     registryProjectId: true,
     registryUrl: true,
     countries: {
         select: {
+            id: true,
             iso2Name: true,
             iso3Name: true,
             name: true,
@@ -102,8 +99,9 @@ const getProject = async (projectId: string) =>
         select: ProjectSchema,
     });
 
-const createProject = (data: any) =>
-    prisma.project.create({
+const createProject = (data: any) => {
+    console.log('Creating project', data);
+    return prisma.project.create({
         data: {
             name: data.name,
             registry: {
@@ -160,6 +158,7 @@ const createProject = (data: any) =>
         },
         select: ProjectSchema,
     });
+};
 
 const updateProject = (projectId: string, data: any) => {
     const updateData = {

@@ -1,4 +1,3 @@
-import prisma from '../prisma';
 import { faker } from '@faker-js/faker';
 
 import {
@@ -7,76 +6,24 @@ import {
     updateProject,
     deleteProject,
 } from '../projects';
-import {
+
+import { ProjectMockFactory } from '../../__mocks__/mock.data';
+
+const {
     countries,
-    methodologies,
     registries,
+    methodologies,
     projectTypes,
     organizations,
     engagements,
-} from '../../__mocks__/mock.data';
+    createMockData,
+    clearMockData,
+} = ProjectMockFactory();
 
-beforeEach(() =>
-    Promise.all([
-        prisma.registry.createMany({ data: registries }),
-        prisma.country.createMany({ data: countries }),
-        prisma.methodology.createMany({ data: methodologies }),
-        prisma.projectType.createMany({ data: projectTypes }),
-        prisma.organization.createMany({ data: organizations }),
-        prisma.engagement.createMany({ data: engagements }),
-    ])
-);
+beforeAll(async () => createMockData());
 
-afterEach(async () => {
-    await Promise.all([
-        prisma.registry.deleteMany({
-            where: {
-                id: {
-                    in: registries.map((r) => r.id),
-                },
-            },
-        }),
-        prisma.country.deleteMany({
-            where: {
-                iso2Name: {
-                    in: countries.map((r) => r.iso2Name),
-                },
-            },
-        }),
-        prisma.methodology.deleteMany({
-            where: {
-                id: {
-                    in: methodologies.map((r) => r.id),
-                },
-            },
-        }),
-        prisma.projectType.deleteMany({
-            where: {
-                id: {
-                    in: projectTypes.map((r) => r.id),
-                },
-            },
-        }),
-        prisma.organization.deleteMany({
-            where: {
-                id: {
-                    in: organizations.map((r) => r.id),
-                },
-            },
-        }),
-
-        prisma.engagement.deleteMany({
-            where: {
-                id: {
-                    in: engagements.map((r) => r.id),
-                },
-            },
-        }),
-    ]);
-
-    jest.clearAllMocks();
-
-    await prisma.$disconnect();
+afterAll(async () => {
+    await clearMockData();
 });
 
 describe('createProject()', () => {
@@ -105,26 +52,31 @@ describe('createProject()', () => {
             creditingPeriodEndDate: '2023-04-11T14:15:22Z',
             annualApproximateCreditVolume: 300000,
             portfolioOwner: faker.helpers.arrayElement(organizations).id,
-            // assetOwners: faker.helpers
-            //     .arrayElements(organizations)
-            //     .map((m) => m.id),
+            assetOwners: faker.helpers
+                .arrayElements(organizations)
+                .map((m) => m.id),
         };
 
         const result = await createProject(data);
 
-        if (!result.id) {
-            throw new Error('Project not created');
-        }
-
         expect(typeof result?.id).toBe('string');
         expect(result.name).toBe('Renewable Power Project');
-        expect(result.registry?.id).toBe(data.registry);
-        expect(result.registry?.name).toBe(
+        expect(result?.registry?.id).toBe(data.registry);
+        expect(result?.registry?.name).toBe(
             registries.find((r) => r.id === data.registry)?.name
         );
-        expect(result.registryUrl).toBe(data.registryUrl);
-        expect(result.registryProjectId).toBe(data.registryProjectId);
-        expect(result.countries?.length).toBe(data.countries.length);
+
+        expect(result?.registryProjectId).toBe(data.registryProjectId);
+        expect(result?.registryUrl).toBe(data.registryUrl);
+        expect(Array.isArray(result?.countries)).toBe(true);
+        expect(result?.states).toEqual(result.states);
+        expect(result?.methodologies).toEqual(result.methodologies);
+        expect(result?.types).toEqual(result.types);
+        expect(result?.subTypes).toEqual(result.subTypes);
+        expect(result?.notes).toBe(data.notes);
+        expect(typeof result?.isActive).toBe('boolean');
+        expect(Array.isArray(result?.engagements)).toBe(true);
+        expect(result?.engagements).toEqual(result.engagements);
 
         expect(result.countries).toEqual(
             countries.filter((c) => data.countries.includes(c.iso2Name))
@@ -229,9 +181,9 @@ describe('updateProject()', () => {
             creditingPeriodEndDate: '2023-04-11T14:15:22Z',
             annualApproximateCreditVolume: 300000,
             portfolioOwner: faker.helpers.arrayElement(organizations).id,
-            // assetOwners: faker.helpers
-            //     .arrayElements(organizations)
-            //     .map((m) => m.id),
+            assetOwners: faker.helpers
+                .arrayElements(organizations)
+                .map((m) => m.id),
         };
 
         const project = await createProject(data);
@@ -288,9 +240,9 @@ describe('deleteProject()', () => {
             creditingPeriodEndDate: '2023-04-11T14:15:22Z',
             annualApproximateCreditVolume: 300000,
             portfolioOwner: faker.helpers.arrayElement(organizations).id,
-            // assetOwners: faker.helpers
-            //     .arrayElements(organizations)
-            //     .map((m) => m.id),
+            assetOwners: faker.helpers
+                .arrayElements(organizations)
+                .map((m) => m.id),
         };
 
         const project = await createProject(data);

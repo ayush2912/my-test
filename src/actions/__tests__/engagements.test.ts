@@ -78,14 +78,16 @@ describe('createEngagement()', () => {
 
         expect(result.state).toBe('NOT_STARTED');
         expect(result.type).toBe(data.type);
-        expect(result.startDate.getTime()).toBe(
+        expect(result?.startDate?.getTime()).toBe(
             new Date(data.startDate).getTime()
         );
-        expect(result.dueDate.getTime()).toBe(new Date(data.dueDate).getTime());
+        expect(result?.dueDate?.getTime()).toBe(
+            new Date(data.dueDate).getTime()
+        );
         expect(result.projectId).toBe(data.projectId);
-        expect(result?.tasks.length).toBe(data.tasks.length);
-        expect(result.stateHistory[0].state).toBe(data.stateHistory[0].state);
-        expect(result.stateHistory[0].stateUpdatedAt.getTime()).toBe(
+        expect(result?.tasks?.length).toBe(data.tasks.length);
+        expect(result?.stateHistory[0].state).toBe(data.stateHistory[0].state);
+        expect(result?.stateHistory[0]?.stateUpdatedAt.getTime()).toBe(
             new Date(data.stateHistory[0].stateUpdatedAt).getTime()
         );
         result.tasks.sort((firstItem, secondItem) =>
