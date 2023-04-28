@@ -1,7 +1,8 @@
-import { Engagement } from '@prisma/client';
-import prisma from './prisma';
+import { Prisma, PrismaClient } from '@prisma/client';
 
-const EngagementSchema = {
+const prisma = new PrismaClient();
+
+const EngagementSchema: Prisma.EngagementSelect = {
     id: true,
     projectId: true,
     startDate: true,

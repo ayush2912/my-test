@@ -1,6 +1,8 @@
-import { Prisma } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 
-import prisma from './prisma';
+// import prisma from './prisma';
+
+const prisma = new PrismaClient();
 
 const TaskSchema: Prisma.TaskSelect = {
     id: true,
@@ -24,18 +26,13 @@ const ProjectSchema: Prisma.ProjectSelect = {
         select: {
             id: true,
             name: true,
-            methodologies: {
-                select: {
-                    id: true,
-                    name: true,
-                },
-            },
         },
     },
     registryProjectId: true,
     registryUrl: true,
     countries: {
         select: {
+            id: true,
             iso2Name: true,
             iso3Name: true,
             name: true,
@@ -92,6 +89,12 @@ const ProjectSchema: Prisma.ProjectSelect = {
             name: true,
         },
     },
+    assetOwners: {
+        select: {
+            id: true,
+            name: true,
+        },
+    },
 };
 
 const getProject = async (projectId: string) =>
@@ -102,8 +105,8 @@ const getProject = async (projectId: string) =>
         select: ProjectSchema,
     });
 
-const createProject = (data: any) =>
-    prisma.project.create({
+const createProject = (data: any) => {
+    return prisma.project.create({
         data: {
             name: data.name,
             registry: {
@@ -125,14 +128,18 @@ const createProject = (data: any) =>
                 })),
             },
             types: {
-                connect: data.types.map((typeID: string) => ({
-                    id: typeID,
-                })),
+                connect: [
+                    {
+                        id: data.type,
+                    },
+                ],
             },
             subTypes: {
-                connect: data.subTypes.map((subTypeID: string) => ({
-                    id: subTypeID,
-                })),
+                connect: [
+                    {
+                        id: data.subType,
+                    },
+                ],
             },
             notes: data.notes,
             engagements: {
@@ -144,6 +151,7 @@ const createProject = (data: any) =>
             },
             creditingPeriodStartDate: data.creditingPeriodStartDate,
             creditingPeriodEndDate: data.creditingPeriodEndDate,
+            annualApproximateCreditVolume: data.annualApproximateCreditVolume,
             portfolioOwner: {
                 connect: {
                     id: data.portfolioOwner,
@@ -160,17 +168,14 @@ const createProject = (data: any) =>
         },
         select: ProjectSchema,
     });
+};
 
 const updateProject = (projectId: string, data: any) => {
-    const updateData = {
-        name: data.name,
-    };
-
     return prisma.project.update({
         where: {
             id: projectId,
         },
-        data: updateData,
+        data: data,
         select: ProjectSchema,
     });
 };
@@ -198,6 +203,9 @@ const deleteProject = async (projectId: string | undefined) => {
     return prisma.project.delete({
         where: {
             id: projectId,
+        },
+        select: {
+            name: true,
         },
     });
 };

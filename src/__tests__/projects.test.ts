@@ -1,82 +1,26 @@
 import request from 'supertest';
 import { faker } from '@faker-js/faker';
 
-import prisma from '../actions/prisma';
 import { createProject, deleteProject } from '../actions/projects';
-import {
-    countries,
-    methodologies,
-    registries,
-    projectTypes,
-    organizations,
-    engagements,
-} from '../__mocks__/mock.data';
 
 import { App } from '../app';
 
-async function clearDatabase() {
-    await Promise.all([
-        prisma.registry.deleteMany({
-            where: {
-                id: {
-                    in: registries.map((r) => r.id),
-                },
-            },
-        }),
-        prisma.country.deleteMany({
-            where: {
-                iso2Name: {
-                    in: countries.map((r) => r.iso2Name),
-                },
-            },
-        }),
-        prisma.methodology.deleteMany({
-            where: {
-                id: {
-                    in: methodologies.map((r) => r.id),
-                },
-            },
-        }),
-        prisma.projectType.deleteMany({
-            where: {
-                id: {
-                    in: projectTypes.map((r) => r.id),
-                },
-            },
-        }),
-        prisma.organization.deleteMany({
-            where: {
-                id: {
-                    in: organizations.map((r) => r.id),
-                },
-            },
-        }),
-        prisma.engagement.deleteMany({
-            where: {
-                id: {
-                    in: engagements.map((r) => r.id),
-                },
-            },
-        }),
-    ]);
-}
+import { ProjectMockFactory } from '../__mocks__/mock.data';
 
-beforeEach(async () => {
-    await clearDatabase();
-    await Promise.all([
-        prisma.registry.createMany({ data: registries }),
-        prisma.country.createMany({ data: countries }),
-        prisma.methodology.createMany({ data: methodologies }),
-        prisma.projectType.createMany({ data: projectTypes }),
-        prisma.organization.createMany({ data: organizations }),
-        prisma.engagement.createMany({ data: engagements }),
-    ]);
-});
+const {
+    countries,
+    registries,
+    methodologies,
+    projectTypes,
+    organizations,
+    engagements,
+    createMockData,
+    clearMockData,
+} = ProjectMockFactory();
 
-afterEach(async () => {
-    await clearDatabase();
-    await prisma.$disconnect();
-});
+beforeAll(() => createMockData());
+
+afterAll(() => clearMockData());
 
 describe('/projects/{projectId}', () => {
     test('GET /projects/{projectId}', async () => {
@@ -94,12 +38,8 @@ describe('/projects/{projectId}', () => {
             methodologies: faker.helpers
                 .arrayElements(methodologies, 1)
                 .map((m) => m.id),
-            types: faker.helpers
-                .arrayElements(projectTypes, 1)
-                .map((m) => m.id),
-            subTypes: faker.helpers
-                .arrayElements(projectTypes, 1)
-                .map((m) => m.id),
+            type: faker.helpers.arrayElement(projectTypes).id,
+            subType: faker.helpers.arrayElement(projectTypes).id,
             notes: 'Renewable Power project in India',
             isActive: true,
             creditingPeriodStartDate: '2023-04-11T14:15:22Z',

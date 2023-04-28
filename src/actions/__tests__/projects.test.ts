@@ -1,4 +1,3 @@
-import prisma from '../prisma';
 import { faker } from '@faker-js/faker';
 
 import {
@@ -7,76 +6,25 @@ import {
     updateProject,
     deleteProject,
 } from '../projects';
-import {
+
+import { ProjectMockFactory } from '../../__mocks__/mock.data';
+
+const {
     countries,
-    methodologies,
     registries,
+    methodologies,
     projectTypes,
     organizations,
     engagements,
-} from '../../__mocks__/mock.data';
+    states,
+    createMockData,
+    clearMockData,
+} = ProjectMockFactory();
 
-beforeEach(() =>
-    Promise.all([
-        prisma.registry.createMany({ data: registries }),
-        prisma.country.createMany({ data: countries }),
-        prisma.methodology.createMany({ data: methodologies }),
-        prisma.projectType.createMany({ data: projectTypes }),
-        prisma.organization.createMany({ data: organizations }),
-        prisma.engagement.createMany({ data: engagements }),
-    ])
-);
+beforeAll(async () => createMockData());
 
-afterEach(async () => {
-    await Promise.all([
-        prisma.registry.deleteMany({
-            where: {
-                id: {
-                    in: registries.map((r) => r.id),
-                },
-            },
-        }),
-        prisma.country.deleteMany({
-            where: {
-                iso2Name: {
-                    in: countries.map((r) => r.iso2Name),
-                },
-            },
-        }),
-        prisma.methodology.deleteMany({
-            where: {
-                id: {
-                    in: methodologies.map((r) => r.id),
-                },
-            },
-        }),
-        prisma.projectType.deleteMany({
-            where: {
-                id: {
-                    in: projectTypes.map((r) => r.id),
-                },
-            },
-        }),
-        prisma.organization.deleteMany({
-            where: {
-                id: {
-                    in: organizations.map((r) => r.id),
-                },
-            },
-        }),
-
-        prisma.engagement.deleteMany({
-            where: {
-                id: {
-                    in: engagements.map((r) => r.id),
-                },
-            },
-        }),
-    ]);
-
-    jest.clearAllMocks();
-
-    await prisma.$disconnect();
+afterAll(async () => {
+    await clearMockData();
 });
 
 describe('createProject()', () => {
@@ -89,25 +37,21 @@ describe('createProject()', () => {
             countries: faker.helpers
                 .arrayElements(countries)
                 .map((c) => c.iso2Name),
-            state: 'UP',
+            states: ['UP', 'Maharashtra', 'California'],
             methodologies: faker.helpers
                 .arrayElements(methodologies, 1)
                 .map((m) => m.id),
-            types: faker.helpers
-                .arrayElements(projectTypes, 1)
-                .map((m) => m.id),
-            subTypes: faker.helpers
-                .arrayElements(projectTypes, 1)
-                .map((m) => m.id),
+            type: faker.helpers.arrayElement(projectTypes).id,
+            subType: faker.helpers.arrayElement(projectTypes).id,
             notes: 'Renewable Power project in India',
             isActive: true,
-            creditingPeriodStartDate: '2023-04-11T14:15:22Z',
-            creditingPeriodEndDate: '2023-04-11T14:15:22Z',
-            annualApproximateCreditVolume: 300000,
+            creditingPeriodStartDate: '2023-04-26T07:14:39.237Z',
+            creditingPeriodEndDate: '2023-04-26T07:14:39.237Z',
+            annualApproximateCreditVolume: 3000,
             portfolioOwner: faker.helpers.arrayElement(organizations).id,
-            // assetOwners: faker.helpers
-            //     .arrayElements(organizations)
-            //     .map((m) => m.id),
+            assetOwners: faker.helpers
+                .arrayElements(organizations)
+                .map((m) => m.id),
         };
 
         const result = await createProject(data);
@@ -118,19 +62,57 @@ describe('createProject()', () => {
 
         expect(typeof result?.id).toBe('string');
         expect(result.name).toBe('Renewable Power Project');
-        expect(result.registry?.id).toBe(data.registry);
-        expect(result.registry?.name).toBe(
+        expect(result?.registry?.id).toBe(data.registry);
+        expect(result?.registry?.name).toBe(
             registries.find((r) => r.id === data.registry)?.name
         );
-        expect(result.registryUrl).toBe(data.registryUrl);
-        expect(result.registryProjectId).toBe(data.registryProjectId);
-        expect(result.countries?.length).toBe(data.countries.length);
+
+        expect(result?.registryProjectId).toBe(data.registryProjectId);
+        expect(result?.registryUrl).toBe(data.registryUrl);
+        expect(Array.isArray(result?.countries)).toBe(true);
+        expect(result?.states).toEqual(result.states);
+        expect(result?.methodologies).toEqual(result.methodologies);
+        expect(result?.types).toEqual(result.types);
+        expect(result?.subTypes).toEqual(result.subTypes);
+        expect(result?.notes).toBe(data.notes);
+        expect(typeof result?.isActive).toBe('boolean');
+        expect(Array.isArray(result?.engagements)).toBe(true);
+        expect(result?.engagements).toEqual(result.engagements);
 
         expect(result.countries).toEqual(
             countries.filter((c) => data.countries.includes(c.iso2Name))
         );
+        expect(result.states?.length).toBe(data.states.length);
+        expect(result?.states).toEqual(
+            states.filter((c) => data.states.includes(c))
+        );
+        expect(result.methodologies?.length).toBe(data.methodologies.length);
+        expect(result.methodologies).toEqual(
+            methodologies.filter((c) => data.methodologies.includes(c.id))
+        );
+        expect(result.types?.pop()?.id).toBe(data.type);
+        expect(result.subTypes?.pop()?.id).toBe(data.subType);
+        expect(result.notes).toBe(data.notes);
+        expect(result.isActive).toBe(data.isActive);
+        expect(result.creditingPeriodStartDate?.getTime()).toBe(
+            new Date(data.creditingPeriodStartDate).getTime()
+        );
+        expect(result.creditingPeriodEndDate?.getTime()).toBe(
+            new Date(data.creditingPeriodEndDate).getTime()
+        );
+        expect(result.annualApproximateCreditVolume).toBe(
+            data.annualApproximateCreditVolume
+        );
+        expect(result.portfolioOwner?.id).toBe(data.portfolioOwner);
+        expect(result.assetOwners?.length).toBe(data.assetOwners.length);
+        expect(result.assetOwners).toEqual(
+            organizations.filter((c) => data.assetOwners.includes(c.id))
+        );
 
+        // Teardown
         await deleteProject(result.id);
+
+        // expect(result.countries).toContain('IN');
     });
 });
 
@@ -148,12 +130,8 @@ describe('getProject()', () => {
             methodologies: faker.helpers
                 .arrayElements(methodologies, 1)
                 .map((m) => m.id),
-            types: faker.helpers
-                .arrayElements(projectTypes, 1)
-                .map((m) => m.id),
-            subTypes: faker.helpers
-                .arrayElements(projectTypes, 1)
-                .map((m) => m.id),
+            type: faker.helpers.arrayElement(projectTypes).id,
+            subType: faker.helpers.arrayElement(projectTypes).id,
             notes: 'Renewable Power project in India',
             isActive: true,
             creditingPeriodStartDate: '2023-04-11T14:15:22Z',
@@ -180,19 +158,36 @@ describe('getProject()', () => {
         expect(result?.registry?.name).toBe(
             registries.find((r) => r.id === data.registry)?.name
         );
-
-        expect(result?.registryProjectId).toBe(data.registryProjectId);
         expect(result?.registryUrl).toBe(data.registryUrl);
-        expect(Array.isArray(result?.countries)).toBe(true);
-        expect(result?.states).toEqual(project.states);
-        expect(result?.methodologies).toEqual(project.methodologies);
-        expect(result?.types).toEqual(project.types);
-        expect(result?.subTypes).toEqual(project.subTypes);
+        expect(result?.registryProjectId).toBe(data.registryProjectId);
+        expect(result?.countries).toEqual(
+            countries.filter((c) => data.countries.includes(c.iso2Name))
+        );
+        expect(result?.states).toEqual(
+            states.filter((c) => data.states.includes(c))
+        );
+        expect(result?.methodologies).toEqual(
+            methodologies.filter((c) => data.methodologies.includes(c.id))
+        );
+        expect(result?.types?.pop()?.id).toBe(data.type);
+        expect(result?.subTypes?.pop()?.id).toBe(data.subType);
         expect(result?.notes).toBe(data.notes);
-        expect(typeof result?.isActive).toBe('boolean');
-        expect(Array.isArray(result?.engagements)).toBe(true);
-        expect(result?.engagements).toEqual(project.engagements);
+        expect(result?.isActive).toBe(data.isActive);
+        expect(result?.creditingPeriodStartDate?.getTime()).toBe(
+            new Date(data.creditingPeriodStartDate).getTime()
+        );
+        expect(result?.creditingPeriodEndDate?.getTime()).toBe(
+            new Date(data.creditingPeriodEndDate).getTime()
+        );
+        expect(result?.annualApproximateCreditVolume).toBe(
+            data.annualApproximateCreditVolume
+        );
+        expect(result?.portfolioOwner?.id).toBe(data.portfolioOwner);
+        expect(result?.assetOwners).toEqual(
+            organizations.filter((c) => data.assetOwners.includes(c.id))
+        );
 
+        // Teardown
         await deleteProject(project.id);
     });
 
@@ -213,52 +208,75 @@ describe('updateProject()', () => {
             countries: faker.helpers
                 .arrayElements(countries)
                 .map((c) => c.iso2Name),
-            state: 'UP',
+            states: ['UP', 'Maharashtra', 'California'],
             methodologies: faker.helpers
                 .arrayElements(methodologies, 1)
                 .map((m) => m.id),
-            types: faker.helpers
-                .arrayElements(projectTypes, 1)
-                .map((m) => m.id),
-            subTypes: faker.helpers
-                .arrayElements(projectTypes, 1)
-                .map((m) => m.id),
+            type: faker.helpers.arrayElement(projectTypes).id,
+            subType: faker.helpers.arrayElement(projectTypes).id,
             notes: 'Renewable Power project in India',
             isActive: true,
-            creditingPeriodStartDate: '2023-04-11T14:15:22Z',
-            creditingPeriodEndDate: '2023-04-11T14:15:22Z',
+            creditingPeriodStartDate: '2023-04-26T07:14:39.237Z',
+            creditingPeriodEndDate: '2023-04-26T07:14:39.237Z',
             annualApproximateCreditVolume: 300000,
             portfolioOwner: faker.helpers.arrayElement(organizations).id,
-            // assetOwners: faker.helpers
-            //     .arrayElements(organizations)
-            //     .map((m) => m.id),
+            assetOwners: faker.helpers
+                .arrayElements(organizations)
+                .map((m) => m.id),
         };
 
         const project = await createProject(data);
+
+        const dataToUpdate = {
+            name: 'My Updated Project Name',
+        };
 
         if (!project.id) {
             throw new Error('Project not created');
         }
 
-        const result = await updateProject(project.id, {
-            name: 'My Updated Project Name',
-        });
+        const result = await updateProject(project.id, dataToUpdate);
 
-        expect(result?.name).toBe('My Updated Project Name');
+        expect(result?.name).toBe(dataToUpdate.name);
 
-        expect(result?.registry?.id).toBe(data.registry);
-        expect(result?.registry?.name).toBe(
+        expect(result.registry?.id).toBe(data.registry);
+        expect(result.registry?.name).toBe(
             registries.find((r) => r.id === data.registry)?.name
         );
-        expect(result?.registryUrl).toBe(data.registryUrl);
-        expect(result?.registryProjectId).toBe(data.registryProjectId);
-        expect(result?.countries?.length).toBe(data.countries.length);
-
-        expect(result?.countries).toEqual(
+        expect(result.registryUrl).toBe(data.registryUrl);
+        expect(result.registryProjectId).toBe(data.registryProjectId);
+        expect(result.countries?.length).toBe(data.countries.length);
+        expect(result.countries).toEqual(
             countries.filter((c) => data.countries.includes(c.iso2Name))
         );
+        expect(result.states?.length).toBe(data.states.length);
+        expect(result?.states).toEqual(
+            states.filter((c) => data.states.includes(c))
+        );
+        expect(result.methodologies?.length).toBe(data.methodologies.length);
+        expect(result.methodologies).toEqual(
+            methodologies.filter((c) => data.methodologies.includes(c.id))
+        );
+        expect(result.types?.pop()?.id).toBe(data.type);
+        expect(result.subTypes?.pop()?.id).toBe(data.subType);
+        expect(result.notes).toBe(data.notes);
+        expect(result.isActive).toBe(data.isActive);
+        expect(result.creditingPeriodStartDate?.getTime()).toBe(
+            new Date(data.creditingPeriodStartDate).getTime()
+        );
+        expect(result.creditingPeriodEndDate?.getTime()).toBe(
+            new Date(data.creditingPeriodEndDate).getTime()
+        );
+        expect(result.annualApproximateCreditVolume).toBe(
+            data.annualApproximateCreditVolume
+        );
+        expect(result.portfolioOwner?.id).toBe(data.portfolioOwner);
+        expect(result.assetOwners?.length).toBe(data.assetOwners.length);
+        expect(result.assetOwners).toEqual(
+            organizations.filter((c) => data.assetOwners.includes(c.id))
+        );
 
-        await deleteProject(project.id);
+        await deleteProject(result.id);
     });
 });
 
@@ -272,25 +290,21 @@ describe('deleteProject()', () => {
             countries: faker.helpers
                 .arrayElements(countries)
                 .map((c) => c.iso2Name),
-            state: 'UP',
+            states: ['UP', 'Maharashtra', 'California'],
             methodologies: faker.helpers
                 .arrayElements(methodologies, 1)
                 .map((m) => m.id),
-            types: faker.helpers
-                .arrayElements(projectTypes, 1)
-                .map((m) => m.id),
-            subTypes: faker.helpers
-                .arrayElements(projectTypes, 1)
-                .map((m) => m.id),
+            type: faker.helpers.arrayElement(projectTypes).id,
+            subType: faker.helpers.arrayElement(projectTypes).id,
             notes: 'Renewable Power project in India',
             isActive: true,
-            creditingPeriodStartDate: '2023-04-11T14:15:22Z',
-            creditingPeriodEndDate: '2023-04-11T14:15:22Z',
+            creditingPeriodStartDate: '2023-04-26T07:14:39.237Z',
+            creditingPeriodEndDate: '2023-04-26T07:14:39.237Z',
             annualApproximateCreditVolume: 300000,
             portfolioOwner: faker.helpers.arrayElement(organizations).id,
-            // assetOwners: faker.helpers
-            //     .arrayElements(organizations)
-            //     .map((m) => m.id),
+            assetOwners: faker.helpers
+                .arrayElements(organizations)
+                .map((m) => m.id),
         };
 
         const project = await createProject(data);
