@@ -101,7 +101,7 @@ describe('createProject()', () => {
         expect(result.registryUrl).toBe(data.registryUrl);
         expect(result.registryProjectId).toBe(data.registryProjectId);
         expect(result.countries.length).toBe(data.countries.length);
-        expect(result.countries).toEqual(
+        expect(result?.countries).toEqual(
             countries.filter((c) => data.countries.includes(c.iso2Name))
         );
         expect(result.states.length).toBe(data.states.length);
@@ -173,10 +173,10 @@ describe('getProject()', () => {
         );
         expect(result?.registryUrl).toBe(data.registryUrl);
         expect(result?.registryProjectId).toBe(data.registryProjectId);
-        // expect(result?.countries.length).toBe(data.countries.length);
-        // expect(result?.countries).toEqual(
-        //     countries.filter((c) => data.countries.includes(c.iso2Name))
-        // );
+        expect(result?.countries.length).toBe(data.countries.length);
+        expect(result?.countries).toEqual(
+            countries.filter((c) => data.countries.includes(c.iso2Name))
+        );
         expect(result?.states.length).toBe(data.states.length);
         expect(result?.states).toEqual(
             states.filter((c) => data.states.includes(c))
@@ -253,9 +253,9 @@ describe('updateProject()', () => {
         expect(result.registryUrl).toBe(data.registryUrl);
         expect(result.registryProjectId).toBe(data.registryProjectId);
         expect(result.countries.length).toBe(data.countries.length);
-        // expect(result.countries).toEqual(
-        //     countries.filter((c) => data.countries.includes(c.iso2Name))
-        // );
+        expect(result.countries).toEqual(
+            countries.filter((c) => data.countries.includes(c.iso2Name))
+        );
         expect(result.states.length).toBe(data.states.length);
         expect(result?.states).toEqual(
             states.filter((c) => data.states.includes(c))
