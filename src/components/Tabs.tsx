@@ -25,34 +25,36 @@ const TabsHolder = styled.div`
   width: fit-content;
 `;
 
-const Tab = styled.button`
+const Tab = styled.button<{ currentTab: string; selectedTab: string }>`
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 8px 16px;
   border-radius: 8px;
   width: fit-content;
+  height: 32px;
   border: none;
-  background: #ffffff;
   cursor: pointer;
-`;
-const ActiveTab = styled(Tab)`
-  background: #d8e4fc;
+  background: ${(props) =>
+    props.currentTab === props.selectedTab ? "#d8e4fc" : "#ffffff"};
 `;
 
 export default function Tabs({ tabs, selectedTab, onSelect }: TabsInfoType) {
   return (
+    // color="primary"/
     <TabsHolder>
       {tabs.map((tab) => {
-        return tab.value == selectedTab ? (
-          <ActiveTab>
-            <Text type="bodyBold" color="primary">
-              {tab.label}
-            </Text>
-          </ActiveTab>
-        ) : (
-          <Tab onClick={() => onSelect(tab.value)}>
-            <Text type="bodyBold" color="subdued">
+        return (
+          <Tab
+            key={tab.value}
+            currentTab={tab.value}
+            selectedTab={selectedTab}
+            onClick={() => onSelect(tab.value)}
+          >
+            <Text
+              type="bodyBold"
+              color={tab.value === selectedTab ? "primary" : "subdued"}
+            >
               {tab.label}
             </Text>
           </Tab>
