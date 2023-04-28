@@ -93,6 +93,11 @@ const DividerDiv = styled.div`
   background: #e1e4e8;
   margin: 24px 0px;
 `;
+
+const ModalContent = styled.div`
+  max-width: 414px;
+`;
+
 type EngamentStateTypes =
   | "NOT_STARTED"
   | "IN_PROGRESS"
@@ -165,7 +170,7 @@ function EngagementTable({
             }}
             title="Engagement Attributes"
           >
-            <div>
+            <ModalContent>
               <Text type="body" color="subdued">
                 Registration has the following attributes. As soon as the Carbon
                 Desk fills out the details, they will be available here for you
@@ -182,7 +187,7 @@ function EngagementTable({
                   />
                 );
               })}
-            </div>
+            </ModalContent>
           </Modal>
         </>
       ),
