@@ -39,6 +39,7 @@ export type TaskListProps = {
   name: string;
   startDate: Date;
   dueDate: Date;
+  completedDate?: Date;
   status: "IN_PROGRESS" | "COMPLETED" | "NOT_STARTED" | "DISCONTINUED";
 };
 
@@ -47,6 +48,7 @@ export default function TaskList({
   startDate,
   dueDate,
   status,
+  completedDate,
 }: TaskListProps) {
   const selectedIconName = {
     IN_PROGRESS: "inProgress",
@@ -57,7 +59,9 @@ export default function TaskList({
 
   const tooltipTextContent = {
     IN_PROGRESS: "IN PROGRESS",
-    COMPLETED: "Completed on xxx",
+    COMPLETED: `Completed on ${
+      completedDate && convertToEuropeanDateFormat(completedDate)
+    }`,
     NOT_STARTED: "NOT STARTED",
     DISCONTINUED: "discontinued",
   }[status] as string;
@@ -69,8 +73,16 @@ export default function TaskList({
       </Tooltip>
 
       <ColumnWrapper>
-        <TextWithMarginBottom type="body">{name}</TextWithMarginBottom>
-        <Text type="body" color="subdued">
+        <TextWithMarginBottom
+          type="body"
+          color={status === "DISCONTINUED" ? "disabled" : "default"}
+        >
+          {name}
+        </TextWithMarginBottom>
+        <Text
+          type="body"
+          color={status === "DISCONTINUED" ? "disabled" : "subdued"}
+        >
           {`${convertToEuropeanDateFormat(
             startDate,
           )} - ${convertToEuropeanDateFormat(dueDate)}`}

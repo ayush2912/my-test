@@ -17,7 +17,39 @@ const projectEngagementsTableData: EngagementItem[] = [
     state: "COMPLETED",
     startDate: new Date("2023-01-10T06:20:44.069Z"),
     dueDate: new Date("2030-01-05T08:52:29.962Z"),
+    completedDate: new Date("2030-01-05T08:52:29.962Z"),
     note: "I am a note",
+    document: 20,
+    attributes: [
+      {
+        label: "Date of registration",
+        value: "",
+      },
+      {
+        label: "Registry ID",
+        value: "",
+      },
+      {
+        label: "Registry URL",
+        value: "https://registry.goldstandard.org/projects/details/48",
+      },
+    ],
+    tasks: [
+      {
+        name: "Task 1",
+        startDate: new Date("2023-01-10T06:20:44.069Z"),
+        dueDate: new Date("2023-01-10T06:20:44.069Z"),
+        status: "COMPLETED",
+        completedDate: new Date("2023-01-10T06:20:44.069Z"),
+      },
+    ],
+  },
+  {
+    name: "Engagement 1",
+    state: "OVERDUE",
+    startDate: new Date("2023-01-10T06:20:44.069Z"),
+    dueDate: new Date("2030-01-05T08:52:29.962Z"),
+    note: "",
     document: 20,
     attributes: [{ label: "hello", value: "hi" }],
     tasks: [
@@ -26,12 +58,13 @@ const projectEngagementsTableData: EngagementItem[] = [
         startDate: new Date("2023-01-10T06:20:44.069Z"),
         dueDate: new Date("2023-01-10T06:20:44.069Z"),
         status: "COMPLETED",
+        completedDate: new Date("2023-01-10T06:20:44.069Z"),
       },
     ],
   },
   {
     name: "Engagement 1",
-    state: "COMPLETED",
+    state: "IN_PROGRESS",
     startDate: new Date("2023-01-10T06:20:44.069Z"),
     dueDate: new Date("2030-01-05T08:52:29.962Z"),
     note: "I am a note",
@@ -43,6 +76,7 @@ const projectEngagementsTableData: EngagementItem[] = [
         startDate: new Date("2023-01-10T06:20:44.069Z"),
         dueDate: new Date("2023-01-10T06:20:44.069Z"),
         status: "COMPLETED",
+        completedDate: new Date("2023-01-10T06:20:44.069Z"),
       },
       {
         name: "Task 1",
@@ -55,16 +89,17 @@ const projectEngagementsTableData: EngagementItem[] = [
         startDate: new Date("2023-01-10T06:20:44.069Z"),
         dueDate: new Date("2023-01-10T06:20:44.069Z"),
         status: "COMPLETED",
+        completedDate: new Date("2023-01-10T06:20:44.069Z"),
       },
     ],
   },
   {
     name: "Engagement 1",
-    state: "COMPLETED",
+    state: "NOT_STARTED",
     startDate: new Date("2023-01-10T06:20:44.069Z"),
     dueDate: new Date("2030-01-05T08:52:29.962Z"),
     note: "I am a note",
-    document: 20,
+    document: 0,
     attributes: [{ label: "hello", value: "hi" }],
     tasks: [
       {
@@ -72,16 +107,17 @@ const projectEngagementsTableData: EngagementItem[] = [
         startDate: new Date("2023-01-10T06:20:44.069Z"),
         dueDate: new Date("2023-01-10T06:20:44.069Z"),
         status: "COMPLETED",
+        completedDate: new Date("2023-01-10T06:20:44.069Z"),
       },
     ],
   },
   {
     name: "Engagement 1",
-    state: "COMPLETED",
+    state: "DISCONTINUED",
     startDate: new Date("2023-01-10T06:20:44.069Z"),
     dueDate: new Date("2030-01-05T08:52:29.962Z"),
-    note: "I am a note",
-    document: 20,
+    note: "",
+    document: 0,
     attributes: [{ label: "hello", value: "hi" }],
     tasks: [
       {
@@ -89,6 +125,7 @@ const projectEngagementsTableData: EngagementItem[] = [
         startDate: new Date("2023-01-10T06:20:44.069Z"),
         dueDate: new Date("2023-01-10T06:20:44.069Z"),
         status: "COMPLETED",
+        completedDate: new Date("2023-01-10T06:20:44.069Z"),
       },
     ],
   },

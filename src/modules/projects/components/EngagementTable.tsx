@@ -5,8 +5,9 @@ import TaskList, { TaskListProps } from "./TaskList";
 import Button from "../../../components/Button";
 import Card from "../../../components/Card";
 import Icon from "../../../components/Icon";
+import LabelValue from "../../../components/labelValuePair";
 import Modal from "../../../components/Modal";
-import StatusTag from "../../../components/StatusTag";
+import StatusTag, { StatusType } from "../../../components/StatusTag";
 import Text from "../../../components/Text";
 import { convertToEuropeanDateFormat } from "../../../utils/dateTimeFormatter";
 
@@ -75,15 +76,55 @@ const RowWrapper = styled.div`
   align-items: center;
 `;
 
+const InfoButton = styled.button`
+  background: none;
+  color: inherit;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const DividerDiv = styled.div`
+  height: 1px;
+  background: #e1e4e8;
+  margin: 24px 0px;
+`;
+
+const ModalContent = styled.div`
+  max-width: 414px;
+`;
+
+const EmptyState = styled.div`
+  padding-left: 20px;
+  cursor: default;
+`;
+
+type EngamentStateTypes =
+  | "NOT_STARTED"
+  | "IN_PROGRESS"
+  | "DISCONTINUED"
+  | "COMPLETED"
+  | "OVERDUE";
+
 export interface EngagementItem {
   name: string;
-  state: "COMPLETED" | "OVERDUE" | "IN_PROGRESS" | "DISCONTINUED";
+  state: EngamentStateTypes;
   startDate: Date;
   dueDate: Date;
+  completedDate?: Date;
   note: string;
   document: number;
   attributes: { label: string; value: string }[];
   tasks: TaskListProps[];
+}
+
+interface EngagementStatus {
+  label: EngamentStateTypes;
+  type: StatusType;
 }
 
 function EngagementTable({
@@ -96,22 +137,74 @@ function EngagementTable({
   const cellContentMapper = (v: EngagementItem) => {
     const [showTasks, setShowTasks] = useState(false);
     const [showNote, setShowNote] = useState(false);
+    const [showEngagments, setShowEngagments] = useState(false);
     const toggleTasks = () => setShowTasks(!showTasks);
-
+    const statusTag = {
+      NOT_STARTED: { label: "NOT STARTED", type: "disabled" },
+      IN_PROGRESS: { label: "IN PROGRESS", type: "information" },
+      DISCONTINUED: { label: "DISCONTINUED", type: "error" },
+      COMPLETED: { label: "COMPLETED", type: "success" },
+      OVERDUE: { label: "OVERDUE", type: "warning" },
+    }[v.state] as EngagementStatus;
+    const isEngamentDiscontinued = v.state === "DISCONTINUED";
     return {
       engagements: (
-        <ColumnWrapper>
-          <RowWrapper>
-            <Text type="bodyBold">{v.name}</Text>
-            <Icon name="information" size="small" />
-          </RowWrapper>
+        <>
+          <ColumnWrapper>
+            <RowWrapper>
+              <Text type="bodyBold">{v.name}</Text>
+              <InfoButton
+                onClick={() => {
+                  setShowEngagments(true);
+                }}
+              >
+                <Icon name="information" size="small" />
+              </InfoButton>
+            </RowWrapper>
 
-          <Text type="caption" color="subdued">
-            {`${v.tasks.length} tasks`}
-            <span> &bull; </span>
-            {`Completed on DD/MM/YYYY`}
-          </Text>
-        </ColumnWrapper>
+            <Text type="caption" color="subdued">
+              {`${v.tasks.length} tasks`}
+
+              {v.state === "COMPLETED" && (
+                <>
+                  <span> &bull; </span>
+                  <Text type="caption" color="success">
+                    Completed on{" "}
+                    {v?.completedDate &&
+                      convertToEuropeanDateFormat(v.completedDate)}
+                  </Text>
+                </>
+              )}
+            </Text>
+          </ColumnWrapper>
+
+          <Modal
+            isOpen={showEngagments}
+            onClose={() => {
+              setShowEngagments(false);
+            }}
+            title="Engagement Attributes"
+          >
+            <ModalContent>
+              <Text type="body" color="subdued">
+                Registration has the following attributes. As soon as the Carbon
+                Desk fills out the details, they will be available here for you
+                to read.
+              </Text>
+              <DividerDiv></DividerDiv>
+
+              {v.attributes.map((attribute, index) => {
+                return (
+                  <LabelValue
+                    key={index}
+                    label={attribute?.label}
+                    value={attribute?.value}
+                  />
+                );
+              })}
+            </ModalContent>
+          </Modal>
+        </>
       ),
       startDate: (
         <Text type="body" color={"subdued"}>
@@ -119,16 +212,24 @@ function EngagementTable({
         </Text>
       ),
       dueDate: (
-        <Text type="body" color={"subdued"}>
+        <Text type="body" color={v.state === "OVERDUE" ? "warning" : "subdued"}>
           {convertToEuropeanDateFormat(v.dueDate)}
         </Text>
       ),
-      state: <StatusTag name="IN PROGRESS" type="information" />,
+      state: <StatusTag name={statusTag.label} type={statusTag.type} />,
       note: (
         <>
-          <Button type="ghost" onClick={() => setShowNote(true)}>
-            <Icon name="message" />
-          </Button>
+          {v.note.length > 0 ? (
+            <Button type="ghost" onClick={() => setShowNote(true)}>
+              <Icon name="message" />
+            </Button>
+          ) : (
+            <EmptyState>
+              <Text type="body" color="default">
+                -
+              </Text>
+            </EmptyState>
+          )}
           <Modal
             isOpen={showNote}
             onClose={() => {
@@ -136,15 +237,32 @@ function EngagementTable({
             }}
             title="Note"
           >
-            <p>{v.note}</p>
+            <Text type="body" color="default">
+              {v.note}
+            </Text>
           </Modal>
         </>
       ),
       documents: (
-        <Button type="ghost" onClick={() => setShowNote(true)}>
-          <Icon name="file" />
-          <Text type="bodyBold">{20}</Text>
-        </Button>
+        <>
+          {v.document > 0 ? (
+            <Button
+              type="ghost"
+              onClick={() => () => {
+                console.log("document");
+              }}
+            >
+              <Icon name="file" />
+              <Text type="bodyBold">{20}</Text>
+            </Button>
+          ) : (
+            <EmptyState>
+              <Text type="body" color="default">
+                -
+              </Text>
+            </EmptyState>
+          )}
+        </>
       ),
       chevronButton: (
         <ChevronButtonIconWrapper isExpanded={showTasks} onClick={toggleTasks}>
@@ -159,7 +277,8 @@ function EngagementTable({
               name={v.name}
               startDate={v.startDate}
               dueDate={v.dueDate}
-              status={v.status}
+              completedDate={v?.completedDate}
+              status={isEngamentDiscontinued ? "DISCONTINUED" : v.status}
             />
           ))}
         </TaskListCell>

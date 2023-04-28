@@ -2,8 +2,11 @@
 
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
+import styled from "styled-components";
 
+import Button from "./Button";
 import Modal from "./Modal";
+import Text from "./Text";
 
 const meta: Meta<typeof Modal> = {
   title: "Modal",
@@ -13,20 +16,32 @@ const meta: Meta<typeof Modal> = {
 export default meta;
 type Story = StoryObj<typeof Modal>;
 
+const ContentDiv = styled.div`
+  max-width: 414px;
+`;
+
 export const Normal: Story = {
-  render: () => (
-    <div style={{ width: 500 }}>
-      <Modal
-        isOpen={true}
-        onClose={() => {
-          console.log("closed");
-        }}
-        title="Note"
-      >
-        <p>
-          {`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor in. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiu`}{" "}
-        </p>
-      </Modal>
-    </div>
-  ),
+  render: () => {
+    const [modalStatus, setModalStatus] = useState(false);
+    return (
+      <div style={{ width: 500 }}>
+        <Button large onClick={() => setModalStatus(true)}>
+          Open Modal
+        </Button>
+        <Modal
+          isOpen={modalStatus}
+          onClose={() => setModalStatus(false)}
+          title="Note"
+        >
+          <ContentDiv>
+            <Text type="body" color="default">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+              eiusmod tempor in. Lorem ipsum dolor sit amet, consectetur
+              adipiscing elit, sed do eiu
+            </Text>
+          </ContentDiv>
+        </Modal>
+      </div>
+    );
+  },
 };
