@@ -89,6 +89,12 @@ const ProjectSchema: Prisma.ProjectSelect = {
             name: true,
         },
     },
+    assetOwners: {
+        select: {
+            id: true,
+            name: true,
+        },
+    },
 };
 
 const getProject = async (projectId: string) =>
@@ -100,7 +106,6 @@ const getProject = async (projectId: string) =>
     });
 
 const createProject = (data: any) => {
-    console.log('Creating project', data);
     return prisma.project.create({
         data: {
             name: data.name,
@@ -123,14 +128,18 @@ const createProject = (data: any) => {
                 })),
             },
             types: {
-                connect: data.types.map((typeID: string) => ({
-                    id: typeID,
-                })),
+                connect: [
+                    {
+                        id: data.type,
+                    },
+                ],
             },
             subTypes: {
-                connect: data.subTypes.map((subTypeID: string) => ({
-                    id: subTypeID,
-                })),
+                connect: [
+                    {
+                        id: data.subType,
+                    },
+                ],
             },
             notes: data.notes,
             engagements: {
@@ -142,6 +151,7 @@ const createProject = (data: any) => {
             },
             creditingPeriodStartDate: data.creditingPeriodStartDate,
             creditingPeriodEndDate: data.creditingPeriodEndDate,
+            annualApproximateCreditVolume: data.annualApproximateCreditVolume,
             portfolioOwner: {
                 connect: {
                     id: data.portfolioOwner,
@@ -161,15 +171,11 @@ const createProject = (data: any) => {
 };
 
 const updateProject = (projectId: string, data: any) => {
-    const updateData = {
-        name: data.name,
-    };
-
     return prisma.project.update({
         where: {
             id: projectId,
         },
-        data: updateData,
+        data: data,
         select: ProjectSchema,
     });
 };
@@ -197,6 +203,9 @@ const deleteProject = async (projectId: string | undefined) => {
     return prisma.project.delete({
         where: {
             id: projectId,
+        },
+        select: {
+            name: true,
         },
     });
 };

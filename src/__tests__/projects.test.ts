@@ -38,12 +38,8 @@ describe('/projects/{projectId}', () => {
             methodologies: faker.helpers
                 .arrayElements(methodologies, 1)
                 .map((m) => m.id),
-            types: faker.helpers
-                .arrayElements(projectTypes, 1)
-                .map((m) => m.id),
-            subTypes: faker.helpers
-                .arrayElements(projectTypes, 1)
-                .map((m) => m.id),
+            type: faker.helpers.arrayElement(projectTypes).id,
+            subType: faker.helpers.arrayElement(projectTypes).id,
             notes: 'Renewable Power project in India',
             isActive: true,
             creditingPeriodStartDate: '2023-04-11T14:15:22Z',

@@ -2,8 +2,6 @@ import { faker } from '@faker-js/faker';
 
 import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
-
 enum State {
     NOT_STARTED = 'NOT_STARTED',
     IN_PROGRESS = 'IN_PROGRESS',
@@ -14,17 +12,17 @@ const countryList = [
     {
         name: 'India',
         iso3Name: 'IND',
-        iso2Name: 'IN',
+        iso2Name: faker.address.countryCode('alpha-2'),
     },
     {
         name: 'United Kingdom',
         iso3Name: 'GBR',
-        iso2Name: 'GB',
+        iso2Name: faker.address.countryCode('alpha-2'),
     },
     {
         name: 'United States',
         iso3Name: 'USA',
-        iso2Name: 'US',
+        iso2Name: faker.address.countryCode('alpha-2'),
     },
 ];
 
@@ -83,12 +81,14 @@ const MockEngagements = () =>
         }));
 
 const ProjectMockFactory = () => {
+    const prisma = new PrismaClient();
     const countries = MockCountries();
     const registries = MockRegistries();
     const methodologies = MockMethodologies();
     const projectTypes = MockProjectTypes();
     const organizations = MockOrganizations();
     const engagements = MockEngagements();
+    const states = ['UP', 'Maharashtra', 'California'];
 
     const createMockData = () =>
         Promise.all([
@@ -100,7 +100,7 @@ const ProjectMockFactory = () => {
             prisma.engagement.createMany({ data: engagements }),
         ]);
 
-    const clearMockData = () =>
+    const clearMockData = () => {
         Promise.all([
             prisma.registry.deleteMany({
                 where: {
@@ -146,6 +146,8 @@ const ProjectMockFactory = () => {
                 },
             }),
         ]);
+        return prisma.$disconnect();
+    };
 
     return {
         countries,
@@ -154,6 +156,7 @@ const ProjectMockFactory = () => {
         organizations,
         projectTypes,
         engagements,
+        states,
         createMockData,
         clearMockData,
     };
