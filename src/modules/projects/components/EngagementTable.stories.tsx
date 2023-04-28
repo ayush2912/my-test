@@ -49,7 +49,7 @@ const projectEngagementsTableData: EngagementItem[] = [
     state: "OVERDUE",
     startDate: new Date("2023-01-10T06:20:44.069Z"),
     dueDate: new Date("2030-01-05T08:52:29.962Z"),
-    note: "I am a note",
+    note: "",
     document: 20,
     attributes: [{ label: "hello", value: "hi" }],
     tasks: [
@@ -99,7 +99,7 @@ const projectEngagementsTableData: EngagementItem[] = [
     startDate: new Date("2023-01-10T06:20:44.069Z"),
     dueDate: new Date("2030-01-05T08:52:29.962Z"),
     note: "I am a note",
-    document: 20,
+    document: 0,
     attributes: [{ label: "hello", value: "hi" }],
     tasks: [
       {
@@ -116,8 +116,8 @@ const projectEngagementsTableData: EngagementItem[] = [
     state: "DISCONTINUED",
     startDate: new Date("2023-01-10T06:20:44.069Z"),
     dueDate: new Date("2030-01-05T08:52:29.962Z"),
-    note: "I am a note",
-    document: 20,
+    note: "",
+    document: 0,
     attributes: [{ label: "hello", value: "hi" }],
     tasks: [
       {

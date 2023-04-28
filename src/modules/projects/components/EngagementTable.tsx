@@ -98,6 +98,10 @@ const ModalContent = styled.div`
   max-width: 414px;
 `;
 
+const EmptyState = styled.div`
+  padding-left: 20px;
+`;
+
 type EngamentStateTypes =
   | "NOT_STARTED"
   | "IN_PROGRESS"
@@ -214,9 +218,17 @@ function EngagementTable({
       state: <StatusTag name={statusTag.label} type={statusTag.type} />,
       note: (
         <>
-          <Button type="ghost" onClick={() => setShowNote(true)}>
-            <Icon name="message" />
-          </Button>
+          {v.note.length > 0 ? (
+            <Button type="ghost" onClick={() => setShowNote(true)}>
+              <Icon name="message" />
+            </Button>
+          ) : (
+            <EmptyState>
+              <Text type="body" color="default">
+                -
+              </Text>
+            </EmptyState>
+          )}
           <Modal
             isOpen={showNote}
             onClose={() => {
@@ -231,10 +243,20 @@ function EngagementTable({
         </>
       ),
       documents: (
-        <Button type="ghost" onClick={() => setShowNote(true)}>
-          <Icon name="file" />
-          <Text type="bodyBold">{20}</Text>
-        </Button>
+        <>
+          {v.document > 0 ? (
+            <Button type="ghost" onClick={() => setShowNote(true)}>
+              <Icon name="file" />
+              <Text type="bodyBold">{20}</Text>
+            </Button>
+          ) : (
+            <EmptyState>
+              <Text type="body" color="default">
+                -
+              </Text>
+            </EmptyState>
+          )}
+        </>
       ),
       chevronButton: (
         <ChevronButtonIconWrapper isExpanded={showTasks} onClick={toggleTasks}>
