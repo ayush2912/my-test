@@ -3,7 +3,14 @@ import { faker } from '@faker-js/faker';
 
 import prisma from '../actions/prisma';
 import { createProject, deleteProject } from '../actions/projects';
-import { countries, methodologies, registries, projectTypes, organizations, engagements } from '../__mock__/mock.data'
+import {
+    countries,
+    methodologies,
+    registries,
+    projectTypes,
+    organizations,
+    engagements,
+} from '../__mocks__/mock.data';
 
 import { App } from '../app';
 
@@ -62,10 +69,9 @@ beforeEach(async () => {
         prisma.methodology.createMany({ data: methodologies }),
         prisma.projectType.createMany({ data: projectTypes }),
         prisma.organization.createMany({ data: organizations }),
-        prisma.engagement.createMany({ data: engagements })
-    ])
-}
-);
+        prisma.engagement.createMany({ data: engagements }),
+    ]);
+});
 
 afterEach(async () => {
     await clearDatabase();
@@ -122,15 +128,16 @@ describe('/projects/{projectId}', () => {
     test('GET /projects/{projectId} with invalid projectId', async () => {
         const app = App();
 
-        const results = await request(app).get('/projects/234567890109876543212345');
+        const results = await request(app).get(
+            '/projects/234567890109876543212345'
+        );
 
         expect(results.statusCode).toBe(400);
         expect(results.body.errors).toEqual([
             {
                 msg: 'Invalid Project Id',
-                code: 'BAD_REQUEST'
+                code: 'BAD_REQUEST',
             },
         ]);
-
     });
 });

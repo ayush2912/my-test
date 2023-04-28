@@ -29,11 +29,7 @@ export const App = () => {
         next();
     });
 
-    const whitelist = [
-        process.env.LOCAL,
-        process.env.DEV,
-        process.env.STAGING
-    ];
+    const whitelist = [process.env.LOCAL, process.env.DEV, process.env.STAGING];
     const corsOptions = {
         origin: (origin: any, callback: any) => {
             if (whitelist.indexOf(origin) !== -1 || !origin) {

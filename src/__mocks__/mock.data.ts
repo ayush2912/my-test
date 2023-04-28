@@ -10,7 +10,7 @@ const countryList = [
     {
         name: 'India',
         iso3Name: 'IND',
-        iso2Name: 'IN'
+        iso2Name: 'IN',
     },
     {
         name: 'United Kingdom',
@@ -69,7 +69,7 @@ const engagements = Array(3)
         dueDate: faker.date.future(),
         completedDate: faker.date.future(),
         state: faker.helpers.arrayElement(Object.values(State)),
-        notes: faker.lorem.words(10)
+        notes: faker.lorem.words(10),
     }));
 
 const states = ['UP', 'Maharashtra', 'California']

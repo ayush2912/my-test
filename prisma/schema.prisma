@@ -20,8 +20,8 @@ type EngagementAttribute {
 }
 
 type StateHistory {
-  state    String
-  datetime DateTime
+  state          String
+  stateUpdatedAt DateTime
 }
 
 model Organization {
@@ -136,7 +136,7 @@ model Project {
   status                            String? /// Current status of the project, such as status
   statusLog                         ProjectStage[]
   registryId                        String?                 @db.ObjectId
-  registry                        Registry?               @relation(fields: [registryId], references: [id])
+  registry                          Registry?               @relation(fields: [registryId], references: [id])
   documents                         Document[]
   chats                             Chat[]
   notifications                     Notification[]
@@ -154,6 +154,7 @@ model Project {
   registryRiskInfo                  RegistryRiskInfo?       @relation("RegistryRiskInfo")
   countries                         Country[]               @relation(fields: [countryIDs], references: [id])
   countryIDs                        String[]                @db.ObjectId
+  state                             String?
   states                            String[]
   methodologies                     Methodology[]           @relation(fields: [methodologyIDs], references: [id])
   methodologyIDs                    String[]                @db.ObjectId

@@ -1,8 +1,21 @@
 import prisma from '../prisma';
 import { faker } from '@faker-js/faker';
 
-import { createProject, getProject, updateProject, deleteProject } from '../projects';
-import { countries, states, methodologies, registries, projectTypes, organizations, engagements } from '../../__mock__/mock.data'
+import {
+    createProject,
+    getProject,
+    updateProject,
+    deleteProject,
+} from '../projects';
+import {
+    countries,
+    methodologies,
+    registries,
+    projectTypes,
+    organizations,
+    engagements,
+    states
+} from '../../__mocks__/mock.data';
 
 beforeEach(() =>
     Promise.all([
@@ -11,7 +24,7 @@ beforeEach(() =>
         prisma.methodology.createMany({ data: methodologies }),
         prisma.projectType.createMany({ data: projectTypes }),
         prisma.organization.createMany({ data: organizations }),
-        prisma.engagement.createMany({ data: engagements })
+        prisma.engagement.createMany({ data: engagements }),
     ])
 );
 
@@ -52,6 +65,7 @@ afterEach(async () => {
                 },
             },
         }),
+
         prisma.engagement.deleteMany({
             where: {
                 id: {
@@ -60,6 +74,8 @@ afterEach(async () => {
             },
         }),
     ]);
+
+    jest.clearAllMocks();
 
     await prisma.$disconnect();
 });
@@ -93,6 +109,11 @@ describe('createProject()', () => {
 
         const result = await createProject(data);
 
+        if (!result.id) {
+            throw new Error('Project not created');
+        }
+
+        expect(typeof result?.id).toBe('string');
         expect(result.name).toBe('Renewable Power Project');
         expect(result.registry?.id).toBe(data.registry);
         expect(result.registry?.name).toBe(
@@ -100,15 +121,15 @@ describe('createProject()', () => {
         );
         expect(result.registryUrl).toBe(data.registryUrl);
         expect(result.registryProjectId).toBe(data.registryProjectId);
-        expect(result.countries.length).toBe(data.countries.length);
+        expect(result.countries?.length).toBe(data.countries.length);
         expect(result?.countries).toEqual(
             countries.filter((c) => data.countries.includes(c.iso2Name))
         );
-        expect(result.states.length).toBe(data.states.length);
+        expect(result.states?.length).toBe(data.states.length);
         expect(result?.states).toEqual(
             states.filter((c) => data.states.includes(c))
         );
-        expect(result.methodologies.length).toBe(data.methodologies.length);
+        expect(result.methodologies?.length).toBe(data.methodologies.length);
         expect(result.methodologies).toEqual(
             methodologies.filter((c) => data.methodologies.includes(c.id))
         );
@@ -120,7 +141,7 @@ describe('createProject()', () => {
         expect(result.creditingPeriodEndDate?.getTime()).toBe(new Date(data.creditingPeriodEndDate).getTime());
         expect(result.annualApproximateCreditVolume).toBe(data.annualApproximateCreditVolume);
         expect(result.portfolioOwner?.id).toBe(data.portfolioOwner);
-        expect(result.assetOwners.length).toBe(data.assetOwners.length);
+        expect(result.assetOwners?.length).toBe(data.assetOwners.length);
         expect(result.assetOwners).toEqual(
             organizations.filter((c) => data.assetOwners.includes(c.id))
         );
@@ -163,8 +184,11 @@ describe('getProject()', () => {
         };
         const project = await createProject(data);
 
-        const result = await getProject(project.id);
+        if (!project.id) {
+            throw new Error('Project not created');
+        }
 
+        const result = await getProject(project.id);
         expect(typeof result?.id).toBe('string');
         expect(result?.name).toBe(data.name);
         expect(result?.registry?.id).toBe(data.registry);
@@ -212,7 +236,7 @@ describe('getProject()', () => {
 describe('updateProject()', () => {
     test('it should update a project successfully', async () => {
         const data = {
-            name: 'Renewable Power Project',
+            name: 'Renewable Power Update Project',
             registry: faker.helpers.arrayElement(registries).id,
             registryUrl: 'www.url.com',
             registryProjectId: '1851',
@@ -252,15 +276,15 @@ describe('updateProject()', () => {
         );
         expect(result.registryUrl).toBe(data.registryUrl);
         expect(result.registryProjectId).toBe(data.registryProjectId);
-        expect(result.countries.length).toBe(data.countries.length);
+        expect(result.countries?.length).toBe(data.countries.length);
         expect(result.countries).toEqual(
             countries.filter((c) => data.countries.includes(c.iso2Name))
         );
-        expect(result.states.length).toBe(data.states.length);
+        expect(result.states?.length).toBe(data.states.length);
         expect(result?.states).toEqual(
             states.filter((c) => data.states.includes(c))
         );
-        expect(result.methodologies.length).toBe(data.methodologies.length);
+        expect(result.methodologies?.length).toBe(data.methodologies.length);
         expect(result.methodologies).toEqual(
             methodologies.filter((c) => data.methodologies.includes(c.id))
         );
@@ -272,7 +296,7 @@ describe('updateProject()', () => {
         expect(result.creditingPeriodEndDate?.getTime()).toBe(new Date(data.creditingPeriodEndDate).getTime());
         expect(result.annualApproximateCreditVolume).toBe(data.annualApproximateCreditVolume);
         expect(result.portfolioOwner?.id).toBe(data.portfolioOwner);
-        expect(result.assetOwners.length).toBe(data.assetOwners.length);
+        expect(result.assetOwners?.length).toBe(data.assetOwners.length);
         expect(result.assetOwners).toEqual(
             organizations.filter((c) => data.assetOwners.includes(c.id))
         );
@@ -310,8 +334,12 @@ describe('deleteProject()', () => {
 
         const project = await createProject(data);
 
+        if (!project.id) {
+            throw new Error('Project not created');
+        }
+
         const result = await deleteProject(project.id);
 
-        expect(result.name).toEqual(data.name);
+        expect(result?.name).toEqual(data.name);
     });
 });

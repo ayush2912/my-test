@@ -1,6 +1,8 @@
+import { Prisma } from '@prisma/client';
+
 import prisma from './prisma';
 
-const TaskSchema = {
+const TaskSchema: Prisma.TaskSelect = {
     id: true,
     engagementId: true,
     type: true,
@@ -11,10 +13,12 @@ const TaskSchema = {
     stateHistory: true,
     createdAt: true,
     updatedAt: true,
-}
+};
 
-const ProjectSchema = {
+const ProjectSchema: Prisma.ProjectSelect = {
     id: true,
+    createdAt: true,
+    updatedAt: true,
     name: true,
     registry: {
         select: {
@@ -70,6 +74,7 @@ const ProjectSchema = {
                 select: TaskSchema
             }
         },
+        orderBy: [{ startDate: 'asc' }, { type: 'asc' }],
     },
     creditingPeriodStartDate: true,
     creditingPeriodEndDate: true,
@@ -85,9 +90,7 @@ const ProjectSchema = {
             id: true,
             name: true,
         },
-    },
-    createdAt: true,
-    updatedAt: true,
+    }
 };
 
 const getProject = async (projectId: string) =>
@@ -208,6 +211,13 @@ const createProject = (data: any) =>
                 }]
             },
             notes: data.notes,
+            engagements: {
+                connect: data.engagements
+                    ? data.engagements.map((engagementId: string) => ({
+                          id: engagementId,
+                      }))
+                    : [],
+            },
             creditingPeriodStartDate: data.creditingPeriodStartDate,
             creditingPeriodEndDate: data.creditingPeriodEndDate,
             annualApproximateCreditVolume: data.annualApproximateCreditVolume,
@@ -217,9 +227,11 @@ const createProject = (data: any) =>
                 },
             },
             assetOwners: {
-                connect: data.assetOwners.map((ownerId: string) => ({
-                    id: ownerId,
-                })),
+                connect: data.assetOwners
+                    ? data.assetOwners.map((ownerId: string) => ({
+                          id: ownerId,
+                      }))
+                    : [],
             },
             isActive: true,
         },
@@ -237,7 +249,7 @@ const updateProject = (projectId: string, data: any) => {
     });
 };
 
-const deleteProject = async (projectId: string) => {
+const deleteProject = async (projectId: string | undefined) => {
     const engagements = await prisma.engagement.findMany({
         where: {
             projectId: projectId,
@@ -246,7 +258,9 @@ const deleteProject = async (projectId: string) => {
             id: true,
         },
     });
+
     const engagementIds = engagements.map((engagement) => engagement.id);
+
     await prisma.engagement.deleteMany({
         where: {
             id: {
@@ -254,7 +268,8 @@ const deleteProject = async (projectId: string) => {
             },
         },
     });
-    return await prisma.project.delete({
+
+    return prisma.project.delete({
         where: {
             id: projectId,
         },
