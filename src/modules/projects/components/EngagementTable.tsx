@@ -246,7 +246,12 @@ function EngagementTable({
       documents: (
         <>
           {v.document > 0 ? (
-            <Button type="ghost" onClick={() => setShowNote(true)}>
+            <Button
+              type="ghost"
+              onClick={() => () => {
+                console.log("document");
+              }}
+            >
               <Icon name="file" />
               <Text type="bodyBold">{20}</Text>
             </Button>
