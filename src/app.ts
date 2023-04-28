@@ -40,7 +40,7 @@ export const App = () => {
         },
     };
 
-    app.use(cors(corsOptions));
+    app.use(cors());
 
     app.use(responseMiddleware());
 
