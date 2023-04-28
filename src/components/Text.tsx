@@ -21,7 +21,8 @@ type TextColor =
   | "subdued"
   | "disabled"
   | "white"
-  | "warning";
+  | "warning"
+  | "success";
 
 const StyledText = styled.span<{ type: TypeStyle; color: TextColor }>`
   font-size: ${(props) => props.theme.typography[props.type].size}px;

@@ -41,7 +41,6 @@ const Tab = styled.button<{ currentTab: string; selectedTab: string }>`
 
 export default function Tabs({ tabs, selectedTab, onSelect }: TabsInfoType) {
   return (
-    // color="primary"/
     <TabsHolder>
       {tabs.map((tab) => {
         return (

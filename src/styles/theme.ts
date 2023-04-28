@@ -36,6 +36,7 @@ export const theme = {
       white: "#FFFFFF",
       warning: "#E0A008",
       primary: "#3C76F1",
+      success: "#00A676",
     },
     semantic: {
       error: {

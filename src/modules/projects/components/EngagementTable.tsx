@@ -110,6 +110,7 @@ export interface EngagementItem {
   state: EngamentStateTypes;
   startDate: Date;
   dueDate: Date;
+  completedDate?: Date;
   note: string;
   document: number;
   attributes: { label: string; value: string }[];
@@ -158,8 +159,17 @@ function EngagementTable({
 
             <Text type="caption" color="subdued">
               {`${v.tasks.length} tasks`}
-              <span> &bull; </span>
-              {`Completed on DD/MM/YYYY`}
+
+              {v.state === "COMPLETED" && (
+                <>
+                  <span> &bull; </span>
+                  <Text type="caption" color="success">
+                    Completed on{" "}
+                    {v?.completedDate &&
+                      convertToEuropeanDateFormat(v.completedDate)}
+                  </Text>
+                </>
+              )}
             </Text>
           </ColumnWrapper>
 
