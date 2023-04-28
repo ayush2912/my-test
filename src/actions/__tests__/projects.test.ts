@@ -1,9 +1,20 @@
-
 import prisma from '../prisma';
 import { faker } from '@faker-js/faker';
 
-import { createProject, getProject, updateProject, deleteProject } from '../projects';
-import { countries, methodologies, registries, projectTypes, organizations, engagements } from '../../__mocks__/mock.data'
+import {
+    createProject,
+    getProject,
+    updateProject,
+    deleteProject,
+} from '../projects';
+import {
+    countries,
+    methodologies,
+    registries,
+    projectTypes,
+    organizations,
+    engagements,
+} from '../../__mocks__/mock.data';
 
 beforeEach(() =>
     Promise.all([
@@ -12,7 +23,7 @@ beforeEach(() =>
         prisma.methodology.createMany({ data: methodologies }),
         prisma.projectType.createMany({ data: projectTypes }),
         prisma.organization.createMany({ data: organizations }),
-        prisma.engagement.createMany({ data: engagements })
+        prisma.engagement.createMany({ data: engagements }),
     ])
 );
 
@@ -63,6 +74,8 @@ afterEach(async () => {
         }),
     ]);
 
+    jest.clearAllMocks();
+
     await prisma.$disconnect();
 });
 
@@ -80,8 +93,12 @@ describe('createProject()', () => {
             methodologies: faker.helpers
                 .arrayElements(methodologies, 1)
                 .map((m) => m.id),
-            type: faker.helpers.arrayElement(projectTypes).id,
-            subType: faker.helpers.arrayElement(projectTypes).id,
+            types: faker.helpers
+                .arrayElements(projectTypes, 1)
+                .map((m) => m.id),
+            subTypes: faker.helpers
+                .arrayElements(projectTypes, 1)
+                .map((m) => m.id),
             notes: 'Renewable Power project in India',
             isActive: true,
             creditingPeriodStartDate: '2023-04-11T14:15:22Z',
@@ -95,6 +112,11 @@ describe('createProject()', () => {
 
         const result = await createProject(data);
 
+        if (!result.id) {
+            throw new Error('Project not created');
+        }
+
+        expect(typeof result?.id).toBe('string');
         expect(result.name).toBe('Renewable Power Project');
         expect(result.registry?.id).toBe(data.registry);
         expect(result.registry?.name).toBe(
@@ -108,11 +130,9 @@ describe('createProject()', () => {
             countries.filter((c) => data.countries.includes(c.iso2Name))
         );
 
-        if (result.id) {
-             // Teardown
-            await deleteProject(result.id);
-        }
+        await deleteProject(result.id);
     });
+});
 
 describe('getProject()', () => {
     test('it should find the correct project', async () => {
@@ -150,7 +170,7 @@ describe('getProject()', () => {
         const project = await createProject(data);
 
         if (!project.id) {
-            throw new Error("Project not created")
+            throw new Error('Project not created');
         }
 
         const result = await getProject(project.id);
@@ -163,7 +183,7 @@ describe('getProject()', () => {
 
         expect(result?.registryProjectId).toBe(data.registryProjectId);
         expect(result?.registryUrl).toBe(data.registryUrl);
-        expect(Array.isArray(result?.countries)).toBe(true)
+        expect(Array.isArray(result?.countries)).toBe(true);
         expect(result?.states).toEqual(project.states);
         expect(result?.methodologies).toEqual(project.methodologies);
         expect(result?.types).toEqual(project.types);
@@ -171,7 +191,7 @@ describe('getProject()', () => {
         expect(result?.notes).toBe(data.notes);
         expect(typeof result?.isActive).toBe('boolean');
         expect(Array.isArray(result?.engagements)).toBe(true);
-        expect(result?.engagements).toEqual(project.engagements)
+        expect(result?.engagements).toEqual(project.engagements);
 
         await deleteProject(project.id);
     });
@@ -197,8 +217,12 @@ describe('updateProject()', () => {
             methodologies: faker.helpers
                 .arrayElements(methodologies, 1)
                 .map((m) => m.id),
-            type: faker.helpers.arrayElement(projectTypes).id,
-            subType: faker.helpers.arrayElement(projectTypes).id,
+            types: faker.helpers
+                .arrayElements(projectTypes, 1)
+                .map((m) => m.id),
+            subTypes: faker.helpers
+                .arrayElements(projectTypes, 1)
+                .map((m) => m.id),
             notes: 'Renewable Power project in India',
             isActive: true,
             creditingPeriodStartDate: '2023-04-11T14:15:22Z',
@@ -213,7 +237,7 @@ describe('updateProject()', () => {
         const project = await createProject(data);
 
         if (!project.id) {
-            throw new Error("Project not created")
+            throw new Error('Project not created');
         }
 
         const result = await updateProject(project.id, {
@@ -252,8 +276,12 @@ describe('deleteProject()', () => {
             methodologies: faker.helpers
                 .arrayElements(methodologies, 1)
                 .map((m) => m.id),
-            type: faker.helpers.arrayElement(projectTypes).id,
-            subType: faker.helpers.arrayElement(projectTypes).id,
+            types: faker.helpers
+                .arrayElements(projectTypes, 1)
+                .map((m) => m.id),
+            subTypes: faker.helpers
+                .arrayElements(projectTypes, 1)
+                .map((m) => m.id),
             notes: 'Renewable Power project in India',
             isActive: true,
             creditingPeriodStartDate: '2023-04-11T14:15:22Z',
@@ -268,7 +296,7 @@ describe('deleteProject()', () => {
         const project = await createProject(data);
 
         if (!project.id) {
-            throw new Error("Project not created")
+            throw new Error('Project not created');
         }
 
         const result = await deleteProject(project.id);

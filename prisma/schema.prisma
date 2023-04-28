@@ -154,6 +154,7 @@ model Project {
   registryRiskInfo                  RegistryRiskInfo?       @relation("RegistryRiskInfo")
   countries                         Country[]               @relation(fields: [countryIDs], references: [id])
   countryIDs                        String[]                @db.ObjectId
+  state                             String?
   states                            String[]
   methodologies                     Methodology[]           @relation(fields: [methodologyIDs], references: [id])
   methodologyIDs                    String[]                @db.ObjectId

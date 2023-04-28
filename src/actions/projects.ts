@@ -136,9 +136,11 @@ const createProject = (data: any) =>
             },
             notes: data.notes,
             engagements: {
-                connect: data.engagements.map((engagementId: string) => ({
-                    id: engagementId,
-                })),
+                connect: data.engagements
+                    ? data.engagements.map((engagementId: string) => ({
+                          id: engagementId,
+                      }))
+                    : [],
             },
             creditingPeriodStartDate: data.creditingPeriodStartDate,
             creditingPeriodEndDate: data.creditingPeriodEndDate,
@@ -148,9 +150,11 @@ const createProject = (data: any) =>
                 },
             },
             assetOwners: {
-                connect: data.assetOwners.map((ownerId: string) => ({
-                    id: ownerId,
-                })),
+                connect: data.assetOwners
+                    ? data.assetOwners.map((ownerId: string) => ({
+                          id: ownerId,
+                      }))
+                    : [],
             },
             isActive: true,
         },
@@ -171,7 +175,7 @@ const updateProject = (projectId: string, data: any) => {
     });
 };
 
-const deleteProject = async (projectId: string) => {
+const deleteProject = async (projectId: string | undefined) => {
     const engagements = await prisma.engagement.findMany({
         where: {
             projectId: projectId,
