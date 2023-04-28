@@ -164,7 +164,7 @@ function EngagementTable({
                 <>
                   <span> &bull; </span>
                   <Text type="caption" color="success">
-                    Completed on{" "}
+                    Completed on
                     {v?.completedDate &&
                       convertToEuropeanDateFormat(v.completedDate)}
                   </Text>
@@ -249,6 +249,7 @@ function EngagementTable({
               name={v.name}
               startDate={v.startDate}
               dueDate={v.dueDate}
+              completedDate={v?.completedDate}
               status={isEngamentDiscontinued ? "DISCONTINUED" : v.status}
             />
           ))}
