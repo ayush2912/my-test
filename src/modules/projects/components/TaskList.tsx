@@ -73,8 +73,16 @@ export default function TaskList({
       </Tooltip>
 
       <ColumnWrapper>
-        <TextWithMarginBottom type="body">{name}</TextWithMarginBottom>
-        <Text type="body" color="subdued">
+        <TextWithMarginBottom
+          type="body"
+          color={status === "DISCONTINUED" ? "disabled" : "default"}
+        >
+          {name}
+        </TextWithMarginBottom>
+        <Text
+          type="body"
+          color={status === "DISCONTINUED" ? "disabled" : "subdued"}
+        >
           {`${convertToEuropeanDateFormat(
             startDate,
           )} - ${convertToEuropeanDateFormat(dueDate)}`}

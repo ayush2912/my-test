@@ -100,6 +100,7 @@ const ModalContent = styled.div`
 
 const EmptyState = styled.div`
   padding-left: 20px;
+  cursor: default;
 `;
 
 type EngamentStateTypes =
@@ -168,7 +169,7 @@ function EngagementTable({
                 <>
                   <span> &bull; </span>
                   <Text type="caption" color="success">
-                    Completed on
+                    Completed on{" "}
                     {v?.completedDate &&
                       convertToEuropeanDateFormat(v.completedDate)}
                   </Text>
