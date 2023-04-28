@@ -13,10 +13,10 @@ type DateRange {
 }
 
 type EngagementAttribute {
-  name  String
-  key   String
-  type  String
-  value String
+  name  String?
+  key   String?
+  type  String?
+  value String?
 }
 
 type StateHistory {
@@ -163,7 +163,7 @@ model Project {
   subTypes                          ProjectType[]           @relation("ProjectWithSubProjectType", fields: [subTypeIDs], references: [id])
   subTypeIDs                        String[]                @db.ObjectId
   notes                             String?
-  isActive                          Boolean
+  isActive                          Boolean?
   annualApproximateCreditVolume     Int?
   portfolioOwner                    Organization?           @relation("PortfolioOwnerOrganisations", fields: [portfolioOwnerId], references: [id])
   portfolioOwnerId                  String?                 @db.ObjectId
@@ -178,7 +178,7 @@ model Engagement {
   updatedAt     DateTime              @updatedAt
   type          String
   startDate     DateTime
-  dueDate       DateTime
+  dueDate       DateTime?
   completedDate DateTime?
   state         String?               @default("NOT_STARTED")
   notes         String?
@@ -197,7 +197,7 @@ model Task {
   engagement    Engagement?    @relation(fields: [engagementId], references: [id], onDelete: Cascade)
   type          String
   startDate     DateTime
-  dueDate       DateTime
+  dueDate       DateTime?
   completedDate DateTime?
   state         String?        @default("NOT_STARTED")
   stateHistory  StateHistory[]
