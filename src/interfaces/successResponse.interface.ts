@@ -1,8 +1,8 @@
 interface SuccessResponse {
     data?: any;
-    status_code?: number;
+    statusCode?: number;
     msg?: string;
-    custom_code?: string;
+    customCode?: string;
 }
 
 export default SuccessResponse;

@@ -14,9 +14,9 @@ type DateRange {
 
 type EngagementAttribute {
   name  String
+  key   String
   type  String
   value String
-  key   String
 }
 
 type StateHistory {
@@ -39,12 +39,11 @@ model Organization {
   members            User[]
   projects           Project[]
   portfolioProjects  Project[]      @relation("PortfolioOwnerOrganisations")
-  // assetProjects      Project[]      @relation("AssetOwnerOrganisations")
   accessPolicies     AccessPolicy[]
   Issuance           Issuance[]
   chat               Chat[]
-  // Project            Project?       @relation("AssetOwnerOrganisations", fields: [projectId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  // projectId          String?        @db.ObjectId
+  Project            Project[]      @relation("AssetOwnerOrganisations", fields: [projectIDs], references: [id])
+  projectIDs         String[]       @db.ObjectId
 }
 
 model User {
@@ -153,19 +152,22 @@ model Project {
   creditsAskPrice                   ProjectCreditsAskPrice? @relation("ProjectCreditsAskPrice")
   registryRiskId                    String?
   registryRiskInfo                  RegistryRiskInfo?       @relation("RegistryRiskInfo")
-  countries                         Country[]
-  state                             String
-  methodologies                     Methodology[]
-  type                              ProjectType?            @relation(fields: [typeId], references: [id])
-  typeId                            String?                 @db.ObjectId
-  subType                           ProjectType?            @relation("ProjectWithSubProjectType", fields: [subTypeId], references: [id])
-  subTypeId                         String?                 @db.ObjectId
+  countries                         Country[]               @relation(fields: [countryIDs], references: [id])
+  countryIDs                        String[]                @db.ObjectId
+  states                            String[]
+  methodologies                     Methodology[]           @relation(fields: [methodologyIDs], references: [id])
+  methodologyIDs                    String[]                @db.ObjectId
+  types                             ProjectType[]           @relation("ProjectWithProjectType", fields: [typeIDs], references: [id])
+  typeIDs                           String[]                @db.ObjectId
+  subTypes                          ProjectType[]           @relation("ProjectWithSubProjectType", fields: [subTypeIDs], references: [id])
+  subTypeIDs                        String[]                @db.ObjectId
   notes                             String?
-  isActive                          Boolean
+  isActive                          Boolean?
   annualApproximateCreditVolume     BigInt?
   portfolioOwner                    Organization?           @relation("PortfolioOwnerOrganisations", fields: [portfolioOwnerId], references: [id])
   portfolioOwnerId                  String?                 @db.ObjectId
-  // assetOwners                       Organization[]          @relation("AssetOwnerOrganisations")
+  assetOwners                       Organization[]          @relation("AssetOwnerOrganisations", fields: [assetOwnerIDs], references: [id])
+  assetOwnerIDs                     String[]                @db.ObjectId
   engagements                       Engagement[]
 }
 
@@ -252,7 +254,8 @@ model Registry {
   registryProjectDatas RegistryProjectData[]
   issuance             Issuance[]
   SectoralScope        SectoralScope[]
-  methodologies        Methodology[]
+  methodologies        Methodology[]         @relation(fields: [methodologyIDs], references: [id])
+  methodologyIDs       String[]              @db.ObjectId
 }
 
 model Chat {
@@ -408,29 +411,31 @@ model SectoralScope {
 }
 
 model Methodology {
-  id         String    @id @default(auto()) @map("_id") @db.ObjectId
-  name       String
-  Registry   Registry? @relation(fields: [registryId], references: [id])
-  registryId String?   @db.ObjectId
-  Projects   Project?  @relation(fields: [projectId], references: [id])
-  projectId  String?   @db.ObjectId
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  Registry    Registry[] @relation(fields: [registryIDs], references: [id])
+  registryIDs String[]   @db.ObjectId
+  Projects    Project[]  @relation(fields: [projectIDs], references: [id])
+  projectIDs  String[]   @db.ObjectId
 }
 
 model Country {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
   name      String
-  iso2Name  String   @unique
+  iso2Name  String    @unique
   iso3Name  String
-  Project   Project? @relation(fields: [projectId], references: [id])
-  projectId String?  @db.ObjectId
+  Project   Project[] @relation(fields: [projectId], references: [id])
+  projectId String[]  @db.ObjectId
 }
 
 model ProjectType {
-  id               String        @id @default(auto()) @map("_id") @db.ObjectId
-  name             String
-  parentType       ProjectType?  @relation("ParentProjectType", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  parentId         String?       @db.ObjectId
-  subTypes         ProjectType[] @relation("ParentProjectType")
-  subTypeProjects  Project[]     @relation("ProjectWithSubProjectType")
-  mainTypeProjects Project[]
+  id                 String        @id @default(auto()) @map("_id") @db.ObjectId
+  name               String
+  parentType         ProjectType?  @relation("ParentProjectType", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  parentId           String?       @db.ObjectId
+  subTypes           ProjectType[] @relation("ParentProjectType")
+  subTypeProjects    Project[]     @relation("ProjectWithSubProjectType", fields: [subTypeProjectIDs], references: [id])
+  subTypeProjectIDs  String[]      @db.ObjectId
+  mainTypeProject    Project[]     @relation("ProjectWithProjectType", fields: [mainTypeProjectIDs], references: [id])
+  mainTypeProjectIDs String[]      @db.ObjectId
 }

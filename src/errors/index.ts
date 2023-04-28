@@ -139,9 +139,7 @@ function registerErrors(obj: any) {
     }
 }
 
-(function loadErrors() {
-    registerErrors(Errors);
-})();
+registerErrors(Errors);
 
 errors.OffsetMaxServiceError = OffsetMaxServiceError;
 errors.registerErrors = registerErrors;

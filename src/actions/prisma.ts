@@ -7,7 +7,6 @@ prisma
     .then(() => console.info('Connected to Prisma Client!'))
     .catch((error: any) => {
         console.error('Error connecting to Prisma Client:', error);
-
     });
 
 export default prisma;

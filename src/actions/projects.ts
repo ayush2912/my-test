@@ -1,6 +1,21 @@
+import { Prisma } from '@prisma/client';
+
 import prisma from './prisma';
 
-const ProjectSchema = {
+const TaskSchema: Prisma.TaskSelect = {
+    id: true,
+    engagementId: true,
+    type: true,
+    startDate: true,
+    dueDate: true,
+    completedDate: true,
+    state: true,
+    stateHistory: true,
+    createdAt: true,
+    updatedAt: true,
+};
+
+const ProjectSchema: Prisma.ProjectSelect = {
     id: true,
     createdAt: true,
     updatedAt: true,
@@ -9,6 +24,12 @@ const ProjectSchema = {
         select: {
             id: true,
             name: true,
+            methodologies: {
+                select: {
+                    id: true,
+                    name: true,
+                },
+            },
         },
     },
     registryProjectId: true,
@@ -20,20 +41,20 @@ const ProjectSchema = {
             name: true,
         },
     },
-    state: true,
+    states: true,
     methodologies: {
         select: {
             id: true,
             name: true,
         },
     },
-    type: {
+    types: {
         select: {
             id: true,
             name: true,
         },
     },
-    subType: {
+    subTypes: {
         select: {
             id: true,
             name: true,
@@ -52,19 +73,15 @@ const ProjectSchema = {
             notes: true,
             projectId: true,
             stateHistory: true,
+            attributes: true,
+            createdAt: true,
+            updatedAt: true,
             tasks: {
-                select: {
-                    id: true,
-                    type: true,
-                    startDate: true,
-                    dueDate: true,
-                    completedDate: true,
-                    state: true,
-                    engagementId: true,
-                    stateHistory: true,
-                },
+                select: TaskSchema,
+                orderBy: [{ startDate: 'asc' }, { type: 'asc' }],
             },
         },
+        orderBy: [{ startDate: 'asc' }, { type: 'asc' }],
     },
     creditingPeriodStartDate: true,
     creditingPeriodEndDate: true,
@@ -75,12 +92,6 @@ const ProjectSchema = {
             name: true,
         },
     },
-    // assetOwners: {
-    //     select: {
-    //         id: true,
-    //         name: true,
-    //     },
-    // },
 };
 
 const getProject = async (projectId: string) =>
@@ -107,23 +118,28 @@ const createProject = (data: any) =>
                     iso2Name: country,
                 })),
             },
-            state: data.state,
+            states: data.states,
             methodologies: {
                 connect: data.methodologies.map((methodologyId: string) => ({
                     id: methodologyId,
                 })),
             },
-            type: {
-                connect: {
-                    id: data.type,
-                },
+            types: {
+                connect: data.types.map((typeID: string) => ({
+                    id: typeID,
+                })),
             },
-            subType: {
-                connect: {
-                    id: data.subType,
-                },
+            subTypes: {
+                connect: data.subTypes.map((subTypeID: string) => ({
+                    id: subTypeID,
+                })),
             },
             notes: data.notes,
+            engagements: {
+                connect: data.engagements.map((engagementId: string) => ({
+                    id: engagementId,
+                })),
+            },
             creditingPeriodStartDate: data.creditingPeriodStartDate,
             creditingPeriodEndDate: data.creditingPeriodEndDate,
             portfolioOwner: {
@@ -131,11 +147,11 @@ const createProject = (data: any) =>
                     id: data.portfolioOwner,
                 },
             },
-            // assetOwners: {
-            //     connect: data.assetOwners.map((ownerId: string) => ({
-            //         id: ownerId,
-            //     })),
-            // },
+            assetOwners: {
+                connect: data.assetOwners.map((ownerId: string) => ({
+                    id: ownerId,
+                })),
+            },
             isActive: true,
         },
         select: ProjectSchema,
@@ -155,11 +171,31 @@ const updateProject = (projectId: string, data: any) => {
     });
 };
 
-const deleteProject = (projectId: string) =>
-    prisma.project.delete({
+const deleteProject = async (projectId: string) => {
+    const engagements = await prisma.engagement.findMany({
+        where: {
+            projectId: projectId,
+        },
+        select: {
+            id: true,
+        },
+    });
+
+    const engagementIds = engagements.map((engagement) => engagement.id);
+
+    await prisma.engagement.deleteMany({
+        where: {
+            id: {
+                in: engagementIds,
+            },
+        },
+    });
+
+    return prisma.project.delete({
         where: {
             id: projectId,
         },
     });
+};
 
 export { getProject, createProject, updateProject, deleteProject };

@@ -29,14 +29,7 @@ export const App = () => {
         next();
     });
 
-    const whitelist = [
-        'http://localhost:3000',
-        'https://dev-dashboard.offsetmax.digital/',
-        'https://staging-dashboard.offsetmax.digital/',
-        'https://demo.offsetmax.digital/',
-        'https://mirror.offsetmax.digital/',
-        'https://app.offsetmax.digital/',
-    ];
+    const whitelist = [process.env.LOCAL, process.env.DEV, process.env.STAGING];
     const corsOptions = {
         origin: (origin: any, callback: any) => {
             if (whitelist.indexOf(origin) !== -1 || !origin) {
@@ -57,7 +50,7 @@ export const App = () => {
 
     routes(router);
 
-    app.get('/health', (req: any, res: any) => {
+    app.get('/health', (req: Request, res: Response) => {
         res.status(200).send('Health Check !!');
     });
 

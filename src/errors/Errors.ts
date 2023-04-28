@@ -35,7 +35,7 @@ const errors = {
         statusCode: 409,
     },
     PreConditionFailed: {
-        message: 'Validation errors/ Invalid arguments',
+        message: 'Validation errors/Invalid arguments',
         customCode: 'VALIDATION_ERROR',
         statusCode: 412,
     },

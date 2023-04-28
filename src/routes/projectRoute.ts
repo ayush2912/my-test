@@ -1,8 +1,7 @@
 import { Request, Response, Router } from 'express';
 import { getProjectDetails } from '../services/projectService';
-import {
-    validateProjectIdParamsSchema,
-} from '../middlewares/validation';
+import { validateProjectIdParamsSchema } from '../middlewares/validation';
+import ProjectConstants from '../utility/constants/ProjectConstants';
 
 export default function routes(router: Router) {
     router.get(
@@ -15,10 +14,9 @@ export default function routes(router: Router) {
                 const results = await getProjectDetails(req.params.projectId);
 
                 res.sendSuccess({
-                    msg: 'Project Details Retrived Successfully',
+                    msg: ProjectConstants.PROJECT_DETAILS_RETRIEVED,
                     data: results,
-                    custom_code: 'PROJECT_DETAILS_RETRIVED_SUCCESSFULLY'
-                    
+                    customCode: 'PROJECT_DETAILS_RETRIEVED_SUCCESSFULLY',
                 });
             } catch (error) {
                 res.sendError(error);
