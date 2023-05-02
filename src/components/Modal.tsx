@@ -30,6 +30,7 @@ const ModalContent = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   width: fit-content;
+  min-width: 414px;
   border-radius: 24px;
   background-color: #ffffff;
 `;
