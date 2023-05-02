@@ -100,7 +100,7 @@ resource "aws_ecs_service" "my_service" {
     container_port   = 4000
   }
 }
-/*resource "aws_appautoscaling_target" "dev_to_target" {
+resource "aws_appautoscaling_target" "dev_to_target" {
   max_capacity = 5
   min_capacity = 1
   resource_id = "service/my-graphql-ecs-cluster/my-graphql"
@@ -138,4 +138,4 @@ resource "aws_appautoscaling_policy" "dev_to_cpu" {
 
     target_value = 60
   }
-}*/
+}
