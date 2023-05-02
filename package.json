@@ -15,7 +15,8 @@
     "build-storybook": "storybook build",
     "lint": "eslint --ext js,jsx,ts,tsx src",
     "lint:fix": "eslint --fix .",
-    "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc"
+    "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc",
+    "publish-package": "npm version patch && npm publish"
   },
   "dependencies": {
     "@tanstack/react-query": "^4.29.3",
