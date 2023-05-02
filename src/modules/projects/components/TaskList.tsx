@@ -36,18 +36,18 @@ const TextWithMarginBottom = styled(Text)`
 `;
 
 export type TaskListProps = {
-  name: string;
+  type: string;
   startDate: Date;
   dueDate: Date;
   completedDate?: Date;
-  status: "IN_PROGRESS" | "COMPLETED" | "NOT_STARTED" | "DISCONTINUED";
+  state: "IN_PROGRESS" | "COMPLETED" | "NOT_STARTED" | "DISCONTINUED";
 };
 
 export default function TaskList({
-  name,
+  type,
   startDate,
   dueDate,
-  status,
+  state,
   completedDate,
 }: TaskListProps) {
   const selectedIconName = {
@@ -55,7 +55,7 @@ export default function TaskList({
     COMPLETED: "success",
     NOT_STARTED: "notStarted",
     DISCONTINUED: "discontinued",
-  }[status] as IconNameType;
+  }[state] as IconNameType;
 
   const tooltipTextContent = {
     IN_PROGRESS: "IN PROGRESS",
@@ -64,7 +64,7 @@ export default function TaskList({
     }`,
     NOT_STARTED: "NOT STARTED",
     DISCONTINUED: "discontinued",
-  }[status] as string;
+  }[state] as string;
 
   return (
     <StyledTaskContainer>
@@ -77,7 +77,7 @@ export default function TaskList({
           type="body"
           color={status === "DISCONTINUED" ? "disabled" : "default"}
         >
-          {name}
+          {type}
         </TextWithMarginBottom>
         <Text
           type="body"

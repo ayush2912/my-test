@@ -116,9 +116,9 @@ export interface EngagementItem {
   startDate: Date;
   dueDate: Date;
   completedDate?: Date;
-  note: string;
+  notes: string;
   document: number;
-  attributes: { label: string; value: string }[];
+  attributes: { name: string; value: string }[];
   tasks: TaskListProps[];
 }
 
@@ -197,7 +197,7 @@ function EngagementTable({
                 return (
                   <LabelValue
                     key={index}
-                    label={attribute?.label}
+                    label={attribute?.name}
                     value={attribute?.value}
                   />
                 );
@@ -219,7 +219,7 @@ function EngagementTable({
       state: <StatusTag name={statusTag.label} type={statusTag.type} />,
       note: (
         <>
-          {v.note.length > 0 ? (
+          {v.notes.length > 0 ? (
             <Button type="ghost" onClick={() => setShowNote(true)}>
               <Icon name="message" />
             </Button>
@@ -238,7 +238,7 @@ function EngagementTable({
             title="Note"
           >
             <Text type="body" color="default">
-              {v.note}
+              {v.notes}
             </Text>
           </Modal>
         </>
@@ -273,12 +273,12 @@ function EngagementTable({
         <TaskListCell colSpan={headers.length}>
           {v.tasks.map((v) => (
             <TaskList
-              key={v.name}
-              name={v.name}
+              key={v.type}
+              type={v.type}
               startDate={v.startDate}
               dueDate={v.dueDate}
               completedDate={v?.completedDate}
-              status={isEngamentDiscontinued ? "DISCONTINUED" : v.status}
+              state={isEngamentDiscontinued ? "DISCONTINUED" : v.state}
             />
           ))}
         </TaskListCell>
