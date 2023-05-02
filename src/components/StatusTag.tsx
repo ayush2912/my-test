@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Text from "./Text";
 
 const StyledStatusTag = styled.div<{
-  type: "error" | "warning" | "success" | "information" | "disabled";
+  type: StatusType;
 }>`
   display: flex;
   align-items: center;
@@ -14,13 +14,18 @@ const StyledStatusTag = styled.div<{
   background-color: ${(props) =>
     props.theme.colors.semantic[props.type].default};
 `;
-
+export type StatusType =
+  | "error"
+  | "warning"
+  | "success"
+  | "information"
+  | "disabled";
 export default function StatusTag({
   name,
   type,
 }: {
   name: string;
-  type: "error" | "warning" | "success" | "information" | "disabled";
+  type: StatusType;
 }) {
   return (
     <StyledStatusTag type={type}>

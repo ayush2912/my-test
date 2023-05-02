@@ -1,0 +1,7 @@
+#!/bin/bash
+
+echo "Copying assets folder"
+cp -R ./src/assets ./
+
+echo "Compiling TypeScript files to JavaScript"
+npx tsc

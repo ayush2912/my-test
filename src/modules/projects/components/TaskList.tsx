@@ -1,9 +1,9 @@
 import styled from "styled-components";
 
-import Icon, { IconNameType } from "@/components/Icon";
-import Text from "@/components/Text";
-import Tooltip from "@/components/Tooltip";
-import { convertToEuropeanDateFormat } from "@/utils/dateTimeFormatter";
+import Icon, { IconNameType } from "../../../components/Icon";
+import Text from "../../../components/Text";
+import Tooltip from "../../../components/Tooltip";
+import { convertToEuropeanDateFormat } from "../../../utils/dateTimeFormatter";
 
 const StyledTaskContainer = styled.div`
   border-top: 1px solid #e1e4e8;
@@ -35,17 +35,21 @@ const TextWithMarginBottom = styled(Text)`
   margin-bottom: 4px;
 `;
 
+export type TaskListProps = {
+  name: string;
+  startDate: Date;
+  dueDate: Date;
+  completedDate?: Date;
+  status: "IN_PROGRESS" | "COMPLETED" | "NOT_STARTED" | "DISCONTINUED";
+};
+
 export default function TaskList({
   name,
   startDate,
   dueDate,
   status,
-}: {
-  name: string;
-  startDate: Date;
-  dueDate: Date;
-  status: "IN_PROGRESS" | "COMPLETED" | "NOT_STARTED" | "DISCONTINUED";
-}) {
+  completedDate,
+}: TaskListProps) {
   const selectedIconName = {
     IN_PROGRESS: "inProgress",
     COMPLETED: "success",
@@ -55,7 +59,9 @@ export default function TaskList({
 
   const tooltipTextContent = {
     IN_PROGRESS: "IN PROGRESS",
-    COMPLETED: "Completed on xxx",
+    COMPLETED: `Completed on ${
+      completedDate && convertToEuropeanDateFormat(completedDate)
+    }`,
     NOT_STARTED: "NOT STARTED",
     DISCONTINUED: "discontinued",
   }[status] as string;
@@ -67,8 +73,16 @@ export default function TaskList({
       </Tooltip>
 
       <ColumnWrapper>
-        <TextWithMarginBottom type="body">{name}</TextWithMarginBottom>
-        <Text type="body" color="subdued">
+        <TextWithMarginBottom
+          type="body"
+          color={status === "DISCONTINUED" ? "disabled" : "default"}
+        >
+          {name}
+        </TextWithMarginBottom>
+        <Text
+          type="body"
+          color={status === "DISCONTINUED" ? "disabled" : "subdued"}
+        >
           {`${convertToEuropeanDateFormat(
             startDate,
           )} - ${convertToEuropeanDateFormat(dueDate)}`}

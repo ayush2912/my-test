@@ -10,14 +10,39 @@ const meta: Meta<typeof Button> = {
 export default meta;
 type Story = StoryObj<typeof Button>;
 
-export const Primary: Story = {
-  render: () => <Button type="primary">Click Me</Button>,
-};
+export const Primary = () => (
+  <Button
+    type="primary"
+    onClick={() => {
+      console.log("primary button click");
+    }}
+  >
+    Click Me
+  </Button>
+);
 
 export const Secondary: Story = {
-  render: () => <Button type="secondary">Click Me</Button>,
+  render: () => (
+    <Button
+      type="secondary"
+      onClick={() => {
+        console.log("secondary button click");
+      }}
+    >
+      Click Me
+    </Button>
+  ),
 };
 
 export const Ghost: Story = {
-  render: () => <Button type="ghost">Click Me</Button>,
+  render: () => (
+    <Button
+      type="ghost"
+      onClick={() => {
+        console.log("ghost button click");
+      }}
+    >
+      Click Me
+    </Button>
+  ),
 };

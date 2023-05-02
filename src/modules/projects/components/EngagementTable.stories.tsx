@@ -1,9 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import StatusTag from "@/components/StatusTag";
-import Text from "@/components/Text";
-
-import EngagementTable from "./EngagementTable";
+import EngagementTable, { EngagementItem } from "./EngagementTable";
 import { EngagementTableHeaders } from "../constants/engagementTableHeaders";
 
 const meta: Meta<typeof EngagementTable> = {
@@ -14,26 +11,123 @@ const meta: Meta<typeof EngagementTable> = {
 export default meta;
 type Story = StoryObj<typeof EngagementTable>;
 
-const projectEngagementsTableData = [
+const projectEngagementsTableData: EngagementItem[] = [
   {
     name: "Engagement 1",
-    startDate: "2023-01-10T06:20:44.069Z",
-    dueData: "2030-01-05T08:52:29.962Z",
+    state: "COMPLETED",
+    startDate: new Date("2023-01-10T06:20:44.069Z"),
+    dueDate: new Date("2030-01-05T08:52:29.962Z"),
+    completedDate: new Date("2030-01-05T08:52:29.962Z"),
+    note: "I am a note",
+    document: 20,
+    attributes: [
+      {
+        label: "Date of registration",
+        value: "",
+      },
+      {
+        label: "Registry ID",
+        value: "",
+      },
+      {
+        label: "Registry URL",
+        value: "https://registry.goldstandard.org/projects/details/48",
+      },
+    ],
+    tasks: [
+      {
+        name: "Task 1",
+        startDate: new Date("2023-01-10T06:20:44.069Z"),
+        dueDate: new Date("2023-01-10T06:20:44.069Z"),
+        status: "COMPLETED",
+        completedDate: new Date("2023-01-10T06:20:44.069Z"),
+      },
+    ],
   },
   {
     name: "Engagement 1",
-    startDate: "2023-01-10T06:20:44.069Z",
-    dueData: "2030-01-05T08:52:29.962Z",
+    state: "OVERDUE",
+    startDate: new Date("2023-01-10T06:20:44.069Z"),
+    dueDate: new Date("2030-01-05T08:52:29.962Z"),
+    note: "",
+    document: 20,
+    attributes: [{ label: "hello", value: "hi" }],
+    tasks: [
+      {
+        name: "Task 1",
+        startDate: new Date("2023-01-10T06:20:44.069Z"),
+        dueDate: new Date("2023-01-10T06:20:44.069Z"),
+        status: "COMPLETED",
+        completedDate: new Date("2023-01-10T06:20:44.069Z"),
+      },
+    ],
   },
   {
     name: "Engagement 1",
-    startDate: "2023-01-10T06:20:44.069Z",
-    dueData: "2030-01-05T08:52:29.962Z",
+    state: "IN_PROGRESS",
+    startDate: new Date("2023-01-10T06:20:44.069Z"),
+    dueDate: new Date("2030-01-05T08:52:29.962Z"),
+    note: "I am a note",
+    document: 20,
+    attributes: [{ label: "hello", value: "hi" }],
+    tasks: [
+      {
+        name: "Task 1",
+        startDate: new Date("2023-01-10T06:20:44.069Z"),
+        dueDate: new Date("2023-01-10T06:20:44.069Z"),
+        status: "COMPLETED",
+        completedDate: new Date("2023-01-10T06:20:44.069Z"),
+      },
+      {
+        name: "Task 1",
+        startDate: new Date("2023-01-10T06:20:44.069Z"),
+        dueDate: new Date("2023-01-10T06:20:44.069Z"),
+        status: "IN_PROGRESS",
+      },
+      {
+        name: "Task 1",
+        startDate: new Date("2023-01-10T06:20:44.069Z"),
+        dueDate: new Date("2023-01-10T06:20:44.069Z"),
+        status: "COMPLETED",
+        completedDate: new Date("2023-01-10T06:20:44.069Z"),
+      },
+    ],
   },
   {
     name: "Engagement 1",
-    startDate: "2023-01-10T06:20:44.069Z",
-    dueData: "2030-01-05T08:52:29.962Z",
+    state: "NOT_STARTED",
+    startDate: new Date("2023-01-10T06:20:44.069Z"),
+    dueDate: new Date("2030-01-05T08:52:29.962Z"),
+    note: "I am a note",
+    document: 0,
+    attributes: [{ label: "hello", value: "hi" }],
+    tasks: [
+      {
+        name: "Task 1",
+        startDate: new Date("2023-01-10T06:20:44.069Z"),
+        dueDate: new Date("2023-01-10T06:20:44.069Z"),
+        status: "COMPLETED",
+        completedDate: new Date("2023-01-10T06:20:44.069Z"),
+      },
+    ],
+  },
+  {
+    name: "Engagement 1",
+    state: "DISCONTINUED",
+    startDate: new Date("2023-01-10T06:20:44.069Z"),
+    dueDate: new Date("2030-01-05T08:52:29.962Z"),
+    note: "",
+    document: 0,
+    attributes: [{ label: "hello", value: "hi" }],
+    tasks: [
+      {
+        name: "Task 1",
+        startDate: new Date("2023-01-10T06:20:44.069Z"),
+        dueDate: new Date("2023-01-10T06:20:44.069Z"),
+        status: "COMPLETED",
+        completedDate: new Date("2023-01-10T06:20:44.069Z"),
+      },
+    ],
   },
 ];
 

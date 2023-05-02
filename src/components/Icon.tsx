@@ -67,6 +67,7 @@ import { ReactComponent as WaitingIcon } from "@/assets/icons/generic/waiting.sv
 import { ReactComponent as BidsIcon } from "@/assets/icons/menu/bids.svg";
 import { ReactComponent as ProjectsIcon } from "@/assets/icons/menu/projects.svg";
 import { ReactComponent as UserManagementIcon } from "@/assets/icons/menu/user-management.svg";
+
 interface IconProps {
   size?: "small" | "big";
   color?: string;
