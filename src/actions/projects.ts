@@ -1,8 +1,4 @@
-import { Prisma, PrismaClient } from '@prisma/client';
-
-// import prisma from './prisma';
-
-const prisma = new PrismaClient();
+import { prisma, Prisma } from './prisma';
 
 const TaskSchema: Prisma.TaskSelect = {
     id: true,
@@ -12,7 +8,12 @@ const TaskSchema: Prisma.TaskSelect = {
     dueDate: true,
     completedDate: true,
     state: true,
-    stateHistory: true,
+    stateHistory: {
+        select: {
+            state: true,
+            stateUpdatedAt: true
+        }
+    },
     createdAt: true,
     updatedAt: true,
 };
@@ -69,8 +70,20 @@ const ProjectSchema: Prisma.ProjectSelect = {
             state: true,
             notes: true,
             projectId: true,
-            stateHistory: true,
-            attributes: true,
+            stateHistory: {
+                select: {
+                    state: true,
+                    stateUpdatedAt: true
+                }
+            },
+            attributes: {
+                select: {
+                    name: true,
+                    type: true,
+                    value: true,
+                    key: true,
+                },
+            },
             createdAt: true,
             updatedAt: true,
             tasks: {
@@ -145,8 +158,8 @@ const createProject = (data: any) => {
             engagements: {
                 connect: data.engagements
                     ? data.engagements.map((engagementId: string) => ({
-                          id: engagementId,
-                      }))
+                        id: engagementId,
+                    }))
                     : [],
             },
             creditingPeriodStartDate: data.creditingPeriodStartDate,
@@ -160,8 +173,8 @@ const createProject = (data: any) => {
             assetOwners: {
                 connect: data.assetOwners
                     ? data.assetOwners.map((ownerId: string) => ({
-                          id: ownerId,
-                      }))
+                        id: ownerId,
+                    }))
                     : [],
             },
             isActive: true,
