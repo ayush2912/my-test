@@ -2,6 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 
 import TaskList, { TaskListProps } from "./TaskList";
+import HandShake from "../../../assets/images/HandShake.jpg";
 import Button from "../../../components/Button";
 import Card from "../../../components/Card";
 import Icon from "../../../components/Icon";
@@ -101,6 +102,25 @@ const ModalContent = styled.div`
 const EmptyState = styled.div`
   padding-left: 20px;
   cursor: default;
+`;
+
+const TableTitle = styled.div`
+  margin-bottom: 40px;
+`;
+
+const EmptyStateImageDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 53px 0px 36px 0px;
+`;
+const EmptyStateTextContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  width: 308px;
+  margin: auto;
+  gap: 8px;
 `;
 
 type EngamentStateTypes =
@@ -288,6 +308,12 @@ function EngagementTable({
 
   return (
     <Card width={850}>
+      <TableTitle>
+        <Text color="default" type="heading3">
+          Engagements & Tasks
+        </Text>
+      </TableTitle>
+
       <StyledTable>
         <thead>
           <tr>
@@ -332,6 +358,25 @@ function EngagementTable({
             ))}
         </tbody>
       </StyledTable>
+
+      {tableData.length === 0 && (
+        <div>
+          <EmptyStateImageDiv>
+            <img src={HandShake} />
+          </EmptyStateImageDiv>
+
+          <EmptyStateTextContent>
+            <Text color="default" type="heading3">
+              No engagements listed yet
+            </Text>
+
+            <Text color="subdued" type="body">
+              You will be notified when there are any updates about the
+              engagements and tasks
+            </Text>
+          </EmptyStateTextContent>
+        </div>
+      )}
     </Card>
   );
 }

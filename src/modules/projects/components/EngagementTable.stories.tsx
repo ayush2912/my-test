@@ -139,3 +139,12 @@ export const Primary: Story = {
     ></EngagementTable>
   ),
 };
+
+export const EmptyTable: Story = {
+  render: () => (
+    <EngagementTable
+      headers={EngagementTableHeaders}
+      tableData={[]}
+    ></EngagementTable>
+  ),
+};

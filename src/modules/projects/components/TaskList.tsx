@@ -75,13 +75,13 @@ export default function TaskList({
       <ColumnWrapper>
         <TextWithMarginBottom
           type="body"
-          color={status === "DISCONTINUED" ? "disabled" : "default"}
+          color={state === "DISCONTINUED" ? "disabled" : "default"}
         >
           {type}
         </TextWithMarginBottom>
         <Text
           type="body"
-          color={status === "DISCONTINUED" ? "disabled" : "subdued"}
+          color={state === "DISCONTINUED" ? "disabled" : "subdued"}
         >
           {`${convertToEuropeanDateFormat(
             startDate,
