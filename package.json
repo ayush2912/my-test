@@ -8,15 +8,14 @@
   "repository": "https://github.com/climateconnectdigital/offsetmax-web-app.git",
   "scripts": {
     "dev": "vite",
-    "build": "./bin/clean && ./bin/build",
+    "build": "./bin/clean && ./bin/build && npm version patch && npm publish",
     "test": "vitest",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "lint": "eslint --ext js,jsx,ts,tsx src",
     "lint:fix": "eslint --fix .",
-    "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc",
-    "publish-package": "npm version patch && npm publish"
+    "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc"
   },
   "dependencies": {
     "@tanstack/react-query": "^4.29.3",
