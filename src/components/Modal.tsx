@@ -21,7 +21,7 @@ const Overlay = styled.div<{ isOpen: boolean }>`
   bottom: 0;
   background-color: rgba(54, 60, 70, 0.5);
   display: ${(props) => (props.isOpen ? "block" : "none")};
-  z-index: 1;
+  z-index: 100;
 `;
 
 const ModalContent = styled.div`
@@ -30,6 +30,7 @@ const ModalContent = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   width: fit-content;
+  min-width: 414px;
   border-radius: 24px;
   background-color: #ffffff;
 `;
