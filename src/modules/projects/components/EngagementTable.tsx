@@ -248,7 +248,7 @@ function EngagementTable({
       ),
       note: (
         <>
-          {v.notes.length > 0 ? (
+          {v.notes ? (
             <Button type="ghost" onClick={() => setShowNote(true)}>
               <Icon name="message" />
             </Button>
