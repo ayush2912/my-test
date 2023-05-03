@@ -69,25 +69,6 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
       }
      
    ],
-   /* "environment": [
-        {
-          "name": "SOCKETIO_MONGO_ADAPTER_URI",
-          "value": "${var.SOCKETIO_MONGO_ADAPTER_URI}"
-        },
-       {
-          "name": "SOCKETIO_MONGO_ADAPTER_DB" ,
-          "value": "${var.SOCKETIO_MONGO_ADAPTER_DB}"
-        },
-        {
-          "name": "SOCKETIO_MONGO_ADAPTER_COLLECTION",
-          "value": "${var.SOCKETIO_MONGO_ADAPTER_COLLECTION}"
-        },
-        {
-          "name": "GQL_API" ,
-          "value": "${var.GQL_API}"
-        }
-      
-    ],*/
     "logConfiguration": {
       "logDriver": "awslogs",
       "options": {
@@ -115,48 +96,3 @@ resource "aws_ecs_service" "my_service" {
     assign_public_ip = true
   }
 }
-/*load_balancer {
-    target_group_arn = "arn:aws:elasticloadbalancing:ap-south-1:168933414344:targetgroup/notification-tg/aee60ad2f81fe5b1"
-    container_name   = "my-project-container"
-    container_port   = 8080
-  }
-}
-resource "aws_appautoscaling_target" "dev_to_target" {
-  max_capacity = 5
-  min_capacity = 1
-  resource_id = "service/my-ecs-cluster/my-service"
-  scalable_dimension = "ecs:service:DesiredCount"
-  service_namespace = "ecs"
-}
-
-resource "aws_appautoscaling_policy" "dev_to_memory" {
-  name               = "dev-to-memory"
-  policy_type        = "TargetTrackingScaling"
-  resource_id        = aws_appautoscaling_target.dev_to_target.resource_id
-  scalable_dimension = aws_appautoscaling_target.dev_to_target.scalable_dimension
-  service_namespace  = aws_appautoscaling_target.dev_to_target.service_namespace
-
-  target_tracking_scaling_policy_configuration {
-    predefined_metric_specification {
-      predefined_metric_type = "ECSServiceAverageMemoryUtilization"
-    }
-
-    target_value       = 80
-  }
-}
-
-resource "aws_appautoscaling_policy" "dev_to_cpu" {
-  name = "dev-to-cpu"
-  policy_type = "TargetTrackingScaling"
-  resource_id = aws_appautoscaling_target.dev_to_target.resource_id
-  scalable_dimension = aws_appautoscaling_target.dev_to_target.scalable_dimension
-  service_namespace = aws_appautoscaling_target.dev_to_target.service_namespace
-
-  target_tracking_scaling_policy_configuration {
-    predefined_metric_specification {
-      predefined_metric_type = "ECSServiceAverageCPUUtilization"
-    }
-
-    target_value = 60
-  }
-}*/
