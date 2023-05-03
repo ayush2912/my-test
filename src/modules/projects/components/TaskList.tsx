@@ -71,7 +71,10 @@ export default function TaskList({
   return (
     <StyledTaskContainer>
       <Tooltip text={tooltipTextContent}>
-        <Icon name={selectedIconName} color={isOverdue ? "#E0A008" : ""} />
+        <Icon
+          name={selectedIconName}
+          color={isOverdue && state !== "DISCONTINUED" ? "#E0A008" : ""}
+        />
       </Tooltip>
 
       <ColumnWrapper>
