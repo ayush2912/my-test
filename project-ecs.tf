@@ -114,6 +114,7 @@ resource "aws_ecs_service" "my_service" {
     subnets         = [data.aws_subnet.my_subnet_ids.id]
     assign_public_ip = true
   }
+}
 /*load_balancer {
     target_group_arn = "arn:aws:elasticloadbalancing:ap-south-1:168933414344:targetgroup/notification-tg/aee60ad2f81fe5b1"
     container_name   = "my-project-container"
