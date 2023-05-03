@@ -38,7 +38,7 @@ const ProjectSchema: Prisma.ProjectSelect = {
             name: true,
         },
     },
-    state: true,
+    states: true,
     methodologies: {
         select: {
             id: true,
