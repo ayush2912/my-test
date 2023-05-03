@@ -2,7 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 
 import TaskList, { TaskListProps } from "./TaskList";
-import HandShake from "../../../assets/images/HandShake.jpg";
+import HandShake from "../../../assets/images/HandShake.png";
 import Button from "../../../components/Button";
 import Card from "../../../components/Card";
 import Icon from "../../../components/Icon";
