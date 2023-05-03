@@ -138,6 +138,7 @@ export interface EngagementItem {
   completedDate?: Date;
   notes: string;
   document: number;
+  isOverdue: boolean;
   attributes: { name: string; value: string }[];
   tasks: TaskListProps[];
 }
@@ -188,7 +189,10 @@ function EngagementTable({
               {v.state === "COMPLETED" && (
                 <>
                   <span> &bull; </span>
-                  <Text type="caption" color="success">
+                  <Text
+                    type="caption"
+                    color={v.isOverdue ? "warning" : "success"}
+                  >
                     Completed on{" "}
                     {v?.completedDate &&
                       convertToEuropeanDateFormat(v.completedDate)}
@@ -236,7 +240,12 @@ function EngagementTable({
           {convertToEuropeanDateFormat(v.dueDate)}
         </Text>
       ),
-      state: <StatusTag name={statusTag.label} type={statusTag.type} />,
+      state: (
+        <StatusTag
+          name={statusTag.label}
+          type={v.isOverdue ? "warning" : statusTag.type}
+        />
+      ),
       note: (
         <>
           {v.notes.length > 0 ? (
@@ -293,6 +302,7 @@ function EngagementTable({
         <TaskListCell colSpan={headers.length}>
           {v.tasks.map((v) => (
             <TaskList
+              isOverdue={v.isOverdue}
               key={v.type}
               type={v.type}
               startDate={v.startDate}

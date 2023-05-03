@@ -40,6 +40,7 @@ export type TaskListProps = {
   startDate: Date;
   dueDate: Date;
   completedDate?: Date;
+  isOverdue: boolean;
   state: "IN_PROGRESS" | "COMPLETED" | "NOT_STARTED" | "DISCONTINUED";
 };
 
@@ -49,6 +50,7 @@ export default function TaskList({
   dueDate,
   state,
   completedDate,
+  isOverdue,
 }: TaskListProps) {
   const selectedIconName = {
     IN_PROGRESS: "inProgress",
@@ -69,7 +71,7 @@ export default function TaskList({
   return (
     <StyledTaskContainer>
       <Tooltip text={tooltipTextContent}>
-        <Icon name={selectedIconName} />
+        <Icon name={selectedIconName} color={isOverdue ? "#E0A008" : ""} />
       </Tooltip>
 
       <ColumnWrapper>
