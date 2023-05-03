@@ -13,8 +13,7 @@ node_modules
 
 # Editor directories and files
 .vscode/*
-!.vscode/extensions.json
-!.vscode/settings.json
+.storybook/*
 .idea
 .DS_Store
 *.suo
