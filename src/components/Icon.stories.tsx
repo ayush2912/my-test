@@ -49,9 +49,11 @@ type Story = StoryObj<typeof Icon>;
 
 export const Primary: Story = {
   render: () => (
-    <div>
+    <div style={{ display: "flex", flexWrap: "wrap" }}>
       {IconNames.map((iconName: IconNameType) => (
-        <Icon name={iconName} key={iconName} />
+        <div key={iconName} style={{ margin: "10px" }}>
+          <Icon name={iconName} />
+        </div>
       ))}
     </div>
   ),
