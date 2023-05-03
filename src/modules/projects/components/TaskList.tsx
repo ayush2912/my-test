@@ -61,11 +61,11 @@ export default function TaskList({
 
   const tooltipTextContent = {
     IN_PROGRESS: "IN PROGRESS",
-    COMPLETED: `Completed on ${
+    COMPLETED: `COMPLETED ON ${
       completedDate && convertToEuropeanDateFormat(completedDate)
     }`,
     NOT_STARTED: "NOT STARTED",
-    DISCONTINUED: "discontinued",
+    DISCONTINUED: "DISCONTINUED",
   }[state] as string;
 
   return (

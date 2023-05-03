@@ -139,7 +139,7 @@ export interface EngagementItem {
   notes: string;
   document: number;
   isOverdue: boolean;
-  attributes: { name: string; value: string }[];
+  attributes: { name: string; value: string; type: string }[];
   tasks: TaskListProps[];
 }
 
@@ -223,6 +223,7 @@ function EngagementTable({
                     key={index}
                     label={attribute?.name}
                     value={attribute?.value}
+                    type={attribute?.type}
                   />
                 );
               })}
