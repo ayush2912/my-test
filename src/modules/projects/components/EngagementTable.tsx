@@ -2,6 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 
 import TaskList, { TaskListProps } from "./TaskList";
+import HandShake from "../../../assets/images/HandShake.png";
 import Button from "../../../components/Button";
 import Card from "../../../components/Card";
 import Icon from "../../../components/Icon";
@@ -103,6 +104,25 @@ const EmptyState = styled.div`
   cursor: default;
 `;
 
+const TableTitle = styled.div`
+  margin-bottom: 40px;
+`;
+
+const EmptyStateImageDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 53px 0px 36px 0px;
+`;
+const EmptyStateTextContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  width: 308px;
+  margin: auto;
+  gap: 8px;
+`;
+
 type EngamentStateTypes =
   | "NOT_STARTED"
   | "IN_PROGRESS"
@@ -118,6 +138,7 @@ export interface EngagementItem {
   completedDate?: Date;
   notes: string;
   document: number;
+  isOverdue: boolean;
   attributes: { name: string; value: string }[];
   tasks: TaskListProps[];
 }
@@ -168,7 +189,10 @@ function EngagementTable({
               {v.state === "COMPLETED" && (
                 <>
                   <span> &bull; </span>
-                  <Text type="caption" color="success">
+                  <Text
+                    type="caption"
+                    color={v.isOverdue ? "warning" : "success"}
+                  >
                     Completed on{" "}
                     {v?.completedDate &&
                       convertToEuropeanDateFormat(v.completedDate)}
@@ -216,7 +240,12 @@ function EngagementTable({
           {convertToEuropeanDateFormat(v.dueDate)}
         </Text>
       ),
-      state: <StatusTag name={statusTag.label} type={statusTag.type} />,
+      state: (
+        <StatusTag
+          name={statusTag.label}
+          type={v.isOverdue ? "warning" : statusTag.type}
+        />
+      ),
       note: (
         <>
           {v.notes.length > 0 ? (
@@ -273,6 +302,7 @@ function EngagementTable({
         <TaskListCell colSpan={headers.length}>
           {v.tasks.map((v) => (
             <TaskList
+              isOverdue={v.isOverdue}
               key={v.type}
               type={v.type}
               startDate={v.startDate}
@@ -288,6 +318,12 @@ function EngagementTable({
 
   return (
     <Card width={850}>
+      <TableTitle>
+        <Text color="default" type="heading3">
+          Engagements & Tasks
+        </Text>
+      </TableTitle>
+
       <StyledTable>
         <thead>
           <tr>
@@ -332,6 +368,25 @@ function EngagementTable({
             ))}
         </tbody>
       </StyledTable>
+
+      {tableData.length === 0 && (
+        <div>
+          <EmptyStateImageDiv>
+            <img src={HandShake} />
+          </EmptyStateImageDiv>
+
+          <EmptyStateTextContent>
+            <Text color="default" type="heading3">
+              No engagements listed yet
+            </Text>
+
+            <Text color="subdued" type="body">
+              You will be notified when there are any updates about the
+              engagements and tasks
+            </Text>
+          </EmptyStateTextContent>
+        </div>
+      )}
     </Card>
   );
 }

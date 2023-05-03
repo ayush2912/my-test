@@ -14,14 +14,21 @@ interface IconProps {
   size?: "small" | "big";
   color?: string;
   hoverColor?: string;
+  strokeColor?: string;
 }
 
-const svgStyles = ({ size, color, hoverColor }: IconProps): CSSObject => {
+const svgStyles = ({
+  size,
+  color,
+  hoverColor,
+  strokeColor,
+}: IconProps): CSSObject => {
   return {
     height: `${size === "small" ? 18 : 24}px`,
     width: `${size === "small" ? 18 : 24}px`,
     "& path": {
-      stroke: color,
+      stroke: strokeColor,
+      fill: color,
     },
     "&:hover path": {
       stroke: hoverColor,
@@ -50,11 +57,22 @@ const StyledIcon = styled.svg<IconProps>`
 export default function Icon({
   name,
   size,
+  color,
+  strokeColor,
 }: {
   name: IconNameType;
   size?: "small" | "big";
+  color?: string;
+  strokeColor?: string;
 }) {
   const SelectedIcon = icons[name];
 
-  return <StyledIcon as={SelectedIcon} size={size} />;
+  return (
+    <StyledIcon
+      as={SelectedIcon}
+      size={size}
+      color={color}
+      strokeColor={strokeColor}
+    />
+  );
 }

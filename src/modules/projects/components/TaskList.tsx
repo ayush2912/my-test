@@ -40,6 +40,7 @@ export type TaskListProps = {
   startDate: Date;
   dueDate: Date;
   completedDate?: Date;
+  isOverdue: boolean;
   state: "IN_PROGRESS" | "COMPLETED" | "NOT_STARTED" | "DISCONTINUED";
 };
 
@@ -49,6 +50,7 @@ export default function TaskList({
   dueDate,
   state,
   completedDate,
+  isOverdue,
 }: TaskListProps) {
   const selectedIconName = {
     IN_PROGRESS: "inProgress",
@@ -69,24 +71,41 @@ export default function TaskList({
   return (
     <StyledTaskContainer>
       <Tooltip text={tooltipTextContent}>
-        <Icon name={selectedIconName} />
+        <Icon
+          name={selectedIconName}
+          color={isOverdue && state !== "DISCONTINUED" ? "#E0A008" : ""}
+        />
       </Tooltip>
 
       <ColumnWrapper>
         <TextWithMarginBottom
           type="body"
-          color={status === "DISCONTINUED" ? "disabled" : "default"}
+          color={state === "DISCONTINUED" ? "disabled" : "default"}
         >
           {type}
         </TextWithMarginBottom>
-        <Text
-          type="body"
-          color={status === "DISCONTINUED" ? "disabled" : "subdued"}
-        >
-          {`${convertToEuropeanDateFormat(
-            startDate,
-          )} - ${convertToEuropeanDateFormat(dueDate)}`}
-        </Text>
+
+        <div style={{ display: "flex", gap: "4px" }}>
+          <Text
+            type="body"
+            color={state === "DISCONTINUED" ? "disabled" : "subdued"}
+          >
+            {convertToEuropeanDateFormat(startDate)} -{" "}
+          </Text>
+
+          <Text
+            type="body"
+            color={
+              isOverdue && state !== "DISCONTINUED"
+                ? "warning"
+                : state === "DISCONTINUED"
+                ? "disabled"
+                : "subdued"
+            }
+          >
+            {convertToEuropeanDateFormat(dueDate)}
+          </Text>
+        </div>
       </ColumnWrapper>
     </StyledTaskContainer>
   );
