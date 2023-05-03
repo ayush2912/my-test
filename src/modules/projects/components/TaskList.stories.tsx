@@ -55,13 +55,6 @@ export const Primary: Story = {
         dueDate={new Date("2030-01-05T08:52:29.962Z")}
         state="COMPLETED"
       />
-      <TaskList
-        isOverdue
-        type="Task 7"
-        startDate={new Date("2023-01-10T06:20:44.069Z")}
-        dueDate={new Date("2030-01-05T08:52:29.962Z")}
-        state="DISCONTINUED"
-      />
     </>
   ),
 };

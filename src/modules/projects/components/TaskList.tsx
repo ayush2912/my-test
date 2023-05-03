@@ -84,14 +84,29 @@ export default function TaskList({
         >
           {type}
         </TextWithMarginBottom>
-        <Text
-          type="body"
-          color={state === "DISCONTINUED" ? "disabled" : "subdued"}
-        >
-          {`${convertToEuropeanDateFormat(
-            startDate,
-          )} - ${convertToEuropeanDateFormat(dueDate)}`}
-        </Text>
+
+        <div style={{ display: "flex", gap: "4px" }}>
+          <Text
+            type="body"
+            color={state === "DISCONTINUED" ? "disabled" : "subdued"}
+          >
+            {convertToEuropeanDateFormat(startDate)} -{" "}
+          </Text>
+
+          <Text
+            type="body"
+            color={
+              isOverdue && state !== "DISCONTINUED"
+                ? "warning"
+                : state === "DISCONTINUED"
+                ? "disabled"
+                : "subdued"
+            }
+          >
+            {" "}
+            {convertToEuropeanDateFormat(dueDate)}
+          </Text>
+        </div>
       </ColumnWrapper>
     </StyledTaskContainer>
   );
