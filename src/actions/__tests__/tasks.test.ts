@@ -119,11 +119,9 @@ describe('updateTask()', () => {
         expect(result?.startDate).toEqual(data.startDate);
         expect(result?.dueDate).toEqual(data.dueDate);
 
-        prisma.task.deleteMany({
+        prisma.task.delete({
             where: {
-                engagementId: {
-                    equals: engagement.id,
-                },
+                id: task.id,
             },
         });
     });
