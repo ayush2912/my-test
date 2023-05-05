@@ -1,5 +1,5 @@
-import { Prisma, PrismaClient, StateHistory } from '@prisma/client';
-import { ObjectId } from 'mongodb';
+import { Prisma, PrismaClient } from '@prisma/client';
+import { ObjectId } from 'bson';
 
 const prisma = new PrismaClient();
 

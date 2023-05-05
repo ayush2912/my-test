@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker';
 import prisma from '../prisma';
 import { createTasks, updateTask, deleteTask } from '../tasks';
 import { deleteProject } from '../projects';
-import { create } from 'domain';
+
 const project = {
     id: faker.database.mongodbObjectId(),
     name: faker.company.name(),
@@ -68,35 +68,8 @@ describe('createTasks()', () => {
             )
         );
 
-        // createdTasks.sort((a: any, b: any) => a.type - b.type);
-        // data.sort((a: any, b: any) => a.type - b.type);
-
-        // for (let i = 0; i < createdTasks.length; i++) {
-        //     const given = data[i];
-        //     const created = createdTasks[i];
-        //     expect(given.type).toEqual(created.type);
-        //     expect(given.startDate).toEqual(created.startDate);
-        //     expect(given.dueDate).toEqual(created.dueDate);
-        //     expect(given.engagementId).toEqual(created.engagementId);
-        //     expect(given.stateHistory.length).toEqual(
-        //         created.stateHistory?.length
-        //     );
-        //     for (let i = 0; i < given.stateHistory.length; i++) {
-        //         expect(given.stateHistory[i].state).toEqual(
-        //             created.stateHistory?.[i]?.state
-        //         );
-        //         expect(given.stateHistory[i].stateUpdatedAt).toEqual(
-        //             created.stateHistory?.[i]?.stateUpdatedAt
-        //         );
-        //     }
-        // }
-
         const taskIds = createdTasks.map((t) => t?.id) as string[];
 
-        // const taskIds: string[] = [];
-        // for (let i = 0; i < createdTasks.length; i++) {
-        //     taskIds.push(createdTasks[i].id!);
-        // }
         prisma.task.deleteMany({
             where: {
                 id: {
