@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient, StateHistory } from '@prisma/client';
 import { ObjectId } from 'mongodb';
 
 const prisma = new PrismaClient();
@@ -21,28 +21,33 @@ const TaskSchema: Prisma.TaskSelect = {
     },
 };
 
-const createTasks = async (
-    data: {
-        id?: string;
-        type: string;
-        startDate: Date;
-        dueDate: Date;
-        engagementId: string;
-        stateHistory?: {
-            state: string;
-            stateUpdatedAt: Date;
-        }[];
-    }[]
-) => {
-    const mongodbIds = [];
-    for (let i = 0; i < data.length; i++) {
-        mongodbIds.push(new ObjectId().toHexString());
-        data[i].id = mongodbIds[i];
-    }
+type StateHistoryInputData = {
+    state: string;
+    stateUpdatedAt: Date;
+};
+
+type TaskInputData = {
+    id?: string;
+    type: string;
+    startDate: Date;
+    dueDate: Date;
+    engagementId: string;
+    stateHistory?: StateHistoryInputData[];
+}[];
+
+const createTasks = async (data: TaskInputData) => {
+    const createManyTaskData = data.map((task) => ({
+        id: task.id || new ObjectId().toHexString(),
+        ...task,
+    }));
+
+    const mongodbIds = createManyTaskData.map((task) => task.id);
+
     await prisma.task.createMany({
-        data: data,
+        data: createManyTaskData,
     });
-    return await prisma.task.findMany({
+
+    return prisma.task.findMany({
         where: {
             id: {
                 in: mongodbIds,
