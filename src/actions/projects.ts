@@ -1,5 +1,5 @@
 import { Prisma, PrismaClient } from '@prisma/client';
-
+import { EngagementSchema } from './enagagements';
 // import prisma from './prisma';
 
 const prisma = new PrismaClient();
@@ -105,6 +105,22 @@ const getProject = async (projectId: string) =>
         select: ProjectSchema,
     });
 
+const getProjectEngagements = async (projectId: string) =>
+    prisma.project.findUnique({
+        where: {
+            id: projectId,
+        },
+        select: {
+            id: true,
+            name: true,
+            createdAt: true,
+            updatedAt: true,
+            engagements: {
+                select: EngagementSchema,
+            },
+        },
+    });
+
 const createProject = (data: any) => {
     return prisma.project.create({
         data: {
@@ -145,8 +161,8 @@ const createProject = (data: any) => {
             engagements: {
                 connect: data.engagements
                     ? data.engagements.map((engagementId: string) => ({
-                          id: engagementId,
-                      }))
+                        id: engagementId,
+                    }))
                     : [],
             },
             creditingPeriodStartDate: data.creditingPeriodStartDate,
@@ -160,8 +176,8 @@ const createProject = (data: any) => {
             assetOwners: {
                 connect: data.assetOwners
                     ? data.assetOwners.map((ownerId: string) => ({
-                          id: ownerId,
-                      }))
+                        id: ownerId,
+                    }))
                     : [],
             },
             isActive: true,
@@ -210,4 +226,10 @@ const deleteProject = async (projectId: string | undefined) => {
     });
 };
 
-export { getProject, createProject, updateProject, deleteProject };
+export {
+    getProject,
+    createProject,
+    updateProject,
+    deleteProject,
+    getProjectEngagements,
+};

@@ -139,4 +139,9 @@ const deleteEngagement = (engagementId: string) =>
         },
     });
 
-export { createEngagement, deleteEngagement, updateEngagement };
+export {
+    createEngagement,
+    deleteEngagement,
+    updateEngagement,
+    EngagementSchema,
+};

@@ -1,5 +1,5 @@
 import Errors from '../errors';
-import { getProject } from '../actions/projects';
+import { getProject, getProjectEngagements } from '../actions/projects';
 import ProjectConstants from '../utility/constants/ProjectConstants';
 
 /**
@@ -29,4 +29,26 @@ async function getProjectDetails(projectId: string) {
     }
 }
 
-export { getProjectDetails };
+async function getProjectEngagementDetails(projectId: string) {
+    try {
+        console.info(
+            '-----In getProjectDetails method of ProjectService ------'
+        );
+
+        const projectEngagements = await getProjectEngagements(projectId);
+
+        if (!projectEngagements) {
+            throw new Errors.BadRequest(ProjectConstants.INVALID_PROJECT_ID);
+        }
+
+        return projectEngagements;
+    } catch (error) {
+        console.error(
+            '***** Error in ProjectService of getProjectEngagements method *****',
+            error
+        );
+        throw error;
+    }
+}
+
+export { getProjectDetails, getProjectEngagementDetails };
