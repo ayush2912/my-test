@@ -25,14 +25,17 @@ const projectEngagementsTableData: EngagementItem[] = [
       {
         name: "Date of registration",
         value: "",
+        type: "datetime",
       },
       {
         name: "Registry ID",
         value: "",
+        type: "string",
       },
       {
         name: "Registry URL",
         value: "https://registry.goldstandard.org/projects/details/48",
+        type: "url",
       },
     ],
     tasks: [
@@ -54,7 +57,7 @@ const projectEngagementsTableData: EngagementItem[] = [
     isOverdue: true,
     notes: "",
     document: 20,
-    attributes: [{ name: "hello", value: "hi" }],
+    attributes: [{ name: "hello", value: "hi", type: "string" }],
     tasks: [
       {
         type: "Task 1",
@@ -74,7 +77,7 @@ const projectEngagementsTableData: EngagementItem[] = [
     isOverdue: false,
     notes: "I am a note",
     document: 20,
-    attributes: [{ name: "hello", value: "hi" }],
+    attributes: [{ name: "hello", value: "hi", type: "string" }],
     tasks: [
       {
         type: "Task 1",
@@ -116,7 +119,7 @@ const projectEngagementsTableData: EngagementItem[] = [
     isOverdue: false,
     notes: "I am a note",
     document: 0,
-    attributes: [{ name: "hello", value: "hi" }],
+    attributes: [{ name: "hello", value: "hi", type: "string" }],
     tasks: [
       {
         type: "Task 1",
@@ -136,7 +139,7 @@ const projectEngagementsTableData: EngagementItem[] = [
     isOverdue: false,
     notes: "",
     document: 0,
-    attributes: [{ name: "hello", value: "hi" }],
+    attributes: [{ name: "hello", value: "hi", type: "string" }],
     tasks: [
       {
         type: "Task 1",
@@ -149,7 +152,7 @@ const projectEngagementsTableData: EngagementItem[] = [
     ],
   },
   {
-    name: "Engagement 1",
+    name: "Engagement 3",
     state: "COMPLETED",
     startDate: new Date("2023-01-10T06:20:44.069Z"),
     dueDate: new Date("2030-01-05T08:52:29.962Z"),
@@ -161,14 +164,17 @@ const projectEngagementsTableData: EngagementItem[] = [
       {
         name: "Date of registration",
         value: "",
+        type: "string",
       },
       {
         name: "Registry ID",
-        value: "",
+        value: "2030-01-05T08:52:29.962Z",
+        type: "datetime",
       },
       {
         name: "Registry URL",
         value: "https://registry.goldstandard.org/projects/details/48",
+        type: "url",
       },
     ],
     tasks: [
