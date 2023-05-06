@@ -4,6 +4,7 @@ import "./App.css";
 import { Text } from "./components";
 import { CalendarHeader } from "./components/CalendarHeader";
 import { calendarDetailsMock } from "./components/calendarMockData";
+import { GanttChartBar } from "./components/GanttChartBar";
 import { theme } from "./styles/theme";
 const StyledBody = styled.div<{ width: number }>`
   display: flex;
@@ -39,45 +40,34 @@ const BarContainer = styled.div`
   padding: 8px 0px;
 `;
 
-const TaskBar = styled.div<{ barWidth: number; offsetFromLeft: number }>`
+const Bar = styled.div<{ barWidth: number; offsetFromLeft: number }>`
   display: flex;
-  cursor: default;
   align-items: center;
-  justify-content: center;
   height: 24px;
   width: ${({ barWidth }) => barWidth}px;
+  border-radius: 4px;
+  margin-left: ${({ offsetFromLeft }) => offsetFromLeft}px;
+  cursor: pointer;
+`;
+
+const TaskBar = styled(Bar)`
+  justify-content: center;
   border: 2px solid #8aadf7;
   background-color: #8aadf7;
-  border-radius: 4px;
   overflow: hidden;
-  margin-left: ${({ offsetFromLeft }) => offsetFromLeft}px;
 `;
 
-const EngagementBar = styled.div<{ barWidth: number; offsetFromLeft: number }>`
-  display: flex;
-  cursor: default;
-  align-items: center;
+const EngagementBar = styled(Bar)`
   justify-content: center;
-  height: 24px;
-  width: ${({ barWidth }) => barWidth}px;
   background-color: ${(props) => props.theme.colors.primary[600]};
-  border-radius: 4px;
-  overflow: hidden;
-  margin-left: ${({ offsetFromLeft }) => offsetFromLeft}px;
 `;
 
-const ProjectBar = styled.div<{ barWidth: number; offsetFromLeft: number }>`
-  display: flex;
-  cursor: default;
+const ProjectBar = styled(Bar)`
   align-items: center;
-  justify-content: center;
-  height: 24px;
-  width: ${({ barWidth }) => barWidth}px;
-  border: 2px solid #8aadf7;
-  background-color: transparent;
-  border-radius: 4px;
-  overflow: hidden;
-  margin-left: ${({ offsetFromLeft }) => offsetFromLeft}px;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 function App() {
@@ -87,20 +77,13 @@ function App() {
         <StyledCalendarContainer>
           <CalendarHeader range={calendarDetailsMock.range} />
           <StyledBody width={Number(calendarDetailsMock.duration.DAILY * 40)}>
-            <BarContainer>
-              <TaskBar barWidth={200} offsetFromLeft={50}>
-                <Text type="caption" color="white">
-                  Task 1
-                </Text>
-              </TaskBar>
-            </BarContainer>
-            <BarContainer>
-              <EngagementBar barWidth={200} offsetFromLeft={50}>
-                <Text type="caption" color="white">
-                  engagement
-                </Text>
-              </EngagementBar>
-            </BarContainer>
+            <GanttChartBar barWidth={500} offsetFromLeft={100} type="project" />
+            <GanttChartBar
+              barWidth={200}
+              offsetFromLeft={100}
+              type="engagement"
+            />
+            <GanttChartBar barWidth={200} offsetFromLeft={100} type="task" />
           </StyledBody>
         </StyledCalendarContainer>
       </div>
