@@ -389,11 +389,13 @@ describe('getProjects()', () => {
             expect(project).toHaveProperty('assetOwners')
             expect(project).toHaveProperty('annualApproximateCreditVolume')
             expect(project).toHaveProperty('engagements')
-            expect(project.engagements).toHaveProperty('id')
-            expect(project.engagements).toHaveProperty('type')
-            expect(project.engagements).toHaveProperty('dueDate')
-            expect(project.engagements).toHaveProperty('state')
-            expect(project.engagements).toHaveProperty('isOverdue')
+            if (project.engagements) { // engagements can be empty for some projects
+                expect(project.engagements).toHaveProperty('id')
+                expect(project.engagements).toHaveProperty('type')
+                expect(project.engagements).toHaveProperty('dueDate')
+                expect(project.engagements).toHaveProperty('state')
+                expect(project.engagements).toHaveProperty('isOverdue')
+            }
         });
 
         projectIds.forEach(projectId => {
