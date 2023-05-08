@@ -5,16 +5,32 @@ import Errors from '../errors';
 import ProjectConstants from '../utility/constants/ProjectConstants';
 
 const validateRequest =
-    (bodySchema?: z.ZodType<any>, paramsSchema?: z.ZodType<any>) =>
+    (bodySchema?: z.ZodType<any>, paramsSchema?: z.ZodType<any>, querySchema?: z.ZodType<any>) =>
     (req: Request, res: Response, next: NextFunction) => {
         const bodyData = req.body;
         const paramsData = req.params;
+        const queryData = req.query;
         const errorResponse = new Errors.PreConditionFailed();
 
         if (paramsSchema && Object.keys(paramsData).length > 0) {
             try {
                 const validatedParamsData = paramsSchema.parse(paramsData);
                 req.params = validatedParamsData;
+            } catch (error: any) {
+                if (error instanceof z.ZodError) {
+                    error.errors.forEach((err) => {
+                        errorResponse.push(
+                            new Errors.PreConditionFailed(err.message)
+                        );
+                    });
+                }
+            }
+        }
+
+        if (querySchema && Object.keys(queryData).length > 0) {
+            try {
+                const validatedQueryParamsData = querySchema.parse(queryData);
+                req.query = validatedQueryParamsData;
             } catch (error: any) {
                 if (error instanceof z.ZodError) {
                     error.errors.forEach((err) => {

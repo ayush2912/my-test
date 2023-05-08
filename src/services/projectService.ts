@@ -1,5 +1,5 @@
 import Errors from '../errors';
-import { getProject } from '../actions/projects';
+import { getProjectById } from '../actions/projects';
 import ProjectConstants from '../utility/constants/ProjectConstants';
 
 /**
@@ -13,7 +13,7 @@ async function getProjectDetails(projectId: string) {
             '-----In getProjectDetails method of ProjectService ------'
         );
 
-        const getProjectData = await getProject(projectId);
+        const getProjectData = await getProjectById(projectId);
 
         if (!getProjectData) {
             throw new Errors.BadRequest(ProjectConstants.INVALID_PROJECT_ID);

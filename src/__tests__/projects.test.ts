@@ -45,6 +45,7 @@ describe('/projects/{projectId}', () => {
             creditingPeriodStartDate: '2023-04-11T14:15:22Z',
             creditingPeriodEndDate: '2023-04-11T14:15:22Z',
             annualApproximateCreditVolume: 300000,
+            organization: faker.helpers.arrayElement(organizations).id,
             portfolioOwner: faker.helpers.arrayElement(organizations).id,
             assetOwners: faker.helpers
                 .arrayElements(organizations)

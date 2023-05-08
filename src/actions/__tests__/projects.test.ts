@@ -2,9 +2,10 @@ import { faker } from '@faker-js/faker';
 
 import {
     createProject,
-    getProject,
+    getProjectById,
     updateProject,
     deleteProject,
+    getProjects
 } from '../projects';
 
 import { ProjectMockFactory } from '../../__mocks__/mock.data';
@@ -48,6 +49,7 @@ describe('createProject()', () => {
             creditingPeriodStartDate: '2023-04-26T07:14:39.237Z',
             creditingPeriodEndDate: '2023-04-26T07:14:39.237Z',
             annualApproximateCreditVolume: 3000,
+            organization: faker.helpers.arrayElement(organizations).id,
             portfolioOwner: faker.helpers.arrayElement(organizations).id,
             assetOwners: faker.helpers
                 .arrayElements(organizations)
@@ -116,7 +118,7 @@ describe('createProject()', () => {
     });
 });
 
-describe('getProject()', () => {
+describe('getProjectById()', () => {
     test('it should find the correct project', async () => {
         const data = {
             name: 'Renewable Get Power Project',
@@ -137,6 +139,7 @@ describe('getProject()', () => {
             creditingPeriodStartDate: '2023-04-11T14:15:22Z',
             creditingPeriodEndDate: '2023-04-11T14:15:22Z',
             annualApproximateCreditVolume: 300000,
+            organization: faker.helpers.arrayElement(organizations).id,
             portfolioOwner: faker.helpers.arrayElement(organizations).id,
             assetOwners: faker.helpers
                 .arrayElements(organizations)
@@ -151,7 +154,7 @@ describe('getProject()', () => {
             throw new Error('Project not created');
         }
 
-        const result = await getProject(project.id);
+        const result = await getProjectById(project.id);
         expect(typeof result?.id).toBe('string');
         expect(result?.name).toBe(data.name);
         expect(result?.registry?.id).toBe(data.registry);
@@ -193,7 +196,7 @@ describe('getProject()', () => {
 
     it('returns null if the project does not exist', async () => {
         const projectId = '5116591277702d2113142ebc';
-        const result = await getProject(projectId);
+        const result = await getProjectById(projectId);
         expect(result).toBeNull();
     });
 });
@@ -219,6 +222,7 @@ describe('updateProject()', () => {
             creditingPeriodStartDate: '2023-04-26T07:14:39.237Z',
             creditingPeriodEndDate: '2023-04-26T07:14:39.237Z',
             annualApproximateCreditVolume: 300000,
+            organization: faker.helpers.arrayElement(organizations).id,
             portfolioOwner: faker.helpers.arrayElement(organizations).id,
             assetOwners: faker.helpers
                 .arrayElements(organizations)
@@ -301,6 +305,7 @@ describe('deleteProject()', () => {
             creditingPeriodStartDate: '2023-04-26T07:14:39.237Z',
             creditingPeriodEndDate: '2023-04-26T07:14:39.237Z',
             annualApproximateCreditVolume: 300000,
+            organization: faker.helpers.arrayElement(organizations).id,
             portfolioOwner: faker.helpers.arrayElement(organizations).id,
             assetOwners: faker.helpers
                 .arrayElements(organizations)
@@ -316,5 +321,83 @@ describe('deleteProject()', () => {
         const result = await deleteProject(project.id);
 
         expect(result?.name).toEqual(data.name);
+    });
+});
+
+describe('getProjects()', () => {
+    test('it should get the list of projets successfully', async() => {
+        const projectIds:any[] = []
+        const organization = faker.helpers.arrayElement(organizations).id
+        for (let i = 0; i < 10; i++) {
+            const data = {
+                name: 'Renewable Get Power Project',
+                registry: faker.helpers.arrayElement(registries).id,
+                registryUrl: 'www.url.com',
+                registryProjectId: '1851',
+                countries: faker.helpers
+                    .arrayElements(countries)
+                    .map((c) => c.iso2Name),
+                states: ['UP'],
+                methodologies: faker.helpers
+                    .arrayElements(methodologies, 1)
+                    .map((m) => m.id),
+                type: faker.helpers.arrayElement(projectTypes).id,
+                subType: faker.helpers.arrayElement(projectTypes).id,
+                notes: 'Renewable Power project in India',
+                isActive: true,
+                creditingPeriodStartDate: '2023-04-11T14:15:22Z',
+                creditingPeriodEndDate: '2023-04-11T14:15:22Z',
+                annualApproximateCreditVolume: 300000,
+                organization: organization,
+                portfolioOwner: faker.helpers.arrayElement(organizations).id,
+                assetOwners: faker.helpers
+                    .arrayElements(organizations)
+                    .map((m) => m.id),
+                engagements: faker.helpers
+                    .arrayElements(engagements, 2)
+                    .map((m) => m.id),
+            };
+            const project = await createProject(data)
+            projectIds.push(project.id)
+        }
+
+        const result = await getProjects({organizationIds: organization.split(' '), take: 10, skip: 0})
+
+        expect(Array.isArray(result)).toBe(true)
+
+        expect(result.length).toBe(10)
+
+        // Check that each object in the array has the expected fields
+        result.forEach(project => {
+            expect(project).toHaveProperty('id')
+            expect(project).toHaveProperty('name')
+            expect(project).toHaveProperty('createdAt')
+            expect(project).toHaveProperty('updatedAt')
+            expect(project).toHaveProperty('registry')
+            expect(project.registry).toHaveProperty('name')
+            expect(project).toHaveProperty('registryProjectId')
+            expect(project).toHaveProperty('countries')
+            project.countries.forEach(country => {
+                expect(country).toHaveProperty('iso2Name')
+                expect(country).toHaveProperty('name')
+            })
+            expect(project).toHaveProperty('types')
+            expect(project.types.length).toBe(1)
+            expect(project.subTypes.length).toBe(1)
+            expect(project).toHaveProperty('subTypes')
+            expect(project).toHaveProperty('portfolioOwner')
+            expect(project).toHaveProperty('assetOwners')
+            expect(project).toHaveProperty('annualApproximateCreditVolume')
+            expect(project).toHaveProperty('engagements')
+            expect(project.engagements).toHaveProperty('id')
+            expect(project.engagements).toHaveProperty('type')
+            expect(project.engagements).toHaveProperty('dueDate')
+            expect(project.engagements).toHaveProperty('state')
+            expect(project.engagements).toHaveProperty('isOverdue')
+        });
+
+        projectIds.forEach(projectId => {
+            deleteProject(projectId)
+        })
     });
 });

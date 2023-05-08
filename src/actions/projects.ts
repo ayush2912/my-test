@@ -97,7 +97,46 @@ const ProjectSchema: Prisma.ProjectSelect = {
     },
 };
 
-const getProject = async (projectId: string) =>
+const isEngagementOverdue = (engagement: any) => {
+    if (engagement?.state === 'COMPLETED') {
+        if (!engagement.completedDate) {
+            return false;
+        }
+
+        if (engagement?.completedDate >= engagement?.dueDate) {
+            return true
+        }
+    }
+
+    if (engagement?.state === 'IN_PROGRESS' || engagement?.state === 'NOT_STARTED') {
+        if (engagement.dueDate <= new Date()) {
+            return true; 
+        }
+    }
+
+    return false; 
+};
+
+type GetProjectsOptions = {
+    organizationIds?: string[];
+    take?: number; 
+    skip?: number;
+}
+
+const applyGetProjectsFilters = (options: GetProjectsOptions) => {
+
+    const filters: Prisma.ProjectWhereInput = {};
+
+    if  (options.organizationIds) {
+        filters.organizationId = {
+            in: options.organizationIds
+        }
+    }
+
+    return filters
+};
+
+const getProjectById = async (projectId: string) =>
     prisma.project.findUnique({
         where: {
             id: projectId,
@@ -152,6 +191,11 @@ const createProject = (data: any) => {
             creditingPeriodStartDate: data.creditingPeriodStartDate,
             creditingPeriodEndDate: data.creditingPeriodEndDate,
             annualApproximateCreditVolume: data.annualApproximateCreditVolume,
+            organization: {
+                connect: {
+                    id: data.organization,
+                },
+            },
             portfolioOwner: {
                 connect: {
                     id: data.portfolioOwner,
@@ -210,4 +254,82 @@ const deleteProject = async (projectId: string | undefined) => {
     });
 };
 
-export { getProject, createProject, updateProject, deleteProject };
+const getProjects = async(options: GetProjectsOptions) => 
+    prisma.project.findMany({
+        where: applyGetProjectsFilters(options),
+        take: options.take || 10, 
+        skip: options.skip || 0,
+        orderBy: { 
+            createdAt: "desc"
+        },
+        select: {
+            id: true,
+            name: true,
+            createdAt: true,
+            updatedAt: true,
+            registry: {
+                select: {
+                    name: true, 
+                }
+            },
+            registryProjectId: true,
+            countries: {
+                select: {
+                    iso2Name: true,
+                    name: true,
+                } 
+            },
+            types: true,
+            subTypes: true,
+            portfolioOwner: {
+                select: {
+                    id: true,
+                    name: true,
+                }
+            },
+            assetOwners: {
+                select: {
+                    id: true,
+                    name: true,
+                }
+            },
+            annualApproximateCreditVolume: true,
+            engagements: {
+                where: {
+                    startDate: {
+                        lte: new Date(),
+                    },
+                },
+                select: {
+                    id: true,
+                    type: true,
+                    dueDate: true,
+                    completedDate: true,
+                    state: true,
+                },
+                orderBy: [{ startDate: 'desc' }, { createdAt: 'desc' }],
+                take: 1
+            },
+        },
+    }).then(results => results.map(result => ({
+        id: result.id,
+        name: result.name,
+        createdAt: result.createdAt,
+        updatedAt: result.updatedAt,
+        registry: result.registry,
+        registryProjectId: result.registryProjectId,
+        countries: result.countries,
+        types: result.types,
+        subTypes: result.subTypes,
+        engagements: {
+            ...result.engagements.pop(),
+            isOverdue: isEngagementOverdue(result.engagements.pop())
+        },
+        annualApproximateCreditVolume: result.annualApproximateCreditVolume,
+        portfolioOwner: result.portfolioOwner,
+        assetOwners: result.assetOwners,
+
+    })));
+
+
+export { getProjectById, createProject, updateProject, deleteProject, getProjects };
