@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker';
-import prisma from '../prisma';
+
+import { prisma } from '../prisma';
 import {
     createEngagement,
     deleteEngagement,

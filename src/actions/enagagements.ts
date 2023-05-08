@@ -1,6 +1,4 @@
-import { Prisma, PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { prisma, Prisma } from './prisma';
 
 const EngagementSchema: Prisma.EngagementSelect = {
     id: true,
@@ -22,8 +20,8 @@ const EngagementSchema: Prisma.EngagementSelect = {
     stateHistory: {
         select: {
             state: true,
-            stateUpdatedAt: true,
-        },
+            stateUpdatedAt: true
+        }
     },
     tasks: {
         select: {
@@ -37,11 +35,15 @@ const EngagementSchema: Prisma.EngagementSelect = {
             stateHistory: {
                 select: {
                     state: true,
-                    stateUpdatedAt: true,
-                },
+                    stateUpdatedAt: true
+                }
             },
+            createdAt: true,
+            updatedAt: true,
         },
     },
+    createdAt: true,
+    updatedAt: true,
 };
 
 const createEngagement = (data: any) =>
@@ -58,8 +60,7 @@ const createEngagement = (data: any) =>
             attributes: data.attributes,
             tasks: {
                 create: data.tasks,
-            },
-            stateHistory: data.stateHistory,
+            }
         },
         select: EngagementSchema,
     });
