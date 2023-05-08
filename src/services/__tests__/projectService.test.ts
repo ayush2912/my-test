@@ -4,10 +4,10 @@ import { faker } from '@faker-js/faker';
 
 describe('getprojectEngagementDetails()', () => {
     it('it should return response from getProjectEngagements method in actions', async () => {
-        const mockgetProjectEngagements = jest.fn();
+        const mockGetProjectEngagements = jest.fn();
         const projectId = faker.database.mongodbObjectId();
         const mockProjectEngagements = {
-            id: faker.database.mongodbObjectId(),
+            id: projectId,
             name: 'Renewable Get Power Project',
             createdAt: faker.date.recent(),
             updatedAt: faker.date.recent(),
@@ -28,13 +28,13 @@ describe('getprojectEngagementDetails()', () => {
             ],
         };
         jest.spyOn(projects, 'getProjectEngagements').mockImplementation(
-            mockgetProjectEngagements
+            mockGetProjectEngagements
         );
-        mockgetProjectEngagements.mockReturnValue(mockProjectEngagements);
+        mockGetProjectEngagements.mockReturnValue(mockProjectEngagements);
 
         const engagements = await getProjectEngagementDetails(projectId);
 
-        expect(mockgetProjectEngagements).toHaveBeenCalledWith(projectId);
+        expect(mockGetProjectEngagements).toHaveBeenCalledWith(projectId);
         expect(engagements).toEqual(mockProjectEngagements);
     });
 });

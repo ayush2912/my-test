@@ -321,7 +321,7 @@ describe('deleteProject()', () => {
 });
 
 describe('getProjectEngagements()', () => {
-    test('it should find the correct project engagements', async () => {
+    test('it should list all project engagements', async () => {
         const data = {
             name: 'Renewable Get Power Project',
             registry: faker.helpers.arrayElement(registries).id,
@@ -350,66 +350,26 @@ describe('getProjectEngagements()', () => {
                 .map((m) => m.id),
         };
         const project = await createProject(data);
-
         if (!project.id) {
             throw new Error('Project not created');
         }
 
-        const result = await getProjectEngagements(project.id);
-        console.log(result);
-        expect(typeof result?.id).toBe('string');
-        expect(result?.id).toEqual(project.id);
-        expect(result?.name).toEqual(project.name);
-        expect(result?.createdAt).toEqual(project.createdAt);
-        expect(result?.updatedAt).toEqual(project.updatedAt);
-        expect(result?.engagements?.length).toEqual(
-            project.engagements?.length
+        const result = await getProjectEngagements();
+        expect(result).toContainEqual(
+            expect.objectContaining({
+                id: project.id,
+                name: project.name,
+                registry: project.registry,
+                registryProjectId: project.registryProjectId,
+                types: project.types,
+                countries: project.countries,
+                isActive: project.isActive,
+                createdAt: project.createdAt,
+                updatedAt: project.updatedAt,
+                engagements:
+                    project.engagements == undefined ? [] : project.engagements,
+            })
         );
-        if (project.engagements?.length !== undefined) {
-            for (let i = 0; i < project.engagements?.length; i++) {
-                expect(result?.engagements?.[i]?.id).toEqual(
-                    project?.engagements?.[i]?.id
-                );
-                expect(result?.engagements?.[i]?.type).toEqual(
-                    project?.engagements?.[i]?.type
-                );
-                expect(result?.engagements?.[i]?.startDate).toEqual(
-                    project?.engagements?.[i]?.startDate
-                );
-                expect(result?.engagements?.[i]?.dueDate).toEqual(
-                    project?.engagements?.[i]?.dueDate
-                );
-                expect(result?.engagements?.[i]?.projectId).toEqual(
-                    project?.engagements?.[i]?.projectId
-                );
-                expect(result?.engagements?.[i]?.stateHistory?.length).toEqual(
-                    project?.engagements?.[i]?.stateHistory.length
-                );
-                for (
-                    let i = 0;
-                    i < project.engagements?.[i]?.stateHistory?.length;
-                    i++
-                ) {
-                    expect(
-                        project.engagements?.[i]?.stateHistory[i].state
-                    ).toEqual(
-                        result?.engagements?.[i]?.stateHistory?.[i]?.state
-                    );
-                    expect(
-                        project.engagements?.[i]?.stateHistory[i].stateUpdatedAt
-                    ).toEqual(
-                        result?.engagements?.[i]?.stateHistory?.[i]
-                            ?.stateUpdatedAt
-                    );
-                }
-            }
-            await deleteProject(project.id);
-        }
-    });
-
-    it('returns null if the project does not exist', async () => {
-        const projectId = '5116591277702d2113142ebc';
-        const result = await getProject(projectId);
-        expect(result).toBeNull();
+        await deleteProject(project.id);
     });
 });

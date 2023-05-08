@@ -1,6 +1,4 @@
 import { Prisma, PrismaClient } from '@prisma/client';
-import { EngagementSchema } from './enagagements';
-// import prisma from './prisma';
 
 const prisma = new PrismaClient();
 
@@ -105,18 +103,55 @@ const getProject = async (projectId: string) =>
         select: ProjectSchema,
     });
 
-const getProjectEngagements = async (projectId: string) =>
-    prisma.project.findUnique({
-        where: {
-            id: projectId,
-        },
+const getProjectEngagements = async () =>
+    prisma.project.findMany({
         select: {
             id: true,
             name: true,
+            registry: {
+                select: {
+                    id: true,
+                    name: true,
+                },
+            },
+            registryProjectId: true,
+            types: {
+                select: {
+                    id: true,
+                    name: true,
+                },
+            },
+            countries: {
+                select: {
+                    id: true,
+                    iso2Name: true,
+                    iso3Name: true,
+                    name: true,
+                },
+            },
+            isActive: true,
             createdAt: true,
             updatedAt: true,
             engagements: {
-                select: EngagementSchema,
+                select: {
+                    id: true,
+                    type: true,
+                    startDate: true,
+                    dueDate: true,
+                    completedDate: true,
+                    state: true,
+                    notes: true,
+                    projectId: true,
+                    stateHistory: true,
+                    attributes: true,
+                    createdAt: true,
+                    updatedAt: true,
+                    tasks: {
+                        select: TaskSchema,
+                        orderBy: [{ startDate: 'asc' }, { type: 'asc' }],
+                    },
+                },
+                orderBy: [{ startDate: 'asc' }, { type: 'asc' }],
             },
         },
     });
