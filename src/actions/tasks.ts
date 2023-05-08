@@ -1,13 +1,13 @@
 import { Prisma, PrismaClient } from '@prisma/client';
 import { ObjectId } from 'bson';
 
+import { createTaskData, updateTaskData } from '../interfaces/task.interface';
+
 const prisma = new PrismaClient();
 
 const TaskSchema: Prisma.TaskSelect = {
     id: true,
     engagementId: true,
-    createdAt: true,
-    updatedAt: true,
     type: true,
     startDate: true,
     dueDate: true,
@@ -19,23 +19,11 @@ const TaskSchema: Prisma.TaskSelect = {
             stateUpdatedAt: true,
         },
     },
+    createdAt: true,
+    updatedAt: true
 };
 
-type StateHistoryInputData = {
-    state: string;
-    stateUpdatedAt: Date;
-};
-
-type TaskInputData = {
-    id?: string;
-    type: string;
-    startDate: Date;
-    dueDate: Date;
-    engagementId: string;
-    stateHistory?: StateHistoryInputData[];
-}[];
-
-const createTasks = async (data: TaskInputData) => {
+const createTasks = async (data: createTaskData[]) => {
     const createManyTaskData = data.map((task) => ({
         id: task.id || new ObjectId().toHexString(),
         ...task,
@@ -57,15 +45,7 @@ const createTasks = async (data: TaskInputData) => {
     });
 };
 
-const updateTask = async (
-    taskId: string,
-    data: {
-        startDate?: Date;
-        dueDate?: Date;
-        engagementId?: string;
-        completedDate?: string;
-    }
-) =>
+const updateTask = async (taskId: string, data: updateTaskData) =>
     prisma.task.update({
         data: data,
         where: {

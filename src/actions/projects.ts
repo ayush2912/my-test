@@ -19,8 +19,6 @@ const TaskSchema: Prisma.TaskSelect = {
 
 const ProjectSchema: Prisma.ProjectSelect = {
     id: true,
-    createdAt: true,
-    updatedAt: true,
     name: true,
     registry: {
         select: {
@@ -71,12 +69,12 @@ const ProjectSchema: Prisma.ProjectSelect = {
             projectId: true,
             stateHistory: true,
             attributes: true,
-            createdAt: true,
-            updatedAt: true,
             tasks: {
                 select: TaskSchema,
                 orderBy: [{ startDate: 'asc' }, { type: 'asc' }],
             },
+            createdAt: true,
+            updatedAt: true
         },
         orderBy: [{ startDate: 'asc' }, { type: 'asc' }],
     },
@@ -95,6 +93,8 @@ const ProjectSchema: Prisma.ProjectSelect = {
             name: true,
         },
     },
+    createdAt: true,
+    updatedAt: true
 };
 
 const getProject = async (projectId: string) =>
