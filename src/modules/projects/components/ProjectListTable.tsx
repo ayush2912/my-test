@@ -1,5 +1,4 @@
-// import Flag from "react-world-flags";
-
+import Flag from "react-world-flags";
 import styled from "styled-components";
 
 import Icon, { IconNameType } from "../../../components/Icon";
@@ -24,7 +23,34 @@ export const TableColumn = styled.td`
 export const TableRow = styled.tr``;
 
 export const Content = styled.div`
-  margin-right: 24px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  white-space: pre-wrap;
+  max-height: 50px;
+`;
+
+const FlagHolder = styled.div`
+  height: 12px;
+  width: 22px;
+`;
+
+const EyeButton = styled.button`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 8px;
+  gap: 8px;
+  width: 32px;
+  height: 32px;
+  background: #ffffff;
+  border: 1px solid #e1e4e8;
+  border-radius: 8px;
+  &:hover {
+    background-color: #bdc3c7;
+  }
 `;
 
 export interface ProjectRowItem {
@@ -94,14 +120,15 @@ function ProjectListTable({
         </Content>
       ),
       coutries: (
-        <Content>
-          {v.countries.map((country) => (
-            <div className="w-6 h-3" key={country.iso3Name}>
-              India
-              {/* <Flag code={country?.iso3Name} /> */}
-            </div>
-          ))}
-        </Content>
+        <>
+          <div style={{ display: "flex", gap: "10px" }}>
+            {v.countries.map((country) => (
+              <FlagHolder key={country?.iso3Name}>
+                <Flag code={country?.iso3Name} />
+              </FlagHolder>
+            ))}
+          </div>
+        </>
       ),
       portfolioOwners: (
         <Content>
@@ -132,9 +159,11 @@ function ProjectListTable({
               {v.engagement.type}
             </Text>
           </div>
-          <Text type="caption" color="subdued">
-            {convertToEuropeanDateFormat(v.engagement.dueDate)}
-          </Text>
+          <div style={{ marginLeft: "25px" }}>
+            <Text type="caption" color="subdued">
+              {convertToEuropeanDateFormat(v.engagement.dueDate)}
+            </Text>
+          </div>
         </Content>
       ),
     };
@@ -161,6 +190,11 @@ function ProjectListTable({
                 {rowItem[header.fieldName]}
               </TableColumn>
             ))}
+            <TableColumn>
+              <EyeButton onClick={() => console.log("clicked")}>
+                <Icon name="eyeIcon" />
+              </EyeButton>
+            </TableColumn>
           </TableRow>
         ))}
       </tbody>
