@@ -3,7 +3,6 @@ import moment from "moment";
 
 interface StatusProgressBar {
   name: string;
-  completedPercentage: number;
   offsetFromLeft: {
     DAILY: number;
     MONTHLY: number;
@@ -18,31 +17,20 @@ interface StatusProgressBar {
 
 export const getStatusProgressBar = (
   statusLog: {
-    type: string;
+    name: string;
     startDate: string;
-    endDate: string;
+    completedDate: string;
     dueDate: string;
   }[],
   earliestStartDate: string,
 ): StatusProgressBar[] => {
   return statusLog.map((v) => {
     const startDate = moment(v.startDate).startOf("day");
-    const endDate = moment(v.endDate).endOf("day");
+    const completedDate = moment(v.completedDate).endOf("day");
     const dueDate = moment(v.dueDate).endOf("day");
 
     const totalDays =
-      moment
-        .duration((isNaN(endDate) ? dueDate : endDate).diff(startDate))
-        .asDays() ?? 0;
-
-    const completedPercentage =
-      Boolean(v.endDate) || dueDate.isBefore(moment())
-        ? 100
-        : startDate.isAfter(moment())
-        ? 0
-        : (moment.duration(moment().startOf("day").diff(startDate)).asDays() /
-            totalDays) *
-          100;
+      moment.duration((completedDate || dueDate).diff(startDate)).asDays() ?? 0;
 
     const offsetFromLeft = {
       DAILY: startDate.diff(moment(earliestStartDate).startOf("year"), "days"),
@@ -59,8 +47,7 @@ export const getStatusProgressBar = (
     };
 
     return {
-      name: v.type,
-      completedPercentage,
+      name: v.name,
       offsetFromLeft,
       barWidth,
     };
@@ -72,56 +59,93 @@ export const getCalendarRange = (
   latestEndDate: Date,
 ) => {
   const startOfYear = moment(earliestStartDate).startOf("year");
-  const endOfYear = moment(latestEndDate).endOf("year").add(1, "year");
+  const endOfYear = moment(latestEndDate).endOf("year");
 
-  const numberOfMonths = moment
-    .duration(endOfYear.diff(startOfYear))
-    .asMonths()
-    .toFixed(0);
+  const numberOfMonths = Math.round(
+    moment.duration(endOfYear.diff(startOfYear)).asMonths(),
+  );
 
-  const numberOfDays = moment
-    .duration(endOfYear.diff(startOfYear))
-    .asDays()
-    .toFixed(0);
+  const numberOfDays = Math.round(
+    moment.duration(endOfYear.diff(startOfYear)).asDays(),
+  );
 
-  const numberOfYears = moment
-    .duration(endOfYear.diff(startOfYear))
-    .asYears()
-    .toFixed(0);
+  // const numberOfWeeks = moment
+  //   .duration(endOfYear.diff(startOfYear))
+  //   .asWeeks()
+  //   .toFixed(0);
 
-  const range = [...Array(Number(numberOfMonths)).keys()].map((v) => {
-    const newDate = moment(startOfYear).add(v, "months");
+  const numberOfYears = Math.round(
+    moment.duration(endOfYear.diff(startOfYear)).asYears(),
+  );
 
-    const month = newDate.format("MMMM").toUpperCase();
-    const monthShortName = newDate.format("MMM").toUpperCase();
-
-    const year = newDate.format("YYYY");
-    const daysArr = [...Array(newDate.daysInMonth()).keys()].map((v) => v + 1);
-
-    const isThisMonth =
-      moment().format("MMMM")?.toUpperCase() === month &&
-      moment().format("Y") === year;
-
-    const noOfDays = daysArr.map((day) => ({
-      day,
-      isToday: Number(moment().format("D")) === day && isThisMonth,
-    }));
+  const yearlyHeaderData = [...Array(Number(numberOfYears)).keys()].map((v) => {
+    const year = moment(startOfYear).add(v, "years").format("YYYY");
 
     return {
-      month,
-      monthShortName,
-      noOfDays,
       year,
-      isThisMonth,
+      months: [...Array(12)].map((_, i) => {
+        const month = moment(startOfYear)
+          .add(v, "years")
+          .add(i, "months")
+          .format("MMMM")
+          .toUpperCase();
+
+        return {
+          month,
+          isThisMonth:
+            moment().format("MMMM")?.toUpperCase() === month &&
+            moment().format("Y") === year,
+        };
+      }),
     };
   });
 
+  const monthlyHeaderData = [...Array(Number(numberOfMonths)).keys()].map(
+    (v) => {
+      const newDate = moment(startOfYear).add(v, "months");
+      const month = newDate.format("MMM").toUpperCase();
+      const year = newDate.format("YYYY");
+      const daysArr = [...Array(newDate.daysInMonth()).keys()].map(
+        (v) => v + 1,
+      );
+
+      return {
+        year,
+        month,
+        days: daysArr.map((day) => ({
+          day,
+          isToday:
+            Number(moment().format("D")) === day &&
+            moment().format("MMM")?.toUpperCase() === month &&
+            moment().format("Y") === year,
+        })),
+      };
+    },
+  );
+
+  // const weeklyHeaderData = [...Array(Number(numberOfWeeks)).keys()].map((v) => {
+  //   const thisdfs = moment(startOfYear).startOf("week");
+  //   const newDate = moment(startOfYear).add(v, "weeks");
+
+  //   const year = newDate.format("YYYY");
+  //   const month = newDate.format("MMM").toUpperCase();
+
+  //   const startOfTheWeek = newDate.format("D");
+  //   console.log(thisdfs.format("D"));
+  //   return {
+  //     year,
+  //     month,
+  //     days: { day: startOfTheWeek },
+  //   };
+  // });
+
   return {
     duration: {
-      DAILY: numberOfDays,
-      MONTHLY: numberOfMonths,
-      YEARLY: numberOfYears,
+      numberOfDays,
+      numberOfMonths,
+      numberOfYears,
     },
-    range,
+    monthlyHeaderData,
+    yearlyHeaderData,
   };
 };

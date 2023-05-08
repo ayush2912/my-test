@@ -6,6 +6,14 @@ import { useOutsideAlerter } from "@/hooks/useOutsiderAlerter";
 import { BarPopup } from "./BarPopup";
 import Text from "../Text";
 
+const Container = styled.div`
+  display: flex;
+  align-items: center;
+  height: 40px;
+  padding: 8px 0px;
+  user-select: none;
+`;
+
 const Bar = styled.div<{ barWidth: number; offsetFromLeft: number }>`
   display: flex;
   align-items: center;
@@ -41,20 +49,22 @@ export const ProjectBar = ({
   };
 
   return (
-    <Bar
-      ref={popupRef}
-      barWidth={barWidth}
-      offsetFromLeft={offsetFromLeft}
-      onMouseDown={handleContainerMouseDown}
-    >
-      {showPopup && (
-        <BarPopup top={popupPosition.top} left={popupPosition.left}>
-          This is the popup content.
-        </BarPopup>
-      )}
-      <Text type="bodyBold" color="default">
-        150 MW Solar Project in Karnataka by Avaada Solar
-      </Text>
-    </Bar>
+    <Container>
+      <Bar
+        ref={popupRef}
+        barWidth={barWidth}
+        offsetFromLeft={offsetFromLeft}
+        onMouseDown={handleContainerMouseDown}
+      >
+        {showPopup && (
+          <BarPopup top={popupPosition.top} left={popupPosition.left}>
+            This is the popup content.
+          </BarPopup>
+        )}
+        <Text type="bodyBold" color="default">
+          150 MW Solar Project in Karnataka by Avaada Solar
+        </Text>
+      </Bar>
+    </Container>
   );
 };

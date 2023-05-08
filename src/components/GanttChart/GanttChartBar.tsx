@@ -1,8 +1,8 @@
 import styled from "styled-components";
 
-import { EngagementBar } from "./GanttChart/EngagementBar";
-import { ProjectBar } from "./GanttChart/ProjectBar";
-import { TaskBar } from "./GanttChart/TaskBar";
+import { EngagementBar } from "./EngagementBar";
+import { ProjectBar } from "./ProjectBar";
+import { TaskBar } from "./TaskBar";
 
 const Container = styled.div`
   display: flex;
