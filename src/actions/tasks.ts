@@ -1,9 +1,7 @@
-import { Prisma, PrismaClient } from '@prisma/client';
 import { ObjectId } from 'bson';
 
+import { prisma, Prisma } from './prisma';
 import { createTaskData, updateTaskData } from '../interfaces/task.interface';
-
-const prisma = new PrismaClient();
 
 const TaskSchema: Prisma.TaskSelect = {
     id: true,

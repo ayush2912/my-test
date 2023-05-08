@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import prisma from '../prisma';
+import { prisma } from '../../actions/prisma';
 import { createTasks, updateTask, deleteTask } from '../tasks';
 import { deleteProject } from '../projects';
 
