@@ -33,7 +33,7 @@ resource "aws_security_group" "ecs_security_group" {
   }
 }
 data "aws_ecr_repository" "my_repository" {
-  name = "offsetmax-project-service-dev"
+  name = "offsetmax-dev-project-service"
 
 }
 # Define the ECS cluster
