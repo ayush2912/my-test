@@ -28,13 +28,7 @@ const Bar = styled.div<{ barWidth: number; offsetFromLeft: number }>`
   }
 `;
 
-export const ProjectBar = ({
-  barWidth,
-  offsetFromLeft,
-}: {
-  barWidth: number;
-  offsetFromLeft: number;
-}) => {
+export const ProjectBar = ({ projectData }: { projectData: any }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
 
@@ -52,8 +46,8 @@ export const ProjectBar = ({
     <Container>
       <Bar
         ref={popupRef}
-        barWidth={barWidth}
-        offsetFromLeft={offsetFromLeft}
+        barWidth={projectData.bar.barWidth}
+        offsetFromLeft={projectData.bar.offsetFromLeft}
         onMouseDown={handleContainerMouseDown}
       >
         {showPopup && (

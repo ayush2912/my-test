@@ -54,6 +54,53 @@ export const getStatusProgressBar = (
   });
 };
 
+export const getBarInfo = (
+  startDate: Date,
+  dueDate: Date,
+  completedDate: Date,
+  earliestStartDate: Date,
+  view: "yearly" | "monthly",
+) => {
+  const barStartDate = moment(startDate).startOf("day");
+  const barCompletedDate = moment(completedDate).endOf("day");
+  const barDueDate = moment(dueDate).endOf("day");
+
+  const totalDays = toNumber(
+    moment
+      .duration((barCompletedDate || barDueDate).diff(barStartDate))
+      .asDays()
+      .toFixed(0) ?? 0,
+  );
+
+  const totalMonths = toNumber(
+    moment
+      .duration((barCompletedDate || barDueDate).diff(barStartDate))
+      .asMonths()
+      .toFixed(0) ?? 0,
+  );
+
+  console.log("total days", totalDays);
+
+  const offsetFromLeft = {
+    monthly:
+      barStartDate.diff(moment(earliestStartDate).startOf("year"), "days") * 40,
+    yearly:
+      (barStartDate.diff(moment(earliestStartDate).startOf("year"), "days") /
+        30) *
+      124,
+  }[view];
+
+  const barWidth = {
+    monthly: (totalDays > 1 ? totalDays : 1) * 40,
+    yearly: totalMonths * 124,
+  }[view];
+
+  return {
+    offsetFromLeft,
+    barWidth,
+  };
+};
+
 export const getCalendarRange = (
   earliestStartDate: Date,
   latestEndDate: Date,

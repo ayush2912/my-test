@@ -1,7 +1,7 @@
 import moment from "moment";
 import styled from "styled-components";
 
-import { getCalendarRange } from "@/utils/calendarHelper";
+import { getBarInfo, getCalendarRange } from "@/utils/calendarHelper";
 
 import { CalendarHeader } from "./CalendarHeader";
 import { EngagementBar } from "./EngagementBar";
@@ -46,22 +46,6 @@ export const GanttChart = ({
     overflow-x: scroll;
   `;
 
-  const engagementsWithProjectInfo = engagementlistmockdata.flatMap((project) =>
-    project.engagements.map((engagement) => ({
-      project: {
-        id: project.id,
-        name: project.name,
-        registry: project.registry,
-        registryProjectId: project.registryProjectId,
-        types: project.types,
-        countries: project.countries,
-      },
-      ...engagement,
-    })),
-  );
-
-  console.log(engagementsWithProjectInfo);
-
   const allEngagements = engagementlistmockdata
     .map((v) => v.engagements)
     .flat();
@@ -75,17 +59,44 @@ export const GanttChart = ({
 
   const calendarRange = getCalendarRange(earliestStartDate, latestEndDate);
 
-  const BarsGroupedByEngagement = ({ data }: any) => {
-    // console.log(data);
+  const engagementsWithProjectInfo = engagementlistmockdata.flatMap((project) =>
+    project.engagements.map((engagement) => ({
+      project: {
+        id: project.id,
+        name: project.name,
+        registry: project.registry,
+        registryProjectId: project.registryProjectId,
+        types: project.types,
+        countries: project.countries,
+        bar: getBarInfo(
+          new Date(engagement.startDate),
+          new Date(engagement.dueDate),
+          new Date(engagement.completedDate),
+          earliestStartDate,
+          selectedOption,
+        ),
+      },
 
+      ...engagement,
+      bar: getBarInfo(
+        new Date(engagement.startDate),
+        new Date(engagement.dueDate),
+        new Date(engagement.completedDate),
+        earliestStartDate,
+        selectedOption,
+      ),
+    })),
+  );
+
+  const BarsGroupedByEngagement = ({ data }: any) => {
     const taskBars = data.tasks.map((v) => (
       <TaskBar key={v.id} barWidth={200} offsetFromLeft={100} />
     ));
 
     return (
       <>
-        <ProjectBar barWidth={500} offsetFromLeft={100} />
-        <EngagementBar barWidth={200} offsetFromLeft={100} />
+        <ProjectBar projectData={data.project} />
+        <EngagementBar engagementData={data} />
         {taskBars}
       </>
     );

@@ -31,13 +31,7 @@ const Bar = styled.div<{ barWidth: number; offsetFromLeft: number }>`
   }
 `;
 
-export const EngagementBar = ({
-  barWidth,
-  offsetFromLeft,
-}: {
-  barWidth: number;
-  offsetFromLeft: number;
-}) => {
+export const EngagementBar = ({ engagementData }: { engagementData: any }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
 
@@ -50,13 +44,18 @@ export const EngagementBar = ({
     setShowPopup(true);
     setPopupPosition({ top: event.clientY, left: event.clientX });
   };
-
+  console.log(
+    "hello",
+    engagementData.bar.barWidth,
+    "hi",
+    engagementData.bar.offsetFromLeft,
+  );
   return (
     <Container>
       <Bar
         ref={popupRef}
-        barWidth={barWidth}
-        offsetFromLeft={offsetFromLeft}
+        barWidth={engagementData.bar.barWidth}
+        offsetFromLeft={engagementData.bar.offsetFromLeft}
         onMouseDown={handleContainerMouseDown}
       >
         {showPopup && (
