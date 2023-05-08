@@ -402,4 +402,10 @@ describe('getProjects()', () => {
             deleteProject(projectId)
         })
     });
+
+    it('returns null if the organization does not exist', async () => {
+        const organization = '5116591277702d2113142ebc';
+        const result = await getProjects({organizationIds: organization.split(' '), take: 10, skip: 0});
+        expect(result).toBeNull();
+    });
 });
