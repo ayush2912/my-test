@@ -1,0 +1,162 @@
+[
+    {
+        "registry": "GCC",
+        "engagementType": "Registration",
+        "taskType": "Project Signed"
+    },
+    {
+        "registry": "GCC",
+        "engagementType": "Registration",
+        "taskType": "Document Collection"
+    },
+    {
+        "registry": "GCC",
+        "engagementType": "Registration",
+        "taskType": "LSC"
+    },
+    {
+        "registry": "GCC",
+        "engagementType": "Registration",
+        "taskType": "PSF v1"
+    },
+    {
+        "registry": "GCC",
+        "engagementType": "Registration",
+        "taskType": "Initial Submission to GCC"
+    },
+    {
+        "registry": "GCC",
+        "engagementType": "Registration",
+        "taskType": "Payment to GCC"
+    },
+    {
+        "registry": "GCC",
+        "engagementType": "Registration",
+        "taskType": "Completeness Check at GCC"
+    },
+    {
+        "registry": "GCC",
+        "engagementType": "Registration",
+        "taskType": "PSF v2"
+    },
+    {
+        "registry": "GCC",
+        "engagementType": "Registration",
+        "taskType": "Completeness check done & Project cleared for GSC"
+    },
+    {
+        "registry": "GCC",
+        "engagementType": "Registration",
+        "taskType": "GSC"
+    },
+    {
+        "registry": "GCC",
+        "engagementType": "Registration",
+        "taskType": "Appointment of DOE"
+    },
+    {
+        "registry": "GCC",
+        "engagementType": "Registration",
+        "taskType": "DOE Site Visit"
+    },
+    {
+        "registry": "GCC",
+        "engagementType": "Registration",
+        "taskType": "DVR (Draft Validation Report)"
+    },
+    {
+        "registry": "GCC",
+        "engagementType": "Registration",
+        "taskType": "FVR (Final Validaiton Report)"
+    },
+    {
+        "registry": "GCC",
+        "engagementType": "Registration",
+        "taskType": "Request for Registration to GCC"
+    },
+    {
+        "registry": "GCC",
+        "engagementType": "Registration",
+        "taskType": "Project Registered"
+    },
+    {
+        "registry": "GCC",
+        "engagementType": "Re Registration",
+        "taskType": "Project Signed"
+    },
+    {
+        "registry": "GCC",
+        "engagementType": "Re Registration",
+        "taskType": "Document Collection"
+    },
+    {
+        "registry": "GCC",
+        "engagementType": "Re Registration",
+        "taskType": "LSC"
+    },
+    {
+        "registry": "GCC",
+        "engagementType": "Re Registration",
+        "taskType": "PSF v1"
+    },
+    {
+        "registry": "GCC",
+        "engagementType": "Re Registration",
+        "taskType": "Initial Submission to GCC"
+    },
+    {
+        "registry": "GCC",
+        "engagementType": "Re Registration",
+        "taskType": "Payment to GCC"
+    },
+    {
+        "registry": "GCC",
+        "engagementType": "Re Registration",
+        "taskType": "Completeness Check at GCC"
+    },
+    {
+        "registry": "GCC",
+        "engagementType": "Re Registration",
+        "taskType": "PSF v2"
+    },
+    {
+        "registry": "GCC",
+        "engagementType": "Re Registration",
+        "taskType": "Completeness check done & Project cleared for GSC"
+    },
+    {
+        "registry": "GCC",
+        "engagementType": "Re Registration",
+        "taskType": "GSC"
+    },
+    {
+        "registry": "GCC",
+        "engagementType": "Re Registration",
+        "taskType": "Appointment of DOE"
+    },
+    {
+        "registry": "GCC",
+        "engagementType": "Re Registration",
+        "taskType": "DOE Site Visit"
+    },
+    {
+        "registry": "GCC",
+        "engagementType": "Re Registration",
+        "taskType": "DVR (Draft Validation Report)"
+    },
+    {
+        "registry": "GCC",
+        "engagementType": "Re Registration",
+        "taskType": "FVR (Final Validaiton Report)"
+    },
+    {
+        "registry": "GCC",
+        "engagementType": "Re Registration",
+        "taskType": "Request for Registration to GCC"
+    },
+    {
+        "registry": "GCC",
+        "engagementType": "Re Registration",
+        "taskType": "Project Registered"
+    }
+]
