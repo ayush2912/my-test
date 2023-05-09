@@ -10,6 +10,7 @@ import LabelValue from "../../../components/labelValuePair";
 import Modal from "../../../components/Modal";
 import StatusTag, { StatusType } from "../../../components/StatusTag";
 import Text from "../../../components/Text";
+import Tooltip from "../../../components/Tooltip";
 import { convertToEuropeanDateFormat } from "../../../utils/dateTimeFormatter";
 
 const StyledTable = styled.table`
@@ -174,13 +175,15 @@ function EngagementTable({
           <ColumnWrapper>
             <RowWrapper>
               <Text type="bodyBold">{v.name}</Text>
-              <InfoButton
-                onClick={() => {
-                  setShowEngagments(true);
-                }}
-              >
-                <Icon name="information" size="small" />
-              </InfoButton>
+              <Tooltip text="ATTRIBUTES">
+                <InfoButton
+                  onClick={() => {
+                    setShowEngagments(true);
+                  }}
+                >
+                  <Icon name="information" size="small" />
+                </InfoButton>
+              </Tooltip>
             </RowWrapper>
 
             <Text type="caption" color="subdued">
