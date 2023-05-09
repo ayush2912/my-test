@@ -431,8 +431,8 @@ model Country {
 
 model ProjectType {
   id                 String        @id @default(auto()) @map("_id") @db.ObjectId
-  name               String
-  parentType         ProjectType?  @relation("ParentProjectType", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  name               String        @unique
+  parentType         ProjectType?  @relation("ParentProjectType", fields: [id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   parentId           String?       @db.ObjectId
   subTypes           ProjectType[] @relation("ParentProjectType")
   subTypeProjects    Project[]     @relation("ProjectWithSubProjectType", fields: [subTypeProjectIDs], references: [id])
