@@ -1,4 +1,4 @@
-import { prisma, Prisma } from '../actions/prisma';
+import { prisma, Prisma } from './prisma';
 import { TaskSchema } from './tasks';
 
 const EngagementSchema: Prisma.EngagementSelect = {

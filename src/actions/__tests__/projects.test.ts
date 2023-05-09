@@ -6,7 +6,7 @@ import {
     deleteProject,
     getProjectEngagements,
 } from '../projects';
-import { createEngagement } from '../enagagements';
+import { createEngagement } from '../engagements';
 import { ProjectMockFactory } from '../../__mocks__/mock.data';
 
 const {

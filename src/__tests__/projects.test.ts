@@ -2,7 +2,7 @@ import request from 'supertest';
 import { faker } from '@faker-js/faker';
 
 import { createProject, deleteProject } from '../actions/projects';
-import { createEngagement } from '../actions/enagagements';
+import { createEngagement } from '../actions/engagements';
 
 import { App } from '../app';
 
