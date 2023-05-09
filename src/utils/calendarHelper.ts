@@ -62,10 +62,6 @@ export const getBarInfo = (
       ) * 155,
   }[view];
 
-  console.log(
-    barStartDate.diff(moment(earliestStartDate).startOf("year"), "weeks", true),
-  );
-
   return {
     offsetFromLeft,
     barWidth,
@@ -90,7 +86,7 @@ function getAllSundays(year: number, month: number): string[] {
   return dates;
 }
 
-export const getCalendarRange = (
+export const getCalendarInfo = (
   earliestStartDate: Date,
   latestEndDate: Date,
 ) => {
@@ -167,19 +163,17 @@ export const getCalendarRange = (
       };
     },
   );
-  // const test = weeklyHeaderData.reduce((total, curr) => {
-  //   return total + curr.sundays.length;
-  // }, 0);
 
   return {
-    duration: {
-      numberOfDays,
-      numberOfWeeks,
-      numberOfMonths,
-      numberOfYears,
+    calendarWidth: {
+      monthly: numberOfDays * 40,
+      weekly: numberOfWeeks * 155,
+      yearly: numberOfMonths * 124,
     },
-    weeklyHeaderData,
-    monthlyHeaderData,
-    yearlyHeaderData,
+    calendarHeader: {
+      monthly: monthlyHeaderData,
+      weekly: weeklyHeaderData,
+      yearly: yearlyHeaderData,
+    },
   };
 };

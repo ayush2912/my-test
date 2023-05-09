@@ -59,31 +59,34 @@ const SundayContainer = styled.div<{ lastWeek: boolean }>`
 `;
 
 interface Range {
-  duration: Duration;
-  monthlyHeaderData: MonthlyRange;
-  yearlyHeaderData: YearlyRange;
-  weeklyHeaderData: WeeklyRange;
+  calendarWidth: CalendarWidth;
+  calendarHeader: CalendarHeader;
 }
 
-type Duration = {
-  numberOfDays: number;
-  numberOfWeeks: number;
-  numberOfMonths: number;
-  numberOfYears: number;
+type CalendarWidth = {
+  monthly: number;
+  weekly: number;
+  yearly: number;
 };
 
-type YearlyRange = {
+type CalendarHeader = {
+  monthly: MonthlyHeader;
+  weekly: WeeklyHeader;
+  yearly: YearlyHeader;
+};
+
+type YearlyHeader = {
   year: string;
   months: { month: string; isThisMonth?: boolean }[];
 }[];
 
-type MonthlyRange = {
+type MonthlyHeader = {
   month: string;
   year: string;
   days: { day: number; isToday?: boolean }[];
 }[];
 
-type WeeklyRange = {
+type WeeklyHeader = {
   month: string;
   year: string;
   sundays: string[];
@@ -91,14 +94,10 @@ type WeeklyRange = {
 
 type CalendarRange = Range;
 
-const MonthlyHeader = ({
-  data: { monthlyHeaderData },
-}: {
-  data: CalendarRange;
-}) => {
+const MonthlyHeader = ({ data }: { data: MonthlyHeader }) => {
   return (
     <RowContainer>
-      {monthlyHeaderData?.map(({ month, year, days }) => (
+      {data?.map(({ month, year, days }) => (
         <div key={`${month}${year}`}>
           <HeaderContainer>
             <Text type="smallText" color="subdued">
@@ -121,14 +120,10 @@ const MonthlyHeader = ({
   );
 };
 
-const YearlyHeader = ({
-  data: { yearlyHeaderData },
-}: {
-  data: CalendarRange;
-}) => {
+const YearlyHeader = ({ data }: { data: YearlyHeader }) => {
   return (
     <RowContainer>
-      {yearlyHeaderData?.map(({ year, months }) => (
+      {data?.map(({ year, months }) => (
         <div key={year}>
           <HeaderContainer>
             <Text type="smallText" color="subdued">
@@ -151,14 +146,10 @@ const YearlyHeader = ({
   );
 };
 
-const WeeklyHeader = ({
-  data: { weeklyHeaderData },
-}: {
-  data: CalendarRange;
-}) => {
+const WeeklyHeader = ({ data }: { data: WeeklyHeader }) => {
   return (
     <RowContainer>
-      {weeklyHeaderData?.map(({ year, month, sundays }, index) => (
+      {data?.map(({ year, month, sundays }, index) => (
         <div key={month}>
           <HeaderContainer>
             <Text type="smallText" color="subdued">
@@ -170,10 +161,7 @@ const WeeklyHeader = ({
             {sundays.map((s, i) => (
               <SundayContainer
                 key={s}
-                lastWeek={
-                  index === weeklyHeaderData.length - 1 &&
-                  i === sundays.length - 1
-                }
+                lastWeek={index === data.length - 1 && i === sundays.length - 1}
               >
                 <Text type="captionBold" color="subdued">
                   {`${s} ${i === 0 ? month : ""}`}
@@ -187,19 +175,19 @@ const WeeklyHeader = ({
   );
 };
 export const CalendarHeader = ({
-  range,
+  calendarInfo,
   view,
 }: {
-  range: CalendarRange;
+  calendarInfo: CalendarRange;
   view: "monthly" | "yearly" | "weekly";
 }) => {
   return (
     <>
       {
         {
-          monthly: <MonthlyHeader data={range} />,
-          yearly: <YearlyHeader data={range} />,
-          weekly: <WeeklyHeader data={range} />,
+          monthly: <MonthlyHeader data={calendarInfo.calendarHeader.monthly} />,
+          yearly: <YearlyHeader data={calendarInfo.calendarHeader.yearly} />,
+          weekly: <WeeklyHeader data={calendarInfo.calendarHeader.weekly} />,
         }[view]
       }
     </>

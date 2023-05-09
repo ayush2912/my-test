@@ -2,13 +2,14 @@ import moment from "moment";
 import { useState } from "react";
 import styled from "styled-components";
 
-import { getBarInfo, getCalendarRange } from "@/utils/calendarHelper";
+import { getBarInfo, getCalendarInfo } from "@/utils/calendarHelper";
 
 import { CalendarHeader } from "./CalendarHeader";
 import { EngagementBar } from "./EngagementBar";
 import { ProjectEngagement } from "./GanttChart.types";
 import { ProjectBar } from "./ProjectBar";
 import { TaskBar } from "./TaskBar";
+import Card from "../Card";
 import Dropdown from "../Dropdown";
 
 const CalendarBackground = styled.div<{
@@ -64,6 +65,7 @@ export const GanttChart = ({
 
   const allEngagements = projectEngagementData.map((v) => v.engagements).flat();
   //TODO: take task dates into consideration
+
   const allStartDate = allEngagements.map((v) => moment(v.startDate));
   const allEndDate = allEngagements.map((v) =>
     moment(v.completedDate ? v.completedDate : v.dueDate ?? v.startDate),
@@ -71,7 +73,7 @@ export const GanttChart = ({
   const earliestStartDate = moment.min(allStartDate).toDate();
   const latestEndDate = moment.max(allEndDate).toDate();
 
-  const calendarRange = getCalendarRange(earliestStartDate, latestEndDate);
+  const calendarInfo = getCalendarInfo(earliestStartDate, latestEndDate);
 
   const mappedProjectEngagements = projectEngagementData.flatMap((project) =>
     project.engagements.map((engagement) => {
@@ -109,7 +111,7 @@ export const GanttChart = ({
   );
 
   return (
-    <div style={{ width: "1280px" }}>
+    <Card width={1280}>
       <div style={{ width: "500px" }}>
         <Dropdown
           options={options}
@@ -118,15 +120,9 @@ export const GanttChart = ({
         />
       </div>
       <StyledCalendarContainer>
-        <CalendarHeader range={calendarRange} view={selectedOption} />
+        <CalendarHeader calendarInfo={calendarInfo} view={selectedOption} />
         <CalendarBackground
-          width={Number(
-            {
-              monthly: calendarRange.duration.numberOfDays * 40,
-              yearly: calendarRange.duration.numberOfMonths * 124,
-              weekly: calendarRange.duration.numberOfWeeks * 155,
-            }[selectedOption],
-          )}
+          width={Number(calendarInfo.calendarWidth[selectedOption])}
           view={selectedOption}
         >
           {mappedProjectEngagements.map((v) => {
@@ -142,6 +138,6 @@ export const GanttChart = ({
           })}
         </CalendarBackground>
       </StyledCalendarContainer>
-    </div>
+    </Card>
   );
 };
