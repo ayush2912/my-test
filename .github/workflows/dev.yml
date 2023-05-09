@@ -11,7 +11,7 @@ jobs:
     env:
       
       TF_VAR_DATABASE_URL: ${{secrets.DATABASE_URL}}
-      DATABASE_URL: ${{secrets.DATABASE_URL}}
+      
       
     steps:
       - name: Checkout code
@@ -29,8 +29,9 @@ jobs:
         env:
           ECR_REGISTRY: 168933414344.dkr.ecr.ap-south-1.amazonaws.com
           IMAGE_NAME: offsetmax-dev-project-service
+          DATABASE_URL: ${{secrets.DATABASE_URL}}
         run: |
-          docker build -t $ECR_REGISTRY/$IMAGE_NAME:latest --build-arg $DATABASE_URL .
+          docker build -t $ECR_REGISTRY/$IMAGE_NAME:latest --build-arg DATABASE_URL=$DATABASE_URL .
           docker push $ECR_REGISTRY/$IMAGE_NAME:latest
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
