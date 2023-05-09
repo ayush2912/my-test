@@ -1,5 +1,13 @@
 import moment from "moment";
 
+function getFirstSundayOfYear(firstDayOfYear: any) {
+  if (firstDayOfYear.day() !== 0) {
+    firstDayOfYear.add(7 - firstDayOfYear.day(), "d");
+  }
+
+  return firstDayOfYear;
+}
+
 export const getBarInfo = (
   startDate: Date,
   dueDate: Date,
@@ -22,11 +30,15 @@ export const getBarInfo = (
     "months",
     true,
   );
-
+  const totalWeeks = (barCompletedDate || barDueDate).diff(
+    barStartDate,
+    "weeks",
+    true,
+  );
   const barWidth = {
     monthly: totalDays * 40,
     yearly: totalMonths * 124,
-    weekly: totalDays * 40,
+    weekly: totalWeeks * 155,
   }[view];
 
   const offsetFromLeft = {
@@ -44,11 +56,15 @@ export const getBarInfo = (
       ) * 124,
     weekly:
       barStartDate.diff(
-        moment(earliestStartDate).startOf("year"),
-        "months",
+        getFirstSundayOfYear(moment(earliestStartDate).startOf("year")),
+        "weeks",
         true,
-      ) * 124,
+      ) * 155,
   }[view];
+
+  console.log(
+    barStartDate.diff(moment(earliestStartDate).startOf("year"), "weeks", true),
+  );
 
   return {
     offsetFromLeft,

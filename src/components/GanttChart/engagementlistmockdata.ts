@@ -27,9 +27,9 @@ export const engagementlistmockdata = [
         id: "6438f5f51725504e53c94347",
         projectId: "6438f5f51725504e53c94356",
         type: "Registration",
-        startDate: "2022-01-24T14:15:22Z",
+        startDate: "2022-01-15T14:01:22Z",
         dueDate: "2022-05-14T14:15:22Z",
-        completedDate: "2022-05-24T14:15:22Z",
+        completedDate: "2022-05-29T14:15:22Z",
         notes: "Project Document Added",
         state: "NOT_STARTED",
         stateHistory: [
@@ -54,7 +54,7 @@ export const engagementlistmockdata = [
             type: "Project Design Document",
             startDate: "2022-04-11T00:00:00Z",
             dueDate: "2022-09-15T00:00:00Z",
-            completedDate: "2023-09-24T08:22:20.099Z",
+            completedDate: "2022-09-24T08:22:20.099Z",
             isOverdue: true,
             state: "NOT_STARTED",
             stateHistory: [
