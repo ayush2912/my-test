@@ -67,6 +67,7 @@ export interface ProjectRowItem {
     state: string;
     dueDate: string;
     type: string;
+    isOverdue: boolean;
   };
 }
 
@@ -154,7 +155,10 @@ function ProjectListTable({
       engagement: (
         <Content>
           <div style={{ display: "flex", alignContent: "center" }}>
-            <Icon name={selectedIconName} />
+            <Icon
+              name={selectedIconName}
+              color={v.engagement.isOverdue ? "#E0A008" : ""}
+            />
             <Text type="bodyBold" color="default">
               {v.engagement.type}
             </Text>
