@@ -9,14 +9,15 @@ import { theme } from "./styles/theme";
 const options = [
   { value: "monthly", label: "monthly" },
   { value: "yearly", label: "yearly" },
+  { value: "weekly", label: "weekly" },
 ];
 
 function App() {
-  const [selectedOption, setSelectedOption] = useState<"yearly" | "monthly">(
-    "monthly",
-  );
+  const [selectedOption, setSelectedOption] = useState<
+    "yearly" | "monthly" | "weekly"
+  >("monthly");
 
-  const handleDropdownChange = (value: "yearly" | "monthly") => {
+  const handleDropdownChange = (value: "yearly" | "monthly" | "weekly") => {
     setSelectedOption(value);
   };
 

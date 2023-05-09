@@ -49,7 +49,6 @@ export const TaskBar = ({ taskData }: { taskData: any }) => {
     setPopupPosition({ top: event.clientY, left: event.clientX });
   };
 
-  console.log(taskData.bar);
   return (
     <Container>
       <Bar

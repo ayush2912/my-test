@@ -46,21 +46,23 @@ const MonthContainer = styled.div`
   border-radius: 4px;
 `;
 
-// interface Range {
-//   month: string;
-//   monthShortName: string;
-//   noOfDays: {
-//     day: number;
-//     isToday?: boolean;
-//   }[];
-//   year: string;
-//   isThisMonth: boolean;
-// }
+const SundayContainer = styled.div`
+  display: flex;
+  align-items: center;
+  background-color: "transparent";
+  color: "#999999";
+
+  width: 155px;
+  padding: 4px 0px;
+  font-size: 14px;
+  border-radius: 4px;
+`;
 
 interface Range {
   duration: any;
   monthlyHeaderData: MonthlyRange;
   yearlyHeaderData: YearlyRange;
+  weeklyHeaderData: WeeklyRange;
 }
 
 type YearlyRange = {
@@ -74,11 +76,11 @@ type MonthlyRange = {
   days: { day: number; isToday?: boolean }[];
 }[];
 
-// type WeeklyRange = {
-//   month: string;
-//   year: string;
-//   days: { day: number; isThisWeek?: boolean }[];
-// }[];
+type WeeklyRange = {
+  month: string;
+  year: string;
+  sundays: string[];
+}[];
 
 type CalendarRange = Range;
 
@@ -142,12 +144,41 @@ const YearlyHeader = ({
   );
 };
 
+const WeeklyHeader = ({
+  data: { weeklyHeaderData },
+}: {
+  data: CalendarRange;
+}) => {
+  return (
+    <RowContainer>
+      {weeklyHeaderData?.map(({ year, month, sundays }) => (
+        <div key={month}>
+          <HeaderContainer>
+            <Text type="smallText" color="subdued">
+              {`${month} ${year}`}
+            </Text>
+          </HeaderContainer>
+
+          <RowContainer>
+            {sundays.map((s, i) => (
+              <SundayContainer key={s}>
+                <Text type="captionBold" color="subdued">
+                  {`${s} ${i === 0 ? month : ""}`}
+                </Text>
+              </SundayContainer>
+            ))}
+          </RowContainer>
+        </div>
+      ))}
+    </RowContainer>
+  );
+};
 export const CalendarHeader = ({
   range,
   view,
 }: {
   range: CalendarRange;
-  view: "monthly" | "yearly";
+  view: "monthly" | "yearly" | "weekly";
 }) => {
   return (
     <>
@@ -155,6 +186,7 @@ export const CalendarHeader = ({
         {
           monthly: <MonthlyHeader data={range} />,
           yearly: <YearlyHeader data={range} />,
+          weekly: <WeeklyHeader data={range} />,
         }[view]
       }
     </>

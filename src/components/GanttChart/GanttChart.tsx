@@ -12,11 +12,11 @@ import { TaskBar } from "./TaskBar";
 export const GanttChart = ({
   selectedOption,
 }: {
-  selectedOption: "yearly" | "monthly";
+  selectedOption: "yearly" | "monthly" | "weekly";
 }) => {
   const CalendarBody = styled.div<{
     width: number;
-    view: "yearly" | "monthly";
+    view: "yearly" | "monthly" | "weekly";
   }>`
     display: flex;
     flex-direction: column;
@@ -31,7 +31,8 @@ export const GanttChart = ({
       ),
       linear-gradient(to bottom, transparent 40px, rgba(241, 242, 244, 0.5) 1px);
 
-    background-size: ${({ view }) => ({ monthly: 40, yearly: 124 }[view])}px
+    background-size: ${({ view }) =>
+        ({ weekly: 155, monthly: 40, yearly: 124 }[view])}px
       80px;
   `;
 
@@ -119,6 +120,7 @@ export const GanttChart = ({
             {
               monthly: calendarRange.duration.numberOfDays * 40,
               yearly: calendarRange.duration.numberOfMonths * 124,
+              weekly: calendarRange.duration.numberOfWeeks * 155,
             }[selectedOption],
           )}
           view={selectedOption}

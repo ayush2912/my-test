@@ -1,4 +1,3 @@
-import { toNumber } from "lodash";
 import moment from "moment";
 
 export const getBarInfo = (
@@ -6,23 +5,30 @@ export const getBarInfo = (
   dueDate: Date,
   completedDate: Date,
   earliestStartDate: Date,
-  view: "yearly" | "monthly",
+  view: "yearly" | "monthly" | "weekly",
 ) => {
   const barStartDate = moment(startDate).startOf("day");
   const barCompletedDate = moment(completedDate).endOf("day");
   const barDueDate = moment(dueDate).endOf("day");
 
-  const totalDays = toNumber(
-    moment.duration(
-      (barCompletedDate || barDueDate).diff(barStartDate, "days", true),
-    ),
+  const totalDays = (barCompletedDate || barDueDate).diff(
+    barStartDate,
+    "days",
+    true,
   );
 
-  const totalMonths = toNumber(
-    moment.duration(
-      (barCompletedDate || barDueDate).diff(barStartDate, "months", true),
-    ),
+  const totalMonths = (barCompletedDate || barDueDate).diff(
+    barStartDate,
+    "months",
+    true,
   );
+
+  const barWidth = {
+    monthly: totalDays * 40,
+    yearly: totalMonths * 124,
+    weekly: totalDays * 40,
+  }[view];
+
   const offsetFromLeft = {
     monthly:
       barStartDate.diff(
@@ -36,11 +42,12 @@ export const getBarInfo = (
         "months",
         true,
       ) * 124,
-  }[view];
-
-  const barWidth = {
-    monthly: totalDays * 40,
-    yearly: totalMonths * 124,
+    weekly:
+      barStartDate.diff(
+        moment(earliestStartDate).startOf("year"),
+        "months",
+        true,
+      ) * 124,
   }[view];
 
   return {
@@ -48,6 +55,24 @@ export const getBarInfo = (
     barWidth,
   };
 };
+
+function getAllSundays(year: number, month: number): string[] {
+  const dates: string[] = [];
+  const date: moment.Moment = moment([year, month, 1]);
+
+  // Find the first Monday of the month
+  while (date.day() !== 0) {
+    date.add(1, "d");
+  }
+
+  // Iterate through the Mondays of the month
+  while (date.month() === month) {
+    dates.push(date.clone().format("D"));
+    date.add(1, "w"); // Add 1 week
+  }
+
+  return dates;
+}
 
 export const getCalendarRange = (
   earliestStartDate: Date,
@@ -57,21 +82,14 @@ export const getCalendarRange = (
   const endOfYear = moment(latestEndDate).endOf("year");
 
   const numberOfMonths = Math.round(
-    moment.duration(endOfYear.diff(startOfYear)).asMonths(),
+    endOfYear.diff(startOfYear, "months", true),
   );
 
-  const numberOfDays = Math.round(
-    moment.duration(endOfYear.diff(startOfYear)).asDays(),
-  );
+  const numberOfDays = Math.round(endOfYear.diff(startOfYear, "days", true));
 
-  // const numberOfWeeks = moment
-  //   .duration(endOfYear.diff(startOfYear))
-  //   .asWeeks()
-  //   .toFixed(0);
+  const numberOfWeeks = Math.round(endOfYear.diff(startOfYear, "weeks", true));
 
-  const numberOfYears = Math.round(
-    moment.duration(endOfYear.diff(startOfYear)).asYears(),
-  );
+  const numberOfYears = Math.round(endOfYear.diff(startOfYear, "years", true));
 
   const yearlyHeaderData = [...Array(Number(numberOfYears)).keys()].map((v) => {
     const year = moment(startOfYear).add(v, "years").format("YYYY");
@@ -118,28 +136,33 @@ export const getCalendarRange = (
     },
   );
 
-  // const weeklyHeaderData = [...Array(Number(numberOfWeeks)).keys()].map((v) => {
-  //   const thisdfs = moment(startOfYear).startOf("week");
-  //   const newDate = moment(startOfYear).add(v, "weeks");
+  const weeklyHeaderData = [...Array(Number(numberOfMonths)).keys()].map(
+    (v) => {
+      const newDate = moment(startOfYear).add(v, "months");
+      const month = newDate.format("MMM").toUpperCase();
+      const year = newDate.format("YYYY");
 
-  //   const year = newDate.format("YYYY");
-  //   const month = newDate.format("MMM").toUpperCase();
+      const sundays = getAllSundays(newDate.year(), newDate.month());
 
-  //   const startOfTheWeek = newDate.format("D");
-  //   console.log(thisdfs.format("D"));
-  //   return {
-  //     year,
-  //     month,
-  //     days: { day: startOfTheWeek },
-  //   };
-  // });
+      return {
+        year,
+        month,
+        sundays,
+      };
+    },
+  );
+  // const test = weeklyHeaderData.reduce((total, curr) => {
+  //   return total + curr.sundays.length;
+  // }, 0);
 
   return {
     duration: {
       numberOfDays,
+      numberOfWeeks,
       numberOfMonths,
       numberOfYears,
     },
+    weeklyHeaderData,
     monthlyHeaderData,
     yearlyHeaderData,
   };
