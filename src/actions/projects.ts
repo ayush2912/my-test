@@ -1,26 +1,8 @@
-import { Prisma, PrismaClient } from '@prisma/client';
-
-// import prisma from './prisma';
-
-const prisma = new PrismaClient();
-
-const TaskSchema: Prisma.TaskSelect = {
-    id: true,
-    engagementId: true,
-    type: true,
-    startDate: true,
-    dueDate: true,
-    completedDate: true,
-    state: true,
-    stateHistory: true,
-    createdAt: true,
-    updatedAt: true,
-};
+import { prisma, Prisma } from '../actions/prisma';
+import { EngagementSchema } from './engagements';
 
 const ProjectSchema: Prisma.ProjectSelect = {
     id: true,
-    createdAt: true,
-    updatedAt: true,
     name: true,
     registry: {
         select: {
@@ -60,24 +42,7 @@ const ProjectSchema: Prisma.ProjectSelect = {
     notes: true,
     isActive: true,
     engagements: {
-        select: {
-            id: true,
-            type: true,
-            startDate: true,
-            dueDate: true,
-            completedDate: true,
-            state: true,
-            notes: true,
-            projectId: true,
-            stateHistory: true,
-            attributes: true,
-            createdAt: true,
-            updatedAt: true,
-            tasks: {
-                select: TaskSchema,
-                orderBy: [{ startDate: 'asc' }, { type: 'asc' }],
-            },
-        },
+        select: EngagementSchema,
         orderBy: [{ startDate: 'asc' }, { type: 'asc' }],
     },
     creditingPeriodStartDate: true,
@@ -95,6 +60,8 @@ const ProjectSchema: Prisma.ProjectSelect = {
             name: true,
         },
     },
+    createdAt: true,
+    updatedAt: true,
 };
 
 const getProject = async (projectId: string) =>
@@ -103,6 +70,42 @@ const getProject = async (projectId: string) =>
             id: projectId,
         },
         select: ProjectSchema,
+    });
+
+const getProjectEngagements = async () =>
+    prisma.project.findMany({
+        select: {
+            id: true,
+            name: true,
+            registry: {
+                select: {
+                    id: true,
+                    name: true,
+                },
+            },
+            registryProjectId: true,
+            types: {
+                select: {
+                    id: true,
+                    name: true,
+                },
+            },
+            countries: {
+                select: {
+                    id: true,
+                    iso2Name: true,
+                    iso3Name: true,
+                    name: true,
+                },
+            },
+            isActive: true,
+            createdAt: true,
+            updatedAt: true,
+            engagements: {
+                select: EngagementSchema,
+                orderBy: [{ startDate: 'asc' }, { type: 'asc' }],
+            },
+        },
     });
 
 const createProject = (data: any) => {
@@ -145,8 +148,8 @@ const createProject = (data: any) => {
             engagements: {
                 connect: data.engagements
                     ? data.engagements.map((engagementId: string) => ({
-                          id: engagementId,
-                      }))
+                        id: engagementId,
+                    }))
                     : [],
             },
             creditingPeriodStartDate: data.creditingPeriodStartDate,
@@ -160,8 +163,8 @@ const createProject = (data: any) => {
             assetOwners: {
                 connect: data.assetOwners
                     ? data.assetOwners.map((ownerId: string) => ({
-                          id: ownerId,
-                      }))
+                        id: ownerId,
+                    }))
                     : [],
             },
             isActive: true,
@@ -210,4 +213,10 @@ const deleteProject = async (projectId: string | undefined) => {
     });
 };
 
-export { getProject, createProject, updateProject, deleteProject };
+export {
+    getProject,
+    createProject,
+    updateProject,
+    deleteProject,
+    getProjectEngagements,
+};
