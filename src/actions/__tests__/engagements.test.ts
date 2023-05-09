@@ -5,7 +5,7 @@ import {
     createEngagement,
     deleteEngagement,
     updateEngagement,
-} from '../enagagements';
+} from '../engagements';
 
 const project = {
     id: faker.database.mongodbObjectId(),

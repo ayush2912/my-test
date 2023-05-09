@@ -1,5 +1,5 @@
 import { prisma, Prisma } from '../actions/prisma';
-import { EngagementSchema } from './enagagements';
+import { EngagementSchema } from './engagements';
 
 const ProjectSchema: Prisma.ProjectSelect = {
     id: true,
