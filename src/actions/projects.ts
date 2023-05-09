@@ -1,24 +1,6 @@
-import { Prisma, PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
-
-const TaskSchema: Prisma.TaskSelect = {
-    id: true,
-    engagementId: true,
-    type: true,
-    startDate: true,
-    dueDate: true,
-    completedDate: true,
-    state: true,
-    stateHistory: {
-        select: {
-            state: true,
-            stateUpdatedAt: true,
-        },
-    },
-    createdAt: true,
-    updatedAt: true,
-};
+import { ConsoleLogger } from 'typedoc/dist/lib/utils';
+import { prisma, Prisma } from '../actions/prisma';
+import { EngagementSchema } from './enagagements';
 
 const ProjectSchema: Prisma.ProjectSelect = {
     id: true,
@@ -61,36 +43,7 @@ const ProjectSchema: Prisma.ProjectSelect = {
     notes: true,
     isActive: true,
     engagements: {
-        select: {
-            id: true,
-            type: true,
-            startDate: true,
-            dueDate: true,
-            completedDate: true,
-            state: true,
-            notes: true,
-            projectId: true,
-            stateHistory: {
-                select: {
-                    state: true,
-                    stateUpdatedAt: true,
-                },
-            },
-            attributes: {
-                select: {
-                    name: true,
-                    type: true,
-                    value: true,
-                    key: true,
-                },
-            },
-            tasks: {
-                select: TaskSchema,
-                orderBy: [{ startDate: 'asc' }, { type: 'asc' }],
-            },
-            createdAt: true,
-            updatedAt: true,
-        },
+        select: EngagementSchema,
         orderBy: [{ startDate: 'asc' }, { type: 'asc' }],
     },
     creditingPeriodStartDate: true,
@@ -150,24 +103,7 @@ const getProjectEngagements = async () =>
             createdAt: true,
             updatedAt: true,
             engagements: {
-                select: {
-                    id: true,
-                    type: true,
-                    startDate: true,
-                    dueDate: true,
-                    completedDate: true,
-                    state: true,
-                    notes: true,
-                    projectId: true,
-                    stateHistory: true,
-                    attributes: true,
-                    createdAt: true,
-                    updatedAt: true,
-                    tasks: {
-                        select: TaskSchema,
-                        orderBy: [{ startDate: 'asc' }, { type: 'asc' }],
-                    },
-                },
+                select: EngagementSchema,
                 orderBy: [{ startDate: 'asc' }, { type: 'asc' }],
             },
         },

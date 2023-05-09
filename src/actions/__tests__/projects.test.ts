@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-
+import { prisma } from '../prisma';
 import {
     createProject,
     getProject,
@@ -7,7 +7,7 @@ import {
     deleteProject,
     getProjectEngagements,
 } from '../projects';
-
+import { createEngagement, EngagementSchema } from '../enagagements';
 import { ProjectMockFactory } from '../../__mocks__/mock.data';
 
 const {
@@ -345,16 +345,65 @@ describe('getProjectEngagements()', () => {
             assetOwners: faker.helpers
                 .arrayElements(organizations)
                 .map((m) => m.id),
-            engagements: faker.helpers
-                .arrayElements(engagements, 1)
-                .map((m) => m.id),
         };
         const project = await createProject(data);
         if (!project.id) {
             throw new Error('Project not created');
         }
+        const engagementData = {
+            type: 'Getting a Project Listed',
+            startDate: faker.date.recent(),
+            dueDate: faker.date.future(),
+            projectId: project.id,
+            tasks: [
+                {
+                    type: 'Project design document',
+                    startDate: faker.date.recent(),
+                    dueDate: faker.date.future(),
+                    stateHistory: [
+                        {
+                            state: 'NOT_STARTED',
+                            stateUpdatedAt: faker.date.recent(),
+                        },
+                    ],
+                },
+                {
+                    type: 'Submit the PPD',
+                    startDate: faker.date.recent(),
+                    dueDate: faker.date.future(),
+                    stateHistory: [
+                        {
+                            state: 'NOT_STARTED',
+                            stateUpdatedAt: faker.date.recent(),
+                        },
+                    ],
+                },
+            ],
+            attributes: [
+                {
+                    name: 'KiloWatts per Hour',
+                    key: 'KW_H',
+                    type: 'integer',
+                    value: '150',
+                },
+                {
+                    name: 'Registry ID',
+                    key: 'REG_ID',
+                    type: 'string',
+                    value: '586789878abd980',
+                },
+            ],
+            stateHistory: [
+                {
+                    state: 'NOT_STARTED',
+                    stateUpdatedAt: faker.date.recent(),
+                },
+            ],
+        };
+        await createEngagement(engagementData);
 
         const result = await getProjectEngagements();
+        const k = await getProject(project.id);
         expect(result).toContainEqual(
             expect.objectContaining({
                 id: project.id,
@@ -367,7 +416,11 @@ describe('getProjectEngagements()', () => {
                 createdAt: project.createdAt,
                 updatedAt: project.updatedAt,
                 engagements:
-                    project.engagements == undefined ? [] : project.engagements,
+                    k != null
+                        ? k.engagements == undefined || k.engagements == null
+                            ? []
+                            : k.engagements
+                        : [],
             })
         );
         await deleteProject(project.id);
