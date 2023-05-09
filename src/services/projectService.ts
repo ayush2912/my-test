@@ -29,18 +29,21 @@ async function getProjectDetails(projectId: string) {
     }
 }
 
-async function getProjectEngagementDetails(projectId: string) {
+async function getProjectEngagementDetails() {
     try {
         console.info(
-            '-----In getProjectDetails method of ProjectService ------'
+            '-----In getProjectEngagementDetails method of ProjectService ------'
         );
-
-        const projectEngagements = await getProjectEngagements(projectId);
-
-        if (!projectEngagements) {
-            throw new Errors.BadRequest(ProjectConstants.INVALID_PROJECT_ID);
-        }
-
+        const projectEngagements = await getProjectEngagements();
+        projectEngagements.forEach((project: any) => {
+            project.engagements.forEach((engagement: any) => {
+                engagement['isOverdue'] =
+                    engagement.completedDate > engagement.dueDate;
+                engagement.tasks.forEach((task: any) => {
+                    task['isOverdue'] = task.completedDate > task.dueDate;
+                });
+            });
+        });
         return projectEngagements;
     } catch (error) {
         console.error(

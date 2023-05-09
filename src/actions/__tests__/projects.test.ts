@@ -403,7 +403,7 @@ describe('getProjectEngagements()', () => {
         await createEngagement(engagementData);
 
         const result = await getProjectEngagements();
-        const k = await getProject(project.id);
+        const projectCreated = await getProject(project.id);
         expect(result).toContainEqual(
             expect.objectContaining({
                 id: project.id,
@@ -416,10 +416,11 @@ describe('getProjectEngagements()', () => {
                 createdAt: project.createdAt,
                 updatedAt: project.updatedAt,
                 engagements:
-                    k != null
-                        ? k.engagements == undefined || k.engagements == null
+                    projectCreated != null
+                        ? projectCreated.engagements == undefined ||
+                            projectCreated.engagements == null
                             ? []
-                            : k.engagements
+                            : projectCreated.engagements
                         : [],
             })
         );
