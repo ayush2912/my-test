@@ -33,18 +33,14 @@ const Bar = styled.div<{ barWidth: number; offsetFromLeft: number }>`
   }
 `;
 
-export const TaskBar = ({
-  barWidth,
-  offsetFromLeft,
-}: {
-  barWidth: number;
-  offsetFromLeft: number;
-}) => {
+export const TaskBar = ({ taskData }: { taskData: any }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
 
   const popupRef = useRef(null);
-  useOutsideAlerter(popupRef, () => setShowPopup(false));
+  useOutsideAlerter(popupRef, () => {
+    if (showPopup) setShowPopup(false);
+  });
 
   const handleContainerMouseDown = (
     event: React.MouseEvent<HTMLDivElement>,
@@ -53,12 +49,13 @@ export const TaskBar = ({
     setPopupPosition({ top: event.clientY, left: event.clientX });
   };
 
+  console.log(taskData.bar);
   return (
     <Container>
       <Bar
         ref={popupRef}
-        barWidth={barWidth}
-        offsetFromLeft={offsetFromLeft}
+        barWidth={taskData.bar.barWidth}
+        offsetFromLeft={taskData.bar.offsetFromLeft}
         onMouseDown={handleContainerMouseDown}
       >
         {showPopup && (

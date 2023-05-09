@@ -1,59 +1,6 @@
 import { toNumber } from "lodash";
 import moment from "moment";
 
-interface StatusProgressBar {
-  name: string;
-  offsetFromLeft: {
-    DAILY: number;
-    MONTHLY: number;
-    YEARLY: number;
-  };
-  barWidth: {
-    DAILY: number;
-    MONTHLY: number;
-    YEARLY: number;
-  };
-}
-
-export const getStatusProgressBar = (
-  statusLog: {
-    name: string;
-    startDate: string;
-    completedDate: string;
-    dueDate: string;
-  }[],
-  earliestStartDate: string,
-): StatusProgressBar[] => {
-  return statusLog.map((v) => {
-    const startDate = moment(v.startDate).startOf("day");
-    const completedDate = moment(v.completedDate).endOf("day");
-    const dueDate = moment(v.dueDate).endOf("day");
-
-    const totalDays =
-      moment.duration((completedDate || dueDate).diff(startDate)).asDays() ?? 0;
-
-    const offsetFromLeft = {
-      DAILY: startDate.diff(moment(earliestStartDate).startOf("year"), "days"),
-      MONTHLY:
-        startDate.diff(moment(earliestStartDate).startOf("year"), "days") / 30,
-      YEARLY:
-        startDate.diff(moment(earliestStartDate).startOf("year"), "days") / 365,
-    };
-
-    const barWidth = {
-      DAILY: toNumber(totalDays) > 1 ? totalDays : 1,
-      MONTHLY: toNumber(totalDays) > 1 ? totalDays / 30 : 1 / 30,
-      YEARLY: toNumber(totalDays) > 1 ? totalDays / 365 : 1 / 365,
-    };
-
-    return {
-      name: v.name,
-      offsetFromLeft,
-      barWidth,
-    };
-  });
-};
-
 export const getBarInfo = (
   startDate: Date,
   dueDate: Date,
@@ -66,32 +13,33 @@ export const getBarInfo = (
   const barDueDate = moment(dueDate).endOf("day");
 
   const totalDays = toNumber(
-    moment
-      .duration((barCompletedDate || barDueDate).diff(barStartDate))
-      .asDays()
-      .toFixed(0) ?? 0,
+    moment.duration(
+      (barCompletedDate || barDueDate).diff(barStartDate, "days", true),
+    ),
   );
 
   const totalMonths = toNumber(
-    moment
-      .duration((barCompletedDate || barDueDate).diff(barStartDate))
-      .asMonths()
-      .toFixed(0) ?? 0,
+    moment.duration(
+      (barCompletedDate || barDueDate).diff(barStartDate, "months", true),
+    ),
   );
-
-  console.log("total days", totalDays);
-
   const offsetFromLeft = {
     monthly:
-      barStartDate.diff(moment(earliestStartDate).startOf("year"), "days") * 40,
+      barStartDate.diff(
+        moment(earliestStartDate).startOf("year"),
+        "days",
+        true,
+      ) * 40,
     yearly:
-      (barStartDate.diff(moment(earliestStartDate).startOf("year"), "days") /
-        30) *
-      124,
+      barStartDate.diff(
+        moment(earliestStartDate).startOf("year"),
+        "months",
+        true,
+      ) * 124,
   }[view];
 
   const barWidth = {
-    monthly: (totalDays > 1 ? totalDays : 1) * 40,
+    monthly: totalDays * 40,
     yearly: totalMonths * 124,
   }[view];
 

@@ -6,7 +6,6 @@ import { getBarInfo, getCalendarRange } from "@/utils/calendarHelper";
 import { CalendarHeader } from "./CalendarHeader";
 import { EngagementBar } from "./EngagementBar";
 import { engagementlistmockdata } from "./engagementlistmockdata";
-import { GanttChartBar } from "./GanttChartBar";
 import { ProjectBar } from "./ProjectBar";
 import { TaskBar } from "./TaskBar";
 
@@ -76,7 +75,6 @@ export const GanttChart = ({
           selectedOption,
         ),
       },
-
       ...engagement,
       bar: getBarInfo(
         new Date(engagement.startDate),
@@ -85,13 +83,23 @@ export const GanttChart = ({
         earliestStartDate,
         selectedOption,
       ),
+      tasks: engagement.tasks.map((v) => {
+        return {
+          ...v,
+          bar: getBarInfo(
+            new Date(v.startDate),
+            new Date(v.dueDate),
+            new Date(v.completedDate),
+            earliestStartDate,
+            selectedOption,
+          ),
+        };
+      }),
     })),
   );
 
   const BarsGroupedByEngagement = ({ data }: any) => {
-    const taskBars = data.tasks.map((v) => (
-      <TaskBar key={v.id} barWidth={200} offsetFromLeft={100} />
-    ));
+    const taskBars = data.tasks.map((v) => <TaskBar key={v.id} taskData={v} />);
 
     return (
       <>

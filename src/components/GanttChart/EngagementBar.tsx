@@ -44,12 +44,7 @@ export const EngagementBar = ({ engagementData }: { engagementData: any }) => {
     setShowPopup(true);
     setPopupPosition({ top: event.clientY, left: event.clientX });
   };
-  console.log(
-    "hello",
-    engagementData.bar.barWidth,
-    "hi",
-    engagementData.bar.offsetFromLeft,
-  );
+
   return (
     <Container>
       <Bar

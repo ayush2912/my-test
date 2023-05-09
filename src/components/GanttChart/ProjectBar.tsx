@@ -56,7 +56,7 @@ export const ProjectBar = ({ projectData }: { projectData: any }) => {
           </BarPopup>
         )}
         <Text type="bodyBold" color="default">
-          150 MW Solar Project in Karnataka by Avaada Solar
+          {projectData.name}
         </Text>
       </Bar>
     </Container>
