@@ -97,7 +97,7 @@ const ProjectSchema: Prisma.ProjectSelect = {
     },
 };
 
-const isEngagementOverdue = (engagement: any) => {
+export const isEngagementOverdue = (engagement: any) => {
     if (engagement?.state === 'COMPLETED') {
         if (!engagement.completedDate) {
             return false;
@@ -182,11 +182,14 @@ const createProject = (data: any) => {
             },
             notes: data.notes,
             engagements: {
-                connect: data.engagements
-                    ? data.engagements.map((engagementId: string) => ({
-                          id: engagementId,
-                      }))
-                    : [],
+                create: data.engagements ? data.engagements.map((engagement: any) => ({
+                    type: engagement.type,
+                    startDate: engagement.startDate,
+                    dueDate: engagement.dueDate,
+                    completedDate: engagement.completedDate,
+                    state: engagement.state,
+                    notes: engagement.notes
+                })) : []
             },
             creditingPeriodStartDate: data.creditingPeriodStartDate,
             creditingPeriodEndDate: data.creditingPeriodEndDate,
@@ -247,10 +250,7 @@ const deleteProject = async (projectId: string | undefined) => {
     return prisma.project.delete({
         where: {
             id: projectId,
-        },
-        select: {
-            name: true,
-        },
+        }
     });
 };
 
@@ -279,8 +279,18 @@ const getProjects = async(options: GetProjectsOptions) =>
                     name: true,
                 } 
             },
-            types: true,
-            subTypes: true,
+            types: {
+                select: {
+                    id: true,
+                    name: true
+                }
+            },
+            subTypes: {
+                select: {
+                    id: true,
+                    name: true
+                }
+            },
             portfolioOwner: {
                 select: {
                     id: true,
@@ -321,9 +331,9 @@ const getProjects = async(options: GetProjectsOptions) =>
         countries: result.countries,
         types: result.types,
         subTypes: result.subTypes,
-        engagements: {
-            ...result.engagements.pop(),
-            isOverdue: isEngagementOverdue(result.engagements.pop())
+        engagement: {
+            ...result.engagements[0],
+            isOverdue: isEngagementOverdue(result.engagements[0])
         },
         annualApproximateCreditVolume: result.annualApproximateCreditVolume,
         portfolioOwner: result.portfolioOwner,

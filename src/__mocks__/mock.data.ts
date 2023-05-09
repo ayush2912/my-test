@@ -71,7 +71,7 @@ const MockEngagements = () =>
         .fill(0)
         .map(() => ({
             id: faker.database.mongodbObjectId(),
-            projectId: faker.database.mongodbObjectId(),
+            // projectId: faker.database.mongodbObjectId(),
             type: faker.company.name(),
             startDate: faker.date.recent(),
             dueDate: faker.date.future(),
@@ -97,7 +97,7 @@ const ProjectMockFactory = () => {
             prisma.methodology.createMany({ data: methodologies }),
             prisma.projectType.createMany({ data: projectTypes }),
             prisma.organization.createMany({ data: organizations }),
-            prisma.engagement.createMany({ data: engagements }),
+            // prisma.engagement.createMany({ data: engagements }),
         ]);
 
     const clearMockData = () => {
@@ -150,6 +150,7 @@ const ProjectMockFactory = () => {
     };
 
     return {
+        prisma,
         countries,
         registries,
         methodologies,

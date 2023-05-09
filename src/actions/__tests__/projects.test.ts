@@ -5,12 +5,14 @@ import {
     getProjectById,
     updateProject,
     deleteProject,
-    getProjects
+    getProjects, 
+    isEngagementOverdue
 } from '../projects';
 
 import { ProjectMockFactory } from '../../__mocks__/mock.data';
 
 const {
+    prisma, 
     countries,
     registries,
     methodologies,
@@ -146,7 +148,6 @@ describe('getProjectById()', () => {
                 .map((m) => m.id),
             engagements: faker.helpers
                 .arrayElements(engagements, 1)
-                .map((m) => m.id),
         };
         const project = await createProject(data);
 
@@ -326,10 +327,11 @@ describe('deleteProject()', () => {
 
 describe('getProjects()', () => {
     test('it should get the list of projets successfully', async() => {
-        const projectIds:any[] = []
-        const organization = faker.helpers.arrayElement(organizations).id
-        for (let i = 0; i < 10; i++) {
-            const data = {
+        // const projectIds:any[] = []
+        const organizationId = faker.helpers.arrayElement(organizations).id
+
+        const projects = await prisma.$transaction(Array(10).fill(0).map(() => 
+            createProject({
                 name: 'Renewable Get Power Project',
                 registry: faker.helpers.arrayElement(registries).id,
                 registryUrl: 'www.url.com',
@@ -348,64 +350,86 @@ describe('getProjects()', () => {
                 creditingPeriodStartDate: '2023-04-11T14:15:22Z',
                 creditingPeriodEndDate: '2023-04-11T14:15:22Z',
                 annualApproximateCreditVolume: 300000,
-                organization: organization,
+                organization: organizationId,
                 portfolioOwner: faker.helpers.arrayElement(organizations).id,
                 assetOwners: faker.helpers
                     .arrayElements(organizations)
                     .map((m) => m.id),
                 engagements: faker.helpers
                     .arrayElements(engagements, 2)
-                    .map((m) => m.id),
-            };
-            const project = await createProject(data)
-            projectIds.push(project.id)
-        }
+            })
+        ))
 
-        const result = await getProjects({organizationIds: organization.split(' '), take: 10, skip: 0})
+        const projectIds = projects.map(project => project.id)
+
+        const result = await getProjects({organizationIds: [ organizationId ], take: 10, skip: 0})
 
         expect(Array.isArray(result)).toBe(true)
 
         expect(result.length).toBe(10)
 
-        // Check that each object in the array has the expected fields
-        result.forEach(project => {
-            expect(project).toHaveProperty('id')
-            expect(project).toHaveProperty('name')
-            expect(project).toHaveProperty('createdAt')
-            expect(project).toHaveProperty('updatedAt')
-            expect(project).toHaveProperty('registry')
-            expect(project.registry).toHaveProperty('name')
-            expect(project).toHaveProperty('registryProjectId')
-            expect(project).toHaveProperty('countries')
-            project.countries.forEach(country => {
-                expect(country).toHaveProperty('iso2Name')
-                expect(country).toHaveProperty('name')
-            })
-            expect(project).toHaveProperty('types')
-            expect(project.types.length).toBe(1)
-            expect(project.subTypes.length).toBe(1)
-            expect(project).toHaveProperty('subTypes')
-            expect(project).toHaveProperty('portfolioOwner')
-            expect(project).toHaveProperty('assetOwners')
-            expect(project).toHaveProperty('annualApproximateCreditVolume')
-            expect(project).toHaveProperty('engagements')
-            if (project.engagements) { // engagements can be empty for some projects
-                expect(project.engagements).toHaveProperty('id')
-                expect(project.engagements).toHaveProperty('type')
-                expect(project.engagements).toHaveProperty('dueDate')
-                expect(project.engagements).toHaveProperty('state')
-                expect(project.engagements).toHaveProperty('isOverdue')
-            }
-        });
+        // expect(result).toBe(
+        //     expect.arrayContaining(
+        //         projects.map(project => expect.objectContaining(project))
+        //     )
+        // ); 
 
-        projectIds.forEach(projectId => {
-            deleteProject(projectId)
+        result.forEach(project => {
+
+            const matchedProject = projects.find(p => p.id === project.id);
+
+            if (!matchedProject) {
+                throw new Error("Result contains project that are not created in this test case")
+            }
+
+            expect(project).toEqual({
+                id: matchedProject.id,
+                name: matchedProject.name,
+                createdAt: matchedProject.createdAt,
+                updatedAt: matchedProject.updatedAt,
+                registry: {
+                    name: matchedProject.registry?.name
+                },
+                countries: (matchedProject.countries || []).map(obj => ({
+                    iso2Name: obj.iso2Name,
+                    name: obj.name
+                })),
+                registryProjectId: matchedProject.registryProjectId,
+                types: (matchedProject.types || []).map(obj => ({
+                    id: obj.id,
+                    name: obj.name
+                })),
+                subTypes: (matchedProject.subTypes || []).map(obj => ({
+                    id: obj.id,
+                    name: obj.name
+                })),
+                portfolioOwner: {
+                    id: matchedProject.portfolioOwner?.id,
+                    name: matchedProject.portfolioOwner?.name
+                },
+                assetOwners: (matchedProject.assetOwners || []).map(obj => ({
+                    id: obj.id,
+                    name: obj.name
+                })),
+                annualApproximateCreditVolume: matchedProject.annualApproximateCreditVolume,
+                engagement: {
+                    id: matchedProject.engagements?.find(e => e.id === project.engagement.id)?.id,
+                    type: matchedProject.engagements?.find(e => e.id === project.engagement.id)?.type,
+                    dueDate: matchedProject.engagements?.find(e => e.id === project.engagement.id)?.dueDate,
+                    state: matchedProject.engagements?.find(e => e.id === project.engagement.id)?.state,
+                    completedDate: matchedProject.engagements?.find(e => e.id === project.engagement.id)?.completedDate,
+                    isOverdue: isEngagementOverdue(matchedProject.engagements?.find(e => e.id === project.engagement.id))
+                }
+              });
+
         })
+
+        await Promise.all(projectIds.map(projectId => deleteProject(projectId)))
     });
 
     it('returns null if the organization does not exist', async () => {
-        const organization = '5116591277702d2113142ebc';
-        const result = await getProjects({organizationIds: organization.split(' '), take: 10, skip: 0});
-        expect(result).toBeNull();
+        const organizationId = '5116591277702d2113142ebc';
+        const result = await getProjects({organizationIds: [organizationId], take: 10, skip: 0});
+        expect(result).toEqual([]);
     });
 });
