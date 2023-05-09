@@ -46,24 +46,31 @@ const MonthContainer = styled.div`
   border-radius: 4px;
 `;
 
-const SundayContainer = styled.div`
+const SundayContainer = styled.div<{ lastWeek: boolean }>`
   display: flex;
   align-items: center;
   background-color: "transparent";
   color: "#999999";
 
-  width: 155px;
+  width: ${(props) => (props.lastWeek ? 0 : 155)}px;
   padding: 4px 0px;
   font-size: 14px;
   border-radius: 4px;
 `;
 
 interface Range {
-  duration: any;
+  duration: Duration;
   monthlyHeaderData: MonthlyRange;
   yearlyHeaderData: YearlyRange;
   weeklyHeaderData: WeeklyRange;
 }
+
+type Duration = {
+  numberOfDays: number;
+  numberOfWeeks: number;
+  numberOfMonths: number;
+  numberOfYears: number;
+};
 
 type YearlyRange = {
   year: string;
@@ -151,7 +158,7 @@ const WeeklyHeader = ({
 }) => {
   return (
     <RowContainer>
-      {weeklyHeaderData?.map(({ year, month, sundays }) => (
+      {weeklyHeaderData?.map(({ year, month, sundays }, index) => (
         <div key={month}>
           <HeaderContainer>
             <Text type="smallText" color="subdued">
@@ -161,7 +168,13 @@ const WeeklyHeader = ({
 
           <RowContainer>
             {sundays.map((s, i) => (
-              <SundayContainer key={s}>
+              <SundayContainer
+                key={s}
+                lastWeek={
+                  index === weeklyHeaderData.length - 1 &&
+                  i === sundays.length - 1
+                }
+              >
                 <Text type="captionBold" color="subdued">
                   {`${s} ${i === 0 ? month : ""}`}
                 </Text>

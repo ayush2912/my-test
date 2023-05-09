@@ -110,7 +110,6 @@ export const GanttChart = ({
       </>
     );
   };
-
   return (
     <div style={{ width: "1280px" }}>
       <StyledCalendarContainer>
