@@ -1,7 +1,7 @@
 import { ObjectId } from 'bson';
 
-import { prisma, Prisma } from './prisma';
 import { createTaskData, updateTaskData } from '../interfaces/task.interface';
+import { prisma, Prisma } from '../actions/prisma';
 
 const TaskSchema: Prisma.TaskSelect = {
     id: true,
@@ -18,7 +18,7 @@ const TaskSchema: Prisma.TaskSelect = {
         },
     },
     createdAt: true,
-    updatedAt: true
+    updatedAt: true,
 };
 
 const createTasks = async (data: createTaskData[]) => {
@@ -58,4 +58,4 @@ const deleteTask = async (taskId: string) =>
         },
     });
 
-export { createTasks, updateTask, deleteTask };
+export { createTasks, updateTask, deleteTask, TaskSchema };
