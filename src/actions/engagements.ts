@@ -1,6 +1,5 @@
-import { Prisma, PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { prisma, Prisma } from './prisma';
+import { TaskSchema } from './tasks';
 
 const EngagementSchema: Prisma.EngagementSelect = {
     id: true,
@@ -19,29 +18,13 @@ const EngagementSchema: Prisma.EngagementSelect = {
             key: true,
         },
     },
-    stateHistory: {
-        select: {
-            state: true,
-            stateUpdatedAt: true,
-        },
-    },
+    stateHistory: true,
     tasks: {
-        select: {
-            id: true,
-            engagementId: true,
-            type: true,
-            startDate: true,
-            dueDate: true,
-            completedDate: true,
-            state: true,
-            stateHistory: {
-                select: {
-                    state: true,
-                    stateUpdatedAt: true,
-                },
-            },
-        },
+        select: TaskSchema,
+        orderBy: [{ startDate: 'asc' }, { type: 'asc' }],
     },
+    createdAt: true,
+    updatedAt: true,
 };
 
 const createEngagement = (data: any) =>
@@ -56,10 +39,12 @@ const createEngagement = (data: any) =>
             startDate: data.startDate,
             dueDate: data.dueDate,
             attributes: data.attributes,
+            state: data.state,
+            stateHistory: data.stateHistory,
+            notes: data.notes,
             tasks: {
                 create: data.tasks,
             },
-            stateHistory: data.stateHistory,
         },
         select: EngagementSchema,
     });
@@ -139,4 +124,9 @@ const deleteEngagement = (engagementId: string) =>
         },
     });
 
-export { createEngagement, deleteEngagement, updateEngagement };
+export {
+    createEngagement,
+    deleteEngagement,
+    updateEngagement,
+    EngagementSchema,
+};

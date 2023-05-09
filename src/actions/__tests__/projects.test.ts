@@ -1,5 +1,4 @@
 import { faker } from '@faker-js/faker';
-
 import {
     createProject,
     getProjectById,
@@ -7,8 +6,9 @@ import {
     deleteProject,
     getProjects, 
     isEngagementOverdue
+    getProjectEngagements,
 } from '../projects';
-
+import { createEngagement } from '../engagements';
 import { ProjectMockFactory } from '../../__mocks__/mock.data';
 
 const {
@@ -325,6 +325,7 @@ describe('deleteProject()', () => {
     });
 });
 
+
 describe('getProjects()', () => {
     test('it should get the list of projets successfully', async() => {
         // const projectIds:any[] = []
@@ -367,12 +368,6 @@ describe('getProjects()', () => {
         expect(Array.isArray(result)).toBe(true)
 
         expect(result.length).toBe(10)
-
-        // expect(result).toBe(
-        //     expect.arrayContaining(
-        //         projects.map(project => expect.objectContaining(project))
-        //     )
-        // ); 
 
         result.forEach(project => {
 
@@ -431,5 +426,115 @@ describe('getProjects()', () => {
         const organizationId = '5116591277702d2113142ebc';
         const result = await getProjects({organizationIds: [organizationId], take: 10, skip: 0});
         expect(result).toEqual([]);
+    });
+});
+
+
+describe('getProjectEngagements()', () => {
+    test('it should list all project engagements', async () => {
+        const data = {
+            name: 'Renewable Get Power Project',
+            registry: faker.helpers.arrayElement(registries).id,
+            registryUrl: 'www.url.com',
+            registryProjectId: '1851',
+            countries: faker.helpers
+                .arrayElements(countries)
+                .map((c) => c.iso2Name),
+            states: ['UP'],
+            methodologies: faker.helpers
+                .arrayElements(methodologies, 1)
+                .map((m) => m.id),
+            type: faker.helpers.arrayElement(projectTypes).id,
+            subType: faker.helpers.arrayElement(projectTypes).id,
+            notes: 'Renewable Power project in India',
+            isActive: true,
+            creditingPeriodStartDate: '2023-04-11T14:15:22Z',
+            creditingPeriodEndDate: '2023-04-11T14:15:22Z',
+            annualApproximateCreditVolume: 300000,
+            organization: faker.helpers.arrayElement(organizations).id,
+            portfolioOwner: faker.helpers.arrayElement(organizations).id,
+            assetOwners: faker.helpers
+                .arrayElements(organizations)
+                .map((m) => m.id),
+        };
+        const project = await createProject(data);
+        if (!project.id) {
+            throw new Error('Project not created');
+        }
+        const engagementData = {
+            type: 'Getting a Project Listed',
+            startDate: faker.date.recent(),
+            dueDate: faker.date.future(),
+            projectId: project.id,
+            tasks: [
+                {
+                    type: 'Project design document',
+                    startDate: faker.date.recent(),
+                    dueDate: faker.date.future(),
+                    stateHistory: [
+                        {
+                            state: 'NOT_STARTED',
+                            stateUpdatedAt: faker.date.recent(),
+                        },
+                    ],
+                },
+                {
+                    type: 'Submit the PPD',
+                    startDate: faker.date.recent(),
+                    dueDate: faker.date.future(),
+                    stateHistory: [
+                        {
+                            state: 'NOT_STARTED',
+                            stateUpdatedAt: faker.date.recent(),
+                        },
+                    ],
+                },
+            ],
+            attributes: [
+                {
+                    name: 'KiloWatts per Hour',
+                    key: 'KW_H',
+                    type: 'integer',
+                    value: '150',
+                },
+                {
+                    name: 'Registry ID',
+                    key: 'REG_ID',
+                    type: 'string',
+                    value: '586789878abd980',
+                },
+            ],
+            stateHistory: [
+                {
+                    state: 'NOT_STARTED',
+                    stateUpdatedAt: faker.date.recent(),
+                },
+            ],
+        };
+        await createEngagement(engagementData);
+
+        const result = await getProjectEngagements();
+        const projectCreated = await getProject(project.id);
+        expect(result).toContainEqual(
+            expect.objectContaining({
+                id: project.id,
+                name: project.name,
+                registry: project.registry,
+                registryProjectId: project.registryProjectId,
+                types: project.types,
+                countries: project.countries,
+                isActive: project.isActive,
+                createdAt: project.createdAt,
+                updatedAt: project.updatedAt,
+                engagements:
+                    projectCreated != null
+                        ? projectCreated.engagements == undefined ||
+                            projectCreated.engagements == null
+                            ? []
+                            : projectCreated.engagements
+                        : [],
+            })
+        );
+        await deleteProject(project.id);
     });
 });

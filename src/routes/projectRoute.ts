@@ -1,5 +1,8 @@
 import { Request, Response, Router } from 'express';
-import { getProjectDetails } from '../services/projectService';
+import {
+    getProjectDetails,
+    getProjectEngagementDetails,
+} from '../services/projectService';
 import { validateProjectIdParamsSchema } from '../middlewares/validation';
 import ProjectConstants from '../utility/constants/ProjectConstants';
 
@@ -23,4 +26,20 @@ export default function routes(router: Router) {
             }
         }
     );
+
+    router.get('/project-engagements/', async (req: Request, res: Response) => {
+        try {
+            console.info('----- /project-engagements/ ----');
+
+            const results = await getProjectEngagementDetails();
+
+            res.sendSuccess({
+                msg: ProjectConstants.PROJECT_ENGAGEMENT_DETAILS_RETRIEVED,
+                data: results,
+                customCode: 'PROJECT_ENGAGEMENT_DETAILS_RETRIEVED_SUCCESSFULLY',
+            });
+        } catch (error) {
+            res.sendError(error);
+        }
+    });
 }
