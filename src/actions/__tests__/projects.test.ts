@@ -1,5 +1,4 @@
 import { faker } from '@faker-js/faker';
-import { prisma } from '../prisma';
 import {
     createProject,
     getProject,
@@ -7,7 +6,7 @@ import {
     deleteProject,
     getProjectEngagements,
 } from '../projects';
-import { createEngagement, EngagementSchema } from '../enagagements';
+import { createEngagement } from '../enagagements';
 import { ProjectMockFactory } from '../../__mocks__/mock.data';
 
 const {
