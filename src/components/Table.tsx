@@ -47,7 +47,7 @@ const CellContent = styled.div`
   }
 `;
 
-export const Table = ({
+function EngagementTable({
   headers,
   tableData,
   cellContentMapper,
@@ -55,7 +55,7 @@ export const Table = ({
   headers: Array<any>;
   tableData: Array<any>;
   cellContentMapper: any;
-}) => {
+}) {
   return (
     <StyledTable>
       <thead>
@@ -88,4 +88,6 @@ export const Table = ({
       </tbody>
     </StyledTable>
   );
-};
+}
+
+export default EngagementTable;
