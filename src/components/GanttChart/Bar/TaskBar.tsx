@@ -43,7 +43,8 @@ interface TaskData {
   startDate: string;
   dueDate: string;
   completedDate: string;
-  bar: { offsetFromLeft: number; barWidth: number };
+  bar: { offsetFromLeft: number; width: number };
+  state: string;
 }
 
 type TaskStateTypes =
@@ -79,7 +80,6 @@ export const TaskBar = ({ taskData }: { taskData: TaskData }) => {
     setShowPopup(true);
     setPopupPosition({ top: event.clientY, left: event.clientX });
   };
-  console.log(taskData);
   return (
     <Container>
       <Bar

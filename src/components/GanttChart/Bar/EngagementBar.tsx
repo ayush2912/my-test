@@ -35,23 +35,35 @@ const Bar = styled.div<IBar>`
   }
 `;
 
-type TaskStateTypes =
+interface EngagementData {
+  isOverdue: boolean;
+  type: string;
+  startDate: string;
+  dueDate: string;
+  completedDate: string;
+  bar: { offsetFromLeft: number; width: number };
+  state: string;
+}
+
+type EngagmentStateTypes =
   | "NOT_STARTED"
   | "IN_PROGRESS"
   | "DISCONTINUED"
   | "COMPLETED"
   | "OVERDUE";
-interface TaskStatus {
-  label: TaskStateTypes;
+interface EngagementStatus {
+  label: EngagmentStateTypes;
   type: StatusType;
 }
 
-export const EngagementBar = ({ engagementData }: { engagementData: any }) => {
+export const EngagementBar = ({
+  engagementData,
+}: {
+  engagementData: EngagementData;
+}) => {
   const [showPopup, setShowPopup] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
-  const engagementTypes: string = engagementData.project.types
-    .map((type: { id: string; name: string }) => type.name)
-    .join(", ");
+
   const popupRef = useRef(null);
   useOutsideAlerter(popupRef, () => {
     if (showPopup) setShowPopup(false);
@@ -69,8 +81,8 @@ export const EngagementBar = ({ engagementData }: { engagementData: any }) => {
     DISCONTINUED: { label: "DISCONTINUED", type: "error" },
     COMPLETED: { label: "COMPLETED", type: "success" },
     OVERDUE: { label: "OVERDUE", type: "warning" },
-  }[engagementData.state] as TaskStatus;
-
+  }[engagementData.state] as EngagementStatus;
+  console.log(engagementData);
   return (
     <Container>
       <Bar
