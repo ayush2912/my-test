@@ -28,8 +28,16 @@ export interface StateHistory {
 }
 
 export type IBar = {
-  width: number;
-  offsetFromLeft: number;
+  offsetFromLeft: {
+    monthly: number;
+    yearly: number;
+    weekly: number;
+  };
+  width: {
+    monthly: number;
+    yearly: number;
+    weekly: number;
+  };
 };
 export interface Task {
   id: string;
@@ -52,7 +60,7 @@ export interface Engagement {
   type: string;
   startDate: string;
   dueDate: string;
-  completedDate: string;
+  completedDate: string | null;
   notes: string;
   state: string;
   stateHistory: StateHistory[];

@@ -6,6 +6,7 @@ import { useOutsideAlerter } from "@/hooks/useOutsiderAlerter";
 import { BarPopup } from "./BarPopup";
 import Text from "../../Text";
 import { IBar } from "../GanttChart.types";
+import useGanttChartControls from "../useGanttChartControls";
 
 const Container = styled.div`
   display: flex;
@@ -15,11 +16,11 @@ const Container = styled.div`
   user-select: none;
 `;
 
-const Bar = styled.div<IBar>`
+const Bar = styled.div<IBar & { focus: boolean }>`
   display: flex;
   align-items: center;
   height: 24px;
-  width: ${({ width }) => width}px;
+  max-width: ${({ width }) => width}px;
   border-radius: 4px;
   margin-left: ${({ offsetFromLeft }) => offsetFromLeft}px;
   cursor: pointer;
@@ -27,9 +28,12 @@ const Bar = styled.div<IBar>`
   &:hover {
     text-decoration: underline;
   }
+
+  ${({ focus }) => (focus ? "text-decoration: underline" : "")}
 `;
 
 export const ProjectBar = ({ projectData }: { projectData: any }) => {
+  const { view } = useGanttChartControls();
   const [showPopup, setShowPopup] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
 
@@ -49,9 +53,10 @@ export const ProjectBar = ({ projectData }: { projectData: any }) => {
     <Container>
       <Bar
         ref={popupRef}
-        width={projectData.bar.width}
-        offsetFromLeft={projectData.bar.offsetFromLeft}
+        width={projectData.bar.width[view]}
+        offsetFromLeft={projectData.bar.offsetFromLeft[view]}
         onMouseDown={handleContainerMouseDown}
+        focus={showPopup}
       >
         {showPopup && (
           <BarPopup top={popupPosition.top} left={popupPosition.left}>

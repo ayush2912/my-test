@@ -3,12 +3,13 @@ import styled from "styled-components";
 import { EngagementBar } from "./Bar/EngagementBar";
 import { ProjectBar } from "./Bar/ProjectBar";
 import { TaskBar } from "./Bar/TaskBar";
-import { ICalendar, TemporalView } from "./Calendar/Calendar.type";
+import { ICalendar } from "./Calendar/Calendar.type";
 import { CalendarBackground } from "./Calendar/CalendarBackground";
 import { CalendarHeader } from "./Calendar/CalendarHeader";
 import { IMappedEngagements } from "./GanttChart.types";
+import { GanttChartControls } from "./GanttChartControls";
+import useGanttChartControls from "./useGanttChartControls";
 import Card from "../Card";
-// import Dropdown from "../Dropdown";
 
 const StyledCalendarContainer = styled.div`
   display: flex;
@@ -20,50 +21,21 @@ const StyledCalendarContainer = styled.div`
   overflow-x: scroll;
 `;
 
-const ButtonContainer = styled.div`
-  display: flex;
-  align-items: center;
-  width: 100%;
-  justify-content: flex-end;
-  margin-bottom: 24px;
-`;
-
 export const GanttChart = ({
   mappedProjectEngagements,
   calendar,
-  selectedView = "monthly",
 }: {
   mappedProjectEngagements: IMappedEngagements;
   calendar: ICalendar;
-  selectedView: TemporalView;
 }) => {
-  // const [selectedOption, setSelectedOption] = useState<TemporalView>("monthly");
-
-  // const options = [
-  //   { value: "monthly", label: "monthly" },
-  //   { value: "yearly", label: "yearly" },
-  //   { value: "weekly", label: "weekly" },
-  // ];
-
-  // const handleDropdownChange = (value: "yearly" | "monthly" | "weekly") => {
-  //   setSelectedOption(value);
-  // };
+  const { view } = useGanttChartControls();
 
   return (
-    <Card width={1280}>
-      {/* <ButtonContainer>
-        <Dropdown
-          options={options}
-          value={selectedOption}
-          onChange={handleDropdownChange}
-        />
-      </ButtonContainer> */}
+    <Card>
+      <GanttChartControls />
       <StyledCalendarContainer>
-        <CalendarHeader calendarHeader={calendar.header} view={selectedView} />
-        <CalendarBackground
-          width={calendar.width[selectedView]}
-          view={selectedView}
-        >
+        <CalendarHeader calendarHeader={calendar.header} view={view} />
+        <CalendarBackground width={calendar.width[view]} view={view}>
           {mappedProjectEngagements.map((v) => {
             return (
               <div key={v.id}>
