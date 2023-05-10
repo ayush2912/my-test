@@ -10,7 +10,6 @@ import { IMappedEngagements } from "./GanttChart.types";
 import { GanttChartControls } from "./GanttChartControls";
 import useGanttChartControls from "./useGanttChartControls";
 import Card from "../Card";
-// import Dropdown from "../Dropdown";
 
 const StyledCalendarContainer = styled.div`
   display: flex;
