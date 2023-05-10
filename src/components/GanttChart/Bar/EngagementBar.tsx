@@ -9,7 +9,7 @@ import { BarPopup } from "./BarPopup";
 import { ModalContent, ModalHeader, TextHolder } from "./ProjectBar";
 import StatusTag, { StatusType } from "../../StatusTag";
 import Text from "../../Text";
-import { IBar } from "../GanttChart.types";
+import { IMappedEngagement } from "../GanttChart.types";
 import useGanttChartControls from "../useGanttChartControls";
 
 const Container = styled.div`
@@ -20,7 +20,11 @@ const Container = styled.div`
   user-select: none;
 `;
 
-const Bar = styled.div<IBar & { focus: boolean }>`
+const Bar = styled.div<{
+  width: number;
+  offsetFromLeft: number;
+  focus: boolean;
+}>`
   display: flex;
   align-items: center;
   height: 24px;
@@ -39,16 +43,6 @@ const Bar = styled.div<IBar & { focus: boolean }>`
   ${({ focus }) => (focus ? "box-shadow: 0px 0px 0px 4px #b1c8f9;" : "")}
 `;
 
-interface EngagementData {
-  isOverdue: boolean;
-  type: string;
-  startDate: string;
-  dueDate: string;
-  completedDate: string;
-  bar: { offsetFromLeft: any; width: any };
-  state: string;
-}
-
 type EngagmentStateTypes =
   | "NOT_STARTED"
   | "IN_PROGRESS"
@@ -63,7 +57,7 @@ interface EngagementStatus {
 export const EngagementBar = ({
   engagementData,
 }: {
-  engagementData: EngagementData;
+  engagementData: IMappedEngagement;
 }) => {
   const { view } = useGanttChartControls();
 
@@ -139,7 +133,9 @@ export const EngagementBar = ({
                   Completion date : :
                 </Text>
                 <Text type="caption" color="default">
-                  {convertToEuropeanDateFormat(engagementData.completedDate)}
+                  {engagementData.completedDate
+                    ? convertToEuropeanDateFormat(engagementData.completedDate)
+                    : null}
                 </Text>
               </TextHolder>
             </ModalContent>
