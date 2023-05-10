@@ -1,13 +1,22 @@
 import { useRef, useState } from "react";
+import Flag from "react-world-flags";
 import styled from "styled-components";
 
+import EyeButton from "@/components/EyeButton";
 import { useOutsideAlerter } from "@/hooks/useOutsiderAlerter";
 
 import { BarPopup } from "./BarPopup";
+import { type } from "../../StatusTag";
 import Text from "../../Text";
 import { IBar } from "../GanttChart.types";
 
+const FlagHolder = styled.div`
+  height: 12px;
+  width: 22px;
+  margin-right: 8px;
+`;
 export const ModalHeader = styled.div`
+  width: 100%;
   display: flex;
   justify-content: space-between;
 `;
@@ -24,6 +33,9 @@ export const TextHolder = styled.div`
   gap: 4px;
 `;
 
+const CountryList = styled.div`
+  display: flex;
+`;
 const Container = styled.div`
   display: flex;
   align-items: center;
@@ -63,7 +75,7 @@ export const ProjectBar = ({ projectData }: { projectData: any }) => {
     setShowPopup(true);
     setPopupPosition({ top: event.clientY, left: event.clientX });
   };
-
+  console.log(projectData);
   return (
     <Container>
       <Bar
@@ -78,7 +90,11 @@ export const ProjectBar = ({ projectData }: { projectData: any }) => {
               <Text type="captionBold" color="default">
                 {projectData.name}
               </Text>
-              {/* <button>click</button> */}
+              <EyeButton
+                onClick={() => {
+                  console.log("clicked");
+                }}
+              />
             </ModalHeader>
 
             <ModalContent>
@@ -99,14 +115,29 @@ export const ProjectBar = ({ projectData }: { projectData: any }) => {
                   {projectData.registryProjectId}
                 </Text>
               </TextHolder>
+
               <TextHolder>
                 <Text type="caption" color="subdued">
                   Countries :
                 </Text>
-                <Text type="caption" color="default">
-                  {}
-                </Text>
+                <div style={{ display: "flex", gap: "8px" }}>
+                  {projectData.countries.map(
+                    (country: { iso3Name: string; name: string }) => (
+                      <CountryList key={country?.iso3Name}>
+                        <FlagHolder>
+                          <Flag code={country?.iso3Name} />
+                        </FlagHolder>
+                        <div>
+                          <Text type="caption" color="default">
+                            {country?.name}
+                          </Text>
+                        </div>
+                      </CountryList>
+                    ),
+                  )}
+                </div>
               </TextHolder>
+
               <TextHolder>
                 <Text type="caption" color="subdued">
                   Project type :

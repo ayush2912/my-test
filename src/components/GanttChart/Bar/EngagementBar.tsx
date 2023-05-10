@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import styled from "styled-components";
 
+import EyeButton from "@/components/EyeButton";
 import { useOutsideAlerter } from "@/hooks/useOutsiderAlerter";
 import { convertToEuropeanDateFormat } from "@/utils/dateTimeFormatter";
 
@@ -97,6 +98,11 @@ export const EngagementBar = ({
               <Text type="captionBold" color="default">
                 {engagementData.type}
               </Text>
+              <EyeButton
+                onClick={() => {
+                  console.log("clicked");
+                }}
+              />
             </ModalHeader>
             <div style={{ margin: "5px 0px" }}>
               <StatusTag
