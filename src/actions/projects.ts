@@ -1,5 +1,6 @@
 import { prisma, Prisma } from '../actions/prisma';
 import { EngagementSchema } from './engagements';
+import {GetProjectListInput} from '../interfaces/project.interface'
 
 const ProjectSchema: Prisma.ProjectSelect = {
     id: true,
@@ -84,14 +85,14 @@ export const isEngagementOverdue = (engagement: any) => {
     return false; 
 };
 
-type GetProjectsOptions = {
-    organizationIds?: string[];
-    take?: number; 
-    skip?: number;
-    tab?: string;
-}
+// type GetProjectsOptions = {
+//     organizationIds?: string[];
+//     take?: number; 
+//     skip?: number;
+//     tab?: string;
+// }
 
-const applyGetProjectsFilters = (options: GetProjectsOptions) => {
+const applyGetProjectsFilters = (options: GetProjectListInput) => {
 
     const filters: Prisma.ProjectWhereInput = {};
 
@@ -201,7 +202,22 @@ const createProject = (data: any) => {
                     dueDate: engagement.dueDate,
                     completedDate: engagement.completedDate,
                     state: engagement.state,
-                    notes: engagement.notes
+                    notes: engagement.notes,
+                    attributes: engagement.attributes ? engagement.attributes.map((attribute: any) => ({
+                        name: attribute.name,
+                        key: attribute.key,
+                        type: attribute.type,
+                        value: attribute.value
+                    })) : [],
+                    tasks: {
+                        create: engagement.tasks ? engagement.tasks.map((task: any) => ({
+                            type: task.type,
+                            startDate: task.startDate,
+                            dueDate: task.dueDate,
+                            completedDate: task.completedDate,
+                            state: task.state,          
+                        })) : []
+                    },
                 })) : []
             },
             creditingPeriodStartDate: data.creditingPeriodStartDate,
@@ -267,7 +283,7 @@ const deleteProject = async (projectId: string | undefined) => {
     });
 };
 
-const getProjects = async(options: GetProjectsOptions) => 
+const getProjects = async(options: GetProjectListInput) => 
     prisma.project.findMany({
         where: applyGetProjectsFilters(options),
         take: options.take || 10, 

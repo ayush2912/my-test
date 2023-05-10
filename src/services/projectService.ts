@@ -1,14 +1,8 @@
 import Errors from '../errors';
 import { getProjectById, getProjectEngagements, getProjects } from '../actions/projects';
 import ProjectConstants from '../utility/constants/ProjectConstants';
+import { GetProjectListInput } from '../interfaces/project.interface'
 import { type } from 'os';
-
-type GetProjectListInput = {
-    organizationIds: string[];
-    take: number;
-    skip: number;
-    tab: string;
-}
 
 /**
  * This method get project details from project id.

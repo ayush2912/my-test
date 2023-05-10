@@ -9,15 +9,9 @@ import {
     validateProjectsQueryParamsSchema
 } from '../middlewares/validation';
 import ProjectConstants from '../utility/constants/ProjectConstants';
+import { QueryParams } from "../interfaces/project.interface"
 import { string } from 'zod';
 
-
-interface QueryParams {
-    organizationIds: string
-    take: number
-    skip: number,
-    tab: string
-}
 
 export default function routes(router: Router) {
     router.get(
@@ -55,7 +49,7 @@ export default function routes(router: Router) {
             res.sendError(error);
         }
     });
-    
+
     router.get(
         '/projects',
         validateProjectsQueryParamsSchema,

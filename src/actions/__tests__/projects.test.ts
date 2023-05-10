@@ -56,6 +56,8 @@ describe('createProject()', () => {
             assetOwners: faker.helpers
                 .arrayElements(organizations)
                 .map((m) => m.id),
+            engagements: faker.helpers
+                .arrayElements(engagements, 1)
         };
 
         const result = await createProject(data);
@@ -115,8 +117,6 @@ describe('createProject()', () => {
 
         // Teardown
         await deleteProject(result.id);
-
-        // expect(result.countries).toContain('IN');
     });
 });
 
@@ -328,7 +328,6 @@ describe('deleteProject()', () => {
 
 describe('getProjects()', () => {
     test('it should get the list of projets successfully', async() => {
-        // const projectIds:any[] = []
         const organizationId = faker.helpers.arrayElement(organizations).id
 
         const projects = await prisma.$transaction(Array(10).fill(0).map(() => 
