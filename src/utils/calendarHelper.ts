@@ -13,60 +13,38 @@ function getFirstSundayOfYear(firstDayOfYear: any) {
 export const getBarInfo = (
   startDate: Date,
   dueDate: Date,
-  completedDate: Date,
+  completedDate: Date | null,
   earliestStartDate: Date,
-  view: "yearly" | "monthly" | "weekly",
 ) => {
   const barStartDate = moment(startDate).startOf("day");
-  const barCompletedDate = moment(completedDate).endOf("day");
-  const barDueDate = moment(dueDate).endOf("day");
-
-  const totalDays = (barCompletedDate || barDueDate).diff(
-    barStartDate,
-    "days",
-    true,
-  );
-
-  const totalMonths = (barCompletedDate || barDueDate).diff(
-    barStartDate,
-    "months",
-    true,
-  );
-  const totalWeeks = (barCompletedDate || barDueDate).diff(
-    barStartDate,
-    "weeks",
-    true,
-  );
-  const barWidth = {
-    monthly: totalDays * 40,
-    yearly: totalMonths * 124,
-    weekly: totalWeeks * 155,
-  }[view];
-
-  const offsetFromLeft = {
-    monthly:
-      barStartDate.diff(
-        moment(earliestStartDate).startOf("year"),
-        "days",
-        true,
-      ) * 40,
-    yearly:
-      barStartDate.diff(
-        moment(earliestStartDate).startOf("year"),
-        "months",
-        true,
-      ) * 124,
-    weekly:
-      barStartDate.diff(
-        getFirstSundayOfYear(moment(earliestStartDate).startOf("year")),
-        "weeks",
-        true,
-      ) * 155,
-  }[view];
+  const barEndDate = moment(completedDate || dueDate).endOf("day");
 
   return {
-    offsetFromLeft,
-    width: barWidth,
+    offsetFromLeft: {
+      monthly:
+        barStartDate.diff(
+          moment(earliestStartDate).startOf("year"),
+          "days",
+          true,
+        ) * 40,
+      yearly:
+        barStartDate.diff(
+          moment(earliestStartDate).startOf("year"),
+          "months",
+          true,
+        ) * 124,
+      weekly:
+        barStartDate.diff(
+          getFirstSundayOfYear(moment(earliestStartDate).startOf("year")),
+          "weeks",
+          true,
+        ) * 155,
+    },
+    width: {
+      monthly: barEndDate.diff(barStartDate, "days", true) * 40,
+      yearly: barEndDate.diff(barStartDate, "months", true) * 124,
+      weekly: barEndDate.diff(barStartDate, "weeks", true) * 155,
+    },
   };
 };
 

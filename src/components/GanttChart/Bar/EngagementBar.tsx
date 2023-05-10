@@ -6,6 +6,7 @@ import { useOutsideAlerter } from "@/hooks/useOutsiderAlerter";
 import { BarPopup } from "./BarPopup";
 import Text from "../../Text";
 import { IBar } from "../GanttChart.types";
+import useGanttChartControls from "../useGanttChartControls";
 
 const Container = styled.div`
   display: flex;
@@ -15,7 +16,7 @@ const Container = styled.div`
   user-select: none;
 `;
 
-const Bar = styled.div<IBar>`
+const Bar = styled.div<IBar & { focus: boolean }>`
   display: flex;
   align-items: center;
   height: 24px;
@@ -30,9 +31,13 @@ const Bar = styled.div<IBar>`
   &:active {
     box-shadow: 0px 0px 0px 4px #b1c8f9;
   }
+
+  ${({ focus }) => (focus ? "box-shadow: 0px 0px 0px 4px #b1c8f9;" : "")}
 `;
 
 export const EngagementBar = ({ engagementData }: { engagementData: any }) => {
+  const { view } = useGanttChartControls();
+
   const [showPopup, setShowPopup] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
 
@@ -52,9 +57,10 @@ export const EngagementBar = ({ engagementData }: { engagementData: any }) => {
     <Container>
       <Bar
         ref={popupRef}
-        width={engagementData.bar.width}
-        offsetFromLeft={engagementData.bar.offsetFromLeft}
+        width={engagementData.bar.width[view]}
+        offsetFromLeft={engagementData.bar.offsetFromLeft[view]}
         onMouseDown={handleContainerMouseDown}
+        focus={showPopup}
       >
         {showPopup && (
           <BarPopup top={popupPosition.top} left={popupPosition.left}>
