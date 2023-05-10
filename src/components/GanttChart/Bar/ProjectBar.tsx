@@ -79,7 +79,6 @@ export const ProjectBar = ({ projectData }: { projectData: any }) => {
     setShowPopup(true);
     setPopupPosition({ top: event.clientY, left: event.clientX });
   };
-  console.log(projectData);
   return (
     <Container>
       <Bar

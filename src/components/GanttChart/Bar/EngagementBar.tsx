@@ -88,7 +88,7 @@ export const EngagementBar = ({
     COMPLETED: { label: "COMPLETED", type: "success" },
     OVERDUE: { label: "OVERDUE", type: "warning" },
   }[engagementData.state] as EngagementStatus;
-  console.log(engagementData);
+
   return (
     <Container>
       <Bar
