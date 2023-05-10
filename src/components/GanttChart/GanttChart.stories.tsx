@@ -21,8 +21,6 @@ export default meta;
 const Template: StoryFn<GanttChartProps> = ({
   projectEngagementData,
 }: GanttChartProps) => {
-  const selectedView = "monthly";
-
   const calendar = memoizedCalendarData(projectEngagementData);
 
   const mappedProjectEngagements = projectEngagementData.flatMap((project) =>
@@ -30,9 +28,8 @@ const Template: StoryFn<GanttChartProps> = ({
       const engagementBar = getBarInfo(
         new Date(engagement.startDate),
         new Date(engagement.dueDate),
-        new Date(engagement.completedDate),
+        engagement.completedDate ? new Date(engagement.completedDate) : null,
         calendar.earliestStartDate,
-        selectedView,
       );
       return {
         ...engagement,
@@ -53,7 +50,6 @@ const Template: StoryFn<GanttChartProps> = ({
             new Date(task.dueDate),
             new Date(task.completedDate),
             calendar.earliestStartDate,
-            selectedView,
           ),
         })),
       };
@@ -64,7 +60,6 @@ const Template: StoryFn<GanttChartProps> = ({
       <GanttChart
         mappedProjectEngagements={mappedProjectEngagements}
         calendar={calendar}
-        selectedView={selectedView}
       />
     </div>
   );
@@ -203,7 +198,7 @@ GanttChartWithMultipleProjects.args = {
           type: "Registration",
           startDate: "2021-02-16T14:01:22Z",
           dueDate: "2022-06-14T14:15:22Z",
-          completedDate: "2022-04-29T14:15:22Z",
+          completedDate: null,
           notes: "Project Document Added",
           state: "NOT_STARTED",
           stateHistory: [
