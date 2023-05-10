@@ -517,7 +517,7 @@ describe('getProjectEngagements()', () => {
         await createEngagement(engagementData);
 
         const result = await getProjectEngagements();
-        const projectCreated = await getProject(project.id);
+        const projectCreated = await getProjectById(project.id);
         expect(result).toContainEqual(
             expect.objectContaining({
                 id: project.id,
