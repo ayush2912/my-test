@@ -1,5 +1,5 @@
 import moment from "moment";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import styled from "styled-components";
 
 import { getBarInfo, getCalendarInfo } from "@/utils/calendarHelper";
@@ -44,6 +44,14 @@ const StyledCalendarContainer = styled.div`
   overflow-x: scroll;
 `;
 
+const ButtonContainer = styled.div`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: flex-end;
+  margin-bottom: 24px;
+`;
+
 export const GanttChart = ({
   projectEngagementData,
 }: {
@@ -63,17 +71,27 @@ export const GanttChart = ({
     setSelectedOption(value);
   };
 
-  const allEngagements = projectEngagementData.map((v) => v.engagements).flat();
-  //TODO: take task dates into consideration
+  const calendar = useMemo(() => {
+    const allEngagements = projectEngagementData
+      .map((v) => v.engagements)
+      .flat();
 
-  const allStartDate = allEngagements.map((v) => moment(v.startDate));
-  const allEndDate = allEngagements.map((v) =>
-    moment(v.completedDate ? v.completedDate : v.dueDate ?? v.startDate),
-  );
-  const earliestStartDate = moment.min(allStartDate).toDate();
-  const latestEndDate = moment.max(allEndDate).toDate();
+    const allTasks = allEngagements.map((v) => v.tasks).flat();
+    console.log(allTasks);
 
-  const calendarInfo = getCalendarInfo(earliestStartDate, latestEndDate);
+    const allStartDate = allEngagements.map((v) => moment(v.startDate));
+    const allEndDate = allEngagements.map((v) =>
+      moment(v.completedDate ? v.completedDate : v.dueDate ?? v.startDate),
+    );
+    const earliestStartDate = moment.min(allStartDate).toDate();
+    const latestEndDate = moment.max(allEndDate).toDate();
+    const info = getCalendarInfo(earliestStartDate, latestEndDate);
+    return {
+      earliestStartDate,
+      latestEndDate,
+      info,
+    };
+  }, [projectEngagementData]);
 
   const mappedProjectEngagements = projectEngagementData.flatMap((project) =>
     project.engagements.map((engagement) => {
@@ -81,7 +99,7 @@ export const GanttChart = ({
         new Date(engagement.startDate),
         new Date(engagement.dueDate),
         new Date(engagement.completedDate),
-        earliestStartDate,
+        calendar.earliestStartDate,
         selectedOption,
       );
       return {
@@ -102,7 +120,7 @@ export const GanttChart = ({
             new Date(task.startDate),
             new Date(task.dueDate),
             new Date(task.completedDate),
-            earliestStartDate,
+            calendar.earliestStartDate,
             selectedOption,
           ),
         })),
@@ -112,17 +130,17 @@ export const GanttChart = ({
 
   return (
     <Card width={1280}>
-      <div style={{ width: "500px" }}>
+      <ButtonContainer>
         <Dropdown
           options={options}
           value={selectedOption}
           onChange={handleDropdownChange}
         />
-      </div>
+      </ButtonContainer>
       <StyledCalendarContainer>
-        <CalendarHeader calendarInfo={calendarInfo} view={selectedOption} />
+        <CalendarHeader calendarInfo={calendar.info} view={selectedOption} />
         <CalendarBackground
-          width={Number(calendarInfo.calendarWidth[selectedOption])}
+          width={calendar.info.calendarWidth[selectedOption]}
           view={selectedOption}
         >
           {mappedProjectEngagements.map((v) => {

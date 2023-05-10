@@ -33,7 +33,9 @@ export const ProjectBar = ({ projectData }: { projectData: any }) => {
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
 
   const popupRef = useRef(null);
-  useOutsideAlerter(popupRef, () => setShowPopup(false));
+  useOutsideAlerter(popupRef, () => {
+    if (showPopup) setShowPopup(false);
+  });
 
   const handleContainerMouseDown = (
     event: React.MouseEvent<HTMLDivElement>,
