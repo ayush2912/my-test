@@ -32,8 +32,7 @@ const Bar = styled.div<{
   border-radius: 4px;
   margin-left: ${({ offsetFromLeft }) => offsetFromLeft}px;
   cursor: pointer;
-
-  justify-content: center;
+  padding: 4px 8px;
   background-color: ${(props) => props.theme.colors.primary[600]};
 
   &:active {
@@ -142,7 +141,7 @@ export const EngagementBar = ({
           </BarPopup>
         )}
         <Text type="caption" color="white">
-          engagement
+          {engagementData.type}
         </Text>
       </Bar>
     </Container>

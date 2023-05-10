@@ -75,7 +75,7 @@ GanttChartWithoutEngagements.args = {
   projectEngagementData: [
     {
       id: "6438f5f51725504e53c94356",
-      name: "name of the project",
+      name: "150 MW Solar Project in Karnataka by Avaada Solar",
       registry: {
         id: "6438f5f51725504e53c94356",
         name: "Verra",
@@ -108,7 +108,7 @@ GanttChartWithoutTasks.args = {
   projectEngagementData: [
     {
       id: "6438f5f51725504e53c94356",
-      name: "name of the project",
+      name: "150 MW Solar Project in Karnataka by Avaada Solar",
       registry: {
         id: "6438f5f51725504e53c94356",
         name: "Verra",
@@ -170,7 +170,7 @@ GanttChartWithMultipleProjects.args = {
   projectEngagementData: [
     {
       id: "6438f5f51725504e53c94356",
-      name: "name of the project",
+      name: "150 MW Solar Project in Karnataka by Avaada Solar",
       registry: {
         id: "6438f5f51725504e53c94356",
         name: "Verra",
@@ -263,7 +263,7 @@ GanttChartWithMultipleProjects.args = {
     },
     {
       id: "6438f5f517255dfde53c94356",
-      name: "name of the project",
+      name: "150 MW Solar Project in Karnataka by Avaada Solar",
       registry: {
         id: "6438f5f51725504e53c94356",
         name: "Verra",

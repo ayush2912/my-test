@@ -6,7 +6,6 @@ import EyeButton from "@/components/EyeButton";
 import { useOutsideAlerter } from "@/hooks/useOutsiderAlerter";
 
 import { BarPopup } from "./BarPopup";
-import { type } from "../../StatusTag";
 import Text from "../../Text";
 import { IBar } from "../GanttChart.types";
 import useGanttChartControls from "../useGanttChartControls";

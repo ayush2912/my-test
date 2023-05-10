@@ -31,8 +31,7 @@ const Bar = styled.div<{
   border-radius: 4px;
   margin-left: ${({ offsetFromLeft }) => offsetFromLeft}px;
   cursor: pointer;
-
-  justify-content: center;
+  padding: 4px 8px;
   border: 2px solid #8aadf7;
   background-color: #8aadf7;
   overflow: hidden;
@@ -132,7 +131,7 @@ export const TaskBar = ({ taskData }: { taskData: Task & { bar: IBar } }) => {
           </BarPopup>
         )}
         <Text type="caption" color="default">
-          Task 1
+          {taskData.type}
         </Text>
       </Bar>
     </Container>
