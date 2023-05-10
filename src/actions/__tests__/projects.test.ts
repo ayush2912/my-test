@@ -428,7 +428,12 @@ describe('getProjects()', () => {
 
     it('returns null if the organization does not exist', async () => {
         const organizationId = '5116591277702d2113142ebc';
-        const result = await getProjects({organizationIds: [organizationId], take: 10, skip: 0});
+        const result = await getProjects({
+            organizationIds: [ organizationId ],
+            take: 10,
+            skip: 0,
+            tab: 'ACTIVE'
+        });
         expect(result).toEqual([]);
     });
 });
