@@ -1,11 +1,15 @@
 import { useRef, useState } from "react";
 import styled from "styled-components";
 
+import EyeButton from "@/components/EyeButton";
 import { useOutsideAlerter } from "@/hooks/useOutsiderAlerter";
+import { convertToEuropeanDateFormat } from "@/utils/dateTimeFormatter";
 
 import { BarPopup } from "./BarPopup";
+import { ModalContent, ModalHeader, TextHolder } from "./ProjectBar";
+import StatusTag, { StatusType } from "../../StatusTag";
 import Text from "../../Text";
-import { IBar } from "../GanttChart.types";
+import { IMappedEngagement } from "../GanttChart.types";
 import useGanttChartControls from "../useGanttChartControls";
 
 const Container = styled.div`
@@ -16,7 +20,11 @@ const Container = styled.div`
   user-select: none;
 `;
 
-const Bar = styled.div<IBar & { focus: boolean }>`
+const Bar = styled.div<{
+  width: number;
+  offsetFromLeft: number;
+  focus: boolean;
+}>`
   display: flex;
   align-items: center;
   height: 24px;
@@ -24,8 +32,7 @@ const Bar = styled.div<IBar & { focus: boolean }>`
   border-radius: 4px;
   margin-left: ${({ offsetFromLeft }) => offsetFromLeft}px;
   cursor: pointer;
-
-  justify-content: center;
+  padding: 4px 8px;
   background-color: ${(props) => props.theme.colors.primary[600]};
 
   &:active {
@@ -35,7 +42,22 @@ const Bar = styled.div<IBar & { focus: boolean }>`
   ${({ focus }) => (focus ? "box-shadow: 0px 0px 0px 4px #b1c8f9;" : "")}
 `;
 
-export const EngagementBar = ({ engagementData }: { engagementData: any }) => {
+type EngagmentStateTypes =
+  | "NOT_STARTED"
+  | "IN_PROGRESS"
+  | "DISCONTINUED"
+  | "COMPLETED"
+  | "OVERDUE";
+interface EngagementStatus {
+  label: EngagmentStateTypes;
+  type: StatusType;
+}
+
+export const EngagementBar = ({
+  engagementData,
+}: {
+  engagementData: IMappedEngagement;
+}) => {
   const { view } = useGanttChartControls();
 
   const [showPopup, setShowPopup] = useState(false);
@@ -52,6 +74,13 @@ export const EngagementBar = ({ engagementData }: { engagementData: any }) => {
     setShowPopup(true);
     setPopupPosition({ top: event.clientY, left: event.clientX });
   };
+  const statusTag = {
+    NOT_STARTED: { label: "NOT STARTED", type: "disabled" },
+    IN_PROGRESS: { label: "IN PROGRESS", type: "information" },
+    DISCONTINUED: { label: "DISCONTINUED", type: "error" },
+    COMPLETED: { label: "COMPLETED", type: "success" },
+    OVERDUE: { label: "OVERDUE", type: "warning" },
+  }[engagementData.state] as EngagementStatus;
 
   return (
     <Container>
@@ -64,11 +93,55 @@ export const EngagementBar = ({ engagementData }: { engagementData: any }) => {
       >
         {showPopup && (
           <BarPopup top={popupPosition.top} left={popupPosition.left}>
-            This is the popup content.
+            <ModalHeader>
+              <Text type="captionBold" color="default">
+                {engagementData.type}
+              </Text>
+              <EyeButton
+                onClick={() => {
+                  console.log("clicked");
+                }}
+              />
+            </ModalHeader>
+            <div style={{ margin: "5px 0px" }}>
+              <StatusTag
+                name={statusTag.label}
+                type={engagementData.isOverdue ? "warning" : statusTag.type}
+              />
+            </div>
+            <ModalContent>
+              <TextHolder>
+                <Text type="caption" color="subdued">
+                  Start date :
+                </Text>
+                <Text type="caption" color="default">
+                  {convertToEuropeanDateFormat(engagementData.startDate)}
+                </Text>
+              </TextHolder>
+
+              <TextHolder>
+                <Text type="caption" color="subdued">
+                  Due date :
+                </Text>
+                <Text type="caption" color="default">
+                  {convertToEuropeanDateFormat(engagementData.dueDate)}
+                </Text>
+              </TextHolder>
+              <TextHolder>
+                <Text type="caption" color="subdued">
+                  Completion date : :
+                </Text>
+                <Text type="caption" color="default">
+                  {engagementData.completedDate
+                    ? convertToEuropeanDateFormat(engagementData.completedDate)
+                    : null}
+                </Text>
+              </TextHolder>
+            </ModalContent>
           </BarPopup>
         )}
         <Text type="caption" color="white">
-          engagement
+          {engagementData.type}
         </Text>
       </Bar>
     </Container>

@@ -49,7 +49,6 @@ export interface Task {
   isOverdue: boolean;
   state: string;
   stateHistory: StateHistory[];
-  bar?: IBar;
   createdAt: string;
   updatedAt: string;
 }
@@ -67,7 +66,6 @@ export interface Engagement {
   isOverdue: boolean;
   attributes: Attribute[];
   tasks: Task[];
-  bar?: IBar;
   createdAt: string;
   updatedAt: string;
 }
@@ -85,7 +83,21 @@ export interface ProjectEngagement {
   updatedAt: string;
 }
 
-export interface IMappedEngagement extends Engagement {
+export interface IMappedEngagement {
+  id: string;
+  projectId: string;
+  type: string;
+  startDate: string;
+  dueDate: string;
+  completedDate: string | null;
+  notes: string;
+  state: string;
+  stateHistory: StateHistory[];
+  isOverdue: boolean;
+  attributes: Attribute[];
+
+  createdAt: string;
+  updatedAt: string;
   project: {
     id: string;
     name: string;
@@ -95,6 +107,8 @@ export interface IMappedEngagement extends Engagement {
     countries: Country[];
     bar: IBar;
   };
+  bar: IBar;
+  tasks: (Task & { bar: IBar })[];
 }
 
 export type IMappedEngagements = IMappedEngagement[];

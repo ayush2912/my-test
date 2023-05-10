@@ -13,6 +13,7 @@ type Story = StoryObj<typeof ProjectListTable>;
 
 const projectLists: ProjectRowItem[] = [
   {
+    id: "6438f5f51725504e53c94356",
     projectName:
       "Songtao, Tongren, Wanshan and Yuping Rural Methane Songtao, Tongren, Wanshan and Yuping Rural Methane",
     registryName: "verra",
@@ -57,6 +58,7 @@ const projectLists: ProjectRowItem[] = [
     },
   },
   {
+    id: "6438f5f517255043c94356",
     projectName:
       "Songtao, Tongren, Wanshan and Yuping Rural Methane Songtao, Tongren, Wanshan and Yuping Rural Methane",
     registryName: "verra",
@@ -101,6 +103,7 @@ const projectLists: ProjectRowItem[] = [
     },
   },
   {
+    id: "645f51725504e53c94356",
     projectName: "Songtao, Tongren, Wanshan and Yuping Rural Methane",
     registryName: "verra",
     registryId: "123",
@@ -130,6 +133,7 @@ const projectLists: ProjectRowItem[] = [
     },
   },
   {
+    id: "6c94356",
     projectName:
       "Songtao, Tongren, Wanshan and Yuping Rural MethaneSongtao, Tongren, Wanshan and Yuping Rural Methane Songtao, Tongren, Wanshan and Yuping Rural Methane",
     registryName: "verra",
@@ -185,8 +189,20 @@ const headers: Headers[] = [
     fieldName: "annualApproximateCreditVolume",
   },
   { name: "LATEST ENGAGEMENT STATE & DUE DATE", fieldName: "engagement" },
+  { name: "", fieldName: "viewButton" },
 ];
 
 export const Primary: Story = {
-  render: () => <ProjectListTable headers={headers} tableData={projectLists} />,
+  render: () => {
+    const showId = (id: any) => {
+      console.log(id);
+    };
+    return (
+      <ProjectListTable
+        headers={headers}
+        tableData={projectLists}
+        onViewButton={showId}
+      />
+    );
+  },
 };

@@ -1,7 +1,9 @@
 import Flag from "react-world-flags";
 import styled from "styled-components";
 
+import EyeButton from "../../../components/EyeButton";
 import Icon, { IconNameType } from "../../../components/Icon";
+import EngagementTable from "../../../components/Table";
 import Text from "../../../components/Text";
 import { convertToEuropeanDateFormat } from "../../../utils/dateTimeFormatter";
 
@@ -36,24 +38,8 @@ const FlagHolder = styled.div`
   width: 22px;
 `;
 
-const EyeButton = styled.button`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  padding: 8px;
-  gap: 8px;
-  width: 32px;
-  height: 32px;
-  background: #ffffff;
-  border: 1px solid #e1e4e8;
-  border-radius: 8px;
-  &:hover {
-    background-color: #bdc3c7;
-  }
-`;
-
 export interface ProjectRowItem {
+  id: string;
   projectName: string;
   registryName: string;
   registryId: string;
@@ -79,9 +65,11 @@ export interface Headers {
 function ProjectListTable({
   headers,
   tableData,
+  onViewButton,
 }: {
   headers: Headers[];
   tableData: ProjectRowItem[];
+  onViewButton: (id: string) => void;
 }) {
   const cellContentMapper = (v: ProjectRowItem) => {
     const selectedIconName = {
@@ -170,39 +158,15 @@ function ProjectListTable({
           </div>
         </Content>
       ),
+      viewButton: <EyeButton onClick={() => onViewButton(v.id)} />,
     };
   };
-
   return (
-    <Table>
-      <thead>
-        <tr>
-          {headers.map((header) => (
-            <TableHeader key={header.fieldName}>
-              <Text type="smallTextBold" color="subdued">
-                {header.name}
-              </Text>
-            </TableHeader>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {tableData.map(cellContentMapper).map((rowItem: any, index) => (
-          <TableRow key={index}>
-            {headers.map((header) => (
-              <TableColumn key={header.fieldName}>
-                {rowItem[header.fieldName]}
-              </TableColumn>
-            ))}
-            <TableColumn>
-              <EyeButton onClick={() => console.log("clicked")}>
-                <Icon name="eyeIcon" />
-              </EyeButton>
-            </TableColumn>
-          </TableRow>
-        ))}
-      </tbody>
-    </Table>
+    <EngagementTable
+      headers={headers}
+      tableData={tableData}
+      cellContentMapper={cellContentMapper}
+    />
   );
 }
 export default ProjectListTable;
