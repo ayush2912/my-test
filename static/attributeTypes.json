@@ -1,0 +1,56 @@
+[
+    {
+        "engagementType": "Registration",
+        "name": "Registration Date",
+        "key": "REGISTRATION_DATE",
+        "type": "Date"
+    },
+    {
+        "engagementType": "Issuance",
+        "name": "Monitoring Period",
+        "key": "MONITORING_PERIOD",
+        "type": "Date Range"
+    },
+    {
+        "engagementType": "Issuance",
+        "name": "Quantity Issued",
+        "key": "QUANTITY_ISSUED",
+        "type": "Number"
+    },
+    {
+        "engagementType": "Issuance",
+        "name": "Issuance Date",
+        "key": "ISSUANCE_DATE",
+        "type": "Date"
+    },
+    {
+        "engagementType": "Issuance",
+        "name": "Serial No",
+        "key": "SERIAL_NO",
+        "type": "Alphanumeric"
+    },
+    {
+        "engagementType": "Issuance",
+        "name": "SDG Goals",
+        "key": "SDG_GOALS",
+        "type": "Number"
+    },
+    {
+        "engagementType": "Issuance",
+        "name": "Additional Certification",
+        "key": "ADDITIONAL_CERTIFICATION",
+        "type": "String"
+    },
+    {
+        "engagementType": "Issuance",
+        "name": "Vintage Range",
+        "key": "VINTAGE_RANGE",
+        "type": "Year"
+    },
+    {
+        "engagementType": "Issuance",
+        "name": "Vintage",
+        "key": "VINTAGE",
+        "type": "Year"
+    }
+]
