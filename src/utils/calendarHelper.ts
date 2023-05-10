@@ -177,3 +177,32 @@ export const getCalendarInfo = (
     },
   };
 };
+
+export const memoizeProjectEngagementData = (projectEngagementData: any) => {
+  const allEngagements = projectEngagementData
+    .map((v: any) => v.engagements)
+    .flat();
+
+  const allTasks = allEngagements.map((v: any) => v.tasks).flat();
+
+  const allStartDate = [
+    ...allEngagements.map((v: any) => moment(v.startDate)),
+    ...allTasks.map((v: any) => moment(v.startDate)),
+  ];
+  const allEndDate = [
+    ...allEngagements.map((v: any) =>
+      moment(v.completedDate ? v.completedDate : v.dueDate ?? v.startDate),
+    ),
+    ...allTasks.map((v: any) =>
+      moment(v.completedDate ? v.completedDate : v.dueDate ?? v.startDate),
+    ),
+  ];
+  const earliestStartDate = moment.min(allStartDate).toDate();
+  const latestEndDate = moment.max(allEndDate).toDate();
+  const info = getCalendarInfo(earliestStartDate, latestEndDate);
+  return {
+    earliestStartDate,
+    latestEndDate,
+    info,
+  };
+};

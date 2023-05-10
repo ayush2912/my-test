@@ -1,8 +1,12 @@
 import moment from "moment";
-import { useMemo, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import styled from "styled-components";
 
-import { getBarInfo, getCalendarInfo } from "@/utils/calendarHelper";
+import {
+  getBarInfo,
+  memoizeProjectEngagementData,
+  getCalendarInfo,
+} from "@/utils/calendarHelper";
 
 import { CalendarHeader } from "./CalendarHeader";
 import { EngagementBar } from "./EngagementBar";
@@ -53,13 +57,17 @@ const ButtonContainer = styled.div`
 `;
 
 export const GanttChart = ({
+  mappedProjectEngagements,
   projectEngagementData,
+  selectedView,
 }: {
+  mappedProjectEngagements?: any;
   projectEngagementData: ProjectEngagement[];
+  selectedView?: string;
 }) => {
   const [selectedOption, setSelectedOption] = useState<
     "yearly" | "monthly" | "weekly"
-  >("monthly");
+  >(selectedView || "monthly");
 
   const options = [
     { value: "monthly", label: "monthly" },
@@ -72,68 +80,15 @@ export const GanttChart = ({
   };
 
   const calendar = useMemo(() => {
-    const allEngagements = projectEngagementData
-      .map((v) => v.engagements)
-      .flat();
+    const { earliestStartDate, latestEndDate, info } =
+      memoizeProjectEngagementData(projectEngagementData);
 
-    const allTasks = allEngagements.map((v) => v.tasks).flat();
-
-    const allStartDate = [
-      ...allEngagements.map((v) => moment(v.startDate)),
-      ...allTasks.map((v) => moment(v.startDate)),
-    ];
-    const allEndDate = [
-      ...allEngagements.map((v) =>
-        moment(v.completedDate ? v.completedDate : v.dueDate ?? v.startDate),
-      ),
-      ...allTasks.map((v) =>
-        moment(v.completedDate ? v.completedDate : v.dueDate ?? v.startDate),
-      ),
-    ];
-    const earliestStartDate = moment.min(allStartDate).toDate();
-    const latestEndDate = moment.max(allEndDate).toDate();
-    const info = getCalendarInfo(earliestStartDate, latestEndDate);
     return {
       earliestStartDate,
       latestEndDate,
       info,
     };
   }, [projectEngagementData]);
-
-  const mappedProjectEngagements = projectEngagementData.flatMap((project) =>
-    project.engagements.map((engagement) => {
-      const engagementBar = getBarInfo(
-        new Date(engagement.startDate),
-        new Date(engagement.dueDate),
-        new Date(engagement.completedDate),
-        calendar.earliestStartDate,
-        selectedOption,
-      );
-      return {
-        ...engagement,
-        bar: engagementBar,
-        project: {
-          id: project.id,
-          name: project.name,
-          registry: project.registry,
-          registryProjectId: project.registryProjectId,
-          types: project.types,
-          countries: project.countries,
-          bar: engagementBar,
-        },
-        tasks: engagement.tasks.map((task) => ({
-          ...task,
-          bar: getBarInfo(
-            new Date(task.startDate),
-            new Date(task.dueDate),
-            new Date(task.completedDate),
-            calendar.earliestStartDate,
-            selectedOption,
-          ),
-        })),
-      };
-    }),
-  );
 
   return (
     <Card width={1280}>
@@ -150,12 +105,12 @@ export const GanttChart = ({
           width={calendar.info.calendarWidth[selectedOption]}
           view={selectedOption}
         >
-          {mappedProjectEngagements.map((v) => {
+          {mappedProjectEngagements.map((v: any) => {
             return (
               <>
                 <ProjectBar key={v.id} projectData={v.project} />
                 <EngagementBar key={v.id} engagementData={v} />
-                {v.tasks.map((v) => (
+                {v.tasks.map((v: any) => (
                   <TaskBar key={v.id} taskData={v} />
                 ))}
               </>
