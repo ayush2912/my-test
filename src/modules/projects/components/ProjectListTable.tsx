@@ -97,11 +97,12 @@ function ProjectListTable({
       OVERDUE: "OVERDUE",
     }[v.engagement.state] as ProjectStateTypes;
 
-    const iconTooltip =
-      statusLabel +
-      (statusLabel === "COMPLETED"
-        ? " ON " + convertToMonthNameFormat(v.engagement.dueDate)
-        : "");
+    const iconTooltip = v.engagement.isOverdue
+      ? "OVERDUE"
+      : statusLabel +
+        (statusLabel === "COMPLETED"
+          ? " ON " + convertToMonthNameFormat(v.engagement.dueDate)
+          : "");
     return {
       projectName: (
         <Tooltip text={v.projectName}>
