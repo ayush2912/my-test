@@ -1,7 +1,7 @@
 import { memo } from "react";
 
 import { engagementlistmockdata } from "../../components/GanttChart/engagementlistmockdata";
-import { memoizeProjectEngagementData } from "../calendarHelper";
+import { memoizedCalendarData } from "../calendarHelper";
 
 const memoizedProjectEngagementData = {
   earliestStartDate: "2021-01-16T14:01:22.000Z",
@@ -1418,9 +1418,9 @@ const memoizedProjectEngagementData = {
 };
 
 test("memoizeProjectEngagementData()", () => {
-  const results = memoizeProjectEngagementData(engagementlistmockdata);
+  const results = memoizedCalendarData(engagementlistmockdata);
 
-  expect(results).toEqual(memoizeProjectEngagementData);
+  expect(results).toEqual(memoizedCalendarData);
 });
 
 test("memoizeProjectEngagementData() without tasks", () => {
@@ -1483,7 +1483,7 @@ test("memoizeProjectEngagementData() without tasks", () => {
     },
   ];
 
-  const results = memoizeProjectEngagementData(data);
+  const results = memoizedCalendarData(data);
 
   console.log(results);
 
@@ -1521,7 +1521,7 @@ test("memoizeProjectEngagementData() without engagements", () => {
     },
   ];
 
-  const results = memoizeProjectEngagementData(data);
+  const results = memoizedCalendarData(data);
 
   console.log(results);
 
@@ -1565,7 +1565,7 @@ test("memoizeProjectEngagementData() with multiple countries", () => {
     },
   ];
 
-  const results = memoizeProjectEngagementData(data);
+  const results = memoizedCalendarData(data);
 
   console.log(results);
 

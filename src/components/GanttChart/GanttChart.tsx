@@ -1,42 +1,14 @@
-import moment from "moment";
-import { memo, useMemo, useState } from "react";
 import styled from "styled-components";
 
-import {
-  getBarInfo,
-  memoizeProjectEngagementData,
-  getCalendarInfo,
-} from "@/utils/calendarHelper";
-
-import { CalendarHeader } from "./CalendarHeader";
-import { EngagementBar } from "./EngagementBar";
-import { ProjectEngagement } from "./GanttChart.types";
-import { ProjectBar } from "./ProjectBar";
-import { TaskBar } from "./TaskBar";
+import { EngagementBar } from "./Bar/EngagementBar";
+import { ProjectBar } from "./Bar/ProjectBar";
+import { TaskBar } from "./Bar/TaskBar";
+import { ICalendar, TemporalView } from "./Calendar/Calendar.type";
+import { CalendarBackground } from "./Calendar/CalendarBackground";
+import { CalendarHeader } from "./Calendar/CalendarHeader";
+import { IMappedEngagements } from "./GanttChart.types";
 import Card from "../Card";
-import Dropdown from "../Dropdown";
-
-const CalendarBackground = styled.div<{
-  width: number;
-  view: "yearly" | "monthly" | "weekly";
-}>`
-  display: flex;
-  flex-direction: column;
-  width: ${({ width }) => width}px;
-  height: 600px;
-  border: 1px solid #f1f2f4;
-  background-color: #ffffff;
-  background-image: linear-gradient(
-      to right,
-      rgba(225, 228, 232, 0.5) 1px,
-      transparent 1px
-    ),
-    linear-gradient(to bottom, transparent 40px, rgba(241, 242, 244, 0.5) 1px);
-
-  background-size: ${({ view }) =>
-      ({ weekly: 155, monthly: 40, yearly: 124 }[view])}px
-    80px;
-`;
+// import Dropdown from "../Dropdown";
 
 const StyledCalendarContainer = styled.div`
   display: flex;
@@ -58,62 +30,49 @@ const ButtonContainer = styled.div`
 
 export const GanttChart = ({
   mappedProjectEngagements,
-  projectEngagementData,
-  selectedView,
+  calendar,
+  selectedView = "monthly",
 }: {
-  mappedProjectEngagements?: any;
-  projectEngagementData: ProjectEngagement[];
-  selectedView?: string;
+  mappedProjectEngagements: IMappedEngagements;
+  calendar: ICalendar;
+  selectedView: TemporalView;
 }) => {
-  const [selectedOption, setSelectedOption] = useState<
-    "yearly" | "monthly" | "weekly"
-  >(selectedView || "monthly");
+  // const [selectedOption, setSelectedOption] = useState<TemporalView>("monthly");
 
-  const options = [
-    { value: "monthly", label: "monthly" },
-    { value: "yearly", label: "yearly" },
-    { value: "weekly", label: "weekly" },
-  ];
+  // const options = [
+  //   { value: "monthly", label: "monthly" },
+  //   { value: "yearly", label: "yearly" },
+  //   { value: "weekly", label: "weekly" },
+  // ];
 
-  const handleDropdownChange = (value: "yearly" | "monthly" | "weekly") => {
-    setSelectedOption(value);
-  };
-
-  const calendar = useMemo(() => {
-    const { earliestStartDate, latestEndDate, info } =
-      memoizeProjectEngagementData(projectEngagementData);
-
-    return {
-      earliestStartDate,
-      latestEndDate,
-      info,
-    };
-  }, [projectEngagementData]);
+  // const handleDropdownChange = (value: "yearly" | "monthly" | "weekly") => {
+  //   setSelectedOption(value);
+  // };
 
   return (
     <Card width={1280}>
-      <ButtonContainer>
+      {/* <ButtonContainer>
         <Dropdown
           options={options}
           value={selectedOption}
           onChange={handleDropdownChange}
         />
-      </ButtonContainer>
+      </ButtonContainer> */}
       <StyledCalendarContainer>
-        <CalendarHeader calendarInfo={calendar.info} view={selectedOption} />
+        <CalendarHeader calendarHeader={calendar.header} view={selectedView} />
         <CalendarBackground
-          width={calendar.info.calendarWidth[selectedOption]}
-          view={selectedOption}
+          width={calendar.width[selectedView]}
+          view={selectedView}
         >
-          {mappedProjectEngagements.map((v: any) => {
+          {mappedProjectEngagements.map((v) => {
             return (
-              <>
-                <ProjectBar key={v.id} projectData={v.project} />
-                <EngagementBar key={v.id} engagementData={v} />
-                {v.tasks.map((v: any) => (
+              <div key={v.id}>
+                <ProjectBar key={v.id + "p"} projectData={v.project} />
+                <EngagementBar key={v.id + "e"} engagementData={v} />
+                {v.tasks.map((v) => (
                   <TaskBar key={v.id} taskData={v} />
                 ))}
-              </>
+              </div>
             );
           })}
         </CalendarBackground>

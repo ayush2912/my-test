@@ -1,10 +1,7 @@
 import type { Meta } from "@storybook/react";
 import { StoryFn } from "@storybook/react";
 
-import {
-  getBarInfo,
-  memoizeProjectEngagementData,
-} from "@/utils/calendarHelper";
+import { getBarInfo, memoizedCalendarData } from "@/utils/calendarHelper";
 
 import { engagementlistmockdata } from "./engagementlistmockdata";
 import { GanttChart } from "./GanttChart";
@@ -12,10 +9,9 @@ import { ProjectEngagement } from "./GanttChart.types";
 
 interface GanttChartProps {
   projectEngagementData: ProjectEngagement[];
-  mappedProjectEngagements: any;
 }
 
-const meta: Meta<GanttChartProps> = {
+const meta: Meta = {
   title: "GanttChart",
   component: GanttChart,
 };
@@ -27,7 +23,7 @@ const Template: StoryFn<GanttChartProps> = ({
 }: GanttChartProps) => {
   const selectedView = "monthly";
 
-  const calendar = memoizeProjectEngagementData(projectEngagementData);
+  const calendar = memoizedCalendarData(projectEngagementData);
 
   const mappedProjectEngagements = projectEngagementData.flatMap((project) =>
     project.engagements.map((engagement) => {
@@ -63,12 +59,11 @@ const Template: StoryFn<GanttChartProps> = ({
       };
     }),
   );
-
   return (
     <div style={{ width: 1000, boxSizing: "border-box" }}>
       <GanttChart
         mappedProjectEngagements={mappedProjectEngagements}
-        projectEngagementData={projectEngagementData}
+        calendar={calendar}
         selectedView={selectedView}
       />
     </div>
@@ -203,7 +198,7 @@ GanttChartWithMultipleProjects.args = {
       isActive: true,
       engagements: [
         {
-          id: "6438f5f51725504e53c94347",
+          id: "6438f5f5172fef504e53c94347",
           projectId: "6438f5f51725504e53c94356",
           type: "Registration",
           startDate: "2021-02-16T14:01:22Z",
@@ -228,7 +223,7 @@ GanttChartWithMultipleProjects.args = {
           ],
           tasks: [
             {
-              id: "63b863d2fdbf66b24e1e9f12",
+              id: "63b863d2fdfghgfh66b24e1e9f12",
               engagementId: "63bd887fa62f3170407d1c42",
               type: "Project Design Document",
               startDate: "2021-03-11T00:00:00Z",
@@ -246,7 +241,7 @@ GanttChartWithMultipleProjects.args = {
               updatedAt: "2023-04-24T14:15:22Z",
             },
             {
-              id: "63b863d2fdbf6223b24e1e9f12",
+              id: "63b863d2fdbf62ashgthg24e1e9f12",
               engagementId: "63bd887fa62f3170407d1c42",
               type: "Project Design Document",
               startDate: "2021-02-11T00:00:00Z",
@@ -272,7 +267,7 @@ GanttChartWithMultipleProjects.args = {
       updatedAt: "2023-06-08T16:00:00.000Z",
     },
     {
-      id: "6438f5f51725504e53c94356",
+      id: "6438f5f517255dfde53c94356",
       name: "name of the project",
       registry: {
         id: "6438f5f51725504e53c94356",
@@ -296,7 +291,7 @@ GanttChartWithMultipleProjects.args = {
       isActive: true,
       engagements: [
         {
-          id: "6438f5f51725504e53c94347",
+          id: "6438f5f517255023453c94347",
           projectId: "6438f5f51725504e53c94356",
           type: "Registration",
           startDate: "2021-01-16T14:01:22Z",
@@ -339,7 +334,7 @@ GanttChartWithMultipleProjects.args = {
               updatedAt: "2023-04-24T14:15:22Z",
             },
             {
-              id: "63b863d2fdbf6223b24e1e9f12",
+              id: "63b863d2fdbasdf223b24e1e9f12",
               engagementId: "63bd887fa62f3170407d1c42",
               type: "Project Design Document",
               startDate: "2021-02-11T00:00:00Z",
