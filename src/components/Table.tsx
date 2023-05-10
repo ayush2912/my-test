@@ -47,7 +47,7 @@ const CellContent = styled.div`
   }
 `;
 
-function EngagementTable({
+function Table({
   headers,
   tableData,
   cellContentMapper,
@@ -90,4 +90,4 @@ function EngagementTable({
   );
 }
 
-export default EngagementTable;
+export default Table;
