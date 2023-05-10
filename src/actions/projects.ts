@@ -1,3 +1,4 @@
+import { ObjectId } from 'bson';
 import { prisma, Prisma } from './prisma';
 
 const TaskSchema: Prisma.TaskSelect = {
@@ -82,32 +83,35 @@ const ProjectSchema: Prisma.ProjectSelect = {
                     key: true,
                 },
             },
+            strapiId: true,
+            createdAt: true,
+            updatedAt: true,
             tasks: {
                 select: TaskSchema,
                 orderBy: [{ startDate: 'asc' }, { type: 'asc' }],
             },
-            createdAt: true,
-            updatedAt: true
         },
         orderBy: [{ startDate: 'asc' }, { type: 'asc' }],
     },
     creditingPeriodStartDate: true,
     creditingPeriodEndDate: true,
     annualApproximateCreditVolume: true,
-    portfolioOwner: {
-        select: {
-            id: true,
-            name: true,
-        },
-    },
-    assetOwners: {
-        select: {
-            id: true,
-            name: true,
-        },
-    },
+    // portfolioOwner: {
+    //     select: {
+    //         id: true,
+    //         name: true,
+    //     },
+    // },
+    // assetOwners: {
+    //     select: {
+    //         id: true,
+    //         name: true,
+    //     },
+    // },
+    strapiId: true,
     createdAt: true,
-    updatedAt: true
+    updatedAt: true,
+
 };
 
 const getProject = async (projectId: string) =>
@@ -119,12 +123,14 @@ const getProject = async (projectId: string) =>
     });
 
 const createProject = (data: any) => {
+
+
     return prisma.project.create({
         data: {
             name: data.name,
             registry: {
                 connect: {
-                    id: data.registry,
+                    [ObjectId.isValid(data.registry) ? "id" : "name"]: ObjectId.isValid(data.registry) ? data.registry : data.registry
                 },
             },
             registryProjectId: data.registryProjectId,
@@ -136,48 +142,73 @@ const createProject = (data: any) => {
             },
             states: data.states,
             methodologies: {
-                connect: data.methodologies.map((methodologyId: string) => ({
-                    id: methodologyId,
-                })),
+                connect: data.methodologies.map((methodology: string) => {
+                    if (ObjectId.isValid(methodology)) {
+                        return { id: methodology };
+                    } else {
+                        return { code: methodology };
+                    }
+                }),
             },
             types: {
                 connect: [
                     {
-                        id: data.type,
-                    },
+                        [ObjectId.isValid(data.type) ? "id" : "name"]: ObjectId.isValid(data.type) ? data.type : data.type
+                    }
                 ],
             },
             subTypes: {
                 connect: [
                     {
-                        id: data.subType,
+                        [ObjectId.isValid(data.subType) ? "id" : "name"]: ObjectId.isValid(data.subType) ? data.subType : data.subType
                     },
                 ],
             },
             notes: data.notes,
             engagements: {
-                connect: data.engagements
-                    ? data.engagements.map((engagementId: string) => ({
-                        id: engagementId,
-                    }))
-                    : [],
+                create: data.engagements ? data.engagements.map((engagement: any) => ({
+                    type: engagement.type,
+                    startDate: engagement.startDate,
+                    dueDate: engagement.dueDate,
+                    completedDate: engagement.completedDate,
+                    state: engagement.state,
+                    notes: engagement.notes,
+                    attributes: engagement.attributes ? engagement.attributes.map((attribute: any) => ({
+                        name: attribute.name,
+                        type: attribute.type,
+                        value: attribute.value,
+                        strapiId: attribute.strapiId
+                    })) : [],
+                    tasks: {
+                        create: engagement.tasks.map((task: any) => ({
+                            type: task.type,
+                            startDate: task.startDate,
+                            dueDate: task.dueDate,
+                            completedDate: task.completedDate,
+                            state: task.state,
+                            strapiId: task.strapiId
+                        }))
+                    },
+                    strapiId: engagement.strapiId
+                })) : []
             },
             creditingPeriodStartDate: data.creditingPeriodStartDate,
             creditingPeriodEndDate: data.creditingPeriodEndDate,
             annualApproximateCreditVolume: data.annualApproximateCreditVolume,
-            portfolioOwner: {
-                connect: {
-                    id: data.portfolioOwner,
-                },
-            },
-            assetOwners: {
-                connect: data.assetOwners
-                    ? data.assetOwners.map((ownerId: string) => ({
-                        id: ownerId,
-                    }))
-                    : [],
-            },
+            // // portfolioOwner: {
+            // //     connect: {
+            // //         id: data.portfolioOwner,
+            // //     },
+            // // },
+            // // assetOwners: {
+            // //     connect: data.assetOwners
+            // //         ? data.assetOwners.map((ownerId: string) => ({
+            // //             id: ownerId,
+            // //         }))
+            // //         : [],
+            // // },
             isActive: true,
+            strapiId: data.strapiId
         },
         select: ProjectSchema,
     });
@@ -203,7 +234,7 @@ const deleteProject = async (projectId: string | undefined) => {
         },
     });
 
-    const engagementIds = engagements.map((engagement) => engagement.id);
+    const engagementIds = engagements.map((engagement: any) => engagement.id);
 
     await prisma.engagement.deleteMany({
         where: {

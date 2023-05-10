@@ -13,10 +13,11 @@ type DateRange {
 }
 
 type EngagementAttribute {
-  name  String
-  key   String
-  type  String
-  value String
+  name      String
+  key       String?
+  type      String
+  value     String
+  strapiId  String
 }
 
 type StateHistory {
@@ -170,6 +171,7 @@ model Project {
   assetOwners                       Organization[]          @relation("AssetOwnerOrganisations", fields: [assetOwnerIDs], references: [id])
   assetOwnerIDs                     String[]                @db.ObjectId
   engagements                       Engagement[]
+  strapiId                          BigInt?
 }
 
 model Engagement {
@@ -187,6 +189,7 @@ model Engagement {
   attributes    EngagementAttribute[]
   stateHistory  StateHistory[]
   tasks         Task[]
+  strapiId      BigInt?
 }
 
 model Task {
@@ -201,6 +204,7 @@ model Task {
   completedDate DateTime?
   state         String?        @default("NOT_STARTED")
   stateHistory  StateHistory[]
+  strapiId      BigInt?
 }
 
 model RegistryProjectData {
@@ -250,7 +254,7 @@ model ProjectRiskScore {
 
 model Registry {
   id                   String                @id @default(auto()) @map("_id") @db.ObjectId
-  name                 String /// GCC, Verra
+  name                 String                @unique
   projects             Project[]
   registryProjectDatas RegistryProjectData[]
   issuance             Issuance[]
@@ -414,6 +418,7 @@ model SectoralScope {
 model Methodology {
   id          String     @id @default(auto()) @map("_id") @db.ObjectId
   name        String
+  code        String     @unique
   Registry    Registry[] @relation(fields: [registryIDs], references: [id])
   registryIDs String[]   @db.ObjectId
   Projects    Project[]  @relation(fields: [projectIDs], references: [id])
@@ -431,7 +436,7 @@ model Country {
 
 model ProjectType {
   id                 String        @id @default(auto()) @map("_id") @db.ObjectId
-  name               String
+  name               String        @unique
   parentType         ProjectType?  @relation("ParentProjectType", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   parentId           String?       @db.ObjectId
   subTypes           ProjectType[] @relation("ParentProjectType")
