@@ -19,7 +19,7 @@ export default meta;
 const Template: StoryFn<GanttChartProps> = ({
   projectEngagementData,
 }: GanttChartProps) => (
-  <div style={{ width: 1280, boxSizing: "border-box" }}>
+  <div style={{ width: 1000, boxSizing: "border-box" }}>
     <GanttChart projectEngagementData={projectEngagementData} />
   </div>
 );

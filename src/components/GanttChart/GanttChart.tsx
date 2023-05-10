@@ -59,7 +59,7 @@ export const GanttChart = ({
 }) => {
   const [selectedOption, setSelectedOption] = useState<
     "yearly" | "monthly" | "weekly"
-  >("weekly");
+  >("monthly");
 
   const options = [
     { value: "monthly", label: "monthly" },
@@ -77,12 +77,19 @@ export const GanttChart = ({
       .flat();
 
     const allTasks = allEngagements.map((v) => v.tasks).flat();
-    console.log(allTasks);
 
-    const allStartDate = allEngagements.map((v) => moment(v.startDate));
-    const allEndDate = allEngagements.map((v) =>
-      moment(v.completedDate ? v.completedDate : v.dueDate ?? v.startDate),
-    );
+    const allStartDate = [
+      ...allEngagements.map((v) => moment(v.startDate)),
+      ...allTasks.map((v) => moment(v.startDate)),
+    ];
+    const allEndDate = [
+      ...allEngagements.map((v) =>
+        moment(v.completedDate ? v.completedDate : v.dueDate ?? v.startDate),
+      ),
+      ...allTasks.map((v) =>
+        moment(v.completedDate ? v.completedDate : v.dueDate ?? v.startDate),
+      ),
+    ];
     const earliestStartDate = moment.min(allStartDate).toDate();
     const latestEndDate = moment.max(allEndDate).toDate();
     const info = getCalendarInfo(earliestStartDate, latestEndDate);
