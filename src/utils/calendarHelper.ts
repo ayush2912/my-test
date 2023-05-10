@@ -1,5 +1,7 @@
 import moment from "moment";
 
+import { ProjectEngagement } from "@/components/GanttChart/GanttChart.types";
+
 function getFirstSundayOfYear(firstDayOfYear: any) {
   if (firstDayOfYear.day() !== 0) {
     firstDayOfYear.add(7 - firstDayOfYear.day(), "d");
@@ -64,7 +66,7 @@ export const getBarInfo = (
 
   return {
     offsetFromLeft,
-    barWidth,
+    width: barWidth,
   };
 };
 
@@ -86,7 +88,7 @@ function getAllSundays(year: number, month: number): string[] {
   return dates;
 }
 
-export const getCalendarInfo = (
+export const getCalendarHeaderAndWidth = (
   earliestStartDate: Date,
   latestEndDate: Date,
 ) => {
@@ -175,5 +177,38 @@ export const getCalendarInfo = (
       weekly: weeklyHeaderData,
       yearly: yearlyHeaderData,
     },
+  };
+};
+
+export const memoizedCalendarData = (
+  projectEngagementData: ProjectEngagement[],
+) => {
+  const allEngagements = projectEngagementData.map((v) => v.engagements).flat();
+
+  const allTasks = allEngagements.map((v) => v.tasks).flat();
+
+  const allStartDate = [
+    ...allEngagements.map((v) => moment(v.startDate)),
+    ...allTasks.map((v) => moment(v.startDate)),
+  ];
+  const allEndDate = [
+    ...allEngagements.map((v) =>
+      moment(v.completedDate ? v.completedDate : v.dueDate ?? v.startDate),
+    ),
+    ...allTasks.map((v) =>
+      moment(v.completedDate ? v.completedDate : v.dueDate ?? v.startDate),
+    ),
+  ];
+  const earliestStartDate = moment.min(allStartDate).toDate();
+  const latestEndDate = moment.max(allEndDate).toDate();
+  const { calendarHeader, calendarWidth } = getCalendarHeaderAndWidth(
+    earliestStartDate,
+    latestEndDate,
+  );
+  return {
+    earliestStartDate,
+    latestEndDate,
+    header: calendarHeader,
+    width: calendarWidth,
   };
 };

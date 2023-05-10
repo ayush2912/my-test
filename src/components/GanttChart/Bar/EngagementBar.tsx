@@ -2,26 +2,13 @@ import { useRef, useState } from "react";
 import styled from "styled-components";
 
 import { useOutsideAlerter } from "@/hooks/useOutsiderAlerter";
+import { convertToEuropeanDateFormat } from "@/utils/dateTimeFormatter";
 
 import { BarPopup } from "./BarPopup";
-import Text from "../Text";
-
-export const ModalHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
-
-export const ModalContent = styled.div`
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-`;
-
-export const TextHolder = styled.div`
-  display: flex;
-  gap: 4px;
-`;
+import { ModalContent, ModalHeader, TextHolder } from "./ProjectBar";
+import StatusTag, { StatusType } from "../../StatusTag";
+import Text from "../../Text";
+import { IBar } from "../GanttChart.types";
 
 const Container = styled.div`
   display: flex;
@@ -31,24 +18,38 @@ const Container = styled.div`
   user-select: none;
 `;
 
-const Bar = styled.div<{ barWidth: number; offsetFromLeft: number }>`
+const Bar = styled.div<IBar>`
   display: flex;
   align-items: center;
   height: 24px;
-  width: ${({ barWidth }) => barWidth}px;
+  width: ${({ width }) => width}px;
   border-radius: 4px;
   margin-left: ${({ offsetFromLeft }) => offsetFromLeft}px;
   cursor: pointer;
 
-  &:hover {
-    text-decoration: underline;
+  justify-content: center;
+  background-color: ${(props) => props.theme.colors.primary[600]};
+
+  &:active {
+    box-shadow: 0px 0px 0px 4px #b1c8f9;
   }
 `;
 
-export const ProjectBar = ({ projectData }: { projectData: any }) => {
+type TaskStateTypes =
+  | "NOT_STARTED"
+  | "IN_PROGRESS"
+  | "DISCONTINUED"
+  | "COMPLETED"
+  | "OVERDUE";
+interface TaskStatus {
+  label: TaskStateTypes;
+  type: StatusType;
+}
+
+export const EngagementBar = ({ engagementData }: { engagementData: any }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
-  const projectTypes: string = projectData.types
+  const engagementTypes: string = engagementData.project.types
     .map((type: { id: string; name: string }) => type.name)
     .join(", ");
   const popupRef = useRef(null);
@@ -62,63 +63,66 @@ export const ProjectBar = ({ projectData }: { projectData: any }) => {
     setShowPopup(true);
     setPopupPosition({ top: event.clientY, left: event.clientX });
   };
+  const statusTag = {
+    NOT_STARTED: { label: "NOT STARTED", type: "disabled" },
+    IN_PROGRESS: { label: "IN PROGRESS", type: "information" },
+    DISCONTINUED: { label: "DISCONTINUED", type: "error" },
+    COMPLETED: { label: "COMPLETED", type: "success" },
+    OVERDUE: { label: "OVERDUE", type: "warning" },
+  }[engagementData.state] as TaskStatus;
 
   return (
     <Container>
       <Bar
         ref={popupRef}
-        barWidth={projectData.bar.barWidth}
-        offsetFromLeft={projectData.bar.offsetFromLeft}
+        width={engagementData.bar.width}
+        offsetFromLeft={engagementData.bar.offsetFromLeft}
         onMouseDown={handleContainerMouseDown}
       >
         {showPopup && (
           <BarPopup top={popupPosition.top} left={popupPosition.left}>
             <ModalHeader>
               <Text type="captionBold" color="default">
-                {projectData.name}
+                {engagementData.type}
               </Text>
-              {/* <button>click</button> */}
             </ModalHeader>
-
+            <div style={{ margin: "5px 0px" }}>
+              <StatusTag
+                name={statusTag.label}
+                type={engagementData.isOverdue ? "warning" : statusTag.type}
+              />
+            </div>
             <ModalContent>
               <TextHolder>
                 <Text type="caption" color="subdued">
-                  Registry :
+                  Start date :
                 </Text>
                 <Text type="caption" color="default">
-                  {projectData.registry.name}
+                  {convertToEuropeanDateFormat(engagementData.startDate)}
                 </Text>
               </TextHolder>
 
               <TextHolder>
                 <Text type="caption" color="subdued">
-                  Registry project ID :
+                  Due date :
                 </Text>
                 <Text type="caption" color="default">
-                  {projectData.registryProjectId}
+                  {convertToEuropeanDateFormat(engagementData.dueDate)}
                 </Text>
               </TextHolder>
               <TextHolder>
                 <Text type="caption" color="subdued">
-                  Countries :
+                  Completion date : :
                 </Text>
                 <Text type="caption" color="default">
-                  {}
-                </Text>
-              </TextHolder>
-              <TextHolder>
-                <Text type="caption" color="subdued">
-                  Project type :
-                </Text>
-                <Text type="caption" color="default">
-                  {projectTypes}
+                  {convertToEuropeanDateFormat(engagementData.completedDate)}
                 </Text>
               </TextHolder>
             </ModalContent>
           </BarPopup>
         )}
-        <Text type="bodyBold" color="default">
-          {projectData.name}
+        <Text type="caption" color="white">
+          engagement
         </Text>
       </Bar>
     </Container>

@@ -6,8 +6,9 @@ import { convertToEuropeanDateFormat } from "@/utils/dateTimeFormatter";
 
 import { BarPopup } from "./BarPopup";
 import { ModalContent, ModalHeader, TextHolder } from "./ProjectBar";
-import StatusTag, { StatusType } from "../StatusTag";
-import Text from "../Text";
+import StatusTag, { StatusType } from "../../StatusTag";
+import Text from "../../Text";
+import { IBar } from "../GanttChart.types";
 
 const Container = styled.div`
   display: flex;
@@ -17,22 +18,33 @@ const Container = styled.div`
   user-select: none;
 `;
 
-const Bar = styled.div<{ barWidth: number; offsetFromLeft: number }>`
+const Bar = styled.div<IBar>`
   display: flex;
   align-items: center;
   height: 24px;
-  width: ${({ barWidth }) => barWidth}px;
+  width: ${({ width }) => width}px;
   border-radius: 4px;
   margin-left: ${({ offsetFromLeft }) => offsetFromLeft}px;
   cursor: pointer;
 
   justify-content: center;
-  background-color: ${(props) => props.theme.colors.primary[600]};
+  border: 2px solid #8aadf7;
+  background-color: #8aadf7;
+  overflow: hidden;
 
   &:active {
     box-shadow: 0px 0px 0px 4px #b1c8f9;
   }
 `;
+
+interface TaskData {
+  isOverdue: boolean;
+  type: string;
+  startDate: string;
+  dueDate: string;
+  completedDate: string;
+  bar: { offsetFromLeft: number; barWidth: number };
+}
 
 type TaskStateTypes =
   | "NOT_STARTED"
@@ -45,12 +57,17 @@ interface TaskStatus {
   type: StatusType;
 }
 
-export const EngagementBar = ({ engagementData }: { engagementData: any }) => {
+export const TaskBar = ({ taskData }: { taskData: TaskData }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
-  const engagementTypes: string = engagementData.project.types
-    .map((type: { id: string; name: string }) => type.name)
-    .join(", ");
+  const statusTag = {
+    NOT_STARTED: { label: "NOT STARTED", type: "disabled" },
+    IN_PROGRESS: { label: "IN PROGRESS", type: "information" },
+    DISCONTINUED: { label: "DISCONTINUED", type: "error" },
+    COMPLETED: { label: "COMPLETED", type: "success" },
+    OVERDUE: { label: "OVERDUE", type: "warning" },
+  }[taskData.state] as TaskStatus;
+
   const popupRef = useRef(null);
   useOutsideAlerter(popupRef, () => {
     if (showPopup) setShowPopup(false);
@@ -62,42 +79,36 @@ export const EngagementBar = ({ engagementData }: { engagementData: any }) => {
     setShowPopup(true);
     setPopupPosition({ top: event.clientY, left: event.clientX });
   };
-  const statusTag = {
-    NOT_STARTED: { label: "NOT STARTED", type: "disabled" },
-    IN_PROGRESS: { label: "IN PROGRESS", type: "information" },
-    DISCONTINUED: { label: "DISCONTINUED", type: "error" },
-    COMPLETED: { label: "COMPLETED", type: "success" },
-    OVERDUE: { label: "OVERDUE", type: "warning" },
-  }[engagementData.state] as TaskStatus;
-
+  console.log(taskData);
   return (
     <Container>
       <Bar
         ref={popupRef}
-        barWidth={engagementData.bar.barWidth}
-        offsetFromLeft={engagementData.bar.offsetFromLeft}
+        width={taskData.bar.width}
+        offsetFromLeft={taskData.bar.offsetFromLeft}
         onMouseDown={handleContainerMouseDown}
       >
         {showPopup && (
           <BarPopup top={popupPosition.top} left={popupPosition.left}>
             <ModalHeader>
               <Text type="captionBold" color="default">
-                {engagementData.type}
+                {taskData.type}
               </Text>
             </ModalHeader>
             <div style={{ margin: "5px 0px" }}>
               <StatusTag
                 name={statusTag.label}
-                type={engagementData.isOverdue ? "warning" : statusTag.type}
+                type={taskData.isOverdue ? "warning" : statusTag.type}
               />
             </div>
+
             <ModalContent>
               <TextHolder>
                 <Text type="caption" color="subdued">
                   Start date :
                 </Text>
                 <Text type="caption" color="default">
-                  {convertToEuropeanDateFormat(engagementData.startDate)}
+                  {convertToEuropeanDateFormat(taskData.startDate)}
                 </Text>
               </TextHolder>
 
@@ -106,7 +117,7 @@ export const EngagementBar = ({ engagementData }: { engagementData: any }) => {
                   Due date :
                 </Text>
                 <Text type="caption" color="default">
-                  {convertToEuropeanDateFormat(engagementData.dueDate)}
+                  {convertToEuropeanDateFormat(taskData.dueDate)}
                 </Text>
               </TextHolder>
               <TextHolder>
@@ -114,14 +125,14 @@ export const EngagementBar = ({ engagementData }: { engagementData: any }) => {
                   Completion date : :
                 </Text>
                 <Text type="caption" color="default">
-                  {convertToEuropeanDateFormat(engagementData.completedDate)}
+                  {convertToEuropeanDateFormat(taskData.completedDate)}
                 </Text>
               </TextHolder>
             </ModalContent>
           </BarPopup>
         )}
-        <Text type="caption" color="white">
-          engagement
+        <Text type="caption" color="default">
+          Task 1
         </Text>
       </Bar>
     </Container>
