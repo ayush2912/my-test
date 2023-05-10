@@ -180,14 +180,14 @@ const createProject = (data: any) => {
                         strapiId: attribute.strapiId
                     })) : [],
                     tasks: {
-                        create: engagement.tasks.map((task: any) => ({
+                        create: engagement.tasks ? engagement.tasks.map((task: any) => ({
                             type: task.type,
                             startDate: task.startDate,
                             dueDate: task.dueDate,
                             completedDate: task.completedDate,
                             state: task.state,
                             strapiId: task.strapiId
-                        }))
+                        })) : []
                     },
                     strapiId: engagement.strapiId
                 })) : []
