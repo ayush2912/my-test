@@ -2,8 +2,11 @@ import { useRef, useState } from "react";
 import styled from "styled-components";
 
 import { useOutsideAlerter } from "@/hooks/useOutsiderAlerter";
+import { convertToEuropeanDateFormat } from "@/utils/dateTimeFormatter";
 
 import { BarPopup } from "./BarPopup";
+import { ModalContent, ModalHeader, TextHolder } from "./ProjectBar";
+import StatusTag, { StatusType } from "../StatusTag";
 import Text from "../Text";
 
 const Container = styled.div`
@@ -12,23 +15,6 @@ const Container = styled.div`
   height: 40px;
   padding: 8px 0px;
   user-select: none;
-`;
-
-export const ModalHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
-
-export const ModalContent = styled.div`
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-`;
-
-export const TextHolder = styled.div`
-  display: flex;
-  gap: 4px;
 `;
 
 const Bar = styled.div<{ barWidth: number; offsetFromLeft: number }>`
@@ -48,6 +34,17 @@ const Bar = styled.div<{ barWidth: number; offsetFromLeft: number }>`
   }
 `;
 
+type TaskStateTypes =
+  | "NOT_STARTED"
+  | "IN_PROGRESS"
+  | "DISCONTINUED"
+  | "COMPLETED"
+  | "OVERDUE";
+interface TaskStatus {
+  label: TaskStateTypes;
+  type: StatusType;
+}
+
 export const EngagementBar = ({ engagementData }: { engagementData: any }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
@@ -65,7 +62,14 @@ export const EngagementBar = ({ engagementData }: { engagementData: any }) => {
     setShowPopup(true);
     setPopupPosition({ top: event.clientY, left: event.clientX });
   };
-  console.log(engagementData, engagementTypes);
+  const statusTag = {
+    NOT_STARTED: { label: "NOT STARTED", type: "disabled" },
+    IN_PROGRESS: { label: "IN PROGRESS", type: "information" },
+    DISCONTINUED: { label: "DISCONTINUED", type: "error" },
+    COMPLETED: { label: "COMPLETED", type: "success" },
+    OVERDUE: { label: "OVERDUE", type: "warning" },
+  }[engagementData.state] as TaskStatus;
+
   return (
     <Container>
       <Bar
@@ -80,41 +84,37 @@ export const EngagementBar = ({ engagementData }: { engagementData: any }) => {
               <Text type="captionBold" color="default">
                 {engagementData.type}
               </Text>
-              {/* <button>click</button> */}
             </ModalHeader>
-
+            <div style={{ margin: "5px 0px" }}>
+              <StatusTag
+                name={statusTag.label}
+                type={engagementData.isOverdue ? "warning" : statusTag.type}
+              />
+            </div>
             <ModalContent>
               <TextHolder>
                 <Text type="caption" color="subdued">
-                  Registry :
+                  Start date :
                 </Text>
                 <Text type="caption" color="default">
-                  {engagementData.project.registry.name}
+                  {convertToEuropeanDateFormat(engagementData.startDate)}
                 </Text>
               </TextHolder>
 
               <TextHolder>
                 <Text type="caption" color="subdued">
-                  Registry project ID :
+                  Due date :
                 </Text>
                 <Text type="caption" color="default">
-                  {engagementData.project.registryProjectId}
+                  {convertToEuropeanDateFormat(engagementData.dueDate)}
                 </Text>
               </TextHolder>
               <TextHolder>
                 <Text type="caption" color="subdued">
-                  Countries :
+                  Completion date : :
                 </Text>
                 <Text type="caption" color="default">
-                  {}
-                </Text>
-              </TextHolder>
-              <TextHolder>
-                <Text type="caption" color="subdued">
-                  Project type :
-                </Text>
-                <Text type="caption" color="default">
-                  {engagementTypes}
+                  {convertToEuropeanDateFormat(engagementData.completedDate)}
                 </Text>
               </TextHolder>
             </ModalContent>
