@@ -14,6 +14,23 @@ const Container = styled.div`
   user-select: none;
 `;
 
+export const ModalHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+export const ModalContent = styled.div`
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+export const TextHolder = styled.div`
+  display: flex;
+  gap: 4px;
+`;
+
 const Bar = styled.div<{ barWidth: number; offsetFromLeft: number }>`
   display: flex;
   align-items: center;
@@ -34,7 +51,9 @@ const Bar = styled.div<{ barWidth: number; offsetFromLeft: number }>`
 export const EngagementBar = ({ engagementData }: { engagementData: any }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
-
+  const engagementTypes: string = engagementData.project.types
+    .map((type: { id: string; name: string }) => type.name)
+    .join(", ");
   const popupRef = useRef(null);
   useOutsideAlerter(popupRef, () => {
     if (showPopup) setShowPopup(false);
@@ -46,7 +65,7 @@ export const EngagementBar = ({ engagementData }: { engagementData: any }) => {
     setShowPopup(true);
     setPopupPosition({ top: event.clientY, left: event.clientX });
   };
-
+  console.log(engagementData, engagementTypes);
   return (
     <Container>
       <Bar
@@ -57,7 +76,48 @@ export const EngagementBar = ({ engagementData }: { engagementData: any }) => {
       >
         {showPopup && (
           <BarPopup top={popupPosition.top} left={popupPosition.left}>
-            This is the popup content.
+            <ModalHeader>
+              <Text type="captionBold" color="default">
+                {engagementData.type}
+              </Text>
+              {/* <button>click</button> */}
+            </ModalHeader>
+
+            <ModalContent>
+              <TextHolder>
+                <Text type="caption" color="subdued">
+                  Registry :
+                </Text>
+                <Text type="caption" color="default">
+                  {engagementData.project.registry.name}
+                </Text>
+              </TextHolder>
+
+              <TextHolder>
+                <Text type="caption" color="subdued">
+                  Registry project ID :
+                </Text>
+                <Text type="caption" color="default">
+                  {engagementData.project.registryProjectId}
+                </Text>
+              </TextHolder>
+              <TextHolder>
+                <Text type="caption" color="subdued">
+                  Countries :
+                </Text>
+                <Text type="caption" color="default">
+                  {}
+                </Text>
+              </TextHolder>
+              <TextHolder>
+                <Text type="caption" color="subdued">
+                  Project type :
+                </Text>
+                <Text type="caption" color="default">
+                  {engagementTypes}
+                </Text>
+              </TextHolder>
+            </ModalContent>
           </BarPopup>
         )}
         <Text type="caption" color="white">
