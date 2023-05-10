@@ -9,6 +9,7 @@ import { App } from '../app';
 import { ProjectMockFactory } from '../__mocks__/mock.data';
 
 const {
+    prisma,
     countries,
     registries,
     methodologies,
@@ -90,10 +91,10 @@ describe('/projects/{projectId}', () => {
     test('GET /projects with valid organization Id', async () => {
         const app = App()
 
-        const projectIds:any[] = []
-        const organization = faker.helpers.arrayElement(organizations).id
-        for (let i = 0; i < 10; i++) {
-            const data = {
+        const organizationId = faker.helpers.arrayElement(organizations).id
+
+        const projects = await prisma.$transaction(Array(10).fill(0).map(() => 
+            createProject({
                 name: 'Renewable Get Power Project',
                 registry: faker.helpers.arrayElement(registries).id,
                 registryUrl: 'www.url.com',
@@ -112,21 +113,20 @@ describe('/projects/{projectId}', () => {
                 creditingPeriodStartDate: '2023-04-11T14:15:22Z',
                 creditingPeriodEndDate: '2023-04-11T14:15:22Z',
                 annualApproximateCreditVolume: 300000,
-                organization: organization,
+                organization: organizationId,
                 portfolioOwner: faker.helpers.arrayElement(organizations).id,
                 assetOwners: faker.helpers
                     .arrayElements(organizations)
                     .map((m) => m.id),
                 engagements: faker.helpers
                     .arrayElements(engagements, 2)
-                    .map((m) => m.id),
-            };
-            const project = await createProject(data)
-            projectIds.push(project.id)
-        }
+            })
+        ))
+
+        const projectIds = projects.map(project => project.id)
 
         const results = await request(app)
-            .get('/projects')
+            .get(`/projects?organizationIds=${organizationId}&tab=ACTIVE&take=10&skip=0`)
             .expect('Content-Type', /json/)
             .expect(200);
         
@@ -134,7 +134,25 @@ describe('/projects/{projectId}', () => {
         expect(results.body.message).toBe(
             'Projects Retrieved Successfully'
         );
-    })
+
+        await Promise.all(projectIds.map(projectId => deleteProject(projectId)))
+    });
+
+    test('GET /projects with invalid organization Id', async () => {
+        const app = App();
+
+        const results = await request(app).get(
+            '/projects?organizationIds=234567890109876543212345&tab=ACTIVE&take=10&skip=0'
+        );
+
+        expect(results.statusCode).toBe(400);
+        expect(results.body.errors).toEqual([
+            {
+                msg: 'Invalid Organization Id',
+                code: 'BAD_REQUEST',
+            },
+        ]);
+    });
 });
 
 describe('/project-engagements', () => {

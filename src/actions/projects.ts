@@ -76,7 +76,7 @@ export const isEngagementOverdue = (engagement: any) => {
     }
 
     if (engagement?.state === 'IN_PROGRESS' || engagement?.state === 'NOT_STARTED') {
-        if (engagement.dueDate <= new Date()) {
+        if (engagement.dueDate <= new Date().toISOString()) {
             return true; 
         }
     }
@@ -88,15 +88,25 @@ type GetProjectsOptions = {
     organizationIds?: string[];
     take?: number; 
     skip?: number;
+    tab?: string;
 }
 
 const applyGetProjectsFilters = (options: GetProjectsOptions) => {
 
     const filters: Prisma.ProjectWhereInput = {};
 
-    if  (options.organizationIds) {
+    if (options.organizationIds) {
         filters.organizationId = {
             in: options.organizationIds
+        }
+    }
+    if (options.tab === 'ACTIVE') {
+        filters.isActive = {
+            equals: true
+        }
+    } else {
+        filters.isActive = {
+            equals: false
         }
     }
 

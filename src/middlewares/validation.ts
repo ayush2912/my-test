@@ -70,4 +70,13 @@ const validateProjectIdParamsSchema = validateRequest(
     })
 );
 
-export { validateProjectIdParamsSchema };
+const validateProjectsQueryParamsSchema = validateRequest(
+    z.object({
+        organizationIds: z.string(),
+        take: z.number().min(10).max(10),
+        skip: z.number().min(0),
+        tab: z.enum(['ACTIVE', 'INACTIVE']),
+    })
+)
+
+export { validateProjectIdParamsSchema, validateProjectsQueryParamsSchema };

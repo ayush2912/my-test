@@ -5,7 +5,7 @@ import {
     updateProject,
     deleteProject,
     getProjects, 
-    isEngagementOverdue
+    isEngagementOverdue,
     getProjectEngagements,
 } from '../projects';
 import { createEngagement } from '../engagements';
@@ -363,7 +363,12 @@ describe('getProjects()', () => {
 
         const projectIds = projects.map(project => project.id)
 
-        const result = await getProjects({organizationIds: [ organizationId ], take: 10, skip: 0})
+        const result = await getProjects({
+            organizationIds: [ organizationId ],
+            take: 10,
+            skip: 0,
+            tab: 'ACTIVE'
+        })
 
         expect(Array.isArray(result)).toBe(true)
 
@@ -429,7 +434,6 @@ describe('getProjects()', () => {
     });
 });
 
-
 describe('getProjectEngagements()', () => {
     test('it should list all project engagements', async () => {
         const data = {
@@ -451,7 +455,6 @@ describe('getProjectEngagements()', () => {
             creditingPeriodStartDate: '2023-04-11T14:15:22Z',
             creditingPeriodEndDate: '2023-04-11T14:15:22Z',
             annualApproximateCreditVolume: 300000,
-            organization: faker.helpers.arrayElement(organizations).id,
             portfolioOwner: faker.helpers.arrayElement(organizations).id,
             assetOwners: faker.helpers
                 .arrayElements(organizations)
@@ -538,3 +541,76 @@ describe('getProjectEngagements()', () => {
         await deleteProject(project.id);
     });
 });
+
+describe('isEngagementOverdue()', () => {
+    test('if state is COMPLETED and no complete date',async () => {
+        const data = {
+            state: 'COMPLETED',
+            dueDate: '2023-12-21T00:00:00.000Z'
+        }
+        const isOverdue = isEngagementOverdue(data)
+        expect(isOverdue).toBeFalsy();
+    });
+
+    test('if state is COMPLETED and completed date >= due date',async () => {
+        const data = {
+            state: 'COMPLETED',
+            dueDate: '2023-12-21T00:00:00.000Z',
+            completedDate: '2023-12-30T00:00:00.000Z'
+        }
+        const isOverdue = isEngagementOverdue(data)
+        expect(isOverdue).toBeTruthy();
+    });
+
+    test('if state is COMPLETED and completed date <= due date',async () => {
+        const data = {
+            state: 'COMPLETED',
+            dueDate: '2023-12-21T00:00:00.000Z',
+            completedDate: '2023-10-30T00:00:00.000Z'
+        }
+        const isOverdue = isEngagementOverdue(data)
+        expect(isOverdue).toBeFalsy();
+    });
+
+    test('if state is IN_PROGRESS and due date <= current date',async () => {
+        const data = {
+            state: 'IN_PROGRESS',
+            dueDate: '2022-12-21T00:00:00.000Z',
+            completedDate: '2023-12-30T00:00:00.000Z'
+        }
+        const isOverdue = isEngagementOverdue(data)
+        expect(isOverdue).toBeTruthy();
+    });
+
+    test('if state is IN_PROGRESS and due date >= current date',async () => {
+        const currentDate = new Date();
+        const data = {
+            state: 'IN_PROGRESS',
+            dueDate: new Date(currentDate.getTime() + 24 * 60 * 60 * 1000).toISOString(),
+            completedDate: '2023-12-30T00:00:00.000Z'
+        }
+        const isOverdue = isEngagementOverdue(data)
+        expect(isOverdue).toBeFalsy();
+    });
+
+    test('if state is NOT_STARTED and due date <= current date',async () => {
+        const data = {
+            state: 'NOT_STARTED',
+            dueDate: '2022-12-21T00:00:00.000Z',
+            completedDate: '2023-12-30T00:00:00.000Z'
+        }
+        const isOverdue = isEngagementOverdue(data)
+        expect(isOverdue).toBeTruthy();
+    });
+
+    test('if state is NOT_STARTED and due date >= current date',async () => {
+        const currentDate = new Date();
+        const data = {
+            state: 'NOT_STARTED',
+            dueDate: new Date(currentDate.getTime() + 24 * 60 * 60 * 1000).toISOString(),
+            completedDate: '2023-12-30T00:00:00.000Z'
+        }
+        const isOverdue = isEngagementOverdue(data)
+        expect(isOverdue).toBeFalsy();
+    });
+})
