@@ -1,6 +1,13 @@
 import styled from "styled-components";
 
-import Text from "../Text";
+import Text from "../../Text";
+import {
+  ICalendarHeader,
+  IMonthlyHeader,
+  TemporalView,
+  IWeeklyHeader,
+  IYearlyHeader,
+} from "../GanttChart.types";
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -58,43 +65,7 @@ const SundayContainer = styled.div<{ lastWeek: boolean }>`
   border-radius: 4px;
 `;
 
-interface Range {
-  calendarWidth: CalendarWidth;
-  calendarHeader: CalendarHeader;
-}
-
-type CalendarWidth = {
-  monthly: number;
-  weekly: number;
-  yearly: number;
-};
-
-type CalendarHeader = {
-  monthly: MonthlyHeader;
-  weekly: WeeklyHeader;
-  yearly: YearlyHeader;
-};
-
-type YearlyHeader = {
-  year: string;
-  months: { month: string; isThisMonth?: boolean }[];
-}[];
-
-type MonthlyHeader = {
-  month: string;
-  year: string;
-  days: { day: number; isToday?: boolean }[];
-}[];
-
-type WeeklyHeader = {
-  month: string;
-  year: string;
-  sundays: string[];
-}[];
-
-type CalendarRange = Range;
-
-const MonthlyHeader = ({ data }: { data: MonthlyHeader }) => {
+const MonthlyHeader = ({ data }: { data: IMonthlyHeader }) => {
   return (
     <RowContainer>
       {data?.map(({ month, year, days }) => (
@@ -120,7 +91,7 @@ const MonthlyHeader = ({ data }: { data: MonthlyHeader }) => {
   );
 };
 
-const YearlyHeader = ({ data }: { data: YearlyHeader }) => {
+const YearlyHeader = ({ data }: { data: IYearlyHeader }) => {
   return (
     <RowContainer>
       {data?.map(({ year, months }) => (
@@ -146,7 +117,7 @@ const YearlyHeader = ({ data }: { data: YearlyHeader }) => {
   );
 };
 
-const WeeklyHeader = ({ data }: { data: WeeklyHeader }) => {
+const WeeklyHeader = ({ data }: { data: IWeeklyHeader }) => {
   return (
     <RowContainer>
       {data?.map(({ year, month, sundays }, index) => (
@@ -175,19 +146,19 @@ const WeeklyHeader = ({ data }: { data: WeeklyHeader }) => {
   );
 };
 export const CalendarHeader = ({
-  calendarInfo,
+  calendarHeader,
   view,
 }: {
-  calendarInfo: CalendarRange;
-  view: "monthly" | "yearly" | "weekly";
+  calendarHeader: ICalendarHeader;
+  view: TemporalView;
 }) => {
   return (
     <>
       {
         {
-          monthly: <MonthlyHeader data={calendarInfo.calendarHeader.monthly} />,
-          yearly: <YearlyHeader data={calendarInfo.calendarHeader.yearly} />,
-          weekly: <WeeklyHeader data={calendarInfo.calendarHeader.weekly} />,
+          monthly: <MonthlyHeader data={calendarHeader.monthly} />,
+          yearly: <YearlyHeader data={calendarHeader.yearly} />,
+          weekly: <WeeklyHeader data={calendarHeader.weekly} />,
         }[view]
       }
     </>

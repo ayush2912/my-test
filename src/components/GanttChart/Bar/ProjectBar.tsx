@@ -4,7 +4,8 @@ import styled from "styled-components";
 import { useOutsideAlerter } from "@/hooks/useOutsiderAlerter";
 
 import { BarPopup } from "./BarPopup";
-import Text from "../Text";
+import Text from "../../Text";
+import { IBar } from "../GanttChart.types";
 
 const Container = styled.div`
   display: flex;
@@ -14,26 +15,21 @@ const Container = styled.div`
   user-select: none;
 `;
 
-const Bar = styled.div<{ barWidth: number; offsetFromLeft: number }>`
+const Bar = styled.div<IBar>`
   display: flex;
   align-items: center;
   height: 24px;
-  width: ${({ barWidth }) => barWidth}px;
+  width: ${({ width }) => width}px;
   border-radius: 4px;
   margin-left: ${({ offsetFromLeft }) => offsetFromLeft}px;
   cursor: pointer;
 
-  justify-content: center;
-  border: 2px solid #8aadf7;
-  background-color: #8aadf7;
-  overflow: hidden;
-
-  &:active {
-    box-shadow: 0px 0px 0px 4px #b1c8f9;
+  &:hover {
+    text-decoration: underline;
   }
 `;
 
-export const TaskBar = ({ taskData }: { taskData: any }) => {
+export const ProjectBar = ({ projectData }: { projectData: any }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
 
@@ -53,8 +49,8 @@ export const TaskBar = ({ taskData }: { taskData: any }) => {
     <Container>
       <Bar
         ref={popupRef}
-        barWidth={taskData.bar.barWidth}
-        offsetFromLeft={taskData.bar.offsetFromLeft}
+        width={projectData.bar.width}
+        offsetFromLeft={projectData.bar.offsetFromLeft}
         onMouseDown={handleContainerMouseDown}
       >
         {showPopup && (
@@ -62,8 +58,8 @@ export const TaskBar = ({ taskData }: { taskData: any }) => {
             This is the popup content.
           </BarPopup>
         )}
-        <Text type="caption" color="default">
-          Task 1
+        <Text type="bodyBold" color="default">
+          {projectData.name}
         </Text>
       </Bar>
     </Container>

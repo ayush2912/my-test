@@ -4,7 +4,8 @@ import styled from "styled-components";
 import { useOutsideAlerter } from "@/hooks/useOutsiderAlerter";
 
 import { BarPopup } from "./BarPopup";
-import Text from "../Text";
+import Text from "../../Text";
+import { IBar } from "../GanttChart.types";
 
 const Container = styled.div`
   display: flex;
@@ -14,11 +15,11 @@ const Container = styled.div`
   user-select: none;
 `;
 
-const Bar = styled.div<{ barWidth: number; offsetFromLeft: number }>`
+const Bar = styled.div<IBar>`
   display: flex;
   align-items: center;
   height: 24px;
-  width: ${({ barWidth }) => barWidth}px;
+  width: ${({ width }) => width}px;
   border-radius: 4px;
   margin-left: ${({ offsetFromLeft }) => offsetFromLeft}px;
   cursor: pointer;
@@ -51,7 +52,7 @@ export const EngagementBar = ({ engagementData }: { engagementData: any }) => {
     <Container>
       <Bar
         ref={popupRef}
-        barWidth={engagementData.bar.barWidth}
+        width={engagementData.bar.width}
         offsetFromLeft={engagementData.bar.offsetFromLeft}
         onMouseDown={handleContainerMouseDown}
       >
