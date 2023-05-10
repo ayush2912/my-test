@@ -27,6 +27,7 @@ type TextColor =
 const StyledText = styled.span<{ type: TypeStyle; color: TextColor }>`
   font-size: ${(props) => props.theme.typography[props.type].size}px;
   font-weight: ${(props) => props.theme.typography[props.type].weight};
+  font-family: "Open Sans";
   line-height: ${(props) => props.theme.typography[props.type].lineHeight}px;
   color: ${(props) => props.theme.colors.text[props.color]};
 `;

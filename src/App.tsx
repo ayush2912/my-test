@@ -1,12 +1,12 @@
-import styled, { ThemeProvider } from "styled-components";
-
+import { ThemeProvider } from "styled-components";
 import "./App.css";
+
 import { theme } from "./styles/theme";
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <div className="App">This is CCD new project</div>
+      <div>This is CCD supply side new project</div>
     </ThemeProvider>
   );
 }
