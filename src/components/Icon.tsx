@@ -5,6 +5,7 @@ import { ReactComponent as Discontinued } from "../assets/icons/feedback/discont
 import { ReactComponent as InProgressIcon } from "../assets/icons/feedback/in-progress.svg";
 import { ReactComponent as NotStartedIcon } from "../assets/icons/feedback/not-started.svg";
 import { ReactComponent as SuccessIcon } from "../assets/icons/feedback/success.svg";
+import { ReactComponent as EyeIcon } from "../assets/icons/generic/eyeIcon.svg";
 import { ReactComponent as FileIcon } from "../assets/icons/generic/file.svg";
 import { ReactComponent as HomeIcon } from "../assets/icons/generic/home.svg";
 import { ReactComponent as InformationIcon } from "../assets/icons/generic/information.svg";
@@ -41,6 +42,7 @@ const icons = {
   success: SuccessIcon,
   message: MessageIcon,
   file: FileIcon,
+  eyeIcon: EyeIcon,
   notStarted: NotStartedIcon,
   inProgress: InProgressIcon,
   discontinued: Discontinued,
