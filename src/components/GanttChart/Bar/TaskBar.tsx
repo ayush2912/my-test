@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 import { BarPopup } from "./BarPopup";
@@ -29,12 +29,13 @@ const Bar = styled.div<{
   width: ${({ width }) => width}px;
   border-radius: 4px;
   margin-left: ${({ offsetFromLeft }) => offsetFromLeft}px;
+  margin-right: 8px;
   cursor: pointer;
   padding: 4px 8px;
   border: 2px solid #8aadf7;
   background-color: #8aadf7;
   overflow: hidden;
-
+  white-space: nowrap;
   &:active {
     box-shadow: 0px 0px 0px 4px #b1c8f9;
   }
@@ -55,9 +56,10 @@ interface TaskStatus {
 
 export const TaskBar = ({ taskData }: { taskData: Task & { bar: IBar } }) => {
   const { view } = useGanttChartControls();
-
+  const [isTextOverflowing, setIsTextOverflowing] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
+
   const statusTag = {
     NOT_STARTED: { label: "NOT STARTED", type: "disabled" },
     IN_PROGRESS: { label: "IN PROGRESS", type: "information" },
@@ -67,9 +69,20 @@ export const TaskBar = ({ taskData }: { taskData: Task & { bar: IBar } }) => {
   }[taskData.state] as TaskStatus;
 
   const popupRef = useRef(null);
+  const contentRef = useRef(null);
+
   useOutsideAlerter(popupRef, () => {
     if (showPopup) setShowPopup(false);
   });
+
+  useEffect(() => {
+    if (popupRef.current && contentRef.current) {
+      const containerWidth = (popupRef.current as HTMLElement).clientWidth;
+      const contentWidth = (contentRef.current as HTMLElement).scrollWidth;
+
+      setIsTextOverflowing(contentWidth + 16 > containerWidth);
+    }
+  }, [view]);
 
   const handleContainerMouseDown = (
     event: React.MouseEvent<HTMLDivElement>,
@@ -129,10 +142,17 @@ export const TaskBar = ({ taskData }: { taskData: Task & { bar: IBar } }) => {
             </ModalContent>
           </BarPopup>
         )}
+        {!isTextOverflowing && (
+          <Text ref={contentRef} type="caption" color="default">
+            {taskData.type}
+          </Text>
+        )}
+      </Bar>
+      {isTextOverflowing && (
         <Text type="caption" color="default">
           {taskData.type}
         </Text>
-      </Bar>
+      )}
     </Container>
   );
 };

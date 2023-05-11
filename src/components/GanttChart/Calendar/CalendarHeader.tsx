@@ -121,7 +121,7 @@ const WeeklyHeader = ({ data }: { data: IWeeklyHeader }) => {
   return (
     <RowContainer>
       {data?.map(({ year, month, sundays }, index) => (
-        <div key={month}>
+        <div key={month + year}>
           <HeaderContainer>
             <Text type="smallText" color="subdued">
               {`${month} ${year}`}
@@ -131,7 +131,7 @@ const WeeklyHeader = ({ data }: { data: IWeeklyHeader }) => {
           <RowContainer>
             {sundays.map((s, i) => (
               <SundayContainer
-                key={s}
+                key={s + month + year}
                 lastWeek={index === data.length - 1 && i === sundays.length - 1}
               >
                 <Text type="captionBold" color="subdued">
