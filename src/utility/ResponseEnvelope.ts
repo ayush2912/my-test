@@ -3,8 +3,8 @@ import SuccessResponse from '../interfaces/successResponse.interface';
 
 /**
  * @description This method will return a envelope for success response
- * @param { Object } { data, status_code, msg, customCode }
- * @returns { Object } { status, status_code, message, data, customCode }
+ * @param { object } { data, status_code, msg, customCode }
+ * @returns { object } { status, status_code, message, data, customCode }
  */
 function formatSuccessResponse({
     data = {},
