@@ -4,15 +4,15 @@ import styled from "styled-components";
 import { Tooltip } from "../../../components";
 import EyeButton from "../../../components/EyeButton";
 import Icon, { IconNameType } from "../../../components/Icon";
-import EngagementTable from "../../../components/Table";
+import Table from "../../../components/Table";
 import Text from "../../../components/Text";
 import { convertToMonthNameFormat } from "../../../utils/dateTimeFormatter";
 import { numberFormatter } from "../../../utils/numberFormatter";
 
-export const Table = styled.table`
-  width: 100%;
-  border-spacing: 5px 20px;
-`;
+// export const Table = styled.table`
+//   width: 100%;
+//   border-spacing: 5px 20px;
+// `;
 
 export const TableHeader = styled.th`
   padding: 0px;
@@ -203,7 +203,7 @@ function ProjectListTable({
     };
   };
   return (
-    <EngagementTable
+    <Table
       headers={headers}
       tableData={tableData}
       cellContentMapper={cellContentMapper}
