@@ -62,9 +62,9 @@ function Table({
       <thead>
         <tr>
           {headers.length > 0 &&
-            headers.map((header, i) => {
+            headers.map((header) => {
               return (
-                <TableHeader key={i}>
+                <TableHeader key={header.fieldName}>
                   <HeaderContent>
                     <Text type="smallTextBold" color="subdued">
                       {header.name}

@@ -107,6 +107,7 @@ function ProjectListTable({
           ? " ON " + convertToMonthNameFormat(v.engagement.dueDate)
           : "");
     return {
+      rowId: v.id,
       projectName: (
         <Tooltip text={v.projectName}>
           <Content>
