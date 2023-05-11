@@ -290,7 +290,7 @@ const updateProjectData = (projectId: string, data: any) => {
     });
 };
 
-const deleteProject = async (projectId: string) => {
+const deleteProject = async (projectId: any) => {
     const deletedProject = await prisma.$transaction(async (tx) => {
         await tx.engagement.deleteMany({ where: { projectId } });
         await tx.task.deleteMany({ where: { engagement: { projectId } } });
