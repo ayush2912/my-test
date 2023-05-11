@@ -18,7 +18,7 @@ const TaskSchema: Prisma.TaskSelect = {
         },
     },
     createdAt: true,
-    updatedAt: true
+    updatedAt: true,
 };
 
 const createTasks = async (data: createTaskData[]) => {
@@ -58,4 +58,11 @@ const deleteTask = async (taskId: string) =>
         },
     });
 
-export { createTasks, updateTask, deleteTask };
+const deleteTasksByStrapiIds = async (strapiIds: string[]) =>
+    prisma.task.deleteMany({
+        where: {
+            strapiId: { in: strapiIds }
+        },
+    });
+
+export { createTasks, updateTask, deleteTask, deleteTasksByStrapiIds };
