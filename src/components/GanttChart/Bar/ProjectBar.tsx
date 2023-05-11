@@ -2,10 +2,9 @@ import { useRef, useState } from "react";
 import Flag from "react-world-flags";
 import styled from "styled-components";
 
-import EyeButton from "@/components/EyeButton";
-import { useOutsideAlerter } from "@/hooks/useOutsiderAlerter";
-
 import { BarPopup } from "./BarPopup";
+import { useOutsideAlerter } from "../../../hooks/useOutsiderAlerter";
+import EyeButton from "../../EyeButton";
 import Text from "../../Text";
 import { IBar } from "../GanttChart.types";
 import useGanttChartControls from "../useGanttChartControls";

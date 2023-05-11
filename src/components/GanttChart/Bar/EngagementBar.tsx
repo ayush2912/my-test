@@ -1,12 +1,11 @@
 import { useRef, useState } from "react";
 import styled from "styled-components";
 
-import EyeButton from "@/components/EyeButton";
-import { useOutsideAlerter } from "@/hooks/useOutsiderAlerter";
-import { convertToEuropeanDateFormat } from "@/utils/dateTimeFormatter";
-
 import { BarPopup } from "./BarPopup";
 import { ModalContent, ModalHeader, TextHolder } from "./ProjectBar";
+import { useOutsideAlerter } from "../../../hooks/useOutsiderAlerter";
+import { convertToEuropeanDateFormat } from "../../../utils/dateTimeFormatter";
+import EyeButton from "../../EyeButton";
 import StatusTag, { StatusType } from "../../StatusTag";
 import Text from "../../Text";
 import { IMappedEngagement } from "../GanttChart.types";
