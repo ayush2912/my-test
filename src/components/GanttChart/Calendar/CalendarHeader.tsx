@@ -7,7 +7,7 @@ import {
   TemporalView,
   IWeeklyHeader,
   IYearlyHeader,
-} from "../GanttChart.types";
+} from "../Calendar/Calendar.types";
 
 const HeaderContainer = styled.div`
   display: flex;

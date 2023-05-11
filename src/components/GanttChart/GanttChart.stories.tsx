@@ -1,11 +1,10 @@
 import type { Meta } from "@storybook/react";
 import { StoryFn } from "@storybook/react";
 
-import { getBarInfo, memoizedCalendarData } from "@/utils/calendarHelper";
-
 import { engagementlistmockdata } from "./engagementlistmockdata";
 import { GanttChart } from "./GanttChart";
 import { ProjectEngagement } from "./GanttChart.types";
+import { getBarInfo, memoizedCalendarData } from "../../utils/calendarHelper";
 
 interface GanttChartProps {
   projectEngagementData: ProjectEngagement[];

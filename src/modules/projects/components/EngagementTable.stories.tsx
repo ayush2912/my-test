@@ -195,15 +195,12 @@ export const Primary: Story = {
     <EngagementTable
       headers={EngagementTableHeaders}
       tableData={projectEngagementsTableData}
-    ></EngagementTable>
+    />
   ),
 };
 
 export const EmptyTable: Story = {
   render: () => (
-    <EngagementTable
-      headers={EngagementTableHeaders}
-      tableData={[]}
-    ></EngagementTable>
+    <EngagementTable headers={EngagementTableHeaders} tableData={[]} />
   ),
 };

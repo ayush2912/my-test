@@ -215,7 +215,7 @@ function EngagementTable({
                 Desk fills out the details, they will be available here for you
                 to read.
               </Text>
-              <DividerDiv></DividerDiv>
+              <DividerDiv />
 
               {v.attributes.map((attribute, index) => {
                 return (

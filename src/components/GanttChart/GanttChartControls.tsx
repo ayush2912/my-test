@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
 
-import { TemporalView } from "./Calendar/Calendar.type";
+import { TemporalView } from "./Calendar/Calendar.types";
 import useGanttChartControls from "./useGanttChartControls";
 import Dropdown from "../Dropdown";
 

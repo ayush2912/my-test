@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import { TemporalView } from "./Calendar.type";
+import { TemporalView } from "./Calendar.types";
 
 export const CalendarBackground = styled.div<{
   width: number;

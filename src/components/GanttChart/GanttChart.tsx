@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { EngagementBar } from "./Bar/EngagementBar";
 import { ProjectBar } from "./Bar/ProjectBar";
 import { TaskBar } from "./Bar/TaskBar";
-import { ICalendar } from "./Calendar/Calendar.type";
+import { ICalendar } from "./Calendar/Calendar.types";
 import { CalendarBackground } from "./Calendar/CalendarBackground";
 import { CalendarHeader } from "./Calendar/CalendarHeader";
 import { IMappedEngagements } from "./GanttChart.types";
