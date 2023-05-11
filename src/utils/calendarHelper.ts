@@ -1,6 +1,6 @@
 import moment from "moment";
 
-import { ProjectEngagement } from "@/components/GanttChart/GanttChart.types";
+import { ProjectEngagement } from "../components/GanttChart/GanttChart.types";
 
 function getFirstSundayOfYear(firstDayOfYear: any) {
   if (firstDayOfYear.day() !== 0) {
