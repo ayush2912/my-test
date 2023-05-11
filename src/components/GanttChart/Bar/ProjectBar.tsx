@@ -51,7 +51,8 @@ const Bar = styled.div<IBar & { focus: boolean }>`
   border-radius: 4px;
   margin-left: ${({ offsetFromLeft }) => offsetFromLeft}px;
   cursor: pointer;
-
+  overflow: visible;
+  white-space: nowrap;
   &:hover {
     text-decoration: underline;
   }

@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, forwardRef } from "react";
 import styled from "styled-components";
 
 type TypeStyle =
@@ -32,18 +32,21 @@ const StyledText = styled.span<{ type: TypeStyle; color: TextColor }>`
   color: ${(props) => props.theme.colors.text[props.color]};
 `;
 
-export default function Text({
-  type,
-  color = "default",
-  children,
-}: {
-  type: TypeStyle;
-  color?: TextColor;
-  children: ReactNode;
-}) {
+export default forwardRef(function Text(
+  {
+    type,
+    color = "default",
+    children,
+  }: {
+    type: TypeStyle;
+    color?: TextColor;
+    children: ReactNode;
+  },
+  ref?: React.Ref<HTMLDivElement>,
+) {
   return (
-    <StyledText type={type} color={color}>
+    <StyledText ref={ref} type={type} color={color}>
       {children}
     </StyledText>
   );
-}
+});
