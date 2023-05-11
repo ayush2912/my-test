@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 import { BarPopup } from "./BarPopup";
@@ -30,6 +30,7 @@ const Bar = styled.div<{
   width: ${({ width }) => width}px;
   border-radius: 4px;
   margin-left: ${({ offsetFromLeft }) => offsetFromLeft}px;
+  margin-right: 8px;
   cursor: pointer;
   padding: 4px 8px;
   background-color: ${(props) => props.theme.colors.primary[600]};
@@ -59,13 +60,25 @@ export const EngagementBar = ({
 }) => {
   const { view } = useGanttChartControls();
 
+  const [isTextOverflowing, setIsTextOverflowing] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
 
   const popupRef = useRef(null);
+  const contentRef = useRef(null);
+
   useOutsideAlerter(popupRef, () => {
     if (showPopup) setShowPopup(false);
   });
+
+  useEffect(() => {
+    if (popupRef.current && contentRef.current) {
+      const containerWidth = (popupRef.current as HTMLElement).clientWidth;
+      const contentWidth = (contentRef.current as HTMLElement).scrollWidth;
+
+      setIsTextOverflowing(contentWidth + 16 > containerWidth);
+    }
+  }, [view]);
 
   const handleContainerMouseDown = (
     event: React.MouseEvent<HTMLDivElement>,
@@ -139,10 +152,17 @@ export const EngagementBar = ({
             </ModalContent>
           </BarPopup>
         )}
-        <Text type="caption" color="white">
+        {!isTextOverflowing && (
+          <Text ref={contentRef} type="caption" color="white">
+            {engagementData.type}
+          </Text>
+        )}
+      </Bar>
+      {isTextOverflowing && (
+        <Text type="caption" color="default">
           {engagementData.type}
         </Text>
-      </Bar>
+      )}
     </Container>
   );
 };
