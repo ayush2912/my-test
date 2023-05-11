@@ -185,10 +185,10 @@ const headers: Headers[] = [
   { name: "PORTFOLIO OWNER", fieldName: "portfolioOwners" },
   { name: "ASSET OWNER(S)", fieldName: "assetOwners" },
   {
-    name: "ANNUAL APPROX.CR. VOL. (tCO2e)",
+    name: "ANNUAL APPROX. \n CR. VOL. (tCO2e)",
     fieldName: "annualApproximateCreditVolume",
   },
-  { name: "LATEST ENGAGEMENT STATE & DUE DATE", fieldName: "engagement" },
+  { name: "LATEST ENGAGEMENT \n STATE & DUE DATE", fieldName: "engagement" },
   { name: "", fieldName: "viewButton" },
 ];
 

@@ -34,6 +34,7 @@ export const Content = styled.div`
   white-space: pre-wrap;
   max-height: 50px;
   cursor: default;
+  max-width: 200px;
 `;
 
 const FlagHolder = styled.div`
