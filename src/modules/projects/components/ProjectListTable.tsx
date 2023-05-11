@@ -40,6 +40,8 @@ export const Content = styled.div`
 const FlagHolder = styled.div`
   height: 12px;
   width: 22px;
+  display: flex;
+  align-content: center;
 `;
 
 type ProjectStateTypes =
