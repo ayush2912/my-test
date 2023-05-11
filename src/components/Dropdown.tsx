@@ -69,7 +69,7 @@ const Dropdown = ({ options, value, onChange }: any) => {
       <DropdownButton onClick={toggleDropdown}>{value}</DropdownButton>
       {isOpen && (
         <DropdownList>
-          {options.map((option) => (
+          {options.map((option: any) => (
             <DropdownListItem
               key={option.value}
               onClick={() => handleOptionClick(option)}

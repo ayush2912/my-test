@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-import { TemporalView } from "./Calendar/Calendar.type";
+import { TemporalView } from "./Calendar/Calendar.types";
 
 interface GanttChartControls {
   view: TemporalView;
