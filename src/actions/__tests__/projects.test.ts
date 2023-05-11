@@ -110,7 +110,6 @@ describe('createProject()', () => {
         );
 
         await deleteProject(result.id);
-
     });
 });
 

@@ -13,7 +13,7 @@ import {
     getProjectOwners,
     mappedProjectData,
     mappedProjectWithStrapi,
-    deletedStrapiIds
+    deletedStrapiIds,
 } from './projectUtility';
 
 import { compareAndUpdate } from '../../utility/utils';
@@ -75,7 +75,7 @@ async function updateProjectStrapi(entryId: number, data: any) {
         const mappedData = mappedProjectData(combinedData);
         const mappedDatawithStarpi = mappedProjectWithStrapi(getDetails);
 
-        const updatedData = compareAndUpdate(mappedDatawithStarpi, mappedData)
+        const updatedData = compareAndUpdate(mappedDatawithStarpi, mappedData);
 
         const deletedIds = await deletedStrapiIds(getDetails, mappedData);
 
@@ -90,7 +90,6 @@ async function updateProjectStrapi(entryId: number, data: any) {
         const updatedDetails = await updateProjectData(projectId, updatedData);
 
         return updatedDetails;
-
     } catch (error) {
         console.error(
             '***** Error in Webhook projectService of updateProjectStrapi method *****',

@@ -143,9 +143,13 @@ const deleteEngagement = (engagementId: string) =>
 const deleteEngagementsByStrapiIds = async (strapiIds: string[]) =>
     prisma.engagement.deleteMany({
         where: {
-            strapiId: { in: strapiIds }
+            strapiId: { in: strapiIds },
         },
     });
 
-
-export { createEngagement, deleteEngagement, updateEngagement, deleteEngagementsByStrapiIds };
+export {
+    createEngagement,
+    deleteEngagement,
+    updateEngagement,
+    deleteEngagementsByStrapiIds,
+};

@@ -44,7 +44,7 @@ const ProjectSchema: Prisma.ProjectSelect = {
         select: {
             id: true,
             name: true,
-            code: true
+            code: true,
         },
     },
     types: {
@@ -124,7 +124,6 @@ const getProject = async (projectId: string) =>
     });
 
 const createProject = async (data: any) => {
-
     return prisma.project.create({
         data: {
             name: data.name,
@@ -134,25 +133,25 @@ const createProject = async (data: any) => {
                         ObjectId.isValid(data.registry)
                             ? data.registry
                             : data.registry,
-                }
+                },
             },
             registryProjectId: data.registryProjectId,
             registryUrl: data.registryUrl,
             countries: {
                 connect: data.countries.map((country: string) => ({
                     iso2Name: country,
-                }))
+                })),
             },
             states: data.states,
             methodologies: {
                 connect: data.methodologies
                     ? data.methodologies.map((methodology: string) => {
-                        if (ObjectId.isValid(methodology)) {
-                            return { id: methodology };
-                        } else {
-                            return { code: methodology };
-                        }
-                    })
+                          if (ObjectId.isValid(methodology)) {
+                              return { id: methodology };
+                          } else {
+                              return { code: methodology };
+                          }
+                      })
                     : [],
             },
             types: {
@@ -177,34 +176,34 @@ const createProject = async (data: any) => {
             engagements: {
                 create: data.engagements
                     ? data.engagements.map((engagement: any) => ({
-                        type: engagement.type,
-                        startDate: engagement.startDate,
-                        dueDate: engagement.dueDate,
-                        completedDate: engagement.completedDate,
-                        state: engagement.state,
-                        notes: engagement.notes,
-                        attributes: engagement.attributes
-                            ? engagement.attributes.map((attribute: any) => ({
-                                name: attribute.name,
-                                type: attribute.type,
-                                value: attribute.value,
-                                strapiId: attribute.strapiId,
-                            }))
-                            : [],
-                        tasks: {
-                            create: engagement.tasks
-                                ? engagement.tasks.map((task: any) => ({
-                                    type: task.type,
-                                    startDate: task.startDate,
-                                    dueDate: task.dueDate,
-                                    completedDate: task.completedDate,
-                                    state: task.state,
-                                    strapiId: task.strapiId,
+                          type: engagement.type,
+                          startDate: engagement.startDate,
+                          dueDate: engagement.dueDate,
+                          completedDate: engagement.completedDate,
+                          state: engagement.state,
+                          notes: engagement.notes,
+                          attributes: engagement.attributes
+                              ? engagement.attributes.map((attribute: any) => ({
+                                    name: attribute.name,
+                                    type: attribute.type,
+                                    value: attribute.value,
+                                    strapiId: attribute.strapiId,
                                 }))
-                                : [],
-                        },
-                        strapiId: engagement.strapiId,
-                    }))
+                              : [],
+                          tasks: {
+                              create: engagement.tasks
+                                  ? engagement.tasks.map((task: any) => ({
+                                        type: task.type,
+                                        startDate: task.startDate,
+                                        dueDate: task.dueDate,
+                                        completedDate: task.completedDate,
+                                        state: task.state,
+                                        strapiId: task.strapiId,
+                                    }))
+                                  : [],
+                          },
+                          strapiId: engagement.strapiId,
+                      }))
                     : [],
             },
             creditingPeriodStartDate: data.creditingPeriodStartDate,
@@ -221,12 +220,12 @@ const createProject = async (data: any) => {
             assetOwners: {
                 connect: data.assetOwners
                     ? data.assetOwners.map((assetOwner: string) => {
-                        if (ObjectId.isValid(assetOwner)) {
-                            return { id: assetOwner };
-                        } else {
-                            return { name: assetOwner };
-                        }
-                    })
+                          if (ObjectId.isValid(assetOwner)) {
+                              return { id: assetOwner };
+                          } else {
+                              return { name: assetOwner };
+                          }
+                      })
                     : [],
             },
             isActive: true,
@@ -260,11 +259,13 @@ const updateProjectData = (projectId: string, data: any) => {
                     update: {
                         ...engagement,
                         attributes: {
-                            upsert: engagement.attributes.map((attribute: any) => ({
-                                where: { strapiId: attribute.strapiId },
-                                update: attribute,
-                                create: attribute,
-                            }))
+                            upsert: engagement.attributes.map(
+                                (attribute: any) => ({
+                                    where: { strapiId: attribute.strapiId },
+                                    update: attribute,
+                                    create: attribute,
+                                })
+                            ),
                         },
                         tasks: {
                             upsert: engagement.tasks.map((task: any) => ({

@@ -61,7 +61,7 @@ const deleteTask = async (taskId: string) =>
 const deleteTasksByStrapiIds = async (strapiIds: string[]) =>
     prisma.task.deleteMany({
         where: {
-            strapiId: { in: strapiIds }
+            strapiId: { in: strapiIds },
         },
     });
 

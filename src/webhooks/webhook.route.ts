@@ -23,7 +23,6 @@ export default function webhookRoutes(router: Router) {
                 case 'entry.create':
                     switch (model) {
                         case 'project':
-
                             events.emit(
                                 EventTypes.CREATING_STRAPI_PROJECT,
                                 payload.entry.ProjectName
@@ -34,9 +33,11 @@ export default function webhookRoutes(router: Router) {
                                     payload.entry
                                 );
                             } catch (error) {
-                                events.emit(EventTypes.STRAPI_PROJECT_VALIDATION_FAILED,
+                                events.emit(
+                                    EventTypes.STRAPI_PROJECT_VALIDATION_FAILED,
                                     payload.entry.ProjectName,
-                                    error);
+                                    error
+                                );
                             }
 
                             break;
@@ -45,18 +46,21 @@ export default function webhookRoutes(router: Router) {
                 case 'entry.update':
                     switch (model) {
                         case 'project':
-
                             events.emit(
                                 EventTypes.UPDATING_STRAPI_PROJECT,
                                 payload.entry.ProjectName
                             );
                             try {
-                                await updateProjectStrapi(entryId, payload.entry);
-                            }
-                            catch (error) {
-                                events.emit(EventTypes.STRAPI_PROJECT_VALIDATION_FAILED,
+                                await updateProjectStrapi(
+                                    entryId,
+                                    payload.entry
+                                );
+                            } catch (error) {
+                                events.emit(
+                                    EventTypes.STRAPI_PROJECT_VALIDATION_FAILED,
                                     payload.entry.ProjectName,
-                                    error);
+                                    error
+                                );
                             }
 
                             break;
@@ -65,20 +69,18 @@ export default function webhookRoutes(router: Router) {
                 case 'entry.delete':
                     switch (model) {
                         case 'project':
-
                             events.emit(
                                 EventTypes.DELETING_STRAPI_PROJECT,
                                 payload.entry.ProjectName
                             );
                             try {
-                                await deleteProjectStrapi(
-                                    entryId
-                                );
-
+                                await deleteProjectStrapi(entryId);
                             } catch (error) {
-                                events.emit(EventTypes.STRAPI_PROJECT_VALIDATION_FAILED,
+                                events.emit(
+                                    EventTypes.STRAPI_PROJECT_VALIDATION_FAILED,
                                     payload.entry.ProjectName,
-                                    error);
+                                    error
+                                );
                             }
 
                             break;

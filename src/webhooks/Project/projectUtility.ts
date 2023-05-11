@@ -25,8 +25,8 @@ async function getProjectOwners(strapProjectId: number) {
         const assetOwners =
             data.AssetOwners?.data?.length > 0
                 ? data.AssetOwners.data.map(
-                    (owner: any) => owner.attributes.Name
-                )
+                      (owner: any) => owner.attributes.Name
+                  )
                 : [];
 
         if (portfolioOwner) {
@@ -45,7 +45,6 @@ async function getProjectOwners(strapProjectId: number) {
         );
     }
 }
-
 
 /**
  * This method used to mapped project data coming from strapi project creation.
@@ -121,7 +120,9 @@ function mappedProjectWithStrapi(data: any) {
         registryProjectId: data.registryProjectId,
         countries: data.countries.map((country: any) => country.iso2Name),
         states: data.states,
-        methodologies: data.methodologies.map((methodology: any) => methodology.code),
+        methodologies: data.methodologies.map(
+            (methodology: any) => methodology.code
+        ),
         type: data.types[0].name,
         subType: data.subTypes[0].name,
         notes: data.notes,
@@ -146,38 +147,41 @@ function deletedStrapiIds(Ob1: any, Ob2: any) {
         '----- In Webhook projectUtility of deletedStrapiIds method -----'
     );
 
-    let sIdKeys: any = [];
+    const sIdKeys: any = [];
 
     Ob2.engagements.forEach((data: any) => sIdKeys.push(data.strapiId));
 
     let missingTaskIds: any = [];
-    let missingEngagementIds: any = [];
+    const missingEngagementIds: any = [];
 
     Ob1.engagements.forEach((data: any) => {
-
-        let index = sIdKeys.indexOf(data.strapiId);
+        const index = sIdKeys.indexOf(data.strapiId);
 
         if (index != -1) {
-            let obj1task = data.tasks;
-            let obj2task = Ob2.engagements[index].tasks;
-            let a: any = [];
+            const obj1task = data.tasks;
+            const obj2task = Ob2.engagements[index].tasks;
+            const a: any = [];
             obj1task.forEach((data: any) => {
-                a.push(data["strapiId"]);
-            })
-            let b: any = [];
+                a.push(data['strapiId']);
+            });
+            const b: any = [];
             obj2task.forEach((data: any) => {
-                b.push(data["strapiId"]);
-            })
+                b.push(data['strapiId']);
+            });
             missingTaskIds = a.filter((data: any) => !b.includes(data));
-        }
-        else {
+        } else {
             missingEngagementIds.push(data.strapiId);
-            data.tasks.forEach(((data: any) => {
+            data.tasks.forEach((data: any) => {
                 missingTaskIds.push(data.strapiId);
-            }))
+            });
         }
     });
     return { missingEngagementIds, missingTaskIds };
 }
 
-export { getProjectOwners, mappedProjectData, mappedProjectWithStrapi, deletedStrapiIds };
+export {
+    getProjectOwners,
+    mappedProjectData,
+    mappedProjectWithStrapi,
+    deletedStrapiIds,
+};
