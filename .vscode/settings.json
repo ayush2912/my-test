@@ -8,6 +8,7 @@
     "App.test.js": true,
     "main.js": true,
     "assets": true,
+    "hooks": true,
     "components": true,
     "modules": true,
     "styles": true,
