@@ -1,10 +1,17 @@
 import { Request, Response, Router } from 'express';
 import {
-    getProjectDetails,
-    getProjectEngagementDetails,
+    getProjectDetails, 
+    getProjectList,
+    getProjectEngagementDetails
 } from '../services/projectService';
-import { validateProjectIdParamsSchema } from '../middlewares/validation';
+import {
+    validateProjectIdParamsSchema,
+    validateProjectsQueryParamsSchema
+} from '../middlewares/validation';
 import ProjectConstants from '../utility/constants/ProjectConstants';
+import { QueryParams } from "../interfaces/project.interface"
+import { string } from 'zod';
+
 
 export default function routes(router: Router) {
     router.get(
@@ -42,4 +49,37 @@ export default function routes(router: Router) {
             res.sendError(error);
         }
     });
+
+    router.get(
+        '/projects',
+        validateProjectsQueryParamsSchema,
+        async (req: Request, res: Response) => {
+            try {
+                console.info('----- /projects ----');
+
+                const {organizationIds, take, skip, tab} = req.query;
+
+                let queryParams: QueryParams = {
+                    organizationIds: organizationIds as string,
+                    take: Number(take),
+                    skip: Number(skip),
+                    tab: tab as string
+                }
+                let getProjectListInput = {
+                    ...queryParams,
+                    organizationIds: queryParams.organizationIds.split(',')
+                }
+                
+                const results = await getProjectList(getProjectListInput);
+
+                res.sendSuccess({
+                    msg: ProjectConstants.PROJECT_RETRIEVED,
+                    data: results,
+                    customCode: 'PROJECTS_RETRIEVED_SUCCESSFULLY',
+                });
+            } catch (error) {
+                res.sendError(error);
+            }
+        }
+    );
 }
