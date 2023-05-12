@@ -3,7 +3,7 @@ import { Command } from 'commander';
 import { readFileSync } from 'fs';
 
 import { parseProjectTypes, parseCountries } from './parse';
-import { loadDataFromCSV, readDataFromUrl } from './utils';
+import { loadDataFromCSV } from './utils';
 import { seedProjectTypes, seedCountries } from './seed';
 import { listProjectTypes } from './list';
 
@@ -61,8 +61,8 @@ seed.command('projectTypes')
     });
 
 seed.command('countries')
-    .argument('<url>', 'url for the json data')
-    .description('Seed the Countries data into database from url')
+    .argument('<path>', 'path for the json data')
+    .description('Seed the Countries data into database from json file')
     .action(async (path: string) => {
         const jsonString = readFileSync(path, 'utf-8');
         const data = parseCountries(jsonString);
