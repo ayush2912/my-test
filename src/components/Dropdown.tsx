@@ -1,6 +1,8 @@
 import { useState } from "react";
 import styled from "styled-components";
 
+import Text from "./Text";
+
 // Define the type for the options
 interface Option {
   value: string;
@@ -27,6 +29,7 @@ const DropdownButton = styled.button`
   padding: 8px;
   font-size: 16px;
   cursor: pointer;
+  width: 120px;
 `;
 
 const DropdownList = styled.ul`
@@ -34,20 +37,26 @@ const DropdownList = styled.ul`
   top: 100%;
   left: 0;
   z-index: 1;
-  background-color: white;
-  border: 1px solid #ccc;
+
+  background: #ffffff;
+  /* Shadow Card */
+
+  box-shadow: 0px 8px 64px rgba(15, 34, 67, 0.06),
+    0px 0px 1px rgba(15, 34, 67, 0.08);
+  border-radius: 8px;
   padding: 0;
   margin: 0;
   list-style: none;
   font-size: 16px;
+  margin-top: 3px;
 `;
 
 const DropdownListItem = styled.li`
-  padding: 8px;
+  padding: 8px 16px;
   cursor: pointer;
-
+  width: 120px;
   &:hover {
-    background-color: #f6f6f6;
+    background: #eff4fe;
   }
 `;
 
@@ -74,7 +83,7 @@ const Dropdown = ({ options, value, onChange }: any) => {
               key={option.value}
               onClick={() => handleOptionClick(option)}
             >
-              {option.label}
+              <Text type="body">{option.label}</Text>
             </DropdownListItem>
           ))}
         </DropdownList>

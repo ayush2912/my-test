@@ -16,9 +16,9 @@ export const GanttChartControls = () => {
   const { view, changeView } = useGanttChartControls();
 
   const options = [
-    { value: "monthly", label: "monthly" },
-    { value: "yearly", label: "yearly" },
-    { value: "weekly", label: "weekly" },
+    { value: "weekly", label: "Weekly" },
+    { value: "monthly", label: "Monthly" },
+    { value: "yearly", label: "Yearly" },
   ];
 
   const handleDropdownChange = (value: TemporalView) => {
