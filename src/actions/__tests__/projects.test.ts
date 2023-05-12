@@ -453,6 +453,7 @@ describe('getProjects()', () => {
             organizationIds: [organizationId],
             take: 10,
             skip: 0,
+            tab: 'ACTIVE',
         });
         expect(result).toEqual([]);
     });
