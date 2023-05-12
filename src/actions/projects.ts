@@ -407,6 +407,39 @@ const getProjects = async (options: GetProjectListInput) =>
             }))
         );
 
+const countProjects = ({ organizationIds }: { organizationIds: string[] }) =>
+    prisma
+        .$transaction([
+            prisma.project.count({
+                where: {
+                    portfolioOwnerId: {
+                        in: organizationIds,
+                    },
+                    isActive: {
+                        equals: true,
+                    },
+                },
+            }),
+            prisma.project.count({
+                where: {
+                    portfolioOwnerId: {
+                        in: organizationIds,
+                    },
+                    isActive: {
+                        equals: false,
+                    },
+                },
+            }),
+        ])
+        .then((res) => {
+            console.log(res);
+            return res;
+        })
+        .then(([active, inactive]) => ({
+            active,
+            inactive,
+        }));
+
 export {
     getProjectById,
     createProject,
@@ -414,4 +447,5 @@ export {
     deleteProject,
     getProjects,
     getProjectEngagements,
+    countProjects,
 };

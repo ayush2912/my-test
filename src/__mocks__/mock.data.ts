@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 
 enum State {
     NOT_STARTED = 'NOT_STARTED',
@@ -26,6 +26,77 @@ const countryList = [
     },
 ];
 
+type MockMethodology = {
+    id: string;
+    name: string;
+    code: string;
+};
+
+type MockCountry = {
+    name: string;
+    iso3Name: string;
+    iso2Name: string;
+    id: string;
+};
+
+type MockRegistry = {
+    id: string;
+    name: string;
+};
+
+type MockOrganization = {
+    id: string;
+    name: string;
+};
+
+type MockProjectType = {
+    id: string;
+    name: string;
+};
+
+const MockProject =
+    ({
+        registries,
+        organizations,
+        countries,
+        projectTypes,
+        methodologies,
+    }: {
+        countries: MockCountry[];
+        registries: MockRegistry[];
+        methodologies: MockMethodology[];
+        projectTypes: MockProjectType[];
+        organizations: MockOrganization[];
+    }) =>
+    ({ organizationId }: { organizationId: string }) => ({
+        name: faker.company.name(),
+        registry: faker.helpers.arrayElement(registries).id,
+        organization: organizationId,
+        registryUrl: 'www.url.com',
+        registryProjectId: '1851',
+        countries: faker.helpers
+            .arrayElements(countries)
+            .map((c) => c.iso2Name),
+        states: ['UP'],
+        methodologies: faker.helpers
+            .arrayElements(methodologies, 1)
+            .map((m) => m.id),
+        type: faker.helpers.arrayElement(projectTypes).id,
+        subType: faker.helpers.arrayElement(projectTypes).id,
+        notes: faker.company.bs(),
+        isActive: true,
+        creditingPeriodStartDate: faker.date.past(),
+        creditingPeriodEndDate: faker.date.future(),
+        annualApproximateCreditVolume: faker.datatype.number({
+            min: 100000,
+            max: 10000000,
+        }),
+        portfolioOwner: organizationId,
+        assetOwners: faker.helpers
+            .arrayElements(organizations)
+            .map((m) => m.id),
+    });
+
 const MockCountries = () =>
     Array(3)
         .fill(0)
@@ -40,6 +111,7 @@ const MockMethodologies = () =>
         .map(() => ({
             id: faker.database.mongodbObjectId(),
             name: faker.company.bs(),
+            code: faker.datatype.string(5),
         }));
 
 const MockRegistries = () =>
@@ -88,6 +160,15 @@ const ProjectMockFactory = () => {
     const projectTypes = MockProjectTypes();
     const organizations = MockOrganizations();
     const engagements = MockEngagements();
+
+    const createMockProject = MockProject({
+        countries,
+        registries,
+        methodologies,
+        projectTypes,
+        organizations,
+    });
+
     const states = ['UP', 'Maharashtra', 'California'];
 
     const createMockData = () =>
@@ -158,6 +239,7 @@ const ProjectMockFactory = () => {
         projectTypes,
         engagements,
         states,
+        createMockProject,
         createMockData,
         clearMockData,
     };
