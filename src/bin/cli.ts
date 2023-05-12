@@ -69,6 +69,22 @@ list.command('projectTypes')
         console.log(JSON.stringify(results, null, 2));
     });
 
+parse
+    .command('attributeTypes')
+    .argument('<path>', 'file path to the CSV file')
+    .description('Parse Attribute Type CSV file into JSON objects')
+    .action((path) => {
+        const string = readFileSync(path, 'utf-8');
+        const data = loadDataFromCSV(string);
+        const results = data.map((item: any) => ({
+            engagementType: item.engagementType,
+            name: item.name,
+            key: item.key,
+            type: item.type,
+        }));
+        console.log(JSON.stringify(results, null, 2));
+    });
+
 program
     .command('test')
     .description('Test command that outputs Hello World')
