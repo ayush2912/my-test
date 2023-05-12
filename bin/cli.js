@@ -11808,6 +11808,12 @@ var {
 // src/bin/cli.ts
 var import_fs = require("fs");
 
+// src/bin/parse.ts
+var parseProjectTypes = (data) => data.map((d) => ({
+  name: d.Name,
+  parentType: d.ParentType
+}));
+
 // node_modules/csv-parse/lib/api/CsvError.js
 var CsvError = class extends Error {
   constructor(code, message, options, ...contexts) {
@@ -13101,36 +13107,8 @@ prisma.$connect().then(() => console.info("Connected to Prisma Client!")).catch(
   console.error("Error connecting to Prisma Client:", error);
 });
 
-// src/bin/cli.ts
-var program2 = new Command();
-program2.name("offsetmax").description("CLI to some Offsetmax utilities").version("0.0.1");
-var parse2 = program2.command("parse").description("Parse data into JSON objects");
-parse2.command("taskTypes").argument("<path>", "file path to the CSV file").description("Parse Task Type CSV file into JSON objects").action((path) => {
-  const string = (0, import_fs.readFileSync)(path, "utf-8");
-  const data = loadDataFromCSV(string);
-  const results = data.map((item) => ({
-    registry: item.registry,
-    engagementType: item.engagement_type,
-    taskType: item.task_type
-  }));
-  console.log(JSON.stringify(results, null, 2));
-});
-parse2.command("projectTypes").argument("<path>", "file path to the CSV file").description("Parse Project Type CSV files into JSON objects").action((path) => {
-  const string = (0, import_fs.readFileSync)(path, "utf-8");
-  const data = loadDataFromCSV(string);
-  const results = data.map((d) => ({
-    name: d.Name,
-    parentType: d.ParentType
-  }));
-  console.log(JSON.stringify(results, null, 2));
-});
-var seed = program2.command("seed").description("Seed data into database");
-seed.command("projectTypes").argument("<path>", "file path to the CSV file").description("Seed Project Types into database from CSV file").action((path) => __async(exports, null, function* () {
-  const string = (0, import_fs.readFileSync)(path, "utf-8");
-  const data = loadDataFromCSV(string).map((d) => ({
-    name: d.Name,
-    parentType: d.ParentType
-  }));
+// src/bin/seed.ts
+var seedProjectTypes = (data) => __async(void 0, null, function* () {
   const parentTypes = yield prisma.$transaction(
     data.filter((r) => r.parentType === "").map(
       ({ name }) => prisma.projectType.upsert({
@@ -13148,44 +13126,80 @@ seed.command("projectTypes").argument("<path>", "file path to the CSV file").des
   );
   const subTypes = yield prisma.$transaction(
     data.filter((r) => r.parentType !== "").map(
-      (r) => prisma.projectType.upsert({
-        where: {
-          name: r.name
-        },
-        update: {
-          name: r.name,
-          parentId: parentTypes.find(
-            (p) => p.name === r.parentType
-          ).id
-        },
-        create: {
-          name: r.name,
-          parentId: parentTypes.find(
-            (p) => p.name === r.parentType
-          ).id
-        }
-      })
+      (r) => {
+        var _a2, _b;
+        return prisma.projectType.upsert({
+          where: {
+            name: r.name
+          },
+          update: {
+            name: r.name,
+            parentId: (_a2 = parentTypes.find(
+              (p) => p.name === r.parentType
+            )) == null ? void 0 : _a2.id
+          },
+          create: {
+            name: r.name,
+            parentId: (_b = parentTypes.find(
+              (p) => p.name === r.parentType
+            )) == null ? void 0 : _b.id
+          }
+        });
+      }
     )
   );
-  console.log({ parentTypes, subTypes });
+  return {
+    parentTypes,
+    subTypes
+  };
+});
+
+// src/bin/list.ts
+var listProjectTypes = () => prisma.projectType.findMany({
+  select: {
+    id: true,
+    name: true,
+    parentType: {
+      select: {
+        id: true,
+        name: true
+      }
+    }
+  }
+});
+
+// src/bin/cli.ts
+var program2 = new Command();
+program2.name("offsetmax").description("CLI to some Offsetmax utilities").version("0.0.1");
+var parse2 = program2.command("parse").description("Parse data into JSON objects");
+parse2.command("taskTypes").argument("<path>", "file path to the CSV file").description("Parse Task Type CSV file into JSON objects").action((path) => {
+  const string = (0, import_fs.readFileSync)(path, "utf-8");
+  const data = loadDataFromCSV(string);
+  const results = data.map((item) => ({
+    registry: item.registry,
+    engagementType: item.engagement_type,
+    taskType: item.task_type
+  }));
+  console.log(JSON.stringify(results, null, 2));
+});
+parse2.command("projectTypes").argument("<path>", "file path to the CSV file").description("Parse Project Type CSV files into JSON objects").action((path) => {
+  const string = (0, import_fs.readFileSync)(path, "utf-8");
+  const data = loadDataFromCSV(string);
+  const results = parseProjectTypes(data);
+  console.log(JSON.stringify(results, null, 2));
+});
+var seed = program2.command("seed").description("Seed data into database");
+seed.command("projectTypes").argument("<path>", "file path to the CSV file").description("Seed Project Types into database from CSV file").action((path) => __async(exports, null, function* () {
+  const string = (0, import_fs.readFileSync)(path, "utf-8");
+  const data = parseProjectTypes(loadDataFromCSV(string));
+  const { parentTypes, subTypes } = yield seedProjectTypes(data);
   console.log(
     `Created ${parentTypes.length} Project Parent Types, ${subTypes.length} Project Subtypes`
   );
 }));
 var list = program2.command("list").description("List items from database");
 list.command("projectTypes").description("List Project Types from database").action(() => __async(exports, null, function* () {
-  const results = yield prisma.projectType.findMany({
-    select: {
-      id: true,
-      name: true,
-      parentType: {
-        select: {
-          id: true,
-          name: true
-        }
-      }
-    }
-  });
+  const results = yield listProjectTypes();
   console.log(JSON.stringify(results, null, 2));
 }));
 program2.command("test").description("Test command that outputs Hello World").action(() => {
