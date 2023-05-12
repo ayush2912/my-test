@@ -14,9 +14,12 @@ const validateRequest =
         const bodyData = req.body;
         const paramsData = req.params;
         const queryData = req.query;
+        console.log(bodyData);
+        console.log(paramsData);
+        console.log(queryData);
         const errorResponse = new Errors.PreConditionFailed();
 
-        if (paramsSchema && Object.keys(paramsData).length > 0) {
+        if (paramsSchema) {
             try {
                 const validatedParamsData = paramsSchema.parse(paramsData);
                 req.params = validatedParamsData;
@@ -87,6 +90,21 @@ const validateProjectsQueryParamsSchema = validateRequest(
         take: z.number().min(10).max(100).default(10),
         skip: z.number().min(0).default(0),
         tab: z.enum(['ACTIVE', 'INACTIVE']).default('ACTIVE'),
+    })
+);
+
+const validateProjectEngagementsQueryParamsSchema = validateRequest(
+    undefined,
+    undefined,
+    z.object({
+        organizationIds: z
+            .string({
+                invalid_type_error: 'Invalid Organization ID',
+                required_error: 'Organization IDs is required',
+            })
+            .min(24),
+        take: z.number().min(10).max(100).default(10),
+        skip: z.number().min(0).default(0),
     })
 );
 
@@ -213,4 +231,4 @@ const projectSchema = validateRequest(
     })
 );
 
-export { validateProjectIdParamsSchema, validateProjectsQueryParamsSchema, projectSchema };
+export { validateProjectIdParamsSchema, validateProjectsQueryParamsSchema, validateProjectEngagementsQueryParamsSchema, projectSchema };

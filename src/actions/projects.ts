@@ -1,7 +1,10 @@
 import { prisma, Prisma } from './prisma';
 import { ObjectId } from 'bson';
 import { EngagementSchema } from './engagements';
-import { GetProjectListInput, GetProjectEngagementsInput } from '../interfaces/project.interface'
+import {
+    GetProjectEngagementsInput,
+    GetProjectListInput,
+} from '../interfaces/project.interface';
 
 const ProjectSchema: Prisma.ProjectSelect = {
     id: true,
@@ -68,22 +71,19 @@ const ProjectSchema: Prisma.ProjectSelect = {
     updatedAt: true,
 };
 
-export const isEngagementOverdue = (engagement: any) => {
-    if (engagement?.state === 'COMPLETED') {
-        if (!engagement.completedDate) {
+export const getIsOverdue = (object: any) => {
+    if (object?.state === 'COMPLETED') {
+        if (!object.completedDate) {
             return false;
         }
 
-        if (engagement?.completedDate >= engagement?.dueDate) {
+        if (object?.completedDate >= object?.dueDate) {
             return true;
         }
     }
 
-    if (
-        engagement?.state === 'IN_PROGRESS' ||
-        engagement?.state === 'NOT_STARTED'
-    ) {
-        if (engagement.dueDate <= new Date().toISOString()) {
+    if (object?.state === 'IN_PROGRESS' || object?.state === 'NOT_STARTED') {
+        if (object.dueDate <= new Date().toISOString()) {
             return true;
         }
     }
@@ -108,6 +108,7 @@ const applyGetProjectsFilters = (options: GetProjectListInput) => {
             equals: false,
         };
     }
+
     return filters;
 };
 
@@ -401,7 +402,7 @@ const getProjects = async (options: GetProjectListInput) =>
                 subTypes: result.subTypes,
                 engagement: {
                     ...result.engagements[0],
-                    isOverdue: isEngagementOverdue(result.engagements[0]),
+                    isOverdue: getIsOverdue(result.engagements[0]),
                 },
                 annualApproximateCreditVolume:
                     result.annualApproximateCreditVolume,
