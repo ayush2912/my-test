@@ -7,6 +7,7 @@ type CSVMethodologies = {
     Registry: string;
     Code: string;
     Name: string;
+    FullName: string;
 };
 
 export const parseProjectTypes = (data: CSVProjectType[]) =>
@@ -22,4 +23,5 @@ export const parseMethodologies = (data: CSVMethodologies[]) =>
         registry: d.Registry,
         code: d.Code,
         name: d.Name,
+        fullName: d.FullName,
     }));

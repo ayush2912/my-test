@@ -15,6 +15,7 @@ type Methodologies = {
     registry: string;
     code: string;
     name: string;
+    fullName: string;
 };
 
 export const seedProjectTypes = async (data: ProjectTypeData[]) => {
@@ -98,6 +99,7 @@ export const seedMethodologies = async (data: Methodologies[]) => {
                 },
                 update: {
                     name: item.name,
+                    fullName: item.fullName,
                     code: item.code,
                     Registry: {
                         connect:
@@ -114,6 +116,7 @@ export const seedMethodologies = async (data: Methodologies[]) => {
                 create: {
                     name: item.name,
                     code: item.code,
+                    fullName: item.fullName,
                     Registry: {
                         connect:
                             item.registry === 'CDM'
