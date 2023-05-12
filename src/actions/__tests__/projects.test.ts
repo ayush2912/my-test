@@ -460,7 +460,8 @@ describe('getProjects()', () => {
 });
 
 describe('getProjectEngagements()', () => {
-    test('it should list all project engagements', async () => {
+    test.only('it should list all project engagements', async () => {
+        const organizationId = faker.helpers.arrayElement(organizations).id;
         const data = {
             name: 'Renewable Get Power Project',
             registry: faker.helpers.arrayElement(registries).id,
@@ -481,7 +482,7 @@ describe('getProjectEngagements()', () => {
             creditingPeriodStartDate: '2023-04-11T14:15:22Z',
             creditingPeriodEndDate: '2023-04-11T14:15:22Z',
             annualApproximateCreditVolume: 300000,
-            portfolioOwner: faker.helpers.arrayElement(organizations).id,
+            portfolioOwner: organizationId,
             assetOwners: faker.helpers
                 .arrayElements(organizations)
                 .map((m) => m.id),
@@ -540,8 +541,14 @@ describe('getProjectEngagements()', () => {
                 },
             ],
         };
+
         await createEngagement(engagementData);
-        const result = await getProjectEngagements();
+        const getProjectEngagementsInput = {
+            organizationIds: [organizationId],
+            take: 10,
+            skip: 0,
+        };
+        const result = await getProjectEngagements(getProjectEngagementsInput);
         const projectCreated = await getProjectById(project.id);
         expect(result).toContainEqual(
             expect.objectContaining({

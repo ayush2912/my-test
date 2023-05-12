@@ -44,7 +44,9 @@ describe('/project-engagements}', () => {
         mockGetProjectEngagementDetails.mockReturnValue(mockProjectEngagements);
 
         const results = await request(app)
-            .get(`/project-engagements/`)
+            .get(
+                `/project-engagements?organizationIds=6448d91ea2b95136130c9550`
+            )
             .expect('Content-Type', /json/)
             .expect(200);
 
@@ -59,6 +61,10 @@ describe('/project-engagements}', () => {
                 expect.objectContaining(dataItem)
             );
         });
-        expect(mockGetProjectEngagementDetails).toHaveBeenCalledWith();
+        expect(mockGetProjectEngagementDetails).toHaveBeenCalledWith({
+            organizationIds: ['6448d91ea2b95136130c9550'],
+            take: 10,
+            skip: 0,
+        });
     });
 });

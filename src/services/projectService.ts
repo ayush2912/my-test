@@ -6,7 +6,10 @@ import {
     getIsOverdue,
 } from '../actions/projects';
 import ProjectConstants from '../utility/constants/ProjectConstants';
-import { GetProjectListInput } from '../interfaces/project.interface';
+import {
+    GetProjectListInput,
+    GetProjectEngagementsInput,
+} from '../interfaces/project.interface';
 
 /**
  * This method get project details from project id.
@@ -35,12 +38,16 @@ async function getProjectDetails(projectId: string) {
     }
 }
 
-async function getProjectEngagementDetails() {
+async function getProjectEngagementDetails(
+    getProjectEngagementsInput: GetProjectEngagementsInput
+) {
     try {
         console.info(
             '-----In getProjectEngagementDetails method of ProjectService ------'
         );
-        const projectEngagements = await getProjectEngagements();
+        const projectEngagements = await getProjectEngagements(
+            getProjectEngagementsInput
+        );
         projectEngagements.forEach((project: any) => {
             project.engagements.forEach((engagement: any) => {
                 engagement['isOverdue'] = getIsOverdue(engagement);
@@ -64,12 +71,6 @@ async function getProjectList(projectListInput: GetProjectListInput) {
         console.info('-----In getProjectList method of ProjectService ------');
 
         const getProjectListData = await getProjects(projectListInput);
-
-        // if (getProjectListData.length === 0) {
-        //     throw new Errors.BadRequest(
-        //         ProjectConstants.INVALID_ORGANIZATION_ID
-        //     );
-        // }
 
         return getProjectListData;
     } catch (error) {

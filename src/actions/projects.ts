@@ -1,6 +1,9 @@
 import { prisma, Prisma } from '../actions/prisma';
 import { EngagementSchema } from './engagements';
-import { GetProjectListInput } from '../interfaces/project.interface';
+import {
+    GetProjectEngagementsInput,
+    GetProjectListInput,
+} from '../interfaces/project.interface';
 
 const ProjectSchema: Prisma.ProjectSelect = {
     id: true,
@@ -121,12 +124,15 @@ const getProjectById = async (projectId: string) =>
         select: ProjectSchema,
     });
 
-const getProjectEngagements = async () =>
+const getProjectEngagements = async (
+    getProjectEngagementsInput: GetProjectEngagementsInput
+) =>
     prisma.project.findMany({
         where: {
-            // portfolioOwnerId: {
-            //     in: [""]
-            // },
+            portfolioOwnerId: {
+                in: getProjectEngagementsInput.organizationIds,
+            },
+
             engagements: {
                 some: {
                     state: {
@@ -139,6 +145,11 @@ const getProjectEngagements = async () =>
                     },
                 },
             },
+        },
+        take: getProjectEngagementsInput.take || 10,
+        skip: getProjectEngagementsInput.skip || 0,
+        orderBy: {
+            createdAt: 'desc',
         },
         select: {
             id: true,
