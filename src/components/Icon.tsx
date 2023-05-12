@@ -15,20 +15,20 @@ interface IconProps {
   size?: "small" | "big";
   color?: string;
   hoverColor?: string;
-  strokeColor?: string;
+  strokecolor?: string;
 }
 
 const svgStyles = ({
   size,
   color,
   hoverColor,
-  strokeColor,
+  strokecolor,
 }: IconProps): CSSObject => {
   return {
     height: `${size === "small" ? 18 : 24}px`,
     width: `${size === "small" ? 18 : 24}px`,
     "& path": {
-      stroke: strokeColor,
+      stroke: strokecolor,
       fill: color,
     },
     "&:hover path": {
@@ -74,7 +74,7 @@ export default function Icon({
       as={SelectedIcon}
       size={size}
       color={color}
-      strokeColor={strokeColor}
+      strokecolor={strokeColor}
     />
   );
 }

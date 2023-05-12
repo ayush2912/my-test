@@ -34,11 +34,14 @@ export const Content = styled.div`
   white-space: pre-wrap;
   max-height: 50px;
   cursor: default;
+  max-width: 200px;
 `;
 
 const FlagHolder = styled.div`
   height: 12px;
   width: 22px;
+  display: flex;
+  align-content: center;
 `;
 
 type ProjectStateTypes =
@@ -104,6 +107,7 @@ function ProjectListTable({
           ? " ON " + convertToMonthNameFormat(v.engagement.dueDate)
           : "");
     return {
+      rowId: v.id,
       projectName: (
         <Tooltip text={v.projectName}>
           <Content>

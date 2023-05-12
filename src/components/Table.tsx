@@ -1,5 +1,7 @@
 import styled from "styled-components";
 
+import Text from "./Text";
+
 const StyledTable = styled.table`
   table-layout: auto;
   width: 100%;
@@ -14,8 +16,7 @@ const HeaderContent = styled.div`
   display: flex;
   padding: 3px;
   padding-bottom: 2px;
-  white-space: nowrap;
-
+  white-space: pre;
   &:first-child,
   &:last-child {
     padding-left: 0;
@@ -61,11 +62,13 @@ function Table({
       <thead>
         <tr>
           {headers.length > 0 &&
-            headers.map((header, i) => {
+            headers.map((header) => {
               return (
-                <TableHeader key={i}>
+                <TableHeader key={header.fieldName}>
                   <HeaderContent>
-                    <HeaderText>{header.name}</HeaderText>
+                    <Text type="smallTextBold" color="subdued">
+                      {header.name}
+                    </Text>
                   </HeaderContent>
                 </TableHeader>
               );
