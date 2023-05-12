@@ -1,7 +1,6 @@
 import type { Meta } from "@storybook/react";
 import { StoryFn } from "@storybook/react";
 
-import { engagementlistmockdata } from "./engagementlistmockdata";
 import { GanttChart } from "./GanttChart";
 import { ProjectEngagement } from "./GanttChart.types";
 import { getBarInfo, memoizedCalendarData } from "../../utils/calendarHelper";
