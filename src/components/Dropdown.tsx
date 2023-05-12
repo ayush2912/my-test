@@ -27,6 +27,7 @@ const DropdownButton = styled.button`
   border: 1px solid #ccc;
   color: #444;
   padding: 8px;
+  border-radius: 8px;
   font-size: 16px;
   cursor: pointer;
   width: 120px;
