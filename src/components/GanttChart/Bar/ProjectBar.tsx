@@ -6,14 +6,9 @@ import { BarPopup } from "./BarPopup";
 import { useOutsideAlerter } from "../../../hooks/useOutsiderAlerter";
 import EyeButton from "../../EyeButton";
 import Text from "../../Text";
-import { IBar, IProjectBarData } from "../GanttChart.types";
+import { IProjectBarData } from "../GanttChart.types";
 import useGanttChartControls from "../useGanttChartControls";
 
-const FlagHolder = styled.div`
-  height: 12px;
-  width: 22px;
-  margin-right: 8px;
-`;
 export const ModalHeader = styled.div`
   width: 100%;
   display: flex;
@@ -29,11 +24,15 @@ export const ModalContent = styled.div`
 
 export const TextHolder = styled.div`
   display: flex;
+  align-items: center;
   gap: 4px;
 `;
 
-const CountryList = styled.div`
+const CountriesContainer = styled.div`
   display: flex;
+  align-items: center;
+  height: 18px;
+  width: 58px;
 `;
 const Container = styled.div`
   display: flex;
@@ -62,6 +61,11 @@ const Bar = styled.div<{
   }
 
   ${({ focus }) => (focus ? "text-decoration: underline" : "")}
+`;
+
+const TextWrapper = styled.div`
+  width: 224px;
+  white-space: normal;
 `;
 
 export const ProjectBar = ({
@@ -110,9 +114,12 @@ export const ProjectBar = ({
             left={popupPosition.left}
           >
             <ModalHeader>
-              <Text type="captionBold" color="default">
-                {projectData.name}
-              </Text>
+              <TextWrapper>
+                <Text type="captionBold" color="default">
+                  {projectData.name}
+                </Text>
+              </TextWrapper>
+
               <EyeButton
                 onClick={() => {
                   projectData.onViewClick(projectData.id);
@@ -146,16 +153,18 @@ export const ProjectBar = ({
                 <div style={{ display: "flex", gap: "8px" }}>
                   {projectData.countries.map(
                     (country: { iso3Name: string; name: string }) => (
-                      <CountryList key={country?.iso3Name}>
-                        <FlagHolder>
-                          <Flag code={country?.iso3Name} />
-                        </FlagHolder>
-                        <div>
-                          <Text type="caption" color="default">
-                            {country?.name}
-                          </Text>
-                        </div>
-                      </CountryList>
+                      <CountriesContainer key={country?.iso3Name}>
+                        <Flag
+                          code={country?.iso3Name}
+                          width={17}
+                          height={9}
+                          style={{ marginRight: "8px" }}
+                        />
+
+                        <Text type="caption" color="default">
+                          {country?.name}
+                        </Text>
+                      </CountriesContainer>
                     ),
                   )}
                 </div>
@@ -172,7 +181,7 @@ export const ProjectBar = ({
             </ModalContent>
           </BarPopup>
         )}
-        <Text type="bodyBold" color="default">
+        <Text type={showPopup ? "linkTextBold" : "bodyBold"} color="default">
           {projectData.name}
         </Text>
       </Bar>

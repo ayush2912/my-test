@@ -1,7 +1,7 @@
 export const engagementlistmockdata = [
   {
     id: "6438f5f51725504e53c94356",
-    name: "name of the project",
+    name: "this is a very awesome project that has a very very long name",
     registry: {
       id: "6438f5f51725504e53c94356",
       name: "Verra",
