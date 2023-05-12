@@ -1,7 +1,7 @@
 interface StateHistoryInputData {
     state: string;
     stateUpdatedAt: Date;
-};
+}
 
 interface createTaskData {
     id?: string;
@@ -10,7 +10,8 @@ interface createTaskData {
     dueDate: Date;
     engagementId: string;
     stateHistory?: StateHistoryInputData[];
-}[];
+}
+[];
 
 interface updateTaskData {
     startDate?: Date;

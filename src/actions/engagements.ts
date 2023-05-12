@@ -18,7 +18,12 @@ const EngagementSchema: Prisma.EngagementSelect = {
             key: true,
         },
     },
-    stateHistory: true,
+    stateHistory: {
+        select: {
+            state: true,
+            stateUpdatedAt: true,
+        },
+    },
     tasks: {
         select: TaskSchema,
         orderBy: [{ startDate: 'asc' }, { type: 'asc' }],
@@ -124,9 +129,17 @@ const deleteEngagement = (engagementId: string) =>
         },
     });
 
+const deleteEngagementsByStrapiIds = async (strapiIds: string[]) =>
+    prisma.engagement.deleteMany({
+        where: {
+            strapiId: { in: strapiIds },
+        },
+    });
+
 export {
     createEngagement,
     deleteEngagement,
     updateEngagement,
     EngagementSchema,
+    deleteEngagementsByStrapiIds,
 };

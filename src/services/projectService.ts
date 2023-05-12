@@ -14,7 +14,7 @@ import {
 /**
  * This method get project details from project id.
  * @param {projectId} Id of the project
- * @returns {Object}  data of the project details
+ * @returns {object}  data of the project details
  */
 async function getProjectDetails(projectId: string) {
     try {

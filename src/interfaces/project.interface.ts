@@ -5,12 +5,6 @@ interface QueryParams {
     tab: string;
 }
 
-export interface GetProjectEngagementsInput {
-    organizationIds: string[];
-    take: number;
-    skip: number;
-}
-
 interface GetProjectListInput {
     organizationIds: string[];
     take: number;
@@ -18,4 +12,10 @@ interface GetProjectListInput {
     tab: string;
 }
 
-export { QueryParams, GetProjectListInput };
+interface GetProjectEngagementsInput {
+    organizationIds: string[];
+    take: number;
+    skip: number;
+}
+
+export { QueryParams, GetProjectListInput, GetProjectEngagementsInput };

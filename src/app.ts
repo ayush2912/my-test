@@ -3,7 +3,8 @@ import helmet from 'helmet';
 import cors from 'cors';
 import morgan from 'morgan';
 
-import routes from './routes/projectRoute';
+import routes from './routes/project.route';
+import webhookRoutes from './webhooks/webhook.route';
 
 import { responseMiddleware } from './middlewares/customMiddleware';
 
@@ -23,6 +24,7 @@ export const App = () => {
     app.use(router);
 
     routes(router);
+    webhookRoutes(router);
 
     app.get('/health', (req: Request, res: Response) => {
         res.status(200).send('Health Check !!');

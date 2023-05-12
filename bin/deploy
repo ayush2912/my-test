@@ -6,6 +6,13 @@ if [[ -z "$DATABASE_URL" ]]; then
     exit 1
 fi
 
+if [[ -z "$STRAPI_BASE_URL" ]]; then
+    echo "Must provide STRAPI_BASE_URL environment variable" 1>&2
+    exit 1
+fi
+
+
+
 NAME="offsetmax-projects-service"
 PROJECT=$(gcloud config get-value project)
 IMAGE="gcr.io/$PROJECT/$NAME"
@@ -25,4 +32,5 @@ rm /tmp/cloudbuild.yml
 
 gcloud run deploy $NAME \
   --allow-unauthenticated \
+  --set-env-vars=STRAPI_BASE_URL="$STRAPI_BASE_URL"
   --image $IMAGE
