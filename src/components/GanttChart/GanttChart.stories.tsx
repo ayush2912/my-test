@@ -60,7 +60,15 @@ const Template: StoryFn<GanttChartProps> = ({
     }),
   );
   return (
-    <div style={{ width: 1000, boxSizing: "border-box" }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        width: 1000,
+        height: 600,
+        boxSizing: "border-box",
+      }}
+    >
       <GanttChart
         mappedProjectEngagements={mappedProjectEngagements}
         calendar={calendar}
