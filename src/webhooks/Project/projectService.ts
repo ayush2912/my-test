@@ -1,12 +1,12 @@
 import {
-    getProject,
+    getProjectById,
     createProject,
     deleteProject,
     getProjectsByStrapiId,
     updateProjectData,
 } from '../../actions/projects';
 
-import { deleteEngagementsByStrapiIds } from '../../actions/enagagements';
+import { deleteEngagementsByStrapiIds } from '../../actions/engagements';
 import { deleteTasksByStrapiIds } from '../../actions/tasks';
 
 import {
@@ -67,7 +67,7 @@ async function updateProjectStrapi(entryId: number, data: any) {
         }
 
         const projectId = project[0].id;
-        const getDetails = await getProject(projectId);
+        const getDetails = await getProjectById(projectId);
 
         const projectOwners = await getProjectOwners(entryId);
         const combinedData = { ...data, ...projectOwners };
