@@ -33,6 +33,8 @@ const Template: StoryFn<GanttChartProps> = ({
       return {
         ...engagement,
         bar: engagementBar,
+        onViewClick: (id: string) =>
+          console.log(`navigate to project details ${id}`),
         project: {
           id: project.id,
           name: project.name,
@@ -41,6 +43,9 @@ const Template: StoryFn<GanttChartProps> = ({
           types: project.types,
           countries: project.countries,
           bar: engagementBar,
+          onViewClick: (id: string) => {
+            console.log(`navigate to project details ${id}`);
+          },
         },
         tasks: engagement.tasks.map((task) => ({
           ...task,

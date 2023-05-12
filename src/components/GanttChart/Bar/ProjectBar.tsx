@@ -6,7 +6,7 @@ import { BarPopup } from "./BarPopup";
 import { useOutsideAlerter } from "../../../hooks/useOutsiderAlerter";
 import EyeButton from "../../EyeButton";
 import Text from "../../Text";
-import { IBar } from "../GanttChart.types";
+import { IBar, IProjectBarData } from "../GanttChart.types";
 import useGanttChartControls from "../useGanttChartControls";
 
 const FlagHolder = styled.div`
@@ -43,7 +43,11 @@ const Container = styled.div`
   user-select: none;
 `;
 
-const Bar = styled.div<IBar & { focus: boolean }>`
+const Bar = styled.div<{
+  width: number;
+  offsetFromLeft: number;
+  focus: boolean;
+}>`
   display: flex;
   align-items: center;
   height: 24px;
@@ -60,15 +64,21 @@ const Bar = styled.div<IBar & { focus: boolean }>`
   ${({ focus }) => (focus ? "text-decoration: underline" : "")}
 `;
 
-export const ProjectBar = ({ projectData }: { projectData: any }) => {
+export const ProjectBar = ({
+  projectData,
+}: {
+  projectData: IProjectBarData;
+}) => {
   const { view } = useGanttChartControls();
   const [showPopup, setShowPopup] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
   const projectTypes: string = projectData.types
     .map((type: { id: string; name: string }) => type.name)
     .join(", ");
+  const barRef = useRef(null);
   const popupRef = useRef(null);
-  useOutsideAlerter(popupRef, () => {
+
+  useOutsideAlerter(barRef, () => {
     if (showPopup) setShowPopup(false);
   });
 
@@ -78,24 +88,34 @@ export const ProjectBar = ({ projectData }: { projectData: any }) => {
     setShowPopup(true);
     setPopupPosition({ top: event.clientY, left: event.clientX });
   };
+
+  const handlePopupMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation();
+  };
+
   return (
     <Container>
       <Bar
-        ref={popupRef}
+        ref={barRef}
         width={projectData.bar.width[view]}
         offsetFromLeft={projectData.bar.offsetFromLeft[view]}
         onMouseDown={handleContainerMouseDown}
         focus={showPopup}
       >
         {showPopup && (
-          <BarPopup top={popupPosition.top} left={popupPosition.left}>
+          <BarPopup
+            ref={popupRef}
+            onMouseDown={handlePopupMouseDown}
+            top={popupPosition.top}
+            left={popupPosition.left}
+          >
             <ModalHeader>
               <Text type="captionBold" color="default">
                 {projectData.name}
               </Text>
               <EyeButton
                 onClick={() => {
-                  console.log("clicked");
+                  projectData.onViewClick(projectData.id);
                 }}
               />
             </ModalHeader>
