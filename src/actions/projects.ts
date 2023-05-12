@@ -427,15 +427,6 @@ const updateProjectData = (projectId: string, data: any) => {
                     where: { strapiId: engagement.strapiId },
                     update: {
                         ...engagement,
-                        attributes: {
-                            upsert: engagement.attributes.map(
-                                (attribute: any) => ({
-                                    where: { strapiId: attribute.strapiId },
-                                    update: attribute,
-                                    create: attribute,
-                                })
-                            ),
-                        },
                         tasks: {
                             upsert: engagement.tasks.map((task: any) => ({
                                 where: { strapiId: task.strapiId },
@@ -446,9 +437,6 @@ const updateProjectData = (projectId: string, data: any) => {
                     },
                     create: {
                         ...engagement,
-                        attributes: {
-                            create: engagement.attributes,
-                        },
                         tasks: {
                             create: engagement.tasks,
                         },

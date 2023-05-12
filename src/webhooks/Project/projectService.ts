@@ -13,7 +13,7 @@ import {
     getProjectOwners,
     mappedProjectData,
     mappedProjectWithStrapi,
-    deletedStrapiIds,
+    missingStrapiIds,
 } from './projectUtility';
 
 import { compareAndUpdate } from '../../utility/utils';
@@ -62,12 +62,17 @@ async function updateProjectStrapi(entryId: number, data: any) {
 
         const project = await getProjectsByStrapiId(entryId.toString());
 
+        let projectDetails;
+
         if (!project.length) {
-            await createProjectStrapi(entryId, data);
-            //  throw new Errors.BadRequest('Project do not exist in system');
+            projectDetails = await createProjectStrapi(entryId, data);
         }
 
-        const projectId = project[0].id;
+        let projectId:any;
+        if (projectDetails) {
+            projectId = projectDetails?.id;
+        }
+
         const getDetails = await getProjectById(projectId);
 
         const projectOwners = await getProjectOwners(entryId);
@@ -78,7 +83,7 @@ async function updateProjectStrapi(entryId: number, data: any) {
 
         const updatedData = compareAndUpdate(mappedDatawithStarpi, mappedData);
 
-        const deletedIds = await deletedStrapiIds(getDetails, mappedData);
+        const deletedIds = await missingStrapiIds(getDetails, mappedData);
 
         if (deletedIds.missingTaskIds) {
             await deleteTasksByStrapiIds(deletedIds.missingTaskIds);

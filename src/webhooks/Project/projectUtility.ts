@@ -143,9 +143,9 @@ function mappedProjectWithStrapi(data: any) {
  * @param {object} Ob12 new updated data
  * @returns {object}  missingTaskIds missingEngagementIds
  */
-function deletedStrapiIds(Ob1: any, Ob2: any) {
+function missingStrapiIds(Ob1: any, Ob2: any) {
     console.debug(
-        '----- In Webhook projectUtility of deletedStrapiIds method -----'
+        '----- In Webhook projectUtility of missingStrapiIds method -----'
     );
 
     const sIdKeys: any = [];
@@ -184,5 +184,5 @@ export {
     getProjectOwners,
     mappedProjectData,
     mappedProjectWithStrapi,
-    deletedStrapiIds,
+    missingStrapiIds,
 };
