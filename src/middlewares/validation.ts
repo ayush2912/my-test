@@ -92,7 +92,6 @@ const validateProjectsQueryParamsSchema = validateRequest(
         tab: z.enum(['ACTIVE', 'INACTIVE']).default('ACTIVE'),
     })
 );
-<<<<<<< HEAD
 
 export const validateProjectEngagementsQueryParamsSchema = validateRequest(
     undefined,
@@ -108,7 +107,5 @@ export const validateProjectEngagementsQueryParamsSchema = validateRequest(
         skip: z.number().min(0).default(0),
     })
 );
-=======
->>>>>>> development
 
 export { validateProjectIdParamsSchema, validateProjectsQueryParamsSchema };
