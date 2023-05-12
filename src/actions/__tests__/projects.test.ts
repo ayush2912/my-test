@@ -462,7 +462,7 @@ describe('getProjects()', () => {
 });
 
 describe('countProjects()', () => {
-    test.only('it should return project counts grouped by active and inactive', async () => {
+    test('it should return project counts grouped by active and inactive', async () => {
         const organizationId = faker.helpers.arrayElement(organizations).id;
         const projects = await prisma.$transaction(
             Array(10)
