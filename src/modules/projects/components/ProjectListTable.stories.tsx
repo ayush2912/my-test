@@ -199,8 +199,25 @@ export const Primary: Story = {
     };
     return (
       <ProjectListTable
+        projectsType="Active"
         headers={headers}
         tableData={projectLists}
+        onViewButton={showId}
+      />
+    );
+  },
+};
+
+export const EmptyTable: Story = {
+  render: () => {
+    const showId = (id: any) => {
+      console.log(id);
+    };
+    return (
+      <ProjectListTable
+        projectsType="Inactive"
+        headers={headers}
+        tableData={[]}
         onViewButton={showId}
       />
     );

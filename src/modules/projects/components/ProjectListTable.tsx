@@ -79,10 +79,12 @@ function ProjectListTable({
   headers,
   tableData,
   onViewButton,
+  projectsType,
 }: {
   headers: Headers[];
   tableData: ProjectRowItem[];
   onViewButton: (id: string) => void;
+  projectsType: string;
 }) {
   const cellContentMapper = (v: ProjectRowItem) => {
     const selectedIconName = {
@@ -207,11 +209,15 @@ function ProjectListTable({
     };
   };
   return (
-    <Table
-      headers={headers}
-      tableData={tableData}
-      cellContentMapper={cellContentMapper}
-    />
+    <>
+      <Table
+        headers={headers}
+        tableData={tableData}
+        cellContentMapper={cellContentMapper}
+        emptyStateTitle={`No ${projectsType} Projects`}
+        emptyStateSubTitle="You will be notified when there are any projects to view"
+      />
+    </>
   );
 }
 export default ProjectListTable;
