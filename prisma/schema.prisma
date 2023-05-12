@@ -418,6 +418,7 @@ model SectoralScope {
 model Methodology {
   id          String     @id @default(auto()) @map("_id") @db.ObjectId
   name        String
+  fullName    String
   code        String     @unique
   Registry    Registry[] @relation(fields: [registryIDs], references: [id])
   registryIDs String[]   @db.ObjectId

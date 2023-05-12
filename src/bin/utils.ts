@@ -1,4 +1,5 @@
 import { parse } from 'csv-parse/sync';
+import axios from 'axios';
 
 export const loadDataFromCSV = (string: string) =>
     parse(string.trim(), {

@@ -2,9 +2,9 @@
 import { Command } from 'commander';
 import { readFileSync } from 'fs';
 
-import { parseProjectTypes } from './parse';
+import { parseProjectTypes, parseCountries, parseMethodologies } from './parse';
 import { loadDataFromCSV } from './utils';
-import { seedProjectTypes } from './seed';
+import { seedProjectTypes, seedCountries, seedMethodologies } from './seed';
 import { listProjectTypes } from './list';
 
 const program = new Command();
@@ -58,6 +58,26 @@ seed.command('projectTypes')
         console.log(
             `Created ${parentTypes.length} Project Parent Types, ${subTypes.length} Project Subtypes`
         );
+    });
+
+seed.command('countries')
+    .argument('<path>', 'path for the json data')
+    .description('Seed the Countries data into database from json file')
+    .action(async (path: string) => {
+        const jsonString = readFileSync(path, 'utf-8');
+        const data = parseCountries(jsonString);
+        const countries = await seedCountries(data);
+        console.log(`Created ${countries.length} countries`);
+    });
+
+seed.command('methodologies')
+    .argument('<path>', 'file path to csv file')
+    .description('Seed the methodologies data into database from json file')
+    .action(async (path: string) => {
+        const string = readFileSync(path, 'utf-8');
+        const data = parseMethodologies(loadDataFromCSV(string));
+        const methodologies = await seedMethodologies(data);
+        console.log(`Created ${methodologies.length} methodologies`);
     });
 
 const list = program.command('list').description('List items from database');
