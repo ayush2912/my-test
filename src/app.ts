@@ -1,6 +1,7 @@
 import express, { Express, Request, Response, NextFunction } from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
+import morgan from 'morgan';
 
 import routes from './routes/project.route';
 import webhookRoutes from './webhooks/webhook.route';
@@ -11,6 +12,7 @@ export const App = () => {
     const app: Express = express();
 
     app.use(express.json());
+    app.use(morgan('combined'));
     app.use(helmet());
 
     // Handle CORS error

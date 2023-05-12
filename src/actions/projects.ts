@@ -1,7 +1,7 @@
 import { prisma, Prisma } from './prisma';
 import { ObjectId } from 'bson';
 import { EngagementSchema } from './engagements';
-import { GetProjectListInput } from '../interfaces/project.interface'
+import { GetProjectListInput, GetProjectEngagementsInput } from '../interfaces/project.interface'
 
 const ProjectSchema: Prisma.ProjectSelect = {
     id: true,
@@ -75,11 +75,14 @@ export const isEngagementOverdue = (engagement: any) => {
         }
 
         if (engagement?.completedDate >= engagement?.dueDate) {
-            return true
+            return true;
         }
     }
 
-    if (engagement?.state === 'IN_PROGRESS' || engagement?.state === 'NOT_STARTED') {
+    if (
+        engagement?.state === 'IN_PROGRESS' ||
+        engagement?.state === 'NOT_STARTED'
+    ) {
         if (engagement.dueDate <= new Date().toISOString()) {
             return true;
         }
@@ -89,25 +92,23 @@ export const isEngagementOverdue = (engagement: any) => {
 };
 
 const applyGetProjectsFilters = (options: GetProjectListInput) => {
-
     const filters: Prisma.ProjectWhereInput = {};
 
     if (options.organizationIds) {
-        filters.organizationId = {
-            in: options.organizationIds
-        }
+        filters.portfolioOwnerId = {
+            in: options.organizationIds,
+        };
     }
     if (options.tab === 'ACTIVE') {
         filters.isActive = {
-            equals: true
-        }
+            equals: true,
+        };
     } else {
         filters.isActive = {
-            equals: false
-        }
+            equals: false,
+        };
     }
-
-    return filters
+    return filters;
 };
 
 const getProjectById = async (projectId: string) =>
@@ -118,7 +119,68 @@ const getProjectById = async (projectId: string) =>
         select: ProjectSchema,
     });
 
-const createProject = async (data: any) => {
+const getProjectEngagements = async (
+    getProjectEngagementsInput: GetProjectEngagementsInput
+) =>
+    prisma.project.findMany({
+        where: {
+            portfolioOwnerId: {
+                in: getProjectEngagementsInput.organizationIds,
+            },
+
+            engagements: {
+                some: {
+                    state: {
+                        in: [
+                            'NOT_STARTED',
+                            'IN_PROGRESS',
+                            'DISCONTINUED',
+                            'COMPLETED',
+                        ],
+                    },
+                },
+            },
+        },
+        take: getProjectEngagementsInput.take || 10,
+        skip: getProjectEngagementsInput.skip || 0,
+        orderBy: {
+            createdAt: 'desc',
+        },
+        select: {
+            id: true,
+            name: true,
+            registry: {
+                select: {
+                    id: true,
+                    name: true,
+                },
+            },
+            registryProjectId: true,
+            types: {
+                select: {
+                    id: true,
+                    name: true,
+                },
+            },
+            countries: {
+                select: {
+                    id: true,
+                    iso2Name: true,
+                    iso3Name: true,
+                    name: true,
+                },
+            },
+            isActive: true,
+            createdAt: true,
+            updatedAt: true,
+            engagements: {
+                select: EngagementSchema,
+                orderBy: [{ startDate: 'asc' }, { type: 'asc' }],
+            },
+        },
+    });
+
+const createProject = (data: any) => {
     return prisma.project.create({
         data: {
             name: data.name,
@@ -258,127 +320,95 @@ const deleteProject = async (projectId: any) => {
 };
 
 const getProjects = async (options: GetProjectListInput) =>
-    prisma.project.findMany({
-        where: applyGetProjectsFilters(options),
-        take: options.take || 10,
-        skip: options.skip || 0,
-        orderBy: {
-            createdAt: "desc"
-        },
-        select: {
-            id: true,
-            name: true,
-            createdAt: true,
-            updatedAt: true,
-            registry: {
-                select: {
-                    name: true,
-                }
+    prisma.project
+        .findMany({
+            where: applyGetProjectsFilters(options),
+            take: options.take || 10,
+            skip: options.skip || 0,
+            orderBy: {
+                createdAt: 'desc',
             },
-            registryProjectId: true,
-            countries: {
-                select: {
-                    iso2Name: true,
-                    name: true,
-                }
-            },
-            types: {
-                select: {
-                    id: true,
-                    name: true
-                }
-            },
-            subTypes: {
-                select: {
-                    id: true,
-                    name: true
-                }
-            },
-            portfolioOwner: {
-                select: {
-                    id: true,
-                    name: true,
-                }
-            },
-            assetOwners: {
-                select: {
-                    id: true,
-                    name: true,
-                }
-            },
-            annualApproximateCreditVolume: true,
-            engagements: {
-                where: {
-                    startDate: {
-                        lte: new Date(),
+            select: {
+                id: true,
+                name: true,
+                createdAt: true,
+                updatedAt: true,
+                registry: {
+                    select: {
+                        name: true,
                     },
                 },
-                select: {
-                    id: true,
-                    type: true,
-                    dueDate: true,
-                    completedDate: true,
-                    state: true,
+                registryProjectId: true,
+                countries: {
+                    select: {
+                        iso2Name: true,
+                        name: true,
+                    },
                 },
-                orderBy: [{ startDate: 'desc' }, { createdAt: 'desc' }],
-                take: 1
-            },
-        },
-    }).then(results => results.map(result => ({
-        id: result.id,
-        name: result.name,
-        createdAt: result.createdAt,
-        updatedAt: result.updatedAt,
-        registry: result.registry,
-        registryProjectId: result.registryProjectId,
-        countries: result.countries,
-        types: result.types,
-        subTypes: result.subTypes,
-        engagement: {
-            ...result.engagements[0],
-            isOverdue: isEngagementOverdue(result.engagements[0])
-        },
-        annualApproximateCreditVolume: result.annualApproximateCreditVolume,
-        portfolioOwner: result.portfolioOwner,
-        assetOwners: result.assetOwners,
-
-    })));
-
-const getProjectEngagements = async () =>
-    prisma.project.findMany({
-        select: {
-            id: true,
-            name: true,
-            registry: {
-                select: {
-                    id: true,
-                    name: true,
+                types: {
+                    select: {
+                        id: true,
+                        name: true,
+                    },
                 },
-            },
-            registryProjectId: true,
-            types: {
-                select: {
-                    id: true,
-                    name: true,
+                subTypes: {
+                    select: {
+                        id: true,
+                        name: true,
+                    },
                 },
-            },
-            countries: {
-                select: {
-                    id: true,
-                    iso2Name: true,
-                    iso3Name: true,
-                    name: true,
+                portfolioOwner: {
+                    select: {
+                        id: true,
+                        name: true,
+                    },
+                },
+                assetOwners: {
+                    select: {
+                        id: true,
+                        name: true,
+                    },
+                },
+                annualApproximateCreditVolume: true,
+                engagements: {
+                    where: {
+                        startDate: {
+                            lte: new Date(),
+                        },
+                    },
+                    select: {
+                        id: true,
+                        type: true,
+                        dueDate: true,
+                        completedDate: true,
+                        state: true,
+                    },
+                    orderBy: [{ startDate: 'desc' }, { createdAt: 'desc' }],
+                    take: 1,
                 },
             },
-            isActive: true,
-            createdAt: true,
-            updatedAt: true,
-            engagements: {
-                select: EngagementSchema,
-                orderBy: [{ startDate: 'asc' }, { type: 'asc' }],
-            },
-        },
-    });
+        })
+        .then((results) =>
+            results.map((result) => ({
+                id: result.id,
+                name: result.name,
+                createdAt: result.createdAt,
+                updatedAt: result.updatedAt,
+                registry: result.registry,
+                registryProjectId: result.registryProjectId,
+                countries: result.countries,
+                types: result.types,
+                subTypes: result.subTypes,
+                engagement: {
+                    ...result.engagements[0],
+                    isOverdue: isEngagementOverdue(result.engagements[0]),
+                },
+                annualApproximateCreditVolume:
+                    result.annualApproximateCreditVolume,
+                portfolioOwner: result.portfolioOwner,
+                assetOwners: result.assetOwners,
+            }))
+        );
 
 const updateProjectData = (projectId: string, data: any) => {
     const { engagements, ...rest } = data;
