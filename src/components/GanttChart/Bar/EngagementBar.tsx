@@ -150,7 +150,7 @@ export const EngagementBar = ({
               </TextHolder>
               <TextHolder>
                 <Text type="caption" color="subdued">
-                  Completion date : :
+                  Completion date :
                 </Text>
                 <Text type="caption" color="default">
                   {engagementData.completedDate
