@@ -1,15 +1,18 @@
 import { faker } from '@faker-js/faker';
-
 import {
     createProject,
-    getProject,
+    getProjectById,
     updateProject,
     deleteProject,
+    getProjects, 
+    isEngagementOverdue,
+    getProjectEngagements,
 } from '../projects';
-
+import { createEngagement } from '../engagements';
 import { ProjectMockFactory } from '../../__mocks__/mock.data';
 
 const {
+    prisma, 
     countries,
     registries,
     methodologies,
@@ -48,10 +51,13 @@ describe('createProject()', () => {
             creditingPeriodStartDate: '2023-04-26T07:14:39.237Z',
             creditingPeriodEndDate: '2023-04-26T07:14:39.237Z',
             annualApproximateCreditVolume: 3000,
+            organization: faker.helpers.arrayElement(organizations).id,
             portfolioOwner: faker.helpers.arrayElement(organizations).id,
             assetOwners: faker.helpers
                 .arrayElements(organizations)
                 .map((m) => m.id),
+            engagements: faker.helpers
+                .arrayElements(engagements, 1)
         };
 
         const result = await createProject(data);
@@ -113,7 +119,7 @@ describe('createProject()', () => {
     });
 });
 
-describe('getProject()', () => {
+describe('getProjectById()', () => {
     test('it should find the correct project', async () => {
         const data = {
             name: 'Renewable Get Power Project',
@@ -134,13 +140,13 @@ describe('getProject()', () => {
             creditingPeriodStartDate: '2023-04-11T14:15:22Z',
             creditingPeriodEndDate: '2023-04-11T14:15:22Z',
             annualApproximateCreditVolume: 300000,
+            organization: faker.helpers.arrayElement(organizations).id,
             portfolioOwner: faker.helpers.arrayElement(organizations).id,
             assetOwners: faker.helpers
                 .arrayElements(organizations)
                 .map((m) => m.id),
             engagements: faker.helpers
                 .arrayElements(engagements, 1)
-                .map((m) => m.id),
         };
         const project = await createProject(data);
 
@@ -148,7 +154,7 @@ describe('getProject()', () => {
             throw new Error('Project not created');
         }
 
-        const result = await getProject(project.id);
+        const result = await getProjectById(project.id);
         expect(typeof result?.id).toBe('string');
         expect(result?.name).toBe(data.name);
         expect(result?.registry?.id).toBe(data.registry);
@@ -190,7 +196,7 @@ describe('getProject()', () => {
 
     it('returns null if the project does not exist', async () => {
         const projectId = '5116591277702d2113142ebc';
-        const result = await getProject(projectId);
+        const result = await getProjectById(projectId);
         expect(result).toBeNull();
     });
 });
@@ -216,6 +222,7 @@ describe('updateProject()', () => {
             creditingPeriodStartDate: '2023-04-26T07:14:39.237Z',
             creditingPeriodEndDate: '2023-04-26T07:14:39.237Z',
             annualApproximateCreditVolume: 300000,
+            organization: faker.helpers.arrayElement(organizations).id,
             portfolioOwner: faker.helpers.arrayElement(organizations).id,
             assetOwners: faker.helpers
                 .arrayElements(organizations)
@@ -298,6 +305,7 @@ describe('deleteProject()', () => {
             creditingPeriodStartDate: '2023-04-26T07:14:39.237Z',
             creditingPeriodEndDate: '2023-04-26T07:14:39.237Z',
             annualApproximateCreditVolume: 300000,
+            organization: faker.helpers.arrayElement(organizations).id,
             portfolioOwner: faker.helpers.arrayElement(organizations).id,
             assetOwners: faker.helpers
                 .arrayElements(organizations)
@@ -315,3 +323,297 @@ describe('deleteProject()', () => {
         expect(result?.name).toEqual(data.name);
     });
 });
+
+
+describe('getProjects()', () => {
+    test('it should get the list of projets successfully', async() => {
+        const organizationId = faker.helpers.arrayElement(organizations).id
+
+        const projects = await prisma.$transaction(Array(10).fill(0).map(() => 
+            createProject({
+                name: 'Renewable Get Power Project',
+                registry: faker.helpers.arrayElement(registries).id,
+                registryUrl: 'www.url.com',
+                registryProjectId: '1851',
+                countries: faker.helpers
+                    .arrayElements(countries)
+                    .map((c) => c.iso2Name),
+                states: ['UP'],
+                methodologies: faker.helpers
+                    .arrayElements(methodologies, 1)
+                    .map((m) => m.id),
+                type: faker.helpers.arrayElement(projectTypes).id,
+                subType: faker.helpers.arrayElement(projectTypes).id,
+                notes: 'Renewable Power project in India',
+                isActive: true,
+                creditingPeriodStartDate: '2023-04-11T14:15:22Z',
+                creditingPeriodEndDate: '2023-04-11T14:15:22Z',
+                annualApproximateCreditVolume: 300000,
+                organization: organizationId,
+                portfolioOwner: faker.helpers.arrayElement(organizations).id,
+                assetOwners: faker.helpers
+                    .arrayElements(organizations)
+                    .map((m) => m.id),
+                engagements: faker.helpers
+                    .arrayElements(engagements, 2)
+            })
+        ))
+
+        const projectIds = projects.map(project => project.id)
+
+        const result = await getProjects({
+            organizationIds: [ organizationId ],
+            take: 10,
+            skip: 0,
+            tab: 'ACTIVE'
+        })
+
+        expect(Array.isArray(result)).toBe(true)
+
+        expect(result.length).toBe(10)
+
+        result.forEach(project => {
+
+            const matchedProject = projects.find(p => p.id === project.id);
+
+            if (!matchedProject) {
+                throw new Error("Result contains project that are not created in this test case")
+            }
+
+            expect(project).toEqual({
+                id: matchedProject.id,
+                name: matchedProject.name,
+                createdAt: matchedProject.createdAt,
+                updatedAt: matchedProject.updatedAt,
+                registry: {
+                    name: matchedProject.registry?.name
+                },
+                countries: (matchedProject.countries || []).map(obj => ({
+                    iso2Name: obj.iso2Name,
+                    name: obj.name
+                })),
+                registryProjectId: matchedProject.registryProjectId,
+                types: (matchedProject.types || []).map(obj => ({
+                    id: obj.id,
+                    name: obj.name
+                })),
+                subTypes: (matchedProject.subTypes || []).map(obj => ({
+                    id: obj.id,
+                    name: obj.name
+                })),
+                portfolioOwner: {
+                    id: matchedProject.portfolioOwner?.id,
+                    name: matchedProject.portfolioOwner?.name
+                },
+                assetOwners: (matchedProject.assetOwners || []).map(obj => ({
+                    id: obj.id,
+                    name: obj.name
+                })),
+                annualApproximateCreditVolume: matchedProject.annualApproximateCreditVolume,
+                engagement: {
+                    id: matchedProject.engagements?.find(e => e.id === project.engagement.id)?.id,
+                    type: matchedProject.engagements?.find(e => e.id === project.engagement.id)?.type,
+                    dueDate: matchedProject.engagements?.find(e => e.id === project.engagement.id)?.dueDate,
+                    state: matchedProject.engagements?.find(e => e.id === project.engagement.id)?.state,
+                    completedDate: matchedProject.engagements?.find(e => e.id === project.engagement.id)?.completedDate,
+                    isOverdue: isEngagementOverdue(matchedProject.engagements?.find(e => e.id === project.engagement.id))
+                }
+              });
+
+        })
+
+        await Promise.all(projectIds.map(projectId => deleteProject(projectId)))
+    });
+
+    it('returns null if the organization does not exist', async () => {
+        const organizationId = '5116591277702d2113142ebc';
+        const result = await getProjects({
+            organizationIds: [ organizationId ],
+            take: 10,
+            skip: 0,
+            tab: 'ACTIVE'
+        });
+        expect(result).toEqual([]);
+    });
+});
+
+describe('getProjectEngagements()', () => {
+    test('it should list all project engagements', async () => {
+        const data = {
+            name: 'Renewable Get Power Project',
+            registry: faker.helpers.arrayElement(registries).id,
+            registryUrl: 'www.url.com',
+            registryProjectId: '1851',
+            countries: faker.helpers
+                .arrayElements(countries)
+                .map((c) => c.iso2Name),
+            states: ['UP'],
+            methodologies: faker.helpers
+                .arrayElements(methodologies, 1)
+                .map((m) => m.id),
+            type: faker.helpers.arrayElement(projectTypes).id,
+            subType: faker.helpers.arrayElement(projectTypes).id,
+            notes: 'Renewable Power project in India',
+            isActive: true,
+            creditingPeriodStartDate: '2023-04-11T14:15:22Z',
+            creditingPeriodEndDate: '2023-04-11T14:15:22Z',
+            annualApproximateCreditVolume: 300000,
+            portfolioOwner: faker.helpers.arrayElement(organizations).id,
+            assetOwners: faker.helpers
+                .arrayElements(organizations)
+                .map((m) => m.id),
+        };
+        const project = await createProject(data);
+        if (!project.id) {
+            throw new Error('Project not created');
+        }
+        const engagementData = {
+            type: 'Getting a Project Listed',
+            startDate: faker.date.recent(),
+            dueDate: faker.date.future(),
+            projectId: project.id,
+            tasks: [
+                {
+                    type: 'Project design document',
+                    startDate: faker.date.recent(),
+                    dueDate: faker.date.future(),
+                    stateHistory: [
+                        {
+                            state: 'NOT_STARTED',
+                            stateUpdatedAt: faker.date.recent(),
+                        },
+                    ],
+                },
+                {
+                    type: 'Submit the PPD',
+                    startDate: faker.date.recent(),
+                    dueDate: faker.date.future(),
+                    stateHistory: [
+                        {
+                            state: 'NOT_STARTED',
+                            stateUpdatedAt: faker.date.recent(),
+                        },
+                    ],
+                },
+            ],
+            attributes: [
+                {
+                    name: 'KiloWatts per Hour',
+                    key: 'KW_H',
+                    type: 'integer',
+                    value: '150',
+                },
+                {
+                    name: 'Registry ID',
+                    key: 'REG_ID',
+                    type: 'string',
+                    value: '586789878abd980',
+                },
+            ],
+            stateHistory: [
+                {
+                    state: 'NOT_STARTED',
+                    stateUpdatedAt: faker.date.recent(),
+                },
+            ],
+        };
+        await createEngagement(engagementData);
+
+        const result = await getProjectEngagements();
+        const projectCreated = await getProjectById(project.id);
+        expect(result).toContainEqual(
+            expect.objectContaining({
+                id: project.id,
+                name: project.name,
+                registry: project.registry,
+                registryProjectId: project.registryProjectId,
+                types: project.types,
+                countries: project.countries,
+                isActive: project.isActive,
+                createdAt: project.createdAt,
+                updatedAt: project.updatedAt,
+                engagements:
+                    projectCreated != null
+                        ? projectCreated.engagements == undefined ||
+                            projectCreated.engagements == null
+                            ? []
+                            : projectCreated.engagements
+                        : [],
+            })
+        );
+        await deleteProject(project.id);
+    });
+});
+
+describe('isEngagementOverdue()', () => {
+    test('if state is COMPLETED and no complete date',async () => {
+        const data = {
+            state: 'COMPLETED',
+            dueDate: '2023-12-21T00:00:00.000Z'
+        }
+        const isOverdue = isEngagementOverdue(data)
+        expect(isOverdue).toBeFalsy();
+    });
+
+    test('if state is COMPLETED and completed date >= due date',async () => {
+        const data = {
+            state: 'COMPLETED',
+            dueDate: '2023-12-21T00:00:00.000Z',
+            completedDate: '2023-12-30T00:00:00.000Z'
+        }
+        const isOverdue = isEngagementOverdue(data)
+        expect(isOverdue).toBeTruthy();
+    });
+
+    test('if state is COMPLETED and completed date <= due date',async () => {
+        const data = {
+            state: 'COMPLETED',
+            dueDate: '2023-12-21T00:00:00.000Z',
+            completedDate: '2023-10-30T00:00:00.000Z'
+        }
+        const isOverdue = isEngagementOverdue(data)
+        expect(isOverdue).toBeFalsy();
+    });
+
+    test('if state is IN_PROGRESS and due date <= current date',async () => {
+        const data = {
+            state: 'IN_PROGRESS',
+            dueDate: '2022-12-21T00:00:00.000Z',
+            completedDate: '2023-12-30T00:00:00.000Z'
+        }
+        const isOverdue = isEngagementOverdue(data)
+        expect(isOverdue).toBeTruthy();
+    });
+
+    test('if state is IN_PROGRESS and due date >= current date',async () => {
+        const currentDate = new Date();
+        const data = {
+            state: 'IN_PROGRESS',
+            dueDate: new Date(currentDate.getTime() + 24 * 60 * 60 * 1000).toISOString(),
+            completedDate: '2023-12-30T00:00:00.000Z'
+        }
+        const isOverdue = isEngagementOverdue(data)
+        expect(isOverdue).toBeFalsy();
+    });
+
+    test('if state is NOT_STARTED and due date <= current date',async () => {
+        const data = {
+            state: 'NOT_STARTED',
+            dueDate: '2022-12-21T00:00:00.000Z',
+            completedDate: '2023-12-30T00:00:00.000Z'
+        }
+        const isOverdue = isEngagementOverdue(data)
+        expect(isOverdue).toBeTruthy();
+    });
+
+    test('if state is NOT_STARTED and due date >= current date',async () => {
+        const currentDate = new Date();
+        const data = {
+            state: 'NOT_STARTED',
+            dueDate: new Date(currentDate.getTime() + 24 * 60 * 60 * 1000).toISOString(),
+            completedDate: '2023-12-30T00:00:00.000Z'
+        }
+        const isOverdue = isEngagementOverdue(data)
+        expect(isOverdue).toBeFalsy();
+    });
+})

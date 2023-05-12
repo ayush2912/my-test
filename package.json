@@ -5,6 +5,7 @@
     "main": "build/app.js",
     "scripts": {
         "build": "tsc",
+        "build-cli": "tsc --noemit src/bin/cli.ts &&  esbuild src/bin/cli.ts --bundle --platform=node --format=cjs --outfile=bin/cli.js",
         "test": "jest",
         "compile": "node build/server.js",
         "clean": "rm -rf ./build",
@@ -15,6 +16,9 @@
         "start": "npx ts-node ./src/server.ts",
         "test:coverage": "npx jest --coverage --coverageReporters=html"
     },
+    "bin": {
+        "offsetmax": "bin/cli.js"
+    },
     "keywords": [],
     "author": "",
     "license": "ISC",
@@ -23,6 +27,8 @@
         "@types/node": "^18.15.11",
         "@typescript-eslint/eslint-plugin": "^5.59.0",
         "@typescript-eslint/parser": "^5.59.0",
+        "csv-parse": "^5.3.10",
+        "esbuild": "^0.17.18",
         "eslint": "^8.38.0",
         "ts-node": "^10.9.1",
         "typescript": "^5.0.4"
@@ -35,6 +41,7 @@
         "@types/supertest": "^2.0.12",
         "axios": "^1.4.0",
         "bson": "^5.2.0",
+        "commander": "^10.0.1",
         "cors": "^2.8.5",
         "dotenv": "^16.0.3",
         "eslint-config-prettier": "^8.8.0",

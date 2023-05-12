@@ -5,16 +5,32 @@ import Errors from '../errors';
 import ProjectConstants from '../utility/constants/ProjectConstants';
 
 const validateRequest =
-    (bodySchema?: z.ZodType<any>, paramsSchema?: z.ZodType<any>) =>
+    (bodySchema?: z.ZodType<any>, paramsSchema?: z.ZodType<any>, querySchema?: z.ZodType<any>) =>
     (req: Request, res: Response, next: NextFunction) => {
         const bodyData = req.body;
         const paramsData = req.params;
+        const queryData = req.query;
         const errorResponse = new Errors.PreConditionFailed();
 
         if (paramsSchema && Object.keys(paramsData).length > 0) {
             try {
                 const validatedParamsData = paramsSchema.parse(paramsData);
                 req.params = validatedParamsData;
+            } catch (error: any) {
+                if (error instanceof z.ZodError) {
+                    error.errors.forEach((err) => {
+                        errorResponse.push(
+                            new Errors.PreConditionFailed(err.message)
+                        );
+                    });
+                }
+            }
+        }
+
+        if (querySchema && Object.keys(queryData).length > 0) {
+            try {
+                const validatedQueryParamsData = querySchema.parse(queryData);
+                req.query = validatedQueryParamsData;
             } catch (error: any) {
                 if (error instanceof z.ZodError) {
                     error.errors.forEach((err) => {
@@ -53,6 +69,15 @@ const validateProjectIdParamsSchema = validateRequest(
         projectId: z.string().length(24, ProjectConstants.INVALID_PROJECT_ID),
     })
 );
+
+const validateProjectsQueryParamsSchema = validateRequest(
+    z.object({
+        organizationIds: z.string(),
+        take: z.number().min(10).max(10),
+        skip: z.number().min(0),
+        tab: z.enum(['ACTIVE', 'INACTIVE']),
+    })
+)
 
 const engagementTaskSchema = z
     .object({
@@ -177,4 +202,4 @@ const projectSchema = validateRequest(
     })
 );
 
-export { validateProjectIdParamsSchema, projectSchema };
+export { validateProjectIdParamsSchema, validateProjectsQueryParamsSchema, projectSchema };

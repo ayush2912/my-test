@@ -1,4 +1,5 @@
 import { prisma, Prisma } from './prisma';
+import { TaskSchema } from './tasks';
 
 const EngagementSchema: Prisma.EngagementSelect = {
     id: true,
@@ -24,23 +25,8 @@ const EngagementSchema: Prisma.EngagementSelect = {
         },
     },
     tasks: {
-        select: {
-            id: true,
-            engagementId: true,
-            type: true,
-            startDate: true,
-            dueDate: true,
-            completedDate: true,
-            state: true,
-            stateHistory: {
-                select: {
-                    state: true,
-                    stateUpdatedAt: true,
-                },
-            },
-            createdAt: true,
-            updatedAt: true,
-        },
+        select: TaskSchema,
+        orderBy: [{ startDate: 'asc' }, { type: 'asc' }],
     },
     createdAt: true,
     updatedAt: true,
@@ -58,6 +44,9 @@ const createEngagement = (data: any) =>
             startDate: data.startDate,
             dueDate: data.dueDate,
             attributes: data.attributes,
+            state: data.state,
+            stateHistory: data.stateHistory,
+            notes: data.notes,
             tasks: {
                 create: data.tasks,
             },
@@ -151,5 +140,6 @@ export {
     createEngagement,
     deleteEngagement,
     updateEngagement,
+    EngagementSchema,
     deleteEngagementsByStrapiIds,
 };

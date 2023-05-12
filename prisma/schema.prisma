@@ -164,7 +164,7 @@ model Project {
   subTypes                          ProjectType[]           @relation("ProjectWithSubProjectType", fields: [subTypeIDs], references: [id])
   subTypeIDs                        String[]                @db.ObjectId
   notes                             String?
-  isActive                          Boolean
+  isActive                          Boolean?
   annualApproximateCreditVolume     Int?
   portfolioOwner                    Organization?           @relation("PortfolioOwnerOrganisations", fields: [portfolioOwnerId], references: [id])
   portfolioOwnerId                  String?                 @db.ObjectId
@@ -180,7 +180,7 @@ model Engagement {
   updatedAt     DateTime              @updatedAt
   type          String
   startDate     DateTime
-  dueDate       DateTime
+  dueDate       DateTime?
   completedDate DateTime?
   state         String?               @default("NOT_STARTED")
   notes         String?
@@ -200,7 +200,7 @@ model Task {
   engagement    Engagement?    @relation(fields: [engagementId], references: [id], onDelete: Cascade)
   type          String
   startDate     DateTime
-  dueDate       DateTime
+  dueDate       DateTime?
   completedDate DateTime?
   state         String?        @default("NOT_STARTED")
   stateHistory  StateHistory[]
@@ -437,7 +437,7 @@ model Country {
 model ProjectType {
   id                 String        @id @default(auto()) @map("_id") @db.ObjectId
   name               String        @unique
-  parentType         ProjectType?  @relation("ParentProjectType", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  parentType         ProjectType?  @relation("ParentProjectType", fields: [id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   parentId           String?       @db.ObjectId
   subTypes           ProjectType[] @relation("ParentProjectType")
   subTypeProjects    Project[]     @relation("ProjectWithSubProjectType", fields: [subTypeProjectIDs], references: [id])
