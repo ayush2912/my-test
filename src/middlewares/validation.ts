@@ -78,13 +78,21 @@ const validateProjectIdParamsSchema = validateRequest(
 );
 
 const validateProjectsQueryParamsSchema = validateRequest(
+    undefined,
+    undefined,
     z.object({
-        organizationIds: z.string(),
-        take: z.number().min(10).max(10),
-        skip: z.number().min(0),
-        tab: z.enum(['ACTIVE', 'INACTIVE']),
+        organizationIds: z
+            .string({
+                invalid_type_error: 'Invalid Organization ID',
+                required_error: 'Organization ID is required',
+            })
+            .min(24),
+        take: z.number().min(10).max(100).default(10),
+        skip: z.number().min(0).default(0),
+        tab: z.enum(['ACTIVE', 'INACTIVE']).default('ACTIVE'),
     })
 );
+<<<<<<< HEAD
 
 export const validateProjectEngagementsQueryParamsSchema = validateRequest(
     undefined,
@@ -100,5 +108,7 @@ export const validateProjectEngagementsQueryParamsSchema = validateRequest(
         skip: z.number().min(0).default(0),
     })
 );
+=======
+>>>>>>> development
 
 export { validateProjectIdParamsSchema, validateProjectsQueryParamsSchema };

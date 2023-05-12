@@ -31,6 +31,7 @@ export default function routes(router: Router) {
                     customCode: 'PROJECT_DETAILS_RETRIEVED_SUCCESSFULLY',
                 });
             } catch (error) {
+                console.log(error);
                 res.sendError(error);
             }
         }
@@ -68,6 +69,7 @@ export default function routes(router: Router) {
                         'PROJECT_ENGAGEMENT_DETAILS_RETRIEVED_SUCCESSFULLY',
                 });
             } catch (error) {
+                console.log(error);
                 res.sendError(error);
             }
         }
@@ -90,14 +92,8 @@ export default function routes(router: Router) {
                     skip: Number(skip),
                     tab: tab as string,
                 };
-                const getProjectListInput = {
-                    ...queryParams,
-                    organizationIds: ((organizationIds as string) || '').split(
-                        ','
-                    ),
-                };
 
-                const results = await getProjectList(getProjectListInput);
+                const results = await getProjectList(queryParams);
 
                 res.sendSuccess({
                     msg: ProjectConstants.PROJECT_RETRIEVED,
@@ -105,6 +101,7 @@ export default function routes(router: Router) {
                     customCode: 'PROJECTS_RETRIEVED_SUCCESSFULLY',
                 });
             } catch (error) {
+                console.log(error);
                 res.sendError(error);
             }
         }

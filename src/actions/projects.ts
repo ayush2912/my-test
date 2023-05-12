@@ -102,7 +102,7 @@ const applyGetProjectsFilters = (options: GetProjectListInput) => {
     const filters: Prisma.ProjectWhereInput = {};
 
     if (options.organizationIds) {
-        filters.organizationId = {
+        filters.portfolioOwnerId = {
             in: options.organizationIds,
         };
     }
@@ -135,6 +135,7 @@ const getProjectEngagements = async (
             portfolioOwnerId: {
                 in: getProjectEngagementsInput.organizationIds,
             },
+
             engagements: {
                 some: {
                     state: {

@@ -1,5 +1,5 @@
 interface QueryParams {
-    organizationIds: string[];
+    organizationIds: string;
     take: number;
     skip: number;
     tab: string;
