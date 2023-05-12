@@ -557,7 +557,7 @@ describe('getProjectEngagements()', () => {
                 engagements:
                     projectCreated != null
                         ? projectCreated.engagements == undefined ||
-                            projectCreated.engagements == null
+                          projectCreated.engagements == null
                             ? []
                             : projectCreated.engagements
                         : [],

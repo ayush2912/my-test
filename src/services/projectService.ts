@@ -65,11 +65,11 @@ async function getProjectList(projectListInput: GetProjectListInput) {
 
         const getProjectListData = await getProjects(projectListInput);
 
-        if (getProjectListData.length === 0) {
-            throw new Errors.BadRequest(
-                ProjectConstants.INVALID_ORGANIZATION_ID
-            );
-        }
+        // if (getProjectListData.length === 0) {
+        //     throw new Errors.BadRequest(
+        //         ProjectConstants.INVALID_ORGANIZATION_ID
+        //     );
+        // }
 
         return getProjectListData;
     } catch (error) {

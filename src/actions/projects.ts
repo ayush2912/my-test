@@ -96,7 +96,7 @@ const applyGetProjectsFilters = (options: GetProjectListInput) => {
     const filters: Prisma.ProjectWhereInput = {};
 
     if (options.organizationIds) {
-        filters.organizationId = {
+        filters.portfolioOwnerId = {
             in: options.organizationIds,
         };
     }
@@ -123,6 +123,23 @@ const getProjectById = async (projectId: string) =>
 
 const getProjectEngagements = async () =>
     prisma.project.findMany({
+        where: {
+            // portfolioOwnerId: {
+            //     in: [""]
+            // },
+            engagements: {
+                some: {
+                    state: {
+                        in: [
+                            'NOT_STARTED',
+                            'IN_PROGRESS',
+                            'DISCONTINUED',
+                            'COMPLETED',
+                        ],
+                    },
+                },
+            },
+        },
         select: {
             id: true,
             name: true,
@@ -197,32 +214,32 @@ const createProject = (data: any) => {
             engagements: {
                 create: data.engagements
                     ? data.engagements.map((engagement: any) => ({
-                        type: engagement.type,
-                        startDate: engagement.startDate,
-                        dueDate: engagement.dueDate,
-                        completedDate: engagement.completedDate,
-                        state: engagement.state,
-                        notes: engagement.notes,
-                        attributes: engagement.attributes
-                            ? engagement.attributes.map((attribute: any) => ({
-                                name: attribute.name,
-                                key: attribute.key,
-                                type: attribute.type,
-                                value: attribute.value,
-                            }))
-                            : [],
-                        tasks: {
-                            create: engagement.tasks
-                                ? engagement.tasks.map((task: any) => ({
-                                    type: task.type,
-                                    startDate: task.startDate,
-                                    dueDate: task.dueDate,
-                                    completedDate: task.completedDate,
-                                    state: task.state,
+                          type: engagement.type,
+                          startDate: engagement.startDate,
+                          dueDate: engagement.dueDate,
+                          completedDate: engagement.completedDate,
+                          state: engagement.state,
+                          notes: engagement.notes,
+                          attributes: engagement.attributes
+                              ? engagement.attributes.map((attribute: any) => ({
+                                    name: attribute.name,
+                                    key: attribute.key,
+                                    type: attribute.type,
+                                    value: attribute.value,
                                 }))
-                                : [],
-                        },
-                    }))
+                              : [],
+                          tasks: {
+                              create: engagement.tasks
+                                  ? engagement.tasks.map((task: any) => ({
+                                        type: task.type,
+                                        startDate: task.startDate,
+                                        dueDate: task.dueDate,
+                                        completedDate: task.completedDate,
+                                        state: task.state,
+                                    }))
+                                  : [],
+                          },
+                      }))
                     : [],
             },
             creditingPeriodStartDate: data.creditingPeriodStartDate,
@@ -241,8 +258,8 @@ const createProject = (data: any) => {
             assetOwners: {
                 connect: data.assetOwners
                     ? data.assetOwners.map((ownerId: string) => ({
-                        id: ownerId,
-                    }))
+                          id: ownerId,
+                      }))
                     : [],
             },
             isActive: true,
@@ -370,7 +387,7 @@ const getProjects = async (options: GetProjectListInput) =>
                 subTypes: result.subTypes,
                 engagement: {
                     ...result.engagements[0],
-                    isOverdue: getIsOverdue(result.engagements[0]),
+                    isOverdue: isEngagementOverdue(result.engagements[0]),
                 },
                 annualApproximateCreditVolume:
                     result.annualApproximateCreditVolume,

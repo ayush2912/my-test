@@ -1,17 +1,16 @@
 import { Request, Response, Router } from 'express';
 import {
-    getProjectDetails, 
+    getProjectDetails,
     getProjectList,
-    getProjectEngagementDetails
+    getProjectEngagementDetails,
 } from '../services/projectService';
 import {
     validateProjectIdParamsSchema,
-    validateProjectsQueryParamsSchema
+    validateProjectsQueryParamsSchema,
 } from '../middlewares/validation';
 import ProjectConstants from '../utility/constants/ProjectConstants';
-import { QueryParams } from "../interfaces/project.interface"
+import { QueryParams } from '../interfaces/project.interface';
 import { string } from 'zod';
-
 
 export default function routes(router: Router) {
     router.get(
@@ -29,6 +28,7 @@ export default function routes(router: Router) {
                     customCode: 'PROJECT_DETAILS_RETRIEVED_SUCCESSFULLY',
                 });
             } catch (error) {
+                console.log(error);
                 res.sendError(error);
             }
         }
@@ -46,6 +46,7 @@ export default function routes(router: Router) {
                 customCode: 'PROJECT_ENGAGEMENT_DETAILS_RETRIEVED_SUCCESSFULLY',
             });
         } catch (error) {
+            console.log(error);
             res.sendError(error);
         }
     });
@@ -57,20 +58,18 @@ export default function routes(router: Router) {
             try {
                 console.info('----- /projects ----');
 
-                const {organizationIds, take, skip, tab} = req.query;
+                const { organizationIds, take, skip, tab } = req.query;
 
-                let queryParams: QueryParams = {
-                    organizationIds: organizationIds as string,
+                const queryParams: QueryParams = {
+                    organizationIds: ((organizationIds as string) || '').split(
+                        ','
+                    ),
                     take: Number(take),
                     skip: Number(skip),
-                    tab: tab as string
-                }
-                let getProjectListInput = {
-                    ...queryParams,
-                    organizationIds: queryParams.organizationIds.split(',')
-                }
-                
-                const results = await getProjectList(getProjectListInput);
+                    tab: tab as string,
+                };
+
+                const results = await getProjectList(queryParams);
 
                 res.sendSuccess({
                     msg: ProjectConstants.PROJECT_RETRIEVED,
@@ -78,6 +77,7 @@ export default function routes(router: Router) {
                     customCode: 'PROJECTS_RETRIEVED_SUCCESSFULLY',
                 });
             } catch (error) {
+                console.log(error);
                 res.sendError(error);
             }
         }
