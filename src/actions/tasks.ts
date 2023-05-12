@@ -65,5 +65,10 @@ const deleteTasksByStrapiIds = async (strapiIds: string[]) =>
         },
     });
 
-export { createTasks, updateTask, deleteTask, TaskSchema, deleteTasksByStrapiIds };
-
+export {
+    createTasks,
+    updateTask,
+    deleteTask,
+    TaskSchema,
+    deleteTasksByStrapiIds,
+};

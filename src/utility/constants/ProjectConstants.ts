@@ -4,7 +4,7 @@ const ProjectConstants = {
     PROJECT_RETRIEVED: 'Projects Retrieved Successfully',
     PROJECT_ENGAGEMENT_DETAILS_RETRIEVED:
         'Project Engagement Details Retrieved Successfully',
-    INVALID_ORGANIZATION_ID: 'Invalid Organization Id'
+    INVALID_ORGANIZATION_ID: 'Invalid Organization Id',
 };
 
 export default ProjectConstants;
