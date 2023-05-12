@@ -117,23 +117,25 @@ function Table({
             ))}
         </tbody>
       </StyledTable>
-      <EmptyStateDisplay>
-        <div>
-          <EmptyStateImageDiv>
-            <img src={noProjectIcon} />
-          </EmptyStateImageDiv>
+      {tableData.length === 0 && (
+        <EmptyStateDisplay>
+          <div>
+            <EmptyStateImageDiv>
+              <img src={noProjectIcon} />
+            </EmptyStateImageDiv>
 
-          <EmptyStateTextContent>
-            <Text color="default" type="heading3">
-              {emptyStateTitle}
-            </Text>
+            <EmptyStateTextContent>
+              <Text color="default" type="heading3">
+                {emptyStateTitle}
+              </Text>
 
-            <Text color="subdued" type="body">
-              {emptyStateSubTitle}
-            </Text>
-          </EmptyStateTextContent>
-        </div>
-      </EmptyStateDisplay>
+              <Text color="subdued" type="body">
+                {emptyStateSubTitle}
+              </Text>
+            </EmptyStateTextContent>
+          </div>
+        </EmptyStateDisplay>
+      )}
     </>
   );
 }
