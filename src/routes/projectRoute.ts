@@ -27,6 +27,7 @@ export default function routes(router: Router) {
                     customCode: 'PROJECT_DETAILS_RETRIEVED_SUCCESSFULLY',
                 });
             } catch (error) {
+                console.log(error);
                 res.sendError(error);
             }
         }
@@ -44,6 +45,7 @@ export default function routes(router: Router) {
                 customCode: 'PROJECT_ENGAGEMENT_DETAILS_RETRIEVED_SUCCESSFULLY',
             });
         } catch (error) {
+            console.log(error);
             res.sendError(error);
         }
     });
@@ -58,17 +60,15 @@ export default function routes(router: Router) {
                 const { organizationIds, take, skip, tab } = req.query;
 
                 const queryParams: QueryParams = {
-                    organizationIds: organizationIds as string,
+                    organizationIds: ((organizationIds as string) || '').split(
+                        ','
+                    ),
                     take: Number(take),
                     skip: Number(skip),
                     tab: tab as string,
                 };
-                const getProjectListInput = {
-                    ...queryParams,
-                    organizationIds: queryParams.organizationIds.split(','),
-                };
 
-                const results = await getProjectList(getProjectListInput);
+                const results = await getProjectList(queryParams);
 
                 res.sendSuccess({
                     msg: ProjectConstants.PROJECT_RETRIEVED,
@@ -76,6 +76,7 @@ export default function routes(router: Router) {
                     customCode: 'PROJECTS_RETRIEVED_SUCCESSFULLY',
                 });
             } catch (error) {
+                console.log(error);
                 res.sendError(error);
             }
         }

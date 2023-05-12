@@ -92,7 +92,7 @@ const applyGetProjectsFilters = (options: GetProjectListInput) => {
     const filters: Prisma.ProjectWhereInput = {};
 
     if (options.organizationIds) {
-        filters.organizationId = {
+        filters.portfolioOwnerId = {
             in: options.organizationIds,
         };
     }
@@ -105,7 +105,6 @@ const applyGetProjectsFilters = (options: GetProjectListInput) => {
             equals: false,
         };
     }
-
     return filters;
 };
 
@@ -119,6 +118,23 @@ const getProjectById = async (projectId: string) =>
 
 const getProjectEngagements = async () =>
     prisma.project.findMany({
+        where: {
+            // portfolioOwnerId: {
+            //     in: [""]
+            // },
+            engagements: {
+                some: {
+                    state: {
+                        in: [
+                            'NOT_STARTED',
+                            'IN_PROGRESS',
+                            'DISCONTINUED',
+                            'COMPLETED',
+                        ],
+                    },
+                },
+            },
+        },
         select: {
             id: true,
             name: true,

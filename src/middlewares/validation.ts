@@ -5,7 +5,11 @@ import Errors from '../errors';
 import ProjectConstants from '../utility/constants/ProjectConstants';
 
 const validateRequest =
-    (bodySchema?: z.ZodType<any>, paramsSchema?: z.ZodType<any>, querySchema?: z.ZodType<any>) =>
+    (
+        bodySchema?: z.ZodType<any>,
+        paramsSchema?: z.ZodType<any>,
+        querySchema?: z.ZodType<any>
+    ) =>
     (req: Request, res: Response, next: NextFunction) => {
         const bodyData = req.body;
         const paramsData = req.params;
@@ -27,7 +31,7 @@ const validateRequest =
             }
         }
 
-        if (querySchema && Object.keys(queryData).length > 0) {
+        if (querySchema) {
             try {
                 const validatedQueryParamsData = querySchema.parse(queryData);
                 req.query = validatedQueryParamsData;
@@ -71,12 +75,19 @@ const validateProjectIdParamsSchema = validateRequest(
 );
 
 const validateProjectsQueryParamsSchema = validateRequest(
+    undefined,
+    undefined,
     z.object({
-        organizationIds: z.string(),
-        take: z.number().min(10).max(10),
-        skip: z.number().min(0),
-        tab: z.enum(['ACTIVE', 'INACTIVE']),
+        organizationIds: z
+            .string({
+                invalid_type_error: 'Invalid Organization ID',
+                required_error: 'Organization ID is required',
+            })
+            .min(24),
+        take: z.number().min(10).max(100).default(10),
+        skip: z.number().min(0).default(0),
+        tab: z.enum(['ACTIVE', 'INACTIVE']).default('ACTIVE'),
     })
-)
+);
 
 export { validateProjectIdParamsSchema, validateProjectsQueryParamsSchema };
