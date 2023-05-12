@@ -11,12 +11,14 @@ function formatSuccessResponse({
     statusCode,
     msg = constants.DEFAULT_SUCCESS_MESSAGE,
     customCode = 'DEFAULT_SUCCESS_MESSAGE',
+    count,
 }: SuccessResponse) {
     return {
         status: constants.SUCCESS,
         statusCode: statusCode,
         message: msg,
         data: data,
+        count: count,
         customCode: customCode,
     };
 }

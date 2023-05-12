@@ -7,6 +7,7 @@ import {
     getProjects,
     getIsOverdue,
     getProjectEngagements,
+    countProjects,
 } from '../projects';
 import { createEngagement } from '../engagements';
 import { ProjectMockFactory } from '../../__mocks__/mock.data';
@@ -22,6 +23,7 @@ const {
     states,
     createMockData,
     clearMockData,
+    createMockProject,
 } = ProjectMockFactory();
 
 beforeAll(async () => createMockData());
@@ -459,8 +461,33 @@ describe('getProjects()', () => {
     });
 });
 
+describe('countProjects()', () => {
+    test.only('it should return project counts grouped by active and inactive', async () => {
+        const organizationId = faker.helpers.arrayElement(organizations).id;
+        const projects = await prisma.$transaction(
+            Array(10)
+                .fill(0)
+                .map(() =>
+                    createProject({
+                        ...createMockProject({ organizationId }),
+                        isActive: faker.datatype.boolean(),
+                    })
+                )
+        );
+
+        const results = await countProjects({
+            organizationIds: [organizationId],
+        });
+
+        expect(results).toEqual({
+            active: projects.filter((p) => p.isActive).length,
+            inactive: projects.filter((p) => !p.isActive).length,
+        });
+    });
+});
+
 describe('getProjectEngagements()', () => {
-    test.only('it should list all project engagements', async () => {
+    test('it should list all project engagements', async () => {
         const organizationId = faker.helpers.arrayElement(organizations).id;
         const data = {
             name: 'Renewable Get Power Project',

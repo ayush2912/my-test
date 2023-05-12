@@ -14,6 +14,7 @@ import {
     QueryParams,
     GetProjectEngagementsInput,
 } from '../interfaces/project.interface';
+import { countProjects } from '../actions/projects';
 
 export default function routes(router: Router) {
     router.get(
@@ -95,8 +96,20 @@ export default function routes(router: Router) {
 
                 const results = await getProjectList(queryParams);
 
+                const counts = await countProjects({
+                    organizationIds: queryParams.organizationIds,
+                });
+
+                console.log(counts);
+
                 res.sendSuccess({
                     msg: ProjectConstants.PROJECT_RETRIEVED,
+                    count: {
+                        projects: {
+                            active: counts.active || 0,
+                            inactive: counts.inactive || 0,
+                        },
+                    },
                     data: results,
                     customCode: 'PROJECTS_RETRIEVED_SUCCESSFULLY',
                 });
