@@ -7,9 +7,13 @@ import {
 import {
     validateProjectIdParamsSchema,
     validateProjectsQueryParamsSchema,
+    validateProjectEngagementsQueryParamsSchema,
 } from '../middlewares/validation';
 import ProjectConstants from '../utility/constants/ProjectConstants';
-import { QueryParams } from '../interfaces/project.interface';
+import {
+    QueryParams,
+    GetProjectEngagementsInput,
+} from '../interfaces/project.interface';
 
 export default function routes(router: Router) {
     router.get(
@@ -33,22 +37,43 @@ export default function routes(router: Router) {
         }
     );
 
-    router.get('/project-engagements/', async (req: Request, res: Response) => {
-        try {
-            console.info('----- /project-engagements/ ----');
+    router.get(
+        '/project-engagements/',
+        validateProjectEngagementsQueryParamsSchema,
+        async (req: Request, res: Response) => {
+            try {
+                console.info('----- /project-engagements/ ----');
+                const { organizationIds, take, skip } = req.query;
 
-            const results = await getProjectEngagementDetails();
+                const queryParams: GetProjectEngagementsInput = {
+                    organizationIds: ((organizationIds as string) || '').split(
+                        ','
+                    ),
+                    take: Number(take),
+                    skip: Number(skip),
+                };
+                const getProjectEngagementsInput = {
+                    ...queryParams,
+                    organizationIds: ((organizationIds as string) || '').split(
+                        ','
+                    ),
+                };
+                const results = await getProjectEngagementDetails(
+                    getProjectEngagementsInput
+                );
 
-            res.sendSuccess({
-                msg: ProjectConstants.PROJECT_ENGAGEMENT_DETAILS_RETRIEVED,
-                data: results,
-                customCode: 'PROJECT_ENGAGEMENT_DETAILS_RETRIEVED_SUCCESSFULLY',
-            });
-        } catch (error) {
-            console.log(error);
-            res.sendError(error);
+                res.sendSuccess({
+                    msg: ProjectConstants.PROJECT_ENGAGEMENT_DETAILS_RETRIEVED,
+                    data: results,
+                    customCode:
+                        'PROJECT_ENGAGEMENT_DETAILS_RETRIEVED_SUCCESSFULLY',
+                });
+            } catch (error) {
+                console.log(error);
+                res.sendError(error);
+            }
         }
-    });
+    );
 
     router.get(
         '/projects',

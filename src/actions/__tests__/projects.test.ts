@@ -5,7 +5,7 @@ import {
     updateProject,
     deleteProject,
     getProjects,
-    isEngagementOverdue,
+    getIsOverdue,
     getProjectEngagements,
 } from '../projects';
 import { createEngagement } from '../engagements';
@@ -433,7 +433,7 @@ describe('getProjects()', () => {
                     completedDate: matchedProject.engagements?.find(
                         (e) => e.id === project.engagement.id
                     )?.completedDate,
-                    isOverdue: isEngagementOverdue(
+                    isOverdue: getIsOverdue(
                         matchedProject.engagements?.find(
                             (e) => e.id === project.engagement.id
                         )
@@ -460,10 +460,12 @@ describe('getProjects()', () => {
 });
 
 describe('getProjectEngagements()', () => {
-    test('it should list all project engagements', async () => {
+    test.only('it should list all project engagements', async () => {
+        const organizationId = faker.helpers.arrayElement(organizations).id;
         const data = {
             name: 'Renewable Get Power Project',
             registry: faker.helpers.arrayElement(registries).id,
+            organization: faker.helpers.arrayElement(organizations).id,
             registryUrl: 'www.url.com',
             registryProjectId: '1851',
             countries: faker.helpers
@@ -480,7 +482,7 @@ describe('getProjectEngagements()', () => {
             creditingPeriodStartDate: '2023-04-11T14:15:22Z',
             creditingPeriodEndDate: '2023-04-11T14:15:22Z',
             annualApproximateCreditVolume: 300000,
-            portfolioOwner: faker.helpers.arrayElement(organizations).id,
+            portfolioOwner: organizationId,
             assetOwners: faker.helpers
                 .arrayElements(organizations)
                 .map((m) => m.id),
@@ -539,9 +541,14 @@ describe('getProjectEngagements()', () => {
                 },
             ],
         };
-        await createEngagement(engagementData);
 
-        const result = await getProjectEngagements();
+        await createEngagement(engagementData);
+        const getProjectEngagementsInput = {
+            organizationIds: [organizationId],
+            take: 10,
+            skip: 0,
+        };
+        const result = await getProjectEngagements(getProjectEngagementsInput);
         const projectCreated = await getProjectById(project.id);
         expect(result).toContainEqual(
             expect.objectContaining({
@@ -567,13 +574,13 @@ describe('getProjectEngagements()', () => {
     });
 });
 
-describe('isEngagementOverdue()', () => {
+describe('getIsOverdue()', () => {
     test('if state is COMPLETED and no complete date', async () => {
         const data = {
             state: 'COMPLETED',
             dueDate: '2023-12-21T00:00:00.000Z',
         };
-        const isOverdue = isEngagementOverdue(data);
+        const isOverdue = getIsOverdue(data);
         expect(isOverdue).toBeFalsy();
     });
 
@@ -583,7 +590,7 @@ describe('isEngagementOverdue()', () => {
             dueDate: '2023-12-21T00:00:00.000Z',
             completedDate: '2023-12-30T00:00:00.000Z',
         };
-        const isOverdue = isEngagementOverdue(data);
+        const isOverdue = getIsOverdue(data);
         expect(isOverdue).toBeTruthy();
     });
 
@@ -593,7 +600,7 @@ describe('isEngagementOverdue()', () => {
             dueDate: '2023-12-21T00:00:00.000Z',
             completedDate: '2023-10-30T00:00:00.000Z',
         };
-        const isOverdue = isEngagementOverdue(data);
+        const isOverdue = getIsOverdue(data);
         expect(isOverdue).toBeFalsy();
     });
 
@@ -603,7 +610,7 @@ describe('isEngagementOverdue()', () => {
             dueDate: '2022-12-21T00:00:00.000Z',
             completedDate: '2023-12-30T00:00:00.000Z',
         };
-        const isOverdue = isEngagementOverdue(data);
+        const isOverdue = getIsOverdue(data);
         expect(isOverdue).toBeTruthy();
     });
 
@@ -616,7 +623,7 @@ describe('isEngagementOverdue()', () => {
             ).toISOString(),
             completedDate: '2023-12-30T00:00:00.000Z',
         };
-        const isOverdue = isEngagementOverdue(data);
+        const isOverdue = getIsOverdue(data);
         expect(isOverdue).toBeFalsy();
     });
 
@@ -626,7 +633,7 @@ describe('isEngagementOverdue()', () => {
             dueDate: '2022-12-21T00:00:00.000Z',
             completedDate: '2023-12-30T00:00:00.000Z',
         };
-        const isOverdue = isEngagementOverdue(data);
+        const isOverdue = getIsOverdue(data);
         expect(isOverdue).toBeTruthy();
     });
 
@@ -639,7 +646,7 @@ describe('isEngagementOverdue()', () => {
             ).toISOString(),
             completedDate: '2023-12-30T00:00:00.000Z',
         };
-        const isOverdue = isEngagementOverdue(data);
+        const isOverdue = getIsOverdue(data);
         expect(isOverdue).toBeFalsy();
     });
 });
