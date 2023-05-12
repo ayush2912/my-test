@@ -11,6 +11,12 @@ type Countries = {
     iso3: string;
 };
 
+type Methodologies = {
+    registry: string;
+    code: string;
+    name: string;
+};
+
 export const seedProjectTypes = async (data: ProjectTypeData[]) => {
     const parentTypes = await prisma.$transaction(
         data
@@ -81,4 +87,47 @@ export const seedCountries = async (data: Countries[]) => {
         )
     );
     return countries;
+};
+
+export const seedMethodologies = async (data: Methodologies[]) => {
+    const methodologies = await prisma.$transaction(
+        data.map((item) =>
+            prisma.methodology.upsert({
+                where: {
+                    code: item.code,
+                },
+                update: {
+                    name: item.name,
+                    code: item.code,
+                    Registry: {
+                        connect:
+                            item.registry === 'CDM'
+                                ? [
+                                      { name: 'GCC' },
+                                      { name: 'GS' },
+                                      { name: 'CDM' },
+                                      { name: 'Verra' },
+                                  ]
+                                : [{ name: item.registry }],
+                    },
+                },
+                create: {
+                    name: item.name,
+                    code: item.code,
+                    Registry: {
+                        connect:
+                            item.registry === 'CDM'
+                                ? [
+                                      { name: 'GCC' },
+                                      { name: 'GS' },
+                                      { name: 'CDM' },
+                                      { name: 'Verra' },
+                                  ]
+                                : [{ name: item.registry }],
+                    },
+                },
+            })
+        )
+    );
+    return methodologies;
 };

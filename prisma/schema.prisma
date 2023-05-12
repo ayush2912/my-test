@@ -250,7 +250,7 @@ model ProjectRiskScore {
 
 model Registry {
   id                   String                @id @default(auto()) @map("_id") @db.ObjectId
-  name                 String /// GCC, Verra
+  name                 String                @unique
   projects             Project[]
   registryProjectDatas RegistryProjectData[]
   issuance             Issuance[]
@@ -414,6 +414,7 @@ model SectoralScope {
 model Methodology {
   id          String     @id @default(auto()) @map("_id") @db.ObjectId
   name        String
+  code        String     @unique
   Registry    Registry[] @relation(fields: [registryIDs], references: [id])
   registryIDs String[]   @db.ObjectId
   Projects    Project[]  @relation(fields: [projectIDs], references: [id])
