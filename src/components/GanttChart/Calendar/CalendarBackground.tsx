@@ -9,7 +9,7 @@ export const CalendarBackground = styled.div<{
   display: flex;
   flex-direction: column;
   width: ${({ width }) => width}px;
-  min-height: 500px;
+  height: 500px;
   overflow-y: scroll;
   border: 1px solid #f1f2f4;
   background-color: #ffffff;
