@@ -1,8 +1,11 @@
 import Errors from '../errors';
-import { getProjectById, getProjectEngagements, getProjects } from '../actions/projects';
+import {
+    getProjectById,
+    getProjectEngagements,
+    getProjects,
+} from '../actions/projects';
 import ProjectConstants from '../utility/constants/ProjectConstants';
-import { GetProjectListInput } from '../interfaces/project.interface'
-import { type } from 'os';
+import { GetProjectListInput } from '../interfaces/project.interface';
 
 /**
  * This method get project details from project id.
@@ -58,14 +61,14 @@ async function getProjectEngagementDetails() {
 
 async function getProjectList(projectListInput: GetProjectListInput) {
     try {
-        console.info(
-            '-----In getProjectList method of ProjectService ------'
-        );
+        console.info('-----In getProjectList method of ProjectService ------');
 
         const getProjectListData = await getProjects(projectListInput);
 
         if (getProjectListData.length === 0) {
-            throw new Errors.BadRequest(ProjectConstants.INVALID_ORGANIZATION_ID);
+            throw new Errors.BadRequest(
+                ProjectConstants.INVALID_ORGANIZATION_ID
+            );
         }
 
         return getProjectListData;

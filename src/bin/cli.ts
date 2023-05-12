@@ -2,9 +2,9 @@
 import { Command } from 'commander';
 import { readFileSync } from 'fs';
 
-import { parseProjectTypes } from './parse';
-import { loadDataFromCSV } from './utils';
-import { seedProjectTypes } from './seed';
+import { parseProjectTypes, parseCountries } from './parse';
+import { loadDataFromCSV, readDataFromUrl } from './utils';
+import { seedProjectTypes, seedCountries } from './seed';
 import { listProjectTypes } from './list';
 
 const program = new Command();
@@ -58,6 +58,16 @@ seed.command('projectTypes')
         console.log(
             `Created ${parentTypes.length} Project Parent Types, ${subTypes.length} Project Subtypes`
         );
+    });
+
+seed.command('countries')
+    .argument('<url>', 'url for the json data')
+    .description('Seed the Countries data into database from url')
+    .action(async (path: string) => {
+        const jsonString = readFileSync(path, 'utf-8');
+        const data = parseCountries(jsonString);
+        const countries = await seedCountries(data);
+        console.log(`Created ${countries.length} countries`);
     });
 
 const list = program.command('list').description('List items from database');

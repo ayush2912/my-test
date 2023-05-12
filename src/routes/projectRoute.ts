@@ -1,17 +1,15 @@
 import { Request, Response, Router } from 'express';
 import {
-    getProjectDetails, 
+    getProjectDetails,
     getProjectList,
-    getProjectEngagementDetails
+    getProjectEngagementDetails,
 } from '../services/projectService';
 import {
     validateProjectIdParamsSchema,
-    validateProjectsQueryParamsSchema
+    validateProjectsQueryParamsSchema,
 } from '../middlewares/validation';
 import ProjectConstants from '../utility/constants/ProjectConstants';
-import { QueryParams } from "../interfaces/project.interface"
-import { string } from 'zod';
-
+import { QueryParams } from '../interfaces/project.interface';
 
 export default function routes(router: Router) {
     router.get(
@@ -57,19 +55,19 @@ export default function routes(router: Router) {
             try {
                 console.info('----- /projects ----');
 
-                const {organizationIds, take, skip, tab} = req.query;
+                const { organizationIds, take, skip, tab } = req.query;
 
-                let queryParams: QueryParams = {
+                const queryParams: QueryParams = {
                     organizationIds: organizationIds as string,
                     take: Number(take),
                     skip: Number(skip),
-                    tab: tab as string
-                }
-                let getProjectListInput = {
+                    tab: tab as string,
+                };
+                const getProjectListInput = {
                     ...queryParams,
-                    organizationIds: queryParams.organizationIds.split(',')
-                }
-                
+                    organizationIds: queryParams.organizationIds.split(','),
+                };
+
                 const results = await getProjectList(getProjectListInput);
 
                 res.sendSuccess({

@@ -5,6 +5,12 @@ type ProjectTypeData = {
     parentType: string;
 };
 
+type Countries = {
+    name: string;
+    iso2: string;
+    iso3: string;
+};
+
 export const seedProjectTypes = async (data: ProjectTypeData[]) => {
     const parentTypes = await prisma.$transaction(
         data
@@ -52,4 +58,27 @@ export const seedProjectTypes = async (data: ProjectTypeData[]) => {
         parentTypes,
         subTypes,
     };
+};
+
+export const seedCountries = async (data: Countries[]) => {
+    const countries = await prisma.$transaction(
+        data.map((item) =>
+            prisma.country.upsert({
+                where: {
+                    iso2Name: item.iso2,
+                },
+                update: {
+                    name: item.name,
+                    iso3Name: item.iso3,
+                    iso2Name: item.iso2,
+                },
+                create: {
+                    name: item.name,
+                    iso3Name: item.iso3,
+                    iso2Name: item.iso2,
+                },
+            })
+        )
+    );
+    return countries;
 };

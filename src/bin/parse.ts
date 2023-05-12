@@ -8,3 +8,5 @@ export const parseProjectTypes = (data: CSVProjectType[]) =>
         name: d.Name,
         parentType: d.ParentType,
     }));
+
+export const parseCountries = (data: string) => JSON.parse(data);
