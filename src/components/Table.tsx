@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 import Text from "./Text";
-import noProjectIcon from "../../assets/images/noProject.png";
+import noProjectIcon from "../assets/images/noProject.png";
 
 const EmptyStateImageDiv = styled.div`
   display: flex;
