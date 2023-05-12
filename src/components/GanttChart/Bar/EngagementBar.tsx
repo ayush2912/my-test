@@ -64,16 +64,16 @@ export const EngagementBar = ({
   const [showPopup, setShowPopup] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
 
-  const popupRef = useRef(null);
+  const barRef = useRef(null);
   const contentRef = useRef(null);
-
-  useOutsideAlerter(popupRef, () => {
+  const popupRef = useRef(null);
+  useOutsideAlerter(barRef, () => {
     if (showPopup) setShowPopup(false);
   });
 
   useEffect(() => {
-    if (popupRef.current && contentRef.current) {
-      const containerWidth = (popupRef.current as HTMLElement).clientWidth;
+    if (barRef.current && contentRef.current) {
+      const containerWidth = (barRef.current as HTMLElement).clientWidth;
       const contentWidth = (contentRef.current as HTMLElement).scrollWidth;
 
       setIsTextOverflowing(contentWidth + 16 > containerWidth);
@@ -86,6 +86,10 @@ export const EngagementBar = ({
     setShowPopup(true);
     setPopupPosition({ top: event.clientY, left: event.clientX });
   };
+
+  const handlePopupMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation();
+  };
   const statusTag = {
     NOT_STARTED: { label: "NOT STARTED", type: "disabled" },
     IN_PROGRESS: { label: "IN PROGRESS", type: "information" },
@@ -97,21 +101,26 @@ export const EngagementBar = ({
   return (
     <Container>
       <Bar
-        ref={popupRef}
+        ref={barRef}
         width={engagementData.bar.width[view]}
         offsetFromLeft={engagementData.bar.offsetFromLeft[view]}
         onMouseDown={handleContainerMouseDown}
         focus={showPopup}
       >
         {showPopup && (
-          <BarPopup top={popupPosition.top} left={popupPosition.left}>
+          <BarPopup
+            ref={popupRef}
+            onMouseDown={handlePopupMouseDown}
+            top={popupPosition.top}
+            left={popupPosition.left}
+          >
             <ModalHeader>
               <Text type="captionBold" color="default">
                 {engagementData.type}
               </Text>
               <EyeButton
                 onClick={() => {
-                  console.log("clicked");
+                  engagementData.onViewClick(engagementData.projectId);
                 }}
               />
             </ModalHeader>

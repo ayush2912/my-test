@@ -95,7 +95,6 @@ export interface IMappedEngagement {
   stateHistory: StateHistory[];
   isOverdue: boolean;
   attributes: Attribute[];
-
   createdAt: string;
   updatedAt: string;
   project: {
@@ -106,9 +105,12 @@ export interface IMappedEngagement {
     types: Type[];
     countries: Country[];
     bar: IBar;
+    onViewClick: (id: string) => void;
   };
   bar: IBar;
+  onViewClick: (id: string) => void;
   tasks: (Task & { bar: IBar })[];
 }
 
 export type IMappedEngagements = IMappedEngagement[];
+export type IProjectBarData = IMappedEngagement["project"];
