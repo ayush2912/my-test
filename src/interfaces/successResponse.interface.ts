@@ -3,6 +3,7 @@ interface SuccessResponse {
     statusCode?: number;
     msg?: string;
     customCode?: string;
+    count?: any;
 }
 
 export default SuccessResponse;

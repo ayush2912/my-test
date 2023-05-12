@@ -15,34 +15,6 @@ export const App = () => {
     app.use(morgan('combined'));
     app.use(helmet());
 
-    // Handle CORS error
-    app.use((req: Request, res: Response, next: NextFunction) => {
-        res.header('Access-Control-Allow-Origin', '*');
-        res.header(
-            'Access-Control-Allow-Headers',
-            'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-        );
-        if (req.method === 'OPTIONS') {
-            res.header(
-                'Access-Control-Allow-Methods',
-                'PUT, POST, PATCH, DELETE, GET'
-            );
-            return res.status(200).json({});
-        }
-        next();
-    });
-
-    const whitelist = [process.env.LOCAL, process.env.DEV, process.env.STAGING];
-    const corsOptions = {
-        origin: (origin: any, callback: any) => {
-            if (whitelist.indexOf(origin) !== -1 || !origin) {
-                callback(null, true);
-            } else {
-                callback(new Error('Not allowed by CORS'));
-            }
-        },
-    };
-
     app.use(cors());
 
     app.use(responseMiddleware());
