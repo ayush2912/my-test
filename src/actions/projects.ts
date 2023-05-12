@@ -65,22 +65,19 @@ const ProjectSchema: Prisma.ProjectSelect = {
     updatedAt: true,
 };
 
-export const isEngagementOverdue = (engagement: any) => {
-    if (engagement?.state === 'COMPLETED') {
-        if (!engagement.completedDate) {
+export const getIsOverdue = (object: any) => {
+    if (object?.state === 'COMPLETED') {
+        if (!object.completedDate) {
             return false;
         }
 
-        if (engagement?.completedDate >= engagement?.dueDate) {
+        if (object?.completedDate >= object?.dueDate) {
             return true;
         }
     }
 
-    if (
-        engagement?.state === 'IN_PROGRESS' ||
-        engagement?.state === 'NOT_STARTED'
-    ) {
-        if (engagement.dueDate <= new Date().toISOString()) {
+    if (object?.state === 'IN_PROGRESS' || object?.state === 'NOT_STARTED') {
+        if (object.dueDate <= new Date().toISOString()) {
             return true;
         }
     }
@@ -112,6 +109,7 @@ const applyGetProjectsFilters = (options: GetProjectListInput) => {
             equals: false,
         };
     }
+
     return filters;
 };
 
