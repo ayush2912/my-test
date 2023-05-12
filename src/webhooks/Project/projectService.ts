@@ -63,7 +63,8 @@ async function updateProjectStrapi(entryId: number, data: any) {
         const project = await getProjectsByStrapiId(entryId.toString());
 
         if (!project.length) {
-            throw new Errors.BadRequest('Project do not exist in system');
+            await createProjectStrapi(entryId, data);
+            //  throw new Errors.BadRequest('Project do not exist in system');
         }
 
         const projectId = project[0].id;

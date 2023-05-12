@@ -15,9 +15,10 @@ async function getProjectOwners(strapProjectId: number) {
 
         const res = await axios.get(
             `${baseUrl}/api/projects/${strapProjectId}?populate=deep,2`
-        );
+        );        
 
         const data = res?.data?.data?.attributes || {};
+        
         const result: any = {};
 
         const portfolioOwner = data?.PortfolioOwner?.data?.attributes?.Name;

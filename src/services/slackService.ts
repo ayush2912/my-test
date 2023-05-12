@@ -2,7 +2,7 @@ import axios from 'axios';
 import { EventTypes } from './events';
 
 const webhookUrl =
-    'https://hooks.slack.com/services/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';
+    'https://hooks.slack.com/services/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';
 
 /**
  * To send messages in slack.
