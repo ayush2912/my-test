@@ -3,6 +3,7 @@ import {
     getProjectById,
     getProjectEngagements,
     getProjects,
+    getIsOverdue,
 } from '../actions/projects';
 import ProjectConstants from '../utility/constants/ProjectConstants';
 import {
@@ -49,10 +50,9 @@ async function getProjectEngagementDetails(
         );
         projectEngagements.forEach((project: any) => {
             project.engagements.forEach((engagement: any) => {
-                engagement['isOverdue'] =
-                    engagement.completedDate > engagement.dueDate;
+                engagement['isOverdue'] = getIsOverdue(engagement);
                 engagement.tasks.forEach((task: any) => {
-                    task['isOverdue'] = task.completedDate > task.dueDate;
+                    task['isOverdue'] = getIsOverdue(task);
                 });
             });
         });

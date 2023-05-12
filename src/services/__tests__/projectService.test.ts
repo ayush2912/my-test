@@ -33,6 +33,7 @@ describe('getprojectEngagementDetails()', () => {
                             {
                                 id: faker.database.mongodbObjectId(),
                                 startDate: faker.date.recent(),
+                                state: 'COMPLETED',
                                 dueDate: '2022-05-08T21:04:33.782Z',
                                 completedDate: '2023-05-08T21:04:33.782Z',
                             },
