@@ -398,7 +398,7 @@ const getProjects = async (options: GetProjectListInput) =>
                 subTypes: result.subTypes,
                 engagement: {
                     ...result.engagements[0],
-                    isOverdue: isEngagementOverdue(result.engagements[0]),
+                    isOverdue: getIsOverdue(result.engagements[0]),
                 },
                 annualApproximateCreditVolume:
                     result.annualApproximateCreditVolume,
