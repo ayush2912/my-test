@@ -116,7 +116,6 @@ describe('createProject()', () => {
             organizations.filter((c) => data.assetOwners.includes(c.id))
         );
 
-        // Teardown
         await deleteProject(result.id);
     });
 });

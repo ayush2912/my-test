@@ -13,10 +13,11 @@ type DateRange {
 }
 
 type EngagementAttribute {
-  name  String?
-  key   String?
-  type  String?
-  value String?
+  name      String
+  key       String?
+  type      String
+  value     String
+  strapiId  String?
 }
 
 type StateHistory {
@@ -28,7 +29,7 @@ model Organization {
   id                 String         @id @default(auto()) @map("_id") @db.ObjectId
   createdAt          DateTime       @default(now())
   updatedAt          DateTime       @updatedAt
-  name               String?
+  name               String?        @unique
   url                String?
   logo               String? /// Base64 Representation of the logo image 
   logoUrl            String?
@@ -170,6 +171,7 @@ model Project {
   assetOwners                       Organization[]          @relation("AssetOwnerOrganisations", fields: [assetOwnerIDs], references: [id])
   assetOwnerIDs                     String[]                @db.ObjectId
   engagements                       Engagement[]
+  strapiId                          String?                 @unique
 }
 
 model Engagement {
@@ -187,6 +189,7 @@ model Engagement {
   attributes    EngagementAttribute[]
   stateHistory  StateHistory[]
   tasks         Task[]
+  strapiId      String?               @unique
 }
 
 model Task {
@@ -201,6 +204,7 @@ model Task {
   completedDate DateTime?
   state         String?        @default("NOT_STARTED")
   stateHistory  StateHistory[]
+  strapiId      String?        @unique
 }
 
 model RegistryProjectData {
@@ -250,7 +254,7 @@ model ProjectRiskScore {
 
 model Registry {
   id                   String                @id @default(auto()) @map("_id") @db.ObjectId
-  name                 String /// GCC, Verra
+  name                 String                @unique
   projects             Project[]
   registryProjectDatas RegistryProjectData[]
   issuance             Issuance[]
@@ -414,6 +418,7 @@ model SectoralScope {
 model Methodology {
   id          String     @id @default(auto()) @map("_id") @db.ObjectId
   name        String
+  code        String     @unique
   Registry    Registry[] @relation(fields: [registryIDs], references: [id])
   registryIDs String[]   @db.ObjectId
   Projects    Project[]  @relation(fields: [projectIDs], references: [id])

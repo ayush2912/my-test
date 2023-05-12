@@ -89,53 +89,62 @@ describe('/projects/{projectId}', () => {
     });
 
     test('GET /projects with valid organization Id', async () => {
-        const app = App()
+        const app = App();
 
-        const organizationId = faker.helpers.arrayElement(organizations).id
+        const organizationId = faker.helpers.arrayElement(organizations).id;
 
-        const projects = await prisma.$transaction(Array(10).fill(0).map(() => 
-            createProject({
-                name: 'Renewable Get Power Project',
-                registry: faker.helpers.arrayElement(registries).id,
-                registryUrl: 'www.url.com',
-                registryProjectId: '1851',
-                countries: faker.helpers
-                    .arrayElements(countries)
-                    .map((c) => c.iso2Name),
-                states: ['UP'],
-                methodologies: faker.helpers
-                    .arrayElements(methodologies, 1)
-                    .map((m) => m.id),
-                type: faker.helpers.arrayElement(projectTypes).id,
-                subType: faker.helpers.arrayElement(projectTypes).id,
-                notes: 'Renewable Power project in India',
-                isActive: true,
-                creditingPeriodStartDate: '2023-04-11T14:15:22Z',
-                creditingPeriodEndDate: '2023-04-11T14:15:22Z',
-                annualApproximateCreditVolume: 300000,
-                organization: organizationId,
-                portfolioOwner: faker.helpers.arrayElement(organizations).id,
-                assetOwners: faker.helpers
-                    .arrayElements(organizations)
-                    .map((m) => m.id),
-                engagements: faker.helpers
-                    .arrayElements(engagements, 2)
-            })
-        ))
-
-        const projectIds = projects.map(project => project.id)
-
-        const results = await request(app)
-            .get(`/projects?organizationIds=${organizationId}&tab=ACTIVE&take=10&skip=0`)
-            .expect('Content-Type', /json/)
-            .expect(200);
-        
-        expect(results.body.status).toBe('Success');
-        expect(results.body.message).toBe(
-            'Projects Retrieved Successfully'
+        const projects = await prisma.$transaction(
+            Array(10)
+                .fill(0)
+                .map(() =>
+                    createProject({
+                        name: 'Renewable Get Power Project',
+                        registry: faker.helpers.arrayElement(registries).id,
+                        registryUrl: 'www.url.com',
+                        registryProjectId: '1851',
+                        countries: faker.helpers
+                            .arrayElements(countries)
+                            .map((c) => c.iso2Name),
+                        states: ['UP'],
+                        methodologies: faker.helpers
+                            .arrayElements(methodologies, 1)
+                            .map((m) => m.id),
+                        type: faker.helpers.arrayElement(projectTypes).id,
+                        subType: faker.helpers.arrayElement(projectTypes).id,
+                        notes: 'Renewable Power project in India',
+                        isActive: true,
+                        creditingPeriodStartDate: '2023-04-11T14:15:22Z',
+                        creditingPeriodEndDate: '2023-04-11T14:15:22Z',
+                        annualApproximateCreditVolume: 300000,
+                        organization: organizationId,
+                        portfolioOwner:
+                            faker.helpers.arrayElement(organizations).id,
+                        assetOwners: faker.helpers
+                            .arrayElements(organizations)
+                            .map((m) => m.id),
+                        engagements: faker.helpers.arrayElements(
+                            engagements,
+                            2
+                        ),
+                    })
+                )
         );
 
-        await Promise.all(projectIds.map(projectId => deleteProject(projectId)))
+        const projectIds = projects.map((project) => project.id);
+
+        const results = await request(app)
+            .get(
+                `/projects?organizationIds=${organizationId}&tab=ACTIVE&take=10&skip=0`
+            )
+            .expect('Content-Type', /json/)
+            .expect(200);
+
+        expect(results.body.status).toBe('Success');
+        expect(results.body.message).toBe('Projects Retrieved Successfully');
+
+        await Promise.all(
+            projectIds.map((projectId) => deleteProject(projectId))
+        );
     });
 
     test('GET /projects with invalid organization Id', async () => {

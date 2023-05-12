@@ -58,4 +58,17 @@ const deleteTask = async (taskId: string) =>
         },
     });
 
-export { createTasks, updateTask, deleteTask, TaskSchema };
+const deleteTasksByStrapiIds = async (strapiIds: string[]) =>
+    prisma.task.deleteMany({
+        where: {
+            strapiId: { in: strapiIds },
+        },
+    });
+
+export {
+    createTasks,
+    updateTask,
+    deleteTask,
+    TaskSchema,
+    deleteTasksByStrapiIds,
+};
