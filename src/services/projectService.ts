@@ -1,8 +1,14 @@
 import Errors from '../errors';
-import { getProjectById, getProjectEngagements, getProjects } from '../actions/projects';
+import {
+    getProjectById,
+    getProjectEngagements,
+    getProjects,
+} from '../actions/projects';
 import ProjectConstants from '../utility/constants/ProjectConstants';
-import { GetProjectListInput } from '../interfaces/project.interface'
-import { type } from 'os';
+import {
+    GetProjectListInput,
+    GetProjectEngagementsInput,
+} from '../interfaces/project.interface';
 
 /**
  * This method get project details from project id.
@@ -31,12 +37,16 @@ async function getProjectDetails(projectId: string) {
     }
 }
 
-async function getProjectEngagementDetails() {
+async function getProjectEngagementDetails(
+    getProjectEngagementsInput: GetProjectEngagementsInput
+) {
     try {
         console.info(
             '-----In getProjectEngagementDetails method of ProjectService ------'
         );
-        const projectEngagements = await getProjectEngagements();
+        const projectEngagements = await getProjectEngagements(
+            getProjectEngagementsInput
+        );
         projectEngagements.forEach((project: any) => {
             project.engagements.forEach((engagement: any) => {
                 engagement['isOverdue'] =
@@ -58,14 +68,14 @@ async function getProjectEngagementDetails() {
 
 async function getProjectList(projectListInput: GetProjectListInput) {
     try {
-        console.info(
-            '-----In getProjectList method of ProjectService ------'
-        );
+        console.info('-----In getProjectList method of ProjectService ------');
 
         const getProjectListData = await getProjects(projectListInput);
 
         if (getProjectListData.length === 0) {
-            throw new Errors.BadRequest(ProjectConstants.INVALID_ORGANIZATION_ID);
+            throw new Errors.BadRequest(
+                ProjectConstants.INVALID_ORGANIZATION_ID
+            );
         }
 
         return getProjectListData;

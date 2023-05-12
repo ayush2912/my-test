@@ -45,10 +45,18 @@ describe('getprojectEngagementDetails()', () => {
             mockGetProjectEngagements
         );
         mockGetProjectEngagements.mockReturnValue(mockProjectEngagements);
+        const getProjectEngagementsInput = {
+            organizationIds: ['6448d91ea2b95136130c9550'],
+            take: 10,
+            skip: 0,
+        };
+        const projectEngagements = await getProjectEngagementDetails(
+            getProjectEngagementsInput
+        );
 
-        const projectEngagements = await getProjectEngagementDetails();
-
-        expect(mockGetProjectEngagements).toHaveBeenCalledWith();
+        expect(mockGetProjectEngagements).toHaveBeenCalledWith(
+            getProjectEngagementsInput
+        );
         expect(projectEngagements).toEqual(mockProjectEngagements);
         const engagement = projectEngagements[0].engagements[0];
         const tasks = projectEngagements[0].engagements[0].tasks;

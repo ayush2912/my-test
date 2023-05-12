@@ -1,17 +1,19 @@
 import { Request, Response, Router } from 'express';
 import {
-    getProjectDetails, 
+    getProjectDetails,
     getProjectList,
-    getProjectEngagementDetails
+    getProjectEngagementDetails,
 } from '../services/projectService';
 import {
     validateProjectIdParamsSchema,
-    validateProjectsQueryParamsSchema
+    validateProjectsQueryParamsSchema,
+    validateProjectEngagementsQueryParamsSchema,
 } from '../middlewares/validation';
 import ProjectConstants from '../utility/constants/ProjectConstants';
-import { QueryParams } from "../interfaces/project.interface"
-import { string } from 'zod';
-
+import {
+    QueryParams,
+    GetProjectEngagementsInput,
+} from '../interfaces/project.interface';
 
 export default function routes(router: Router) {
     router.get(
@@ -34,21 +36,42 @@ export default function routes(router: Router) {
         }
     );
 
-    router.get('/project-engagements/', async (req: Request, res: Response) => {
-        try {
-            console.info('----- /project-engagements/ ----');
+    router.get(
+        '/project-engagements/',
+        validateProjectEngagementsQueryParamsSchema,
+        async (req: Request, res: Response) => {
+            try {
+                console.info('----- /project-engagements/ ----');
+                const { organizationIds, take, skip } = req.query;
 
-            const results = await getProjectEngagementDetails();
+                const queryParams: GetProjectEngagementsInput = {
+                    organizationIds: ((organizationIds as string) || '').split(
+                        ','
+                    ),
+                    take: Number(take),
+                    skip: Number(skip),
+                };
+                const getProjectEngagementsInput = {
+                    ...queryParams,
+                    organizationIds: ((organizationIds as string) || '').split(
+                        ','
+                    ),
+                };
+                const results = await getProjectEngagementDetails(
+                    getProjectEngagementsInput
+                );
 
-            res.sendSuccess({
-                msg: ProjectConstants.PROJECT_ENGAGEMENT_DETAILS_RETRIEVED,
-                data: results,
-                customCode: 'PROJECT_ENGAGEMENT_DETAILS_RETRIEVED_SUCCESSFULLY',
-            });
-        } catch (error) {
-            res.sendError(error);
+                res.sendSuccess({
+                    msg: ProjectConstants.PROJECT_ENGAGEMENT_DETAILS_RETRIEVED,
+                    data: results,
+                    customCode:
+                        'PROJECT_ENGAGEMENT_DETAILS_RETRIEVED_SUCCESSFULLY',
+                });
+            } catch (error) {
+                res.sendError(error);
+            }
         }
-    });
+    );
 
     router.get(
         '/projects',
@@ -57,19 +80,23 @@ export default function routes(router: Router) {
             try {
                 console.info('----- /projects ----');
 
-                const {organizationIds, take, skip, tab} = req.query;
+                const { organizationIds, take, skip, tab } = req.query;
 
-                let queryParams: QueryParams = {
-                    organizationIds: organizationIds as string,
+                const queryParams: QueryParams = {
+                    organizationIds: ((organizationIds as string) || '').split(
+                        ','
+                    ),
                     take: Number(take),
                     skip: Number(skip),
-                    tab: tab as string
-                }
-                let getProjectListInput = {
+                    tab: tab as string,
+                };
+                const getProjectListInput = {
                     ...queryParams,
-                    organizationIds: queryParams.organizationIds.split(',')
-                }
-                
+                    organizationIds: ((organizationIds as string) || '').split(
+                        ','
+                    ),
+                };
+
                 const results = await getProjectList(getProjectListInput);
 
                 res.sendSuccess({
