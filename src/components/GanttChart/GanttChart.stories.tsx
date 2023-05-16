@@ -77,10 +77,10 @@ const Template: StoryFn<GanttChartProps> = ({
   );
 };
 
-export const EmptyState = Template.bind({});
-EmptyState.args = {
-  projectEngagementData: mockData,
-};
+// export const EmptyState = Template.bind({});
+// EmptyState.args = {
+//   projectEngagementData: mockData,
+// };
 
 export const GanttChartWithoutEngagements = Template.bind({});
 GanttChartWithoutEngagements.args = {
