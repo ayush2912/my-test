@@ -71,7 +71,7 @@ export const getCalendarHeaderAndWidth = (
   latestEndDate: Date,
 ) => {
   const startOfYear = moment(earliestStartDate).startOf("year");
-  const endOfYear = moment(latestEndDate).endOf("year");
+  const endOfYear = moment(latestEndDate).endOf("year").add(1, "year");
 
   const numberOfMonths = Math.round(
     endOfYear.diff(startOfYear, "months", true),

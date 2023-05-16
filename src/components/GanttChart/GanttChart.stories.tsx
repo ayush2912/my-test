@@ -3,6 +3,7 @@ import { StoryFn } from "@storybook/react";
 
 import { GanttChart } from "./GanttChart";
 import { ProjectEngagement } from "./GanttChart.types";
+import { mockData } from "./mockdataimportant";
 import { getBarInfo, memoizedCalendarData } from "../../utils/calendarHelper";
 
 interface GanttChartProps {
@@ -51,7 +52,7 @@ const Template: StoryFn<GanttChartProps> = ({
           bar: getBarInfo(
             new Date(task.startDate),
             new Date(task.dueDate),
-            new Date(task.completedDate),
+            task.completedDate ? new Date(task.completedDate) : null,
             calendar.earliestStartDate,
           ),
         })),
@@ -78,7 +79,7 @@ const Template: StoryFn<GanttChartProps> = ({
 
 export const EmptyState = Template.bind({});
 EmptyState.args = {
-  projectEngagementData: [],
+  projectEngagementData: mockData,
 };
 
 export const GanttChartWithoutEngagements = Template.bind({});
@@ -174,6 +175,11 @@ GanttChartWithoutTasks.args = {
       updatedAt: "2023-06-08T16:00:00.000Z",
     },
   ],
+};
+
+export const GanttChartDebug = Template.bind({});
+GanttChartDebug.args = {
+  projectEngagementData: mockData,
 };
 
 export const GanttChartWithMultipleProjects = Template.bind({});
