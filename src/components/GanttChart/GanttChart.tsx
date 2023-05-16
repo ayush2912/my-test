@@ -31,6 +31,15 @@ const EmptyStateContainer = styled.div`
   align-items: center;
 `;
 
+const CalendarBackgroundWrapper = styled.div<{ width: number }>`
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 500px;
+  width: ${(props) => props.width}px;
+`;
+
 export const GanttChart = ({
   mappedProjectEngagements,
   calendar,
@@ -46,19 +55,21 @@ export const GanttChart = ({
       {mappedProjectEngagements.length ? (
         <StyledCalendarContainer>
           <CalendarHeader calendarHeader={calendar.header} view={view} />
-          <CalendarBackground width={calendar.width[view]} view={view}>
-            {mappedProjectEngagements.map((v) => {
-              return (
-                <div key={v.id}>
-                  <ProjectBar key={v.id + "p"} projectData={v.project} />
-                  <EngagementBar key={v.id + "e"} engagementData={v} />
-                  {v.tasks.map((v) => (
-                    <TaskBar key={v.id} taskData={v} />
-                  ))}
-                </div>
-              );
-            })}
-          </CalendarBackground>
+          <CalendarBackgroundWrapper width={calendar.width[view]}>
+            <CalendarBackground width={calendar.width[view]} view={view}>
+              {mappedProjectEngagements.map((v) => {
+                return (
+                  <>
+                    <ProjectBar key={v.id + "p"} projectData={v.project} />
+                    <EngagementBar key={v.id + "e"} engagementData={v} />
+                    {v.tasks.map((v) => (
+                      <TaskBar key={v.id} taskData={v} />
+                    ))}
+                  </>
+                );
+              })}
+            </CalendarBackground>
+          </CalendarBackgroundWrapper>
         </StyledCalendarContainer>
       ) : (
         <EmptyStateContainer>
