@@ -155,7 +155,7 @@ export const EngagementBar = ({
                 <Text type="caption" color="default">
                   {engagementData.completedDate
                     ? convertToEuropeanDateFormat(engagementData.completedDate)
-                    : null}
+                    : "-"}
                 </Text>
               </TextHolder>
             </ModalContent>

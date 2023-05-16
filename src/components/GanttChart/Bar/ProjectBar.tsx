@@ -13,6 +13,7 @@ export const ModalHeader = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
+  white-space: normal;
 `;
 
 export const ModalContent = styled.div`
