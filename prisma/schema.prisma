@@ -13,22 +13,23 @@ type DateRange {
 }
 
 type EngagementAttribute {
-  name  String
-  key   String
-  type  String
-  value String
+  name      String
+  key       String?
+  type      String
+  value     String
+  strapiId  String?
 }
 
 type StateHistory {
-  state    String
-  datetime DateTime
+  state          String
+  stateUpdatedAt DateTime
 }
 
 model Organization {
   id                 String         @id @default(auto()) @map("_id") @db.ObjectId
   createdAt          DateTime       @default(now())
   updatedAt          DateTime       @updatedAt
-  name               String?
+  name               String?        @unique
   url                String?
   logo               String? /// Base64 Representation of the logo image 
   logoUrl            String?
@@ -136,7 +137,7 @@ model Project {
   status                            String? /// Current status of the project, such as status
   statusLog                         ProjectStage[]
   registryId                        String?                 @db.ObjectId
-  registry                        Registry?               @relation(fields: [registryId], references: [id])
+  registry                          Registry?               @relation(fields: [registryId], references: [id])
   documents                         Document[]
   chats                             Chat[]
   notifications                     Notification[]
@@ -154,6 +155,7 @@ model Project {
   registryRiskInfo                  RegistryRiskInfo?       @relation("RegistryRiskInfo")
   countries                         Country[]               @relation(fields: [countryIDs], references: [id])
   countryIDs                        String[]                @db.ObjectId
+  state                             String?
   states                            String[]
   methodologies                     Methodology[]           @relation(fields: [methodologyIDs], references: [id])
   methodologyIDs                    String[]                @db.ObjectId
@@ -162,13 +164,14 @@ model Project {
   subTypes                          ProjectType[]           @relation("ProjectWithSubProjectType", fields: [subTypeIDs], references: [id])
   subTypeIDs                        String[]                @db.ObjectId
   notes                             String?
-  isActive                          Boolean
-  annualApproximateCreditVolume     BigInt?
+  isActive                          Boolean?
+  annualApproximateCreditVolume     Int?
   portfolioOwner                    Organization?           @relation("PortfolioOwnerOrganisations", fields: [portfolioOwnerId], references: [id])
   portfolioOwnerId                  String?                 @db.ObjectId
   assetOwners                       Organization[]          @relation("AssetOwnerOrganisations", fields: [assetOwnerIDs], references: [id])
   assetOwnerIDs                     String[]                @db.ObjectId
   engagements                       Engagement[]
+  strapiId                          String?                 @unique
 }
 
 model Engagement {
@@ -177,7 +180,7 @@ model Engagement {
   updatedAt     DateTime              @updatedAt
   type          String
   startDate     DateTime
-  dueDate       DateTime
+  dueDate       DateTime?
   completedDate DateTime?
   state         String?               @default("NOT_STARTED")
   notes         String?
@@ -186,6 +189,7 @@ model Engagement {
   attributes    EngagementAttribute[]
   stateHistory  StateHistory[]
   tasks         Task[]
+  strapiId      String?               @unique
 }
 
 model Task {
@@ -196,10 +200,11 @@ model Task {
   engagement    Engagement?    @relation(fields: [engagementId], references: [id], onDelete: Cascade)
   type          String
   startDate     DateTime
-  dueDate       DateTime
+  dueDate       DateTime?
   completedDate DateTime?
   state         String?        @default("NOT_STARTED")
   stateHistory  StateHistory[]
+  strapiId      String?        @unique
 }
 
 model RegistryProjectData {
@@ -249,7 +254,7 @@ model ProjectRiskScore {
 
 model Registry {
   id                   String                @id @default(auto()) @map("_id") @db.ObjectId
-  name                 String /// GCC, Verra
+  name                 String                @unique
   projects             Project[]
   registryProjectDatas RegistryProjectData[]
   issuance             Issuance[]
@@ -413,6 +418,8 @@ model SectoralScope {
 model Methodology {
   id          String     @id @default(auto()) @map("_id") @db.ObjectId
   name        String
+  fullName    String
+  code        String     @unique
   Registry    Registry[] @relation(fields: [registryIDs], references: [id])
   registryIDs String[]   @db.ObjectId
   Projects    Project[]  @relation(fields: [projectIDs], references: [id])
@@ -430,8 +437,8 @@ model Country {
 
 model ProjectType {
   id                 String        @id @default(auto()) @map("_id") @db.ObjectId
-  name               String
-  parentType         ProjectType?  @relation("ParentProjectType", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  name               String        @unique
+  parentType         ProjectType?  @relation("ParentProjectType", fields: [id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   parentId           String?       @db.ObjectId
   subTypes           ProjectType[] @relation("ParentProjectType")
   subTypeProjects    Project[]     @relation("ProjectWithSubProjectType", fields: [subTypeProjectIDs], references: [id])

@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -9,4 +9,4 @@ prisma
         console.error('Error connecting to Prisma Client:', error);
     });
 
-export default prisma;
+export { prisma, Prisma };
