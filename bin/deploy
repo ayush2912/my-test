@@ -32,5 +32,5 @@ rm /tmp/cloudbuild.yml
 
 gcloud run deploy $NAME \
   --allow-unauthenticated \
-  --set-env-vars=STRAPI_BASE_URL="$STRAPI_BASE_URL"
+  --set-env-vars=STRAPI_BASE_URL="$STRAPI_BASE_URL" \
   --image $IMAGE
