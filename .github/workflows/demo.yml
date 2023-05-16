@@ -103,6 +103,7 @@ jobs:
       TF_VAR_DATABASE_URL: ${{secrets.DATABASE_URL}}
       TF_VAR_ENV: ${{secrets.ENV}}
       TF_VAR_TG: ${{secrets.TG}}
+      TF_VAR_key: ${{secrets.key}}
 
       
       
