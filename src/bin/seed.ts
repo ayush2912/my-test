@@ -1,4 +1,4 @@
-import { prisma, Prisma } from '../actions/prisma';
+import { prisma } from '../actions/prisma';
 
 type OrganizationData = {
     name: string;
@@ -297,46 +297,47 @@ export const seedCountries = async (data: Countries[]) => {
 };
 
 export const seedMethodologies = async (data: Methodologies[]) => {
-    const methodologies = await prisma.$transaction(
-        data.map((item) =>
-            prisma.methodology.upsert({
-                where: {
-                    code: item.code,
-                },
-                update: {
-                    name: item.name,
-                    fullName: item.fullName,
-                    code: item.code,
-                    Registry: {
-                        connect:
-                            item.registry === 'CDM'
-                                ? [
-                                      { name: 'GCC' },
-                                      { name: 'GS' },
-                                      { name: 'CDM' },
-                                      { name: 'Verra' },
-                                  ]
-                                : [{ name: item.registry }],
-                    },
-                },
-                create: {
-                    name: item.name,
-                    code: item.code,
-                    fullName: item.fullName,
-                    Registry: {
-                        connect:
-                            item.registry === 'CDM'
-                                ? [
-                                      { name: 'GCC' },
-                                      { name: 'GS' },
-                                      { name: 'CDM' },
-                                      { name: 'Verra' },
-                                  ]
-                                : [{ name: item.registry }],
-                    },
-                },
-            })
-        )
+    console.log(`Importing ${data.length} from CSV`);
+
+    const createdMethodologies = await prisma.methodology.findMany({
+        where: {
+            code: {
+                in: data.map((m) => m.code),
+            },
+        },
+    });
+
+    const newMethodologies = data.filter(
+        (m) => !createdMethodologies.find((c) => c.code === m.code)
     );
+
+    console.log(
+        `Found ${createdMethodologies.length} existing methodologies, creating ${newMethodologies.length} new methodologies`
+    );
+
+    if (!newMethodologies.length) {
+        return { count: 0 };
+    }
+
+    const registries = await prisma.registry.findMany({
+        where: {
+            name: {
+                in: ['CDM', 'GCC', 'CDM', 'Verra'],
+            },
+        },
+    });
+
+    const methodologies = await prisma.methodology.createMany({
+        data: newMethodologies.map((item) => ({
+            name: item.name,
+            code: item.code,
+            fullName: item.fullName,
+            registryIDs:
+                item.registry === 'CDM'
+                    ? registries.map((r) => r.id)
+                    : registries.find((r) => r.name === item.registry)?.id,
+        })),
+    });
+
     return methodologies;
 };

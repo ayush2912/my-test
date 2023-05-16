@@ -129,7 +129,7 @@ seed.command('methodologies')
         const string = readFileSync(path, 'utf-8');
         const data = parseMethodologies(loadDataFromCSV(string));
         const methodologies = await seedMethodologies(data);
-        console.log(`Created ${methodologies.length} methodologies`);
+        console.log(`Created ${methodologies.count} methodologies`);
     });
 
 const list = program.command('list').description('List items from database');
