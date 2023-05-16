@@ -142,7 +142,7 @@ export const TaskBar = ({ taskData }: { taskData: Task & { bar: IBar } }) => {
               </TextHolder>
               <TextHolder>
                 <Text type="caption" color="subdued">
-                  Completion date : :
+                  Completion date :
                 </Text>
                 <Text type="caption" color="default">
                   {convertToEuropeanDateFormat(taskData.completedDate)}
