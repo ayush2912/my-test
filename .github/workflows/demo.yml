@@ -88,7 +88,7 @@ jobs:
         with:
           terraform_version: latest
       - name: Terraform Init
-        run: terraform init
+        run: terraform init -backend-config="key=project-service-demo/terraform.tfstate"
       - name: Terraform Plan
         run: terraform plan
       - name: terraform apply
@@ -220,7 +220,7 @@ jobs:
         with:
           terraform_version: latest
       - name: Terraform Init
-        run: terraform init
+        run: terraform init -backend-config="key=project-service-prod/terraform.tfstate"
       - name: Terraform Plan
         run: terraform plan
       - name: terraform apply
