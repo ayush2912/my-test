@@ -121,7 +121,7 @@ jobs:
       - name: Build and push Docker image
         env:
           ECR_REGISTRY: 168933414344.dkr.ecr.ap-south-1.amazonaws.com
-          IMAGE_NAME: offsetmax-development-project-service
+          IMAGE_NAME: offsetmax-dev-project-service
           DATABASE_URL: ${{secrets.DATABASE_URL}}
         run: |
           docker build -t $ECR_REGISTRY/$IMAGE_NAME:latest --build-arg DATABASE_URL=$DATABASE_URL .
