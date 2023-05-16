@@ -1,6 +1,12 @@
 #!/bin/bash
 # https://til.simonwillison.net/cloudrun/using-build-args-with-cloud-run
 
+if [[ -z "$NAME" ]]; then
+    echo "Must provide NAME environment variable" 1>&2
+    exit 1
+fi
+
+
 if [[ -z "$DATABASE_URL" ]]; then
     echo "Must provide DATABASE_URL environment variable" 1>&2
     exit 1
@@ -11,9 +17,7 @@ if [[ -z "$STRAPI_BASE_URL" ]]; then
     exit 1
 fi
 
-
-
-NAME="offsetmax-projects-service"
+NAME="$NAME"
 PROJECT=$(gcloud config get-value project)
 IMAGE="gcr.io/$PROJECT/$NAME"
 

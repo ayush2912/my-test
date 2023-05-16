@@ -2,7 +2,15 @@
 import { Command } from 'commander';
 import { readFileSync } from 'fs';
 
-import { parseProjectTypes, parseCountries, parseMethodologies } from './parse';
+import {
+    parseOrganizations,
+    parseProjects,
+    parseEngagements,
+    parseTasks,
+    parseProjectTypes,
+    parseCountries,
+    parseMethodologies,
+} from './parse';
 import { loadDataFromCSV } from './utils';
 import { seedProjectTypes, seedCountries, seedMethodologies } from './seed';
 import { listProjectTypes } from './list';
@@ -17,6 +25,50 @@ program
 const parse = program
     .command('parse')
     .description('Parse data into JSON objects');
+
+parse
+    .command('organizations')
+    .argument('<path>', 'file path to the CSV file')
+    .description('Parse Organizations CSV file into JSON objects')
+    .action((path) => {
+        const string = readFileSync(path, 'utf-8');
+        const data = loadDataFromCSV(string);
+        const results = parseOrganizations(data);
+        console.log(JSON.stringify(results, null, 2));
+    });
+
+parse
+    .command('projects')
+    .argument('<path>', 'file path to the CSV file')
+    .description('Parse Projects CSV file into JSON objects')
+    .action((path) => {
+        const string = readFileSync(path, 'utf-8');
+        const data = loadDataFromCSV(string);
+        const results = parseProjects(data);
+        console.log(JSON.stringify(results, null, 2));
+    });
+
+parse
+    .command('engagements')
+    .argument('<path>', 'file path to the CSV file')
+    .description('Parse Engagements CSV file into JSON objects')
+    .action((path) => {
+        const string = readFileSync(path, 'utf-8');
+        const data = loadDataFromCSV(string);
+        const results = parseEngagements(data);
+        console.log(JSON.stringify(results, null, 2));
+    });
+
+parse
+    .command('tasks')
+    .argument('<path>', 'file path to the CSV file')
+    .description('Parse Tasks CSV file into JSON objects')
+    .action((path) => {
+        const string = readFileSync(path, 'utf-8');
+        const data = loadDataFromCSV(string);
+        const results = parseTasks(data);
+        console.log(JSON.stringify(results, null, 2));
+    });
 
 parse
     .command('taskTypes')
