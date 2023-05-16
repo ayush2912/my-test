@@ -12,7 +12,15 @@ import {
     parseMethodologies,
 } from './parse';
 import { loadDataFromCSV } from './utils';
-import { seedProjectTypes, seedCountries, seedMethodologies } from './seed';
+import {
+    seedOrganizations,
+    seedProjects,
+    seedEngagements,
+    seedTasks,
+    seedProjectTypes,
+    seedCountries,
+    seedMethodologies,
+} from './seed';
 import { listProjectTypes } from './list';
 
 const program = new Command();
@@ -97,6 +105,56 @@ parse
     });
 
 const seed = program.command('seed').description('Seed data into database');
+
+seed.command('organizations')
+    .argument('<path>', 'file path to the CSV file')
+    .description('Seed Organizations into database from CSV file')
+    .action(async (path) => {
+        const string = readFileSync(path, 'utf-8');
+        const data = parseOrganizations(loadDataFromCSV(string));
+
+        const organizations = await seedOrganizations(data);
+
+        console.log(`Seeded ${organizations.length} organizations`);
+    });
+
+seed.command('projects')
+    .argument('<path>', 'file path to the CSV file')
+    .description('Seed Organizations into database from CSV file')
+    .action(async (path) => {
+        const string = readFileSync(path, 'utf-8');
+        const data = parseProjects(loadDataFromCSV(string));
+        const projects = await seedProjects(data);
+        console.log(`Seeded ${projects.length} projects`);
+    });
+
+seed.command('engagements')
+    .argument('<path>', 'file path to the CSV file')
+    .description('Seed Engagements into database from CSV file')
+    .action(async (path) => {
+        const string = readFileSync(path, 'utf-8');
+        const data = parseEngagements(loadDataFromCSV(string)).filter(
+            (e) => e.startDate?.length
+        );
+
+        const engagements = await seedEngagements(data);
+
+        console.log(`Seeded ${engagements.length} engagements`);
+    });
+
+seed.command('tasks')
+    .argument('<path>', 'file path to the CSV file')
+    .description('Seed Tasks into database from CSV file')
+    .action(async (path) => {
+        const string = readFileSync(path, 'utf-8');
+        const data = parseTasks(loadDataFromCSV(string)).filter(
+            (e) => e.startDate?.length
+        );
+
+        const tasks = await seedTasks(data);
+
+        console.log(`Seeded ${tasks.length} tasks`);
+    });
 
 seed.command('projectTypes')
     .argument('<path>', 'file path to the CSV file')

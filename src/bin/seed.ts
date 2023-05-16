@@ -1,4 +1,4 @@
-import { prisma } from '../actions/prisma';
+import { prisma, Prisma } from '../actions/prisma';
 
 type OrganizationData = {
     name: string;
@@ -25,6 +25,26 @@ type ProjectData = {
     assetOwners: string[];
 };
 
+type EngagementData = {
+    project: string;
+    type: string;
+    startDate: string;
+    dueDate: string;
+    completedDate?: string;
+    state: string;
+    notes: string;
+};
+
+type TaskData = {
+    project: string;
+    engagement: string;
+    type: string;
+    startDate: string;
+    dueDate: string;
+    completedDate?: string;
+    state: string;
+};
+
 type ProjectTypeData = {
     name: string;
     parentType: string;
@@ -43,186 +63,449 @@ type Methodologies = {
     fullName: string;
 };
 
-const createOrUpdateOrganization = async (data: OrganizationData) =>
-    prisma.$transaction(async (tx) => {
-        const organization = await tx.organization.findFirst({
+const createOrUpdateOrganization = async (data: OrganizationData) => {
+    const organization = await prisma.organization.findFirst({
+        where: {
+            name: data.name,
+        },
+    });
+
+    if (organization) {
+        return prisma.organization.update({
             where: {
-                name: data.name,
+                id: organization.id,
             },
-        });
-
-        if (organization) {
-            return tx.organization.update({
-                where: {
-                    id: organization.id,
-                },
-                data: {
-                    url: data.url,
-                    type: data.type,
-                    expiryDate: data.expiryDate,
-                },
-            });
-        }
-
-        return tx.organization.create({
             data: {
-                name: data.name,
                 url: data.url,
                 type: data.type,
                 expiryDate: data.expiryDate,
             },
         });
+    }
+
+    return prisma.organization.create({
+        data: {
+            name: data.name,
+            url: data.url,
+            type: data.type,
+            expiryDate: data.expiryDate,
+        },
+    });
+};
+
+const createOrUpdateProject = async (data: ProjectData) => {
+    const project = await prisma.project.findFirst({
+        where: {
+            name: data.name,
+            portfolioOwner: {
+                name: {
+                    equals: data.portfolioOwner,
+                },
+            },
+        },
+        select: {
+            id: true,
+        },
     });
 
-const createOrUpdateProject = async (data: ProjectData) =>
-    prisma.$transaction(async (tx) => {
-        const project = await tx.project.findFirst({
+    const countries = await prisma.country.findMany({
+        where: {
+            name: {
+                in: data.countries,
+            },
+        },
+        select: {
+            id: true,
+        },
+    });
+
+    const registry = await prisma.registry.findFirst({
+        where: {
+            name: data.registry,
+        },
+        select: {
+            id: true,
+        },
+    });
+
+    const methodologies = await prisma.methodology.findMany({
+        where: {
+            code: {
+                in: data.methodologies,
+            },
+        },
+    });
+
+    const types = await prisma.projectType.findMany({
+        where: {
+            name: {
+                in: data.types,
+            },
+        },
+    });
+
+    const subTypes = await prisma.projectType.findMany({
+        where: {
+            name: {
+                in: data.subTypes,
+            },
+        },
+    });
+
+    const portfolioOwner = await prisma.organization.findFirst({
+        where: {
+            name: data.portfolioOwner,
+        },
+        select: {
+            id: true,
+        },
+    });
+
+    const assetOwners = await prisma.organization.findMany({
+        where: {
+            name: {
+                in: data.assetOwners,
+            },
+        },
+        select: {
+            id: true,
+        },
+    });
+
+    const projectSelect: Prisma.ProjectSelect = {
+        id: true,
+        name: true,
+        registry: {
+            select: {
+                name: true,
+            },
+        },
+        registryProjectId: true,
+        registryUrl: true,
+        countries: {
+            select: {
+                name: true,
+            },
+        },
+        states: true,
+        methodologies: {
+            select: {
+                code: true,
+            },
+        },
+        notes: true,
+        creditingPeriodStartDate: true,
+        creditingPeriodEndDate: true,
+        annualApproximateCreditVolume: true,
+        types: {
+            select: {
+                name: true,
+            },
+        },
+        subTypes: {
+            select: {
+                name: true,
+            },
+        },
+        portfolioOwner: {
+            select: {
+                name: true,
+            },
+        },
+        assetOwners: {
+            select: {
+                name: true,
+            },
+        },
+    };
+
+    if (project) {
+        await prisma.project.updateMany({
             where: {
+                id: project.id,
+            },
+            data: {
                 name: data.name,
-                portfolioOwner: {
-                    name: {
-                        equals: data.portfolioOwner,
-                    },
+                ...(registry?.id && {
+                    registryId: registry?.id,
+                    registryProjectId: data.registryProjectId,
+                    registryUrl: data.registryUrl,
+                }),
+                countryIDs: countries.map((c) => c.id),
+                states: {
+                    set: data.states.filter((s) => s.length),
                 },
-            },
-            select: {
-                id: true,
+                methodologyIDs: methodologies.map((m) => m.id),
+                notes: data.notes,
+                creditingPeriodStartDate: data.creditingPeriodStartDate,
+                creditingPeriodEndDate: data.creditingPeriodEndDate,
+                annualApproximateCreditVolume:
+                    data.annualApproximateCreditVolume,
+                typeIDs: types.map((t) => t.id),
+                subTypeIDs: subTypes.map((t) => t.id),
+                portfolioOwnerId: portfolioOwner?.id,
+                assetOwnerIDs: assetOwners.map((a) => a.id),
             },
         });
 
-        const countries = await tx.country.findMany({
+        return prisma.project.findFirst({
             where: {
-                name: {
-                    in: data.countries,
-                },
+                id: project.id,
             },
-            select: {
-                id: true,
-            },
+            select: projectSelect,
         });
+    }
 
-        const portfolioOwner = await tx.organization.findFirst({
-            where: {
-                name: data.portfolioOwner,
-            },
-            select: {
-                id: true,
-            },
-        });
-
-        const assetOwners = await tx.organization.findMany({
-            where: {
-                name: {
-                    in: data.assetOwners,
-                },
-            },
-            select: {
-                id: true,
-            },
-        });
-
-        console.log(countries);
-
-        const projectInput = {
+    const created = await prisma.project.create({
+        select: {
+            id: true,
+        },
+        data: {
             name: data.name,
-            registry: {
-                connect: {
-                    name: data.registry,
-                },
-            },
-            registryProjectId: data.registryProjectId,
-            registryUrl: data.registryUrl,
-            countries: {
-                connect: countries.map((c) => ({
-                    id: c.id,
-                })),
-            },
+            ...(registry?.id && {
+                registryId: registry?.id,
+                registryProjectId: data.registryProjectId,
+                registryUrl: data.registryUrl,
+            }),
+            countryIDs: countries.map((c) => c.id),
             states: {
                 set: data.states.filter((s) => s.length),
             },
-            methodologies: {
-                connect: data.methodologies.map((m) => ({
-                    code: m,
-                })),
-            },
+            methodologyIDs: methodologies.map((m) => m.id),
             notes: data.notes,
             creditingPeriodStartDate: data.creditingPeriodStartDate,
             creditingPeriodEndDate: data.creditingPeriodEndDate,
             annualApproximateCreditVolume: data.annualApproximateCreditVolume,
-            portfolioOwner: {
-                connect: {
-                    id: portfolioOwner?.id,
-                },
-            },
-            assetOwners: {
-                connect: assetOwners.map((a) => ({
-                    id: a.id,
-                })),
-            },
-        };
+            typeIDs: types.map((t) => t.id),
+            subTypeIDs: subTypes.map((t) => t.id),
+            portfolioOwnerId: portfolioOwner?.id,
+            assetOwnerIDs: assetOwners.map((a) => a.id),
+        },
+    });
 
-        const projectSelect = {
+    return prisma.project.findFirst({
+        where: {
+            id: created.id,
+        },
+        select: projectSelect,
+    });
+};
+
+const createOrUpdateEngagement = async (data: EngagementData) => {
+    const engagementSelect: Prisma.EngagementSelect = {
+        type: true,
+        project: {
+            select: {
+                name: true,
+            },
+        },
+        startDate: true,
+        dueDate: true,
+        completedDate: true,
+        state: true,
+        notes: true,
+    };
+
+    const project = await prisma.project.findFirst({
+        where: {
+            name: data.project,
+        },
+        select: {
             id: true,
-            name: true,
-            registry: {
-                select: {
-                    name: true,
-                },
-            },
-            registryProjectId: true,
-            registryUrl: true,
-            countries: {
-                select: {
-                    name: true,
-                },
-            },
-            states: true,
-            methodologies: {
-                select: {
-                    name: true,
-                },
-            },
-            notes: true,
-            creditingPeriodStartDate: true,
-            creditingPeriodEndDate: true,
-            annualApproximateCreditVolume: true,
-            portfolioOwner: {
-                select: {
-                    name: true,
-                },
-            },
-            assetOwners: {
-                select: {
-                    name: true,
-                },
-            },
-        };
+        },
+    });
 
-        console.log(
-            JSON.stringify({ project, projectInput, projectSelect }, null, 2)
-        );
+    if (!project) {
+        throw new Error(`Project do not exist: ${data.project}`);
+    }
 
-        if (project) {
-            return tx.project.update({
-                where: {
+    const engagement = await prisma.engagement.findFirst({
+        where: {
+            type: data.type,
+            projectId: project.id,
+        },
+    });
+
+    if (engagement) {
+        await prisma.engagement.updateMany({
+            where: {
+                id: engagement.id,
+            },
+            data: {
+                type: data.type,
+                startDate: data.startDate,
+                dueDate: data.dueDate,
+                completedDate: data.completedDate,
+                state: data.state,
+                notes: data.notes,
+            },
+        });
+
+        return prisma.engagement.findFirst({
+            where: {
+                id: engagement.id,
+            },
+            select: engagementSelect,
+        });
+    }
+
+    const created = await prisma.engagement.create({
+        select: {
+            id: true,
+        },
+        data: {
+            type: data.type,
+            project: {
+                connect: {
                     id: project.id,
                 },
-                data: projectInput,
-                select: projectSelect,
-            });
-        }
-
-        return tx.project.create({
-            data: { ...projectInput },
-            select: projectSelect,
-        });
+            },
+            startDate: data.startDate,
+            dueDate: data.dueDate,
+            completedDate: data.completedDate,
+            state: data.state,
+            notes: data.notes,
+        },
     });
+
+    return prisma.engagement.findFirst({
+        where: {
+            id: created.id,
+        },
+        select: engagementSelect,
+    });
+};
+
+const createOrUpdateTasks = async (data: TaskData) => {
+    const taskSelect: Prisma.TaskSelect = {
+        engagement: {
+            select: {
+                type: true,
+            },
+        },
+        type: true,
+        state: true,
+        startDate: true,
+        dueDate: true,
+        completedDate: true,
+    };
+
+    const project = await prisma.project.findFirst({
+        where: {
+            name: data.project,
+        },
+        select: {
+            id: true,
+        },
+    });
+
+    if (!project) {
+        throw new Error(`Project do not exist: ${data.project}`);
+    }
+
+    const engagement = await prisma.engagement.findFirst({
+        where: {
+            type: data.engagement,
+            projectId: project.id,
+        },
+        select: {
+            id: true,
+        },
+    });
+
+    if (!engagement) {
+        throw new Error(
+            `Engagement ${data.engagement} do not exist for project ${data.project}`
+        );
+    }
+
+    const task = await prisma.task.findFirst({
+        where: {
+            engagementId: engagement.id,
+            type: data.type,
+        },
+        select: {
+            id: true,
+        },
+    });
+
+    if (task) {
+        await prisma.task.updateMany({
+            where: {
+                id: task.id,
+            },
+            data: {
+                type: data.type,
+                startDate: data.startDate,
+                dueDate: data.dueDate,
+                completedDate: data.completedDate,
+                state: data.state,
+            },
+        });
+
+        return prisma.task.findFirst({
+            where: {
+                id: task.id,
+            },
+            select: taskSelect,
+        });
+    }
+
+    const created = await prisma.task.create({
+        select: {
+            id: true,
+        },
+        data: {
+            type: data.type,
+            engagement: {
+                connect: {
+                    id: engagement.id,
+                },
+            },
+            startDate: data.startDate,
+            dueDate: data.dueDate,
+            completedDate: data.completedDate,
+            state: data.state,
+        },
+    });
+
+    return prisma.task.findFirst({
+        where: {
+            id: created.id,
+        },
+        select: taskSelect,
+    });
+};
 
 export const seedOrganizations = (data: OrganizationData[]) =>
     Promise.all(data.map((d) => createOrUpdateOrganization(d)));
 
 export const seedProjects = (data: ProjectData[]) =>
-    Promise.all(data.map((d) => createOrUpdateProject(d)));
+    Promise.all(
+        data.map((d) =>
+            createOrUpdateProject(d).catch((error) =>
+                console.error(`Error seeding project`, {
+                    data: d,
+                    error,
+                })
+            )
+        )
+    );
+
+export const seedEngagements = (data: EngagementData[]) =>
+    Promise.all(data.map((d) => createOrUpdateEngagement(d)));
+
+export const seedTasks = (data: TaskData[]) =>
+    Promise.all(
+        data.map((d) =>
+            createOrUpdateTasks(d).catch((error) =>
+                console.error(`Error seeding project`, {
+                    data: d,
+                    error,
+                })
+            )
+        )
+    );
 
 export const seedProjectTypes = async (data: ProjectTypeData[]) => {
     const parentTypes = await prisma.$transaction(
@@ -297,8 +580,6 @@ export const seedCountries = async (data: Countries[]) => {
 };
 
 export const seedMethodologies = async (data: Methodologies[]) => {
-    console.log(`Importing ${data.length} from CSV`);
-
     const createdMethodologies = await prisma.methodology.findMany({
         where: {
             code: {
@@ -309,10 +590,6 @@ export const seedMethodologies = async (data: Methodologies[]) => {
 
     const newMethodologies = data.filter(
         (m) => !createdMethodologies.find((c) => c.code === m.code)
-    );
-
-    console.log(
-        `Found ${createdMethodologies.length} existing methodologies, creating ${newMethodologies.length} new methodologies`
     );
 
     if (!newMethodologies.length) {

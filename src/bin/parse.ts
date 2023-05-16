@@ -77,8 +77,13 @@ export const parseProjects = (data: CSVProject[]) =>
         registryProjectId: d['Registry project ID'].trim(),
         registryUrl: d['Registry URL'].trim(),
         countries: d.Country.split(',').map((s) => s.trim()),
-        states: d['State/Region'].split(',').map((s) => s.trim()),
-        methodologies: d.Methodology.split(',').map((s) => s.trim()),
+        states: d['State/Region']
+            .split(',')
+            .filter((s) => s.length)
+            .map((s) => s.trim()),
+        methodologies: d.Methodology.split(',')
+            .filter((m) => m.length)
+            .map((s) => s.trim()),
         types: d['Project type'].split(',').map((s) => s.trim()),
         subTypes: d['Project sub-type'].split(',').map((s) => s.trim()),
         notes: d.Notes,
