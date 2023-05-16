@@ -33,17 +33,17 @@ resource "aws_security_group" "ecs_security_group" {
   }
 }
 data "aws_ecr_repository" "my_repository" {
-  name = "offsetmax-dev-project-service"
+  name = "offsetmax-${var.ENV}-project-service"
 
 }
 # Define the ECS cluster
 resource "aws_ecs_cluster" "ecs_cluster" {
-  name = "offsetmax-project-service-dev-ecs-cluster"
+  name = "offsetmax-project-service-${var.ENV}-ecs-cluster"
 }
 
 # Define the ECS task definition
 resource "aws_ecs_task_definition" "ecs_task_definition" {
-  family                   = "project-service-dev-task"
+  family                   = "project-service-${var.ENV}-task"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = "1 vCPU"
@@ -52,7 +52,7 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
   container_definitions    = <<DEFINITION
 [
   {
-    "name": "project-service-dev-container",
+    "name": "project-service-${var.ENV}-container",
     "image": "${data.aws_ecr_repository.my_repository.repository_url}",
     "portMappings": [
       {
@@ -71,7 +71,7 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
     "logConfiguration": {
       "logDriver": "awslogs",
       "options": {
-        "awslogs-group": "/ecs/my-ecs-project-service-task",
+        "awslogs-group": "/ecs/my-ecs-project-${var.ENV}-service-task",
         "awslogs-region": "ap-south-1",
         "awslogs-stream-prefix": "my-project-service-container"
       }
@@ -81,7 +81,7 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
 DEFINITION
 }
 resource "aws_ecs_service" "my_service" {
-  name            = "project-service-dev"
+  name            = "project-service-${var.ENV}"
   cluster         = aws_ecs_cluster.ecs_cluster.id
   task_definition = aws_ecs_task_definition.ecs_task_definition.arn
   launch_type     = "FARGATE"
@@ -95,21 +95,21 @@ resource "aws_ecs_service" "my_service" {
     assign_public_ip = true
   }
   load_balancer {
-    target_group_arn = "arn:aws:elasticloadbalancing:ap-south-1:168933414344:targetgroup/project-service-dev-tg/465c9e9c9e344fc7"
-    container_name   = "project-service-dev-container"
+    target_group_arn = "${var.TG}"
+    container_name   = "project-service-${var.ENV}-container"
     container_port   = 8080
   }
 }
 resource "aws_appautoscaling_target" "dev_to_target" {
   max_capacity       = 5
   min_capacity       = 1
-  resource_id        = "service/offsetmax-project-service-dev-ecs-cluster/project-service-dev"
+  resource_id        = "service/offsetmax-project-service-${var.ENV}-ecs-cluster/project-service-${var.ENV}"
   scalable_dimension = "ecs:service:DesiredCount"
   service_namespace  = "ecs"
 }
 
 resource "aws_appautoscaling_policy" "dev_to_memory" {
-  name               = "project-service-dev-to-memory"
+  name               = "project-service-${var.ENV}-to-memory"
   policy_type        = "TargetTrackingScaling"
   resource_id        = aws_appautoscaling_target.dev_to_target.resource_id
   scalable_dimension = aws_appautoscaling_target.dev_to_target.scalable_dimension
@@ -125,7 +125,7 @@ resource "aws_appautoscaling_policy" "dev_to_memory" {
 }
 
 resource "aws_appautoscaling_policy" "dev_to_cpu" {
-  name               = "project-service-dev-to-cpu"
+  name               = "project-service-${var.ENV}-to-cpu"
   policy_type        = "TargetTrackingScaling"
   resource_id        = aws_appautoscaling_target.dev_to_target.resource_id
   scalable_dimension = aws_appautoscaling_target.dev_to_target.scalable_dimension
