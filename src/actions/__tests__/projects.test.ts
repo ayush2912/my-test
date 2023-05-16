@@ -1,143 +1,136 @@
-import { count } from 'console';
-import prisma from '../prisma';
-import { createProject, getProject, deleteProject } from '../projects';
 import { faker } from '@faker-js/faker';
+import {
+    createProject,
+    getProjectById,
+    updateProject,
+    deleteProject,
+    getProjects,
+    getIsOverdue,
+    getProjectEngagements,
+    countProjects,
+} from '../projects';
+import { createEngagement } from '../engagements';
+import { ProjectMockFactory } from '../../__mocks__/mock.data';
 
-const registry = Array(3)
-    .fill(0)
-    .map(() => ({
-        id: faker.database.mongodbObjectId(),
-        name: faker.company.name(),
-    }));
+const {
+    prisma,
+    countries,
+    registries,
+    methodologies,
+    projectTypes,
+    organizations,
+    engagements,
+    states,
+    createMockData,
+    clearMockData,
+    createMockProject,
+} = ProjectMockFactory();
 
-const countryList = [
-    {
-        name: 'India',
-        iso3Name: 'IND',
-        iso2Name: 'IN'
-    },
-    {
-        name: 'United Kingdom',
-        iso3Name: 'GBR',
-        iso2Name: 'GB',
-    },
-    {
-        name: 'United States',
-        iso3Name: 'USA',
-        iso2Name: 'US',
-    },
-];
-
-const countries = Array(3)
-    .fill(0)
-    .map((_, index) => ({
-        id: faker.database.mongodbObjectId(),
-        ...countryList[index],
-    }));
-
-const methodologies = Array(10)
-    .fill(0)
-    .map(() => ({
-        id: faker.database.mongodbObjectId(),
-        name: faker.company.bs(),
-    }));
-
-const projectTypes = Array(10)
-    .fill(0)
-    .map(() => ({
-        id: faker.database.mongodbObjectId(),
-        name: faker.company.catchPhraseNoun(),
-    }));
-
-const organizations = Array(10)
-    .fill(0)
-    .map(() => ({
-        id: faker.database.mongodbObjectId(),
-        name: faker.company.name(),
-    }));
-
-const engagements = Array(10)
-    .fill(0)
-    .map(() => ({
-        id: faker.database.mongodbObjectId(),
-        type: faker.company.name(),
-        startDate: faker.datatype.datetime(),
-        dueDate: faker.datatype.datetime(),
-        projectId: faker.database.mongodbObjectId(),
-    }));
-
-
-beforeAll(() =>
-    Promise.all([
-        prisma.registry.createMany({ data: registry }),
-        prisma.country.createMany({ data: countries }),
-        prisma.methodology.createMany({ data: methodologies }),
-        prisma.projectType.createMany({ data: projectTypes }),
-        prisma.organization.createMany({ data: organizations }),
-        prisma.engagement.createMany({ data: engagements })
-    ])
-);
+beforeAll(async () => createMockData());
 
 afterAll(async () => {
-    await Promise.all([
-        prisma.registry.deleteMany({
-            where: {
-                id: {
-                    in: registry.map((r) => r.id),
-                },
-            },
-        }),
-        prisma.country.deleteMany({
-            where: {
-                iso2Name: {
-                    in: countries.map((r) => r.iso2Name),
-                },
-            },
-        }),
-        prisma.methodology.deleteMany({
-            where: {
-                id: {
-                    in: methodologies.map((r) => r.id),
-                },
-            },
-        }),
-        prisma.projectType.deleteMany({
-            where: {
-                id: {
-                    in: projectTypes.map((r) => r.id),
-                },
-            },
-        }),
-        prisma.organization.deleteMany({
-            where: {
-                id: {
-                    in: organizations.map((r) => r.id),
-                },
-            },
-        }),
-        prisma.engagement.deleteMany({
-            where: {
-                id: {
-                    in: engagements.map((r) => r.id),
-                },
-            },
-        }),
-    ]);
-
-    await prisma.$disconnect();
+    await clearMockData();
 });
 
-describe('getProject()', () => {
-    test('it should find the correct project', async () => {
+describe('createProject()', () => {
+    test('it should create a project successfully', async () => {
         const data = {
-            name: 'Renewable Get Power Project',
-            registry: faker.helpers.arrayElement(registry).id,
+            name: 'Renewable Power Project',
+            registry: faker.helpers.arrayElement(registries).id,
             registryUrl: 'www.url.com',
             registryProjectId: '1851',
             countries: faker.helpers
                 .arrayElements(countries)
                 .map((c) => c.iso2Name),
-            state: 'UP',
+            states: ['UP', 'Maharashtra', 'California'],
+            methodologies: faker.helpers
+                .arrayElements(methodologies, 1)
+                .map((m) => m.id),
+            type: faker.helpers.arrayElement(projectTypes).id,
+            subType: faker.helpers.arrayElement(projectTypes).id,
+            notes: 'Renewable Power project in India',
+            isActive: true,
+            creditingPeriodStartDate: '2023-04-26T07:14:39.237Z',
+            creditingPeriodEndDate: '2023-04-26T07:14:39.237Z',
+            annualApproximateCreditVolume: 3000,
+            organization: faker.helpers.arrayElement(organizations).id,
+            portfolioOwner: faker.helpers.arrayElement(organizations).id,
+            assetOwners: faker.helpers
+                .arrayElements(organizations)
+                .map((m) => m.id),
+            engagements: faker.helpers.arrayElements(engagements, 1),
+        };
+
+        const result = await createProject(data);
+
+        if (!result.id) {
+            throw new Error('Project not created');
+        }
+
+        expect(typeof result?.id).toBe('string');
+        expect(result.name).toBe('Renewable Power Project');
+        expect(result?.registry?.id).toBe(data.registry);
+        expect(result?.registry?.name).toBe(
+            registries.find((r) => r.id === data.registry)?.name
+        );
+
+        expect(result?.registryProjectId).toBe(data.registryProjectId);
+        expect(result?.registryUrl).toBe(data.registryUrl);
+        expect(Array.isArray(result?.countries)).toBe(true);
+        expect(result?.states).toEqual(result.states);
+        expect(result?.methodologies).toEqual(result.methodologies);
+        expect(result?.types).toEqual(result.types);
+        expect(result?.subTypes).toEqual(result.subTypes);
+        expect(result?.notes).toBe(data.notes);
+        expect(typeof result?.isActive).toBe('boolean');
+        expect(Array.isArray(result?.engagements)).toBe(true);
+        expect(result?.engagements).toEqual(result.engagements);
+
+        expect(result.countries).toEqual(
+            countries.filter((c) => data.countries.includes(c.iso2Name))
+        );
+        expect(result.states?.length).toBe(data.states.length);
+        expect(result?.states).toEqual(
+            states.filter((c) => data.states.includes(c))
+        );
+        expect(result.methodologies?.length).toBe(data.methodologies.length);
+        expect(result.methodologies).toEqual(
+            methodologies.filter((c) => data.methodologies.includes(c.id))
+        );
+        expect(result.types?.pop()?.id).toBe(data.type);
+        expect(result.subTypes?.pop()?.id).toBe(data.subType);
+        expect(result.notes).toBe(data.notes);
+        expect(result.isActive).toBe(data.isActive);
+        expect(result.creditingPeriodStartDate?.getTime()).toBe(
+            new Date(data.creditingPeriodStartDate).getTime()
+        );
+        expect(result.creditingPeriodEndDate?.getTime()).toBe(
+            new Date(data.creditingPeriodEndDate).getTime()
+        );
+        expect(result.annualApproximateCreditVolume).toBe(
+            data.annualApproximateCreditVolume
+        );
+        expect(result.portfolioOwner?.id).toBe(data.portfolioOwner);
+        expect(result.assetOwners?.length).toBe(data.assetOwners.length);
+        expect(result.assetOwners).toEqual(
+            organizations.filter((c) => data.assetOwners.includes(c.id))
+        );
+
+        await deleteProject(result.id);
+    });
+});
+
+describe('getProjectById()', () => {
+    test('it should find the correct project', async () => {
+        const data = {
+            name: 'Renewable Get Power Project',
+            registry: faker.helpers.arrayElement(registries).id,
+            registryUrl: 'www.url.com',
+            registryProjectId: '1851',
+            countries: faker.helpers
+                .arrayElements(countries)
+                .map((c) => c.iso2Name),
+            states: ['UP'],
             methodologies: faker.helpers
                 .arrayElements(methodologies, 1)
                 .map((m) => m.id),
@@ -148,29 +141,538 @@ describe('getProject()', () => {
             creditingPeriodStartDate: '2023-04-11T14:15:22Z',
             creditingPeriodEndDate: '2023-04-11T14:15:22Z',
             annualApproximateCreditVolume: 300000,
+            organization: faker.helpers.arrayElement(organizations).id,
             portfolioOwner: faker.helpers.arrayElement(organizations).id,
             assetOwners: faker.helpers
                 .arrayElements(organizations)
                 .map((m) => m.id),
-            engagements: faker.helpers.arrayElement(engagements).id
-
+            engagements: faker.helpers.arrayElements(engagements, 1),
         };
-
         const project = await createProject(data);
 
-        const result = await getProject(project.id);
+        if (!project.id) {
+            throw new Error('Project not created');
+        }
 
+        const result = await getProjectById(project.id);
+        expect(typeof result?.id).toBe('string');
         expect(result?.name).toBe(data.name);
+        expect(result?.registry?.id).toBe(data.registry);
+        expect(result?.registry?.name).toBe(
+            registries.find((r) => r.id === data.registry)?.name
+        );
         expect(result?.registryUrl).toBe(data.registryUrl);
         expect(result?.registryProjectId).toBe(data.registryProjectId);
+        expect(result?.countries).toEqual(
+            countries.filter((c) => data.countries.includes(c.iso2Name))
+        );
+        expect(result?.states).toEqual(
+            states.filter((c) => data.states.includes(c))
+        );
+        expect(result?.methodologies).toEqual(
+            methodologies.filter((c) => data.methodologies.includes(c.id))
+        );
+        expect(result?.types?.pop()?.id).toBe(data.type);
+        expect(result?.subTypes?.pop()?.id).toBe(data.subType);
+        expect(result?.notes).toBe(data.notes);
+        expect(result?.isActive).toBe(data.isActive);
+        expect(result?.creditingPeriodStartDate?.getTime()).toBe(
+            new Date(data.creditingPeriodStartDate).getTime()
+        );
+        expect(result?.creditingPeriodEndDate?.getTime()).toBe(
+            new Date(data.creditingPeriodEndDate).getTime()
+        );
+        expect(result?.annualApproximateCreditVolume).toBe(
+            data.annualApproximateCreditVolume
+        );
+        expect(result?.portfolioOwner?.id).toBe(data.portfolioOwner);
+        expect(result?.assetOwners).toEqual(
+            organizations.filter((c) => data.assetOwners.includes(c.id))
+        );
 
+        // Teardown
         await deleteProject(project.id);
     });
 
     it('returns null if the project does not exist', async () => {
         const projectId = '5116591277702d2113142ebc';
-        const result = await getProject(projectId);
+        const result = await getProjectById(projectId);
         expect(result).toBeNull();
     });
+});
 
+describe('updateProject()', () => {
+    test('it should update a project successfully', async () => {
+        const data = {
+            name: 'Renewable Power Update Project',
+            registry: faker.helpers.arrayElement(registries).id,
+            registryUrl: 'www.url.com',
+            registryProjectId: '1851',
+            countries: faker.helpers
+                .arrayElements(countries)
+                .map((c) => c.iso2Name),
+            states: ['UP', 'Maharashtra', 'California'],
+            methodologies: faker.helpers
+                .arrayElements(methodologies, 1)
+                .map((m) => m.id),
+            type: faker.helpers.arrayElement(projectTypes).id,
+            subType: faker.helpers.arrayElement(projectTypes).id,
+            notes: 'Renewable Power project in India',
+            isActive: true,
+            creditingPeriodStartDate: '2023-04-26T07:14:39.237Z',
+            creditingPeriodEndDate: '2023-04-26T07:14:39.237Z',
+            annualApproximateCreditVolume: 300000,
+            organization: faker.helpers.arrayElement(organizations).id,
+            portfolioOwner: faker.helpers.arrayElement(organizations).id,
+            assetOwners: faker.helpers
+                .arrayElements(organizations)
+                .map((m) => m.id),
+        };
+
+        const project = await createProject(data);
+
+        const dataToUpdate = {
+            name: 'My Updated Project Name',
+        };
+
+        if (!project.id) {
+            throw new Error('Project not created');
+        }
+
+        const result = await updateProject(project.id, dataToUpdate);
+
+        expect(result?.name).toBe(dataToUpdate.name);
+
+        expect(result.registry?.id).toBe(data.registry);
+        expect(result.registry?.name).toBe(
+            registries.find((r) => r.id === data.registry)?.name
+        );
+        expect(result.registryUrl).toBe(data.registryUrl);
+        expect(result.registryProjectId).toBe(data.registryProjectId);
+        expect(result.countries?.length).toBe(data.countries.length);
+        expect(result.countries).toEqual(
+            countries.filter((c) => data.countries.includes(c.iso2Name))
+        );
+        expect(result.states?.length).toBe(data.states.length);
+        expect(result?.states).toEqual(
+            states.filter((c) => data.states.includes(c))
+        );
+        expect(result.methodologies?.length).toBe(data.methodologies.length);
+        expect(result.methodologies).toEqual(
+            methodologies.filter((c) => data.methodologies.includes(c.id))
+        );
+        expect(result.types?.pop()?.id).toBe(data.type);
+        expect(result.subTypes?.pop()?.id).toBe(data.subType);
+        expect(result.notes).toBe(data.notes);
+        expect(result.isActive).toBe(data.isActive);
+        expect(result.creditingPeriodStartDate?.getTime()).toBe(
+            new Date(data.creditingPeriodStartDate).getTime()
+        );
+        expect(result.creditingPeriodEndDate?.getTime()).toBe(
+            new Date(data.creditingPeriodEndDate).getTime()
+        );
+        expect(result.annualApproximateCreditVolume).toBe(
+            data.annualApproximateCreditVolume
+        );
+        expect(result.portfolioOwner?.id).toBe(data.portfolioOwner);
+        expect(result.assetOwners?.length).toBe(data.assetOwners.length);
+        expect(result.assetOwners).toEqual(
+            organizations.filter((c) => data.assetOwners.includes(c.id))
+        );
+
+        await deleteProject(result.id);
+    });
+});
+
+describe('deleteProject()', () => {
+    test('it should delete a project successfully', async () => {
+        const data = {
+            name: 'Renewable Power Project',
+            registry: faker.helpers.arrayElement(registries).id,
+            registryUrl: 'www.url.com',
+            registryProjectId: '1851',
+            countries: faker.helpers
+                .arrayElements(countries)
+                .map((c) => c.iso2Name),
+            states: ['UP', 'Maharashtra', 'California'],
+            methodologies: faker.helpers
+                .arrayElements(methodologies, 1)
+                .map((m) => m.id),
+            type: faker.helpers.arrayElement(projectTypes).id,
+            subType: faker.helpers.arrayElement(projectTypes).id,
+            notes: 'Renewable Power project in India',
+            isActive: true,
+            creditingPeriodStartDate: '2023-04-26T07:14:39.237Z',
+            creditingPeriodEndDate: '2023-04-26T07:14:39.237Z',
+            annualApproximateCreditVolume: 300000,
+            organization: faker.helpers.arrayElement(organizations).id,
+            portfolioOwner: faker.helpers.arrayElement(organizations).id,
+            assetOwners: faker.helpers
+                .arrayElements(organizations)
+                .map((m) => m.id),
+        };
+
+        const project = await createProject(data);
+
+        if (!project.id) {
+            throw new Error('Project not created');
+        }
+
+        const result = await deleteProject(project.id);
+
+        expect(result?.name).toEqual(data.name);
+    });
+});
+
+describe('getProjects()', () => {
+    test('it should get the list of projets successfully', async () => {
+        const organizationId = faker.helpers.arrayElement(organizations).id;
+
+        const projects = await prisma.$transaction(
+            Array(10)
+                .fill(0)
+                .map(() =>
+                    createProject({
+                        name: 'Renewable Get Power Project',
+                        registry: faker.helpers.arrayElement(registries).id,
+                        registryUrl: 'www.url.com',
+                        registryProjectId: '1851',
+                        countries: faker.helpers
+                            .arrayElements(countries)
+                            .map((c) => c.iso2Name),
+                        states: ['UP'],
+                        methodologies: faker.helpers
+                            .arrayElements(methodologies, 1)
+                            .map((m) => m.id),
+                        type: faker.helpers.arrayElement(projectTypes).id,
+                        subType: faker.helpers.arrayElement(projectTypes).id,
+                        notes: 'Renewable Power project in India',
+                        isActive: true,
+                        creditingPeriodStartDate: '2023-04-11T14:15:22Z',
+                        creditingPeriodEndDate: '2023-04-11T14:15:22Z',
+                        annualApproximateCreditVolume: 300000,
+                        organization: organizationId,
+                        portfolioOwner:
+                            faker.helpers.arrayElement(organizations).id,
+                        assetOwners: faker.helpers
+                            .arrayElements(organizations)
+                            .map((m) => m.id),
+                        engagements: faker.helpers.arrayElements(
+                            engagements,
+                            2
+                        ),
+                    })
+                )
+        );
+
+        const projectIds = projects.map((project) => project.id);
+
+        const result = await getProjects({
+            organizationIds: [organizationId],
+            take: 10,
+            skip: 0,
+            tab: 'ACTIVE',
+        });
+
+        expect(Array.isArray(result)).toBe(true);
+
+        expect(result.length).toBe(10);
+
+        result.forEach((project) => {
+            const matchedProject = projects.find((p) => p.id === project.id);
+
+            if (!matchedProject) {
+                throw new Error(
+                    'Result contains project that are not created in this test case'
+                );
+            }
+
+            expect(project).toEqual({
+                id: matchedProject.id,
+                name: matchedProject.name,
+                createdAt: matchedProject.createdAt,
+                updatedAt: matchedProject.updatedAt,
+                registry: {
+                    name: matchedProject.registry?.name,
+                },
+                countries: (matchedProject.countries || []).map((obj) => ({
+                    iso2Name: obj.iso2Name,
+                    name: obj.name,
+                })),
+                registryProjectId: matchedProject.registryProjectId,
+                types: (matchedProject.types || []).map((obj) => ({
+                    id: obj.id,
+                    name: obj.name,
+                })),
+                subTypes: (matchedProject.subTypes || []).map((obj) => ({
+                    id: obj.id,
+                    name: obj.name,
+                })),
+                portfolioOwner: {
+                    id: matchedProject.portfolioOwner?.id,
+                    name: matchedProject.portfolioOwner?.name,
+                },
+                assetOwners: (matchedProject.assetOwners || []).map((obj) => ({
+                    id: obj.id,
+                    name: obj.name,
+                })),
+                annualApproximateCreditVolume:
+                    matchedProject.annualApproximateCreditVolume,
+                engagement: {
+                    id: matchedProject.engagements?.find(
+                        (e) => e.id === project.engagement.id
+                    )?.id,
+                    type: matchedProject.engagements?.find(
+                        (e) => e.id === project.engagement.id
+                    )?.type,
+                    dueDate: matchedProject.engagements?.find(
+                        (e) => e.id === project.engagement.id
+                    )?.dueDate,
+                    state: matchedProject.engagements?.find(
+                        (e) => e.id === project.engagement.id
+                    )?.state,
+                    completedDate: matchedProject.engagements?.find(
+                        (e) => e.id === project.engagement.id
+                    )?.completedDate,
+                    isOverdue: getIsOverdue(
+                        matchedProject.engagements?.find(
+                            (e) => e.id === project.engagement.id
+                        )
+                    ),
+                },
+            });
+        });
+
+        await Promise.all(
+            projectIds.map((projectId) => deleteProject(projectId))
+        );
+    });
+
+    it('returns null if the organization does not exist', async () => {
+        const organizationId = '5116591277702d2113142ebc';
+        const result = await getProjects({
+            organizationIds: [organizationId],
+            take: 10,
+            skip: 0,
+            tab: 'ACTIVE',
+        });
+        expect(result).toEqual([]);
+    });
+});
+
+describe('countProjects()', () => {
+    test('it should return project counts grouped by active and inactive', async () => {
+        const organizationId = faker.helpers.arrayElement(organizations).id;
+        const projects = await prisma.$transaction(
+            Array(10)
+                .fill(0)
+                .map(() =>
+                    createProject({
+                        ...createMockProject({ organizationId }),
+                        isActive: faker.datatype.boolean(),
+                    })
+                )
+        );
+
+        const results = await countProjects({
+            organizationIds: [organizationId],
+        });
+
+        expect(results).toEqual({
+            active: projects.filter((p) => p.isActive).length,
+            inactive: projects.filter((p) => !p.isActive).length,
+        });
+    });
+});
+
+describe('getProjectEngagements()', () => {
+    test('it should list all project engagements', async () => {
+        const organizationId = faker.helpers.arrayElement(organizations).id;
+        const data = {
+            name: 'Renewable Get Power Project',
+            registry: faker.helpers.arrayElement(registries).id,
+            organization: faker.helpers.arrayElement(organizations).id,
+            registryUrl: 'www.url.com',
+            registryProjectId: '1851',
+            countries: faker.helpers
+                .arrayElements(countries)
+                .map((c) => c.iso2Name),
+            states: ['UP'],
+            methodologies: faker.helpers
+                .arrayElements(methodologies, 1)
+                .map((m) => m.id),
+            type: faker.helpers.arrayElement(projectTypes).id,
+            subType: faker.helpers.arrayElement(projectTypes).id,
+            notes: 'Renewable Power project in India',
+            isActive: true,
+            creditingPeriodStartDate: '2023-04-11T14:15:22Z',
+            creditingPeriodEndDate: '2023-04-11T14:15:22Z',
+            annualApproximateCreditVolume: 300000,
+            portfolioOwner: organizationId,
+            assetOwners: faker.helpers
+                .arrayElements(organizations)
+                .map((m) => m.id),
+        };
+        const project = await createProject(data);
+        if (!project.id) {
+            throw new Error('Project not created');
+        }
+        const engagementData = {
+            type: 'Getting a Project Listed',
+            startDate: faker.date.recent(),
+            dueDate: faker.date.future(),
+            projectId: project.id,
+            tasks: [
+                {
+                    type: 'Project design document',
+                    startDate: faker.date.recent(),
+                    dueDate: faker.date.future(),
+                    stateHistory: [
+                        {
+                            state: 'NOT_STARTED',
+                            stateUpdatedAt: faker.date.recent(),
+                        },
+                    ],
+                },
+                {
+                    type: 'Submit the PPD',
+                    startDate: faker.date.recent(),
+                    dueDate: faker.date.future(),
+                    stateHistory: [
+                        {
+                            state: 'NOT_STARTED',
+                            stateUpdatedAt: faker.date.recent(),
+                        },
+                    ],
+                },
+            ],
+            attributes: [
+                {
+                    name: 'KiloWatts per Hour',
+                    key: 'KW_H',
+                    type: 'integer',
+                    value: '150',
+                },
+                {
+                    name: 'Registry ID',
+                    key: 'REG_ID',
+                    type: 'string',
+                    value: '586789878abd980',
+                },
+            ],
+            stateHistory: [
+                {
+                    state: 'NOT_STARTED',
+                    stateUpdatedAt: faker.date.recent(),
+                },
+            ],
+        };
+
+        await createEngagement(engagementData);
+        const getProjectEngagementsInput = {
+            organizationIds: [organizationId],
+            take: 10,
+            skip: 0,
+        };
+        const result = await getProjectEngagements(getProjectEngagementsInput);
+        const projectCreated = await getProjectById(project.id);
+        expect(result).toContainEqual(
+            expect.objectContaining({
+                id: project.id,
+                name: project.name,
+                registry: project.registry,
+                registryProjectId: project.registryProjectId,
+                types: project.types,
+                countries: project.countries,
+                isActive: project.isActive,
+                createdAt: project.createdAt,
+                updatedAt: project.updatedAt,
+                engagements:
+                    projectCreated != null
+                        ? projectCreated.engagements == undefined ||
+                          projectCreated.engagements == null
+                            ? []
+                            : projectCreated.engagements
+                        : [],
+            })
+        );
+        await deleteProject(project.id);
+    });
+});
+
+describe('getIsOverdue()', () => {
+    test('if state is COMPLETED and no complete date', async () => {
+        const data = {
+            state: 'COMPLETED',
+            dueDate: '2023-12-21T00:00:00.000Z',
+        };
+        const isOverdue = getIsOverdue(data);
+        expect(isOverdue).toBeFalsy();
+    });
+
+    test('if state is COMPLETED and completed date >= due date', async () => {
+        const data = {
+            state: 'COMPLETED',
+            dueDate: '2023-12-21T00:00:00.000Z',
+            completedDate: '2023-12-30T00:00:00.000Z',
+        };
+        const isOverdue = getIsOverdue(data);
+        expect(isOverdue).toBeTruthy();
+    });
+
+    test('if state is COMPLETED and completed date <= due date', async () => {
+        const data = {
+            state: 'COMPLETED',
+            dueDate: '2023-12-21T00:00:00.000Z',
+            completedDate: '2023-10-30T00:00:00.000Z',
+        };
+        const isOverdue = getIsOverdue(data);
+        expect(isOverdue).toBeFalsy();
+    });
+
+    test('if state is IN_PROGRESS and due date <= current date', async () => {
+        const data = {
+            state: 'IN_PROGRESS',
+            dueDate: '2022-12-21T00:00:00.000Z',
+            completedDate: '2023-12-30T00:00:00.000Z',
+        };
+        const isOverdue = getIsOverdue(data);
+        expect(isOverdue).toBeTruthy();
+    });
+
+    test('if state is IN_PROGRESS and due date >= current date', async () => {
+        const currentDate = new Date();
+        const data = {
+            state: 'IN_PROGRESS',
+            dueDate: new Date(
+                currentDate.getTime() + 24 * 60 * 60 * 1000
+            ).toISOString(),
+            completedDate: '2023-12-30T00:00:00.000Z',
+        };
+        const isOverdue = getIsOverdue(data);
+        expect(isOverdue).toBeFalsy();
+    });
+
+    test('if state is NOT_STARTED and due date <= current date', async () => {
+        const data = {
+            state: 'NOT_STARTED',
+            dueDate: '2022-12-21T00:00:00.000Z',
+            completedDate: '2023-12-30T00:00:00.000Z',
+        };
+        const isOverdue = getIsOverdue(data);
+        expect(isOverdue).toBeTruthy();
+    });
+
+    test('if state is NOT_STARTED and due date >= current date', async () => {
+        const currentDate = new Date();
+        const data = {
+            state: 'NOT_STARTED',
+            dueDate: new Date(
+                currentDate.getTime() + 24 * 60 * 60 * 1000
+            ).toISOString(),
+            completedDate: '2023-12-30T00:00:00.000Z',
+        };
+        const isOverdue = getIsOverdue(data);
+        expect(isOverdue).toBeFalsy();
+    });
 });

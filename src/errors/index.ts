@@ -10,7 +10,7 @@ const errors: any = {};
 let OffsetMaxServiceFatalError: any;
 
 /**
- * @param {(string | Object)} msg error message
+ * @param {(string | object)} msg error message
  * @param {object} errDesc error description
  * @param {object} errDesc.message - default error message
  * @param {number} errDesc.statusCode default status code
@@ -85,7 +85,7 @@ function OffsetMaxServiceError(msg: string, errDesc: any, data: any) {
 /**
  * Factory to create new Errors:
  * @param {string} errName nase
- * @param {Object} errDesc - description of error
+ * @param {object} errDesc - description of error
  */
 function errorFactory(errName: string, errDesc: any) {
     if (!errDesc.statusCode && !errDesc.customCode) {
@@ -139,9 +139,7 @@ function registerErrors(obj: any) {
     }
 }
 
-(function loadErrors() {
-    registerErrors(Errors);
-})();
+registerErrors(Errors);
 
 errors.OffsetMaxServiceError = OffsetMaxServiceError;
 errors.registerErrors = registerErrors;
