@@ -13,11 +13,11 @@ type DateRange {
 }
 
 type EngagementAttribute {
-  name      String
-  key       String?
-  type      String
-  value     String
-  strapiId  String?
+  name     String
+  key      String?
+  type     String
+  value    String
+  strapiId String?
 }
 
 type StateHistory {
@@ -418,8 +418,8 @@ model SectoralScope {
 model Methodology {
   id          String     @id @default(auto()) @map("_id") @db.ObjectId
   name        String
-  fullName    String
-  code        String     @unique
+  fullName    String?
+  code        String?    @unique
   Registry    Registry[] @relation(fields: [registryIDs], references: [id])
   registryIDs String[]   @db.ObjectId
   Projects    Project[]  @relation(fields: [projectIDs], references: [id])
