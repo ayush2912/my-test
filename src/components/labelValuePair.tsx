@@ -1,7 +1,6 @@
 import styled from "styled-components";
 
 import Text from "./Text";
-import { convertToEuropeanDateFormat } from "../utils/dateTimeFormatter";
 
 type LabelValueType = {
   label: string;

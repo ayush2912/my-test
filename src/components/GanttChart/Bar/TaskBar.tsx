@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { BarPopup } from "./BarPopup";
 import { ModalContent, ModalHeader, TextHolder } from "./ProjectBar";
 import { useOutsideAlerter } from "../../../hooks/useOutsiderAlerter";
-import { convertToEuropeanDateFormat } from "../../../utils/dateTimeFormatter";
+import { convertToMonthNameFormat } from "../../../utils/dateTimeFormatter";
 import StatusTag, { StatusType } from "../../StatusTag";
 import Text from "../../Text";
 import { IBar, Task } from "../GanttChart.types";
@@ -128,7 +128,7 @@ export const TaskBar = ({ taskData }: { taskData: Task & { bar: IBar } }) => {
                   Start date :
                 </Text>
                 <Text type="caption" color="default">
-                  {convertToEuropeanDateFormat(taskData.startDate)}
+                  {convertToMonthNameFormat(taskData.startDate)}
                 </Text>
               </TextHolder>
 
@@ -137,7 +137,7 @@ export const TaskBar = ({ taskData }: { taskData: Task & { bar: IBar } }) => {
                   Due date :
                 </Text>
                 <Text type="caption" color="default">
-                  {convertToEuropeanDateFormat(taskData.dueDate)}
+                  {convertToMonthNameFormat(taskData.dueDate)}
                 </Text>
               </TextHolder>
               {taskData.completedDate && (
@@ -147,7 +147,7 @@ export const TaskBar = ({ taskData }: { taskData: Task & { bar: IBar } }) => {
                   </Text>
 
                   <Text type="caption" color="default">
-                    {convertToEuropeanDateFormat(taskData.completedDate)}
+                    {convertToMonthNameFormat(taskData.completedDate)}
                   </Text>
                 </TextHolder>
               )}

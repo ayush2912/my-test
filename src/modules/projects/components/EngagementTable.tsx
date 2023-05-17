@@ -10,7 +10,7 @@ import LabelValue from "../../../components/labelValuePair";
 import Modal from "../../../components/Modal";
 import StatusTag, { StatusType } from "../../../components/StatusTag";
 import Text from "../../../components/Text";
-import { convertToEuropeanDateFormat } from "../../../utils/dateTimeFormatter";
+import { convertToMonthNameFormat } from "../../../utils/dateTimeFormatter";
 
 const StyledTable = styled.table`
   table-layout: auto;
@@ -195,7 +195,7 @@ function EngagementTable({
                   >
                     Completed on{" "}
                     {v?.completedDate &&
-                      convertToEuropeanDateFormat(v.completedDate)}
+                      convertToMonthNameFormat(v.completedDate)}
                   </Text>
                 </>
               )}
@@ -233,12 +233,12 @@ function EngagementTable({
       ),
       startDate: (
         <Text type="body" color={"subdued"}>
-          {convertToEuropeanDateFormat(v.startDate)}
+          {convertToMonthNameFormat(v.startDate)}
         </Text>
       ),
       dueDate: (
         <Text type="body" color={v.state === "OVERDUE" ? "warning" : "subdued"}>
-          {convertToEuropeanDateFormat(v.dueDate)}
+          {convertToMonthNameFormat(v.dueDate)}
         </Text>
       ),
       state: (

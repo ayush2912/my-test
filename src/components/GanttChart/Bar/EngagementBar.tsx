@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { BarPopup } from "./BarPopup";
 import { ModalContent, ModalHeader, TextHolder } from "./ProjectBar";
 import { useOutsideAlerter } from "../../../hooks/useOutsiderAlerter";
-import { convertToEuropeanDateFormat } from "../../../utils/dateTimeFormatter";
+import { convertToMonthNameFormat } from "../../../utils/dateTimeFormatter";
 import EyeButton from "../../EyeButton";
 import StatusTag, { StatusType } from "../../StatusTag";
 import Text from "../../Text";
@@ -136,7 +136,7 @@ export const EngagementBar = ({
                   Start date :
                 </Text>
                 <Text type="caption" color="default">
-                  {convertToEuropeanDateFormat(engagementData.startDate)}
+                  {convertToMonthNameFormat(engagementData.startDate)}
                 </Text>
               </TextHolder>
 
@@ -145,7 +145,7 @@ export const EngagementBar = ({
                   Due date :
                 </Text>
                 <Text type="caption" color="default">
-                  {convertToEuropeanDateFormat(engagementData.dueDate)}
+                  {convertToMonthNameFormat(engagementData.dueDate)}
                 </Text>
               </TextHolder>
               {engagementData.completedDate && (
@@ -154,7 +154,7 @@ export const EngagementBar = ({
                     Completion date :
                   </Text>
                   <Text type="caption" color="default">
-                    {convertToEuropeanDateFormat(engagementData.completedDate)}
+                    {convertToMonthNameFormat(engagementData.completedDate)}
                   </Text>
                 </TextHolder>
               )}
