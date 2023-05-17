@@ -140,16 +140,17 @@ export const TaskBar = ({ taskData }: { taskData: Task & { bar: IBar } }) => {
                   {convertToEuropeanDateFormat(taskData.dueDate)}
                 </Text>
               </TextHolder>
-              <TextHolder>
-                <Text type="caption" color="subdued">
-                  Completion date :
-                </Text>
-                <Text type="caption" color="default">
-                  {taskData.completedDate
-                    ? convertToEuropeanDateFormat(taskData.completedDate)
-                    : "-"}
-                </Text>
-              </TextHolder>
+              {taskData.completedDate && (
+                <TextHolder>
+                  <Text type="caption" color="subdued">
+                    Completion date :
+                  </Text>
+
+                  <Text type="caption" color="default">
+                    {convertToEuropeanDateFormat(taskData.completedDate)}
+                  </Text>
+                </TextHolder>
+              )}
             </ModalContent>
           </BarPopup>
         )}

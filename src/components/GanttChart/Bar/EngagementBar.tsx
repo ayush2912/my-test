@@ -148,16 +148,16 @@ export const EngagementBar = ({
                   {convertToEuropeanDateFormat(engagementData.dueDate)}
                 </Text>
               </TextHolder>
-              <TextHolder>
-                <Text type="caption" color="subdued">
-                  Completion date :
-                </Text>
-                <Text type="caption" color="default">
-                  {engagementData.completedDate
-                    ? convertToEuropeanDateFormat(engagementData.completedDate)
-                    : "-"}
-                </Text>
-              </TextHolder>
+              {engagementData.completedDate && (
+                <TextHolder>
+                  <Text type="caption" color="subdued">
+                    Completion date :
+                  </Text>
+                  <Text type="caption" color="default">
+                    {convertToEuropeanDateFormat(engagementData.completedDate)}
+                  </Text>
+                </TextHolder>
+              )}
             </ModalContent>
           </BarPopup>
         )}

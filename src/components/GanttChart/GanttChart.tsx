@@ -21,6 +21,19 @@ const StyledCalendarContainer = styled.div`
   padding-top: 24px;
   border-top: 1px solid #e1e4e8;
   overflow-x: scroll;
+
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: none;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #c4c9d1;
+    border-radius: 16px;
+  }
 `;
 
 const EmptyStateContainer = styled.div`
