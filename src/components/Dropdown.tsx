@@ -25,12 +25,12 @@ const DropdownContainer = styled.div`
 const DropdownButton = styled.button`
   background-color: white;
   border: 1px solid #ccc;
-  color: #444;
-  padding: 8px;
+  border-color: ${(prop) => prop.theme.colors.neutral[700]};
+  padding: 8px 16px;
   border-radius: 8px;
-  font-size: 16px;
   cursor: pointer;
   width: 120px;
+  text-align: left;
 `;
 
 const DropdownList = styled.ul`
@@ -76,7 +76,11 @@ const Dropdown = ({ options, value, onChange }: any) => {
 
   return (
     <DropdownContainer>
-      <DropdownButton onClick={toggleDropdown}>{value}</DropdownButton>
+      <DropdownButton onClick={toggleDropdown}>
+        <Text type="button">
+          {options.find((v: any) => v.value === value)?.label}
+        </Text>
+      </DropdownButton>
       {isOpen && (
         <DropdownList>
           {options.map((option: any) => (

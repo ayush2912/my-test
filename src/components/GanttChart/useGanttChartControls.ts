@@ -8,7 +8,7 @@ interface GanttChartControls {
 }
 
 const useGanttChartControls = create<GanttChartControls>((set) => ({
-  view: "monthly",
+  view: "yearly",
   changeView: (selectedView: TemporalView) => set({ view: selectedView }),
 }));
 
