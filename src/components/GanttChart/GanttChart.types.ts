@@ -45,7 +45,7 @@ export interface Task {
   type: string;
   startDate: string;
   dueDate: string;
-  completedDate: string;
+  completedDate: string | null;
   isOverdue: boolean;
   state: string;
   stateHistory: StateHistory[];
