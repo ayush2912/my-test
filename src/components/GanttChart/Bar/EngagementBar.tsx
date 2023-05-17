@@ -35,6 +35,10 @@ const Bar = styled.div<{
   padding: 4px 8px;
   background-color: ${(props) => props.theme.colors.primary[600]};
 
+  &:hover {
+    box-shadow: 0px 0px 0px 4px #b1c8f9;
+  }
+
   &:active {
     box-shadow: 0px 0px 0px 4px #b1c8f9;
   }
@@ -58,7 +62,7 @@ export const EngagementBar = ({
 }: {
   engagementData: IMappedEngagement;
 }) => {
-  const { view } = useGanttChartControls();
+  const { view, scrollEvent } = useGanttChartControls();
 
   const [isTextOverflowing, setIsTextOverflowing] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
@@ -97,6 +101,10 @@ export const EngagementBar = ({
     COMPLETED: { label: "COMPLETED", type: "success" },
     OVERDUE: { label: "OVERDUE", type: "warning" },
   }[engagementData.state] as EngagementStatus;
+
+  useEffect(() => {
+    setShowPopup(false);
+  }, [scrollEvent]);
 
   return (
     <Container>

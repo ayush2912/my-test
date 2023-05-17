@@ -39,6 +39,9 @@ const Bar = styled.div<{
   &:active {
     box-shadow: 0px 0px 0px 4px #b1c8f9;
   }
+  &:hover {
+    box-shadow: 0px 0px 0px 4px #b1c8f9;
+  }
 
   ${({ focus }) => (focus ? "box-shadow: 0px 0px 0px 4px #b1c8f9;" : "")}
 `;
@@ -55,7 +58,7 @@ interface TaskStatus {
 }
 
 export const TaskBar = ({ taskData }: { taskData: Task & { bar: IBar } }) => {
-  const { view } = useGanttChartControls();
+  const { view, scrollEvent } = useGanttChartControls();
   const [isTextOverflowing, setIsTextOverflowing] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
@@ -94,6 +97,11 @@ export const TaskBar = ({ taskData }: { taskData: Task & { bar: IBar } }) => {
   const handlePopupMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
   };
+
+  useEffect(() => {
+    setShowPopup(false);
+  }, [scrollEvent]);
+
   return (
     <Container>
       <Bar

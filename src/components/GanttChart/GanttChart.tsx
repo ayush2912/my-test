@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import styled from "styled-components";
 
 import { EngagementBar } from "./Bar/EngagementBar";
@@ -60,7 +61,16 @@ export const GanttChart = ({
   mappedProjectEngagements: IMappedEngagements;
   calendar: ICalendar;
 }) => {
-  const { view } = useGanttChartControls();
+  const { view, onScroll } = useGanttChartControls();
+  const calendarBgWrapperRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    calendarBgWrapperRef.current?.addEventListener("wheel", onScroll);
+
+    return () => {
+      calendarBgWrapperRef.current?.removeEventListener("wheel", onScroll);
+    };
+  }, []);
 
   return (
     <Card>
@@ -68,7 +78,10 @@ export const GanttChart = ({
       {mappedProjectEngagements.length ? (
         <StyledCalendarContainer>
           <CalendarHeader calendarHeader={calendar.header} view={view} />
-          <CalendarBackgroundWrapper width={calendar.width[view]}>
+          <CalendarBackgroundWrapper
+            ref={calendarBgWrapperRef}
+            width={calendar.width[view]}
+          >
             <CalendarBackground width={calendar.width[view]} view={view}>
               {mappedProjectEngagements.map((v) => {
                 return (
