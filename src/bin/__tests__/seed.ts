@@ -25,16 +25,24 @@ test('seedOrganizations()', async () => {
 
     const results = await seedOrganizations(data);
 
-    expect(results).toEqual(
-        expect.arrayContaining(
-            data.map((d) =>
-                expect.objectContaining({
-                    ...d,
-                    expiryDate: new Date(d.expiryDate),
-                })
-            )
-        )
-    );
+    results.forEach((result) => {
+        if (!result) {
+            throw new Error('Result is null');
+        }
+
+        const match = data.find((d) => d.name === result?.name);
+
+        if (!match) {
+            throw new Error(
+                'Result contains data that is not provided by the function'
+            );
+        }
+
+        expect(result.name).toBe(match.name);
+        expect(result.url).toBe(match.url);
+        expect(result.type).toBe(match.type);
+        expect(result.expiryDate).toEqual(new Date(match.expiryDate));
+    });
 });
 
 test('seedProjects()', async () => {
@@ -161,6 +169,7 @@ test('seedProjects()', async () => {
                 )
             )
         );
+        expect(result.isActive).toBe(true);
     });
 });
 

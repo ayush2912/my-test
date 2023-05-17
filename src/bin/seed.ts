@@ -63,15 +63,18 @@ type Methodologies = {
     fullName: string;
 };
 
-const createOrUpdateOrganization = async (data: OrganizationData) => {
+export const createOrUpdateOrganization = async (data: OrganizationData) => {
     const organization = await prisma.organization.findFirst({
         where: {
             name: data.name,
         },
+        select: {
+            id: true,
+        },
     });
 
     if (organization) {
-        return prisma.organization.update({
+        await prisma.organization.updateMany({
             where: {
                 id: organization.id,
             },
@@ -79,21 +82,52 @@ const createOrUpdateOrganization = async (data: OrganizationData) => {
                 url: data.url,
                 type: data.type,
                 expiryDate: data.expiryDate,
+                status: 'ACTIVE',
+            },
+        });
+
+        return prisma.organization.findFirst({
+            where: {
+                id: organization.id,
+            },
+            select: {
+                id: true,
+                url: true,
+                name: true,
+                type: true,
+                expiryDate: true,
             },
         });
     }
 
-    return prisma.organization.create({
+    const created = await prisma.organization.create({
         data: {
             name: data.name,
             url: data.url,
             type: data.type,
             expiryDate: data.expiryDate,
+            status: 'ACTIVE',
+        },
+        select: {
+            id: true,
+        },
+    });
+
+    return prisma.organization.findFirst({
+        where: {
+            id: created.id,
+        },
+        select: {
+            id: true,
+            url: true,
+            name: true,
+            type: true,
+            expiryDate: true,
         },
     });
 };
 
-const createOrUpdateProject = async (data: ProjectData) => {
+export const createOrUpdateProject = async (data: ProjectData) => {
     const project = await prisma.project.findFirst({
         where: {
             name: data.name,
@@ -217,6 +251,7 @@ const createOrUpdateProject = async (data: ProjectData) => {
                 name: true,
             },
         },
+        isActive: true,
     };
 
     if (project) {
@@ -245,6 +280,7 @@ const createOrUpdateProject = async (data: ProjectData) => {
                 subTypeIDs: subTypes.map((t) => t.id),
                 portfolioOwnerId: portfolioOwner?.id,
                 assetOwnerIDs: assetOwners.map((a) => a.id),
+                isActive: true,
             },
         });
 
@@ -280,6 +316,7 @@ const createOrUpdateProject = async (data: ProjectData) => {
             subTypeIDs: subTypes.map((t) => t.id),
             portfolioOwnerId: portfolioOwner?.id,
             assetOwnerIDs: assetOwners.map((a) => a.id),
+            isActive: true,
         },
     });
 
@@ -291,7 +328,7 @@ const createOrUpdateProject = async (data: ProjectData) => {
     });
 };
 
-const createOrUpdateEngagement = async (data: EngagementData) => {
+export const createOrUpdateEngagement = async (data: EngagementData) => {
     const engagementSelect: Prisma.EngagementSelect = {
         type: true,
         project: {
@@ -376,7 +413,7 @@ const createOrUpdateEngagement = async (data: EngagementData) => {
     });
 };
 
-const createOrUpdateTasks = async (data: TaskData) => {
+export const createOrUpdateTasks = async (data: TaskData) => {
     const taskSelect: Prisma.TaskSelect = {
         engagement: {
             select: {

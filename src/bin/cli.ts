@@ -21,7 +21,7 @@ import {
     seedCountries,
     seedMethodologies,
 } from './seed';
-import { listProjectTypes } from './list';
+import { listProjectTypes, listProjects } from './list';
 
 const program = new Command();
 
@@ -191,6 +191,14 @@ seed.command('methodologies')
     });
 
 const list = program.command('list').description('List items from database');
+
+list.command('projects')
+    .description('List Projects from database')
+    .option('-o, --organizationId <organizationId>', 'Organization ID')
+    .action(async ({ organizationId }) => {
+        const results = await listProjects({ organizationId });
+        console.log(JSON.stringify(results, null, 2));
+    });
 
 list.command('projectTypes')
     .description('List Project Types from database')
