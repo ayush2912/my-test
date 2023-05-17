@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Flag from "react-world-flags";
 import styled from "styled-components";
 
@@ -74,7 +74,7 @@ export const ProjectBar = ({
 }: {
   projectData: IProjectBarData;
 }) => {
-  const { view } = useGanttChartControls();
+  const { view, scrollEvent } = useGanttChartControls();
   const [showPopup, setShowPopup] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
   const projectTypes: string = projectData.types
@@ -97,6 +97,10 @@ export const ProjectBar = ({
   const handlePopupMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
   };
+
+  useEffect(() => {
+    setShowPopup(false);
+  }, [scrollEvent]);
 
   return (
     <Container>

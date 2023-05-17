@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Icon, { IconNameType } from "../../../components/Icon";
 import Text from "../../../components/Text";
 import Tooltip from "../../../components/Tooltip";
-import { convertToEuropeanDateFormat } from "../../../utils/dateTimeFormatter";
+import { convertToMonthNameFormat } from "../../../utils/dateTimeFormatter";
 
 const StyledTaskContainer = styled.div`
   border-top: 1px solid #e1e4e8;
@@ -62,7 +62,7 @@ export default function TaskList({
   const tooltipTextContent = {
     IN_PROGRESS: "IN PROGRESS",
     COMPLETED: `COMPLETED ON ${
-      completedDate && convertToEuropeanDateFormat(completedDate)
+      completedDate && convertToMonthNameFormat(completedDate)
     }`,
     NOT_STARTED: "NOT STARTED",
     DISCONTINUED: "DISCONTINUED",
@@ -90,7 +90,7 @@ export default function TaskList({
             type="body"
             color={state === "DISCONTINUED" ? "disabled" : "subdued"}
           >
-            {convertToEuropeanDateFormat(startDate)} -{" "}
+            {convertToMonthNameFormat(startDate)} -{" "}
           </Text>
 
           <Text
@@ -103,7 +103,7 @@ export default function TaskList({
                 : "subdued"
             }
           >
-            {convertToEuropeanDateFormat(dueDate)}
+            {convertToMonthNameFormat(dueDate)}
           </Text>
         </div>
       </ColumnWrapper>

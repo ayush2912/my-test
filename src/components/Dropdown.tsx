@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
 
+import Icon from "./Icon";
 import Text from "./Text";
 
 // Define the type for the options
@@ -23,14 +24,20 @@ const DropdownContainer = styled.div`
 `;
 
 const DropdownButton = styled.button`
+  display: flex;
+  align-items: center;
   background-color: white;
   border: 1px solid #ccc;
-  color: #444;
-  padding: 8px;
+  border-color: ${(prop) => prop.theme.colors.neutral[700]};
+  padding: 8px 16px;
   border-radius: 8px;
-  font-size: 16px;
   cursor: pointer;
   width: 120px;
+  text-align: left;
+
+  &:hover {
+    background-color: ${(props) => props.theme.colors.neutral[200]};
+  }
 `;
 
 const DropdownList = styled.ul`
@@ -61,7 +68,6 @@ const DropdownListItem = styled.li`
   }
 `;
 
-// Define the Dropdown component
 const Dropdown = ({ options, value, onChange }: any) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -76,7 +82,12 @@ const Dropdown = ({ options, value, onChange }: any) => {
 
   return (
     <DropdownContainer>
-      <DropdownButton onClick={toggleDropdown}>{value}</DropdownButton>
+      <DropdownButton onClick={toggleDropdown}>
+        <Text type="button">
+          {options.find((v: any) => v.value === value)?.label}
+        </Text>
+        <Icon name="chevronDown" size="big" />
+      </DropdownButton>
       {isOpen && (
         <DropdownList>
           {options.map((option: any) => (

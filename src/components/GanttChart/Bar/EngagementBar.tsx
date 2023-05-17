@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { BarPopup } from "./BarPopup";
 import { ModalContent, ModalHeader, TextHolder } from "./ProjectBar";
 import { useOutsideAlerter } from "../../../hooks/useOutsiderAlerter";
-import { convertToEuropeanDateFormat } from "../../../utils/dateTimeFormatter";
+import { convertToMonthNameFormat } from "../../../utils/dateTimeFormatter";
 import EyeButton from "../../EyeButton";
 import StatusTag, { StatusType } from "../../StatusTag";
 import Text from "../../Text";
@@ -35,6 +35,10 @@ const Bar = styled.div<{
   padding: 4px 8px;
   background-color: ${(props) => props.theme.colors.primary[600]};
 
+  &:hover {
+    box-shadow: 0px 0px 0px 4px #b1c8f9;
+  }
+
   &:active {
     box-shadow: 0px 0px 0px 4px #b1c8f9;
   }
@@ -58,7 +62,7 @@ export const EngagementBar = ({
 }: {
   engagementData: IMappedEngagement;
 }) => {
-  const { view } = useGanttChartControls();
+  const { view, scrollEvent } = useGanttChartControls();
 
   const [isTextOverflowing, setIsTextOverflowing] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
@@ -98,6 +102,10 @@ export const EngagementBar = ({
     OVERDUE: { label: "OVERDUE", type: "warning" },
   }[engagementData.state] as EngagementStatus;
 
+  useEffect(() => {
+    setShowPopup(false);
+  }, [scrollEvent]);
+
   return (
     <Container>
       <Bar
@@ -136,7 +144,7 @@ export const EngagementBar = ({
                   Start date :
                 </Text>
                 <Text type="caption" color="default">
-                  {convertToEuropeanDateFormat(engagementData.startDate)}
+                  {convertToMonthNameFormat(engagementData.startDate)}
                 </Text>
               </TextHolder>
 
@@ -145,19 +153,19 @@ export const EngagementBar = ({
                   Due date :
                 </Text>
                 <Text type="caption" color="default">
-                  {convertToEuropeanDateFormat(engagementData.dueDate)}
+                  {convertToMonthNameFormat(engagementData.dueDate)}
                 </Text>
               </TextHolder>
-              <TextHolder>
-                <Text type="caption" color="subdued">
-                  Completion date :
-                </Text>
-                <Text type="caption" color="default">
-                  {engagementData.completedDate
-                    ? convertToEuropeanDateFormat(engagementData.completedDate)
-                    : "-"}
-                </Text>
-              </TextHolder>
+              {engagementData.completedDate && (
+                <TextHolder>
+                  <Text type="caption" color="subdued">
+                    Completion date :
+                  </Text>
+                  <Text type="caption" color="default">
+                    {convertToMonthNameFormat(engagementData.completedDate)}
+                  </Text>
+                </TextHolder>
+              )}
             </ModalContent>
           </BarPopup>
         )}
