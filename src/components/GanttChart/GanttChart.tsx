@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import styled from "styled-components";
 
 import { EngagementBar } from "./Bar/EngagementBar";
@@ -21,6 +22,19 @@ const StyledCalendarContainer = styled.div`
   padding-top: 24px;
   border-top: 1px solid #e1e4e8;
   overflow-x: scroll;
+
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: none;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #c4c9d1;
+    border-radius: 16px;
+  }
 `;
 
 const EmptyStateContainer = styled.div`
@@ -47,7 +61,16 @@ export const GanttChart = ({
   mappedProjectEngagements: IMappedEngagements;
   calendar: ICalendar;
 }) => {
-  const { view } = useGanttChartControls();
+  const { view, onScroll } = useGanttChartControls();
+  const calendarBgWrapperRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    calendarBgWrapperRef.current?.addEventListener("wheel", onScroll);
+
+    return () => {
+      calendarBgWrapperRef.current?.removeEventListener("wheel", onScroll);
+    };
+  }, []);
 
   return (
     <Card>
@@ -55,7 +78,10 @@ export const GanttChart = ({
       {mappedProjectEngagements.length ? (
         <StyledCalendarContainer>
           <CalendarHeader calendarHeader={calendar.header} view={view} />
-          <CalendarBackgroundWrapper width={calendar.width[view]}>
+          <CalendarBackgroundWrapper
+            ref={calendarBgWrapperRef}
+            width={calendar.width[view]}
+          >
             <CalendarBackground width={calendar.width[view]} view={view}>
               {mappedProjectEngagements.map((v) => {
                 return (

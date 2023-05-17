@@ -9,11 +9,6 @@ import Text from "../../../components/Text";
 import { convertToMonthNameFormat } from "../../../utils/dateTimeFormatter";
 import { numberFormatter } from "../../../utils/numberFormatter";
 
-// export const Table = styled.table`
-//   width: 100%;
-//   border-spacing: 5px 20px;
-// `;
-
 export const TableHeader = styled.th`
   padding: 0px;
   text-align: left;

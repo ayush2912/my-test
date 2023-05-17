@@ -1,6 +1,7 @@
 import styled, { CSSObject } from "styled-components";
 
 import { ReactComponent as ChevronButtonIcon } from "../assets/icons/arrows/chevron-button.svg";
+import { ReactComponent as ChevronDownIcon } from "../assets/icons/arrows/chevron-down.svg";
 import { ReactComponent as Discontinued } from "../assets/icons/feedback/discontinued.svg";
 import { ReactComponent as InProgressIcon } from "../assets/icons/feedback/in-progress.svg";
 import { ReactComponent as NotStartedIcon } from "../assets/icons/feedback/not-started.svg";
@@ -47,6 +48,7 @@ const icons = {
   inProgress: InProgressIcon,
   discontinued: Discontinued,
   chevronButton: ChevronButtonIcon,
+  chevronDown: ChevronDownIcon,
   information: InformationIcon,
 };
 

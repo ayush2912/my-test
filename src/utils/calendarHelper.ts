@@ -92,8 +92,7 @@ export const getCalendarHeaderAndWidth = (
         const month = moment(startOfYear)
           .add(v, "years")
           .add(i, "months")
-          .format("MMMM")
-          .toUpperCase();
+          .format("MMMM");
 
         return {
           month,

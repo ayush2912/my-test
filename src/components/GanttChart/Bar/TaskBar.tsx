@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { BarPopup } from "./BarPopup";
 import { ModalContent, ModalHeader, TextHolder } from "./ProjectBar";
 import { useOutsideAlerter } from "../../../hooks/useOutsiderAlerter";
-import { convertToEuropeanDateFormat } from "../../../utils/dateTimeFormatter";
+import { convertToMonthNameFormat } from "../../../utils/dateTimeFormatter";
 import StatusTag, { StatusType } from "../../StatusTag";
 import Text from "../../Text";
 import { IBar, Task } from "../GanttChart.types";
@@ -39,6 +39,9 @@ const Bar = styled.div<{
   &:active {
     box-shadow: 0px 0px 0px 4px #b1c8f9;
   }
+  &:hover {
+    box-shadow: 0px 0px 0px 4px #b1c8f9;
+  }
 
   ${({ focus }) => (focus ? "box-shadow: 0px 0px 0px 4px #b1c8f9;" : "")}
 `;
@@ -55,7 +58,7 @@ interface TaskStatus {
 }
 
 export const TaskBar = ({ taskData }: { taskData: Task & { bar: IBar } }) => {
-  const { view } = useGanttChartControls();
+  const { view, scrollEvent } = useGanttChartControls();
   const [isTextOverflowing, setIsTextOverflowing] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
@@ -94,6 +97,11 @@ export const TaskBar = ({ taskData }: { taskData: Task & { bar: IBar } }) => {
   const handlePopupMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
   };
+
+  useEffect(() => {
+    setShowPopup(false);
+  }, [scrollEvent]);
+
   return (
     <Container>
       <Bar
@@ -128,7 +136,7 @@ export const TaskBar = ({ taskData }: { taskData: Task & { bar: IBar } }) => {
                   Start date :
                 </Text>
                 <Text type="caption" color="default">
-                  {convertToEuropeanDateFormat(taskData.startDate)}
+                  {convertToMonthNameFormat(taskData.startDate)}
                 </Text>
               </TextHolder>
 
@@ -137,19 +145,20 @@ export const TaskBar = ({ taskData }: { taskData: Task & { bar: IBar } }) => {
                   Due date :
                 </Text>
                 <Text type="caption" color="default">
-                  {convertToEuropeanDateFormat(taskData.dueDate)}
+                  {convertToMonthNameFormat(taskData.dueDate)}
                 </Text>
               </TextHolder>
-              <TextHolder>
-                <Text type="caption" color="subdued">
-                  Completion date :
-                </Text>
-                <Text type="caption" color="default">
-                  {taskData.completedDate
-                    ? convertToEuropeanDateFormat(taskData.completedDate)
-                    : "-"}
-                </Text>
-              </TextHolder>
+              {taskData.completedDate && (
+                <TextHolder>
+                  <Text type="caption" color="subdued">
+                    Completion date :
+                  </Text>
+
+                  <Text type="caption" color="default">
+                    {convertToMonthNameFormat(taskData.completedDate)}
+                  </Text>
+                </TextHolder>
+              )}
             </ModalContent>
           </BarPopup>
         )}
