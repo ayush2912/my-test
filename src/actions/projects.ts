@@ -204,12 +204,12 @@ const createProject = (data: any) => {
             methodologies: {
                 connect: data.methodologies
                     ? data.methodologies.map((methodology: string) => {
-                        if (ObjectId.isValid(methodology)) {
-                            return { id: methodology };
-                        } else {
-                            return { code: methodology };
-                        }
-                    })
+                          if (ObjectId.isValid(methodology)) {
+                              return { id: methodology };
+                          } else {
+                              return { code: methodology };
+                          }
+                      })
                     : [],
             },
             types: {
@@ -234,34 +234,34 @@ const createProject = (data: any) => {
             engagements: {
                 create: data.engagements
                     ? data.engagements.map((engagement: any) => ({
-                        type: engagement.type,
-                        startDate: engagement.startDate,
-                        dueDate: engagement.dueDate,
-                        completedDate: engagement.completedDate,
-                        state: engagement.state,
-                        notes: engagement.notes,
-                        attributes: engagement.attributes
-                            ? engagement.attributes.map((attribute: any) => ({
-                                name: attribute.name,
-                                type: attribute.type,
-                                value: attribute.value,
-                                strapiId: attribute.strapiId,
-                            }))
-                            : [],
-                        tasks: {
-                            create: engagement.tasks
-                                ? engagement.tasks.map((task: any) => ({
-                                    type: task.type,
-                                    startDate: task.startDate,
-                                    dueDate: task.dueDate,
-                                    completedDate: task.completedDate,
-                                    state: task.state,
-                                    strapiId: task.strapiId,
+                          type: engagement.type,
+                          startDate: engagement.startDate,
+                          dueDate: engagement.dueDate,
+                          completedDate: engagement.completedDate,
+                          state: engagement.state,
+                          notes: engagement.notes,
+                          attributes: engagement.attributes
+                              ? engagement.attributes.map((attribute: any) => ({
+                                    name: attribute.name,
+                                    type: attribute.type,
+                                    value: attribute.value,
+                                    strapiId: attribute.strapiId,
                                 }))
-                                : [],
-                        },
-                        strapiId: engagement.strapiId,
-                    }))
+                              : [],
+                          tasks: {
+                              create: engagement.tasks
+                                  ? engagement.tasks.map((task: any) => ({
+                                        type: task.type,
+                                        startDate: task.startDate,
+                                        dueDate: task.dueDate,
+                                        completedDate: task.completedDate,
+                                        state: task.state,
+                                        strapiId: task.strapiId,
+                                    }))
+                                  : [],
+                          },
+                          strapiId: engagement.strapiId,
+                      }))
                     : [],
             },
             creditingPeriodStartDate: data.creditingPeriodStartDate,
@@ -286,12 +286,12 @@ const createProject = (data: any) => {
             assetOwners: {
                 connect: data.assetOwners
                     ? data.assetOwners.map((assetOwner: string) => {
-                        if (ObjectId.isValid(assetOwner)) {
-                            return { id: assetOwner };
-                        } else {
-                            return { name: assetOwner };
-                        }
-                    })
+                          if (ObjectId.isValid(assetOwner)) {
+                              return { id: assetOwner };
+                          } else {
+                              return { name: assetOwner };
+                          }
+                      })
                     : [],
             },
             isActive: true,
@@ -345,7 +345,9 @@ const getProjects = async (options: GetProjectListInput) =>
                 registryProjectId: true,
                 countries: {
                     select: {
+                        id: true,
                         iso2Name: true,
+                        iso3Name: true,
                         name: true,
                     },
                 },
@@ -392,13 +394,17 @@ const getProjects = async (options: GetProjectListInput) =>
                 },
             },
         })
-        .then((results) =>
-            results.map((result) => ({
+        .then((results) => {
+            console.log(results);
+
+            return results.map((result) => ({
                 id: result.id,
                 name: result.name,
                 createdAt: result.createdAt,
                 updatedAt: result.updatedAt,
-                registry: result.registry,
+                registry: result.registry || {
+                    name: '',
+                },
                 registryProjectId: result.registryProjectId,
                 countries: result.countries,
                 types: result.types,
@@ -411,8 +417,8 @@ const getProjects = async (options: GetProjectListInput) =>
                     result.annualApproximateCreditVolume,
                 portfolioOwner: result.portfolioOwner,
                 assetOwners: result.assetOwners,
-            }))
-        );
+            }));
+        });
 
 const updateProjectData = (projectId: string, data: any) => {
     const { engagements, ...rest } = data;
