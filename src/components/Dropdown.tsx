@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
 
+import Icon from "./Icon";
 import Text from "./Text";
 
 // Define the type for the options
@@ -23,6 +24,8 @@ const DropdownContainer = styled.div`
 `;
 
 const DropdownButton = styled.button`
+  display: flex;
+  align-items: center;
   background-color: white;
   border: 1px solid #ccc;
   border-color: ${(prop) => prop.theme.colors.neutral[700]};
@@ -31,6 +34,10 @@ const DropdownButton = styled.button`
   cursor: pointer;
   width: 120px;
   text-align: left;
+
+  &:hover {
+    background-color: ${(props) => props.theme.colors.neutral[200]};
+  }
 `;
 
 const DropdownList = styled.ul`
@@ -61,7 +68,6 @@ const DropdownListItem = styled.li`
   }
 `;
 
-// Define the Dropdown component
 const Dropdown = ({ options, value, onChange }: any) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -80,6 +86,7 @@ const Dropdown = ({ options, value, onChange }: any) => {
         <Text type="button">
           {options.find((v: any) => v.value === value)?.label}
         </Text>
+        <Icon name="chevronDown" size="big" />
       </DropdownButton>
       {isOpen && (
         <DropdownList>
