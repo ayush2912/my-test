@@ -199,7 +199,7 @@ export const Primary: Story = {
     };
     return (
       <ProjectListTable
-        projectsType="Active"
+        projectsType="ACTIVE"
         headers={headers}
         tableData={projectLists}
         onViewButton={showId}
@@ -208,14 +208,30 @@ export const Primary: Story = {
   },
 };
 
-export const EmptyTable: Story = {
+export const EmptyTableActive: Story = {
   render: () => {
     const showId = (id: any) => {
       console.log(id);
     };
     return (
       <ProjectListTable
-        projectsType="Inactive"
+        projectsType="ACTIVE"
+        headers={headers}
+        tableData={[]}
+        onViewButton={showId}
+      />
+    );
+  },
+};
+
+export const EmptyTableInactive: Story = {
+  render: () => {
+    const showId = (id: any) => {
+      console.log(id);
+    };
+    return (
+      <ProjectListTable
+        projectsType="INACTIVE"
         headers={headers}
         tableData={[]}
         onViewButton={showId}

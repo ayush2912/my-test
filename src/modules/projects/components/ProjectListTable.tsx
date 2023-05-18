@@ -81,6 +81,12 @@ function ProjectListTable({
   onViewButton: (id: string) => void;
   projectsType: string;
 }) {
+  const emptyStateSubTitle = {
+    ACTIVE: "You will be notified when there are any projects to view",
+    INACTIVE:
+      "Please check the ‘Active’ tab to view projects that are currently active under this account.",
+  }[projectsType] as string;
+
   const cellContentMapper = (v: ProjectRowItem) => {
     const selectedIconName = {
       IN_PROGRESS: "inProgress",
@@ -209,8 +215,8 @@ function ProjectListTable({
         headers={headers}
         tableData={tableData}
         cellContentMapper={cellContentMapper}
-        emptyStateTitle={`No ${projectsType} Projects`}
-        emptyStateSubTitle="You will be notified when there are any projects to view"
+        emptyStateTitle={`No ${projectsType.toLowerCase()} projects`}
+        emptyStateSubTitle={emptyStateSubTitle}
       />
     </>
   );
