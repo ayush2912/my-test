@@ -138,7 +138,7 @@ export const ProjectBar = ({
                   Registry :
                 </Text>
                 <Text type="caption" color="default">
-                  {projectData.registry.name}
+                  {projectData.registry?.name}
                 </Text>
               </TextHolder>
 
