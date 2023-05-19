@@ -27,9 +27,32 @@ export const Content = styled.div`
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   white-space: pre-wrap;
-  max-height: 50px;
   cursor: default;
-  max-width: 200px;
+  width: 100%;
+`;
+
+export const ProjectNameColumn = styled.div`
+  max-width: 196px;
+  max-height: 48px;
+`;
+
+export const RegistryColumn = styled.div`
+  max-width: 122px;
+  max-height: 48px;
+`;
+
+export const TypeColumn = styled.div`
+  max-width: 126px;
+  max-height: 48px;
+`;
+export const SingleLineColumn = styled.div`
+  max-width: 102px;
+  max-height: 24px;
+`;
+
+export const AssetColumn = styled.div`
+  max-width: 132px;
+  max-height: 48px;
 `;
 
 const FlagHolder = styled.div`
@@ -113,39 +136,45 @@ function ProjectListTable({
     return {
       rowId: v.id,
       projectName: (
-        <Tooltip text={v.projectName}>
-          <Content>
-            <Text type="bodyBold" color="default">
-              {v.projectName}
-            </Text>
-          </Content>
-        </Tooltip>
+        <ProjectNameColumn>
+          <Tooltip text={v.projectName}>
+            <Content>
+              <Text type="bodyBold" color="default">
+                {v.projectName}
+              </Text>
+            </Content>
+          </Tooltip>
+        </ProjectNameColumn>
       ),
       registyNameID: (
-        <Content>
-          <Text type="body" color="subdued">
-            {v.registryName}
-          </Text>
-          <br />
-          <Tooltip text={v.registryId}>
+        <RegistryColumn>
+          <Content>
             <Text type="body" color="subdued">
-              {v.registryId}
+              {v.registryName}
             </Text>
-          </Tooltip>
-        </Content>
+            <br />
+            <Tooltip text={v.registryId}>
+              <Text type="body" color="subdued">
+                {v.registryId}
+              </Text>
+            </Tooltip>
+          </Content>
+        </RegistryColumn>
       ),
       projectTypeSubtype: (
-        <Content>
-          <Text type="body" color="subdued">
-            {v.projectTypes.map((type) => type).join(", ")}
-          </Text>
-          <br />
-          <Tooltip text={v.subTypes.map((type) => type).join(", ")}>
+        <TypeColumn>
+          <Content>
             <Text type="body" color="subdued">
-              {v.subTypes.map((type) => type).join(", ")}
+              {v.projectTypes.map((type) => type).join(", ")}
             </Text>
-          </Tooltip>
-        </Content>
+            <br />
+            <Tooltip text={v.subTypes.map((type) => type).join(", ")}>
+              <Text type="body" color="subdued">
+                {v.subTypes.map((type) => type).join(", ")}
+              </Text>
+            </Tooltip>
+          </Content>
+        </TypeColumn>
       ),
       coutries: (
         <>
@@ -161,29 +190,35 @@ function ProjectListTable({
         </>
       ),
       portfolioOwners: (
-        <Content>
-          <Tooltip text={v.portfolioOwner}>
-            <Text type="body" color="subdued">
-              {v.portfolioOwner}
-            </Text>
-          </Tooltip>
-        </Content>
+        <SingleLineColumn>
+          <Content>
+            <Tooltip text={v.portfolioOwner}>
+              <Text type="body" color="subdued">
+                {v.portfolioOwner}
+              </Text>
+            </Tooltip>
+          </Content>
+        </SingleLineColumn>
       ),
       assetOwners: (
-        <Tooltip text={v.assetOwners.map((owner) => owner.name).join(", ")}>
-          <Content>
-            <Text type="body" color="subdued">
-              {v.assetOwners.map((owner) => owner.name).join(", ")}
-            </Text>
-          </Content>
-        </Tooltip>
+        <AssetColumn>
+          <Tooltip text={v.assetOwners.map((owner) => owner.name).join(", ")}>
+            <Content>
+              <Text type="body" color="subdued">
+                {v.assetOwners.map((owner) => owner.name).join(", ")}
+              </Text>
+            </Content>
+          </Tooltip>
+        </AssetColumn>
       ),
       annualApproximateCreditVolume: (
-        <Content>
-          <Text type="body" color="subdued">
-            {numberFormatter(v.annualApproximateCreditVolume, 0)}
-          </Text>
-        </Content>
+        <SingleLineColumn>
+          <Content>
+            <Text type="body" color="subdued">
+              {numberFormatter(v.annualApproximateCreditVolume, 0)}
+            </Text>
+          </Content>
+        </SingleLineColumn>
       ),
       engagement: (
         <div>

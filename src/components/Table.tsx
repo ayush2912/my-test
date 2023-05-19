@@ -32,7 +32,10 @@ const StyledTable = styled.table`
 
 const TableHeader = styled.th`
   text-align: left;
+  padding-bottom: 24px;
 `;
+
+const TableBody = styled.tbody``;
 
 const HeaderContent = styled.div`
   display: flex;
@@ -51,23 +54,15 @@ const HeaderText = styled.span`
   letter-spacing: 0.0625em;
 `;
 
-const TableRow = styled.tr`
-  height: "72px";
-`;
+const TableRow = styled.tr``;
 
-const TableCell = styled.td``;
+const TableCell = styled.td`
+  padding-bottom: 40px;
+`;
 
 const CellContent = styled.div`
   display: flex;
-  padding-left: 3px;
-  padding-right: 3px;
-  padding-top: 1px;
   align-items: center;
-
-  &:first-child,
-  &:last-child {
-    padding-left: 0;
-  }
 `;
 
 function Table({
@@ -103,7 +98,7 @@ function Table({
           </tr>
         </thead>
 
-        <tbody style={{ width: "100%" }}>
+        <TableBody style={{ width: "100%" }}>
           {tableData
             .map((v) => cellContentMapper(v))
             .map((rowItem) => (
@@ -115,7 +110,7 @@ function Table({
                 ))}
               </TableRow>
             ))}
-        </tbody>
+        </TableBody>
       </StyledTable>
       {tableData.length === 0 && (
         <EmptyStateDisplay>
