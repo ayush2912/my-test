@@ -27,6 +27,7 @@ const Bar = styled.div<{
   align-items: center;
   height: 24px;
   width: ${({ width }) => width}px;
+  min-width: 24px;
   border-radius: 4px;
   margin-left: ${({ offsetFromLeft }) => offsetFromLeft}px;
   margin-right: 8px;
