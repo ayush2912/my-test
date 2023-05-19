@@ -133,6 +133,36 @@ const projectLists: ProjectRowItem[] = [
     },
   },
   {
+    id: "645f51725504e53c94356",
+    projectName: "Songtao, Tongren, Wanshan and Yuping Rural Methane",
+    registryName: "verra",
+    registryId: "123",
+    projectTypes: ["Renewables"],
+    subTypes: ["Renewables"],
+    countries: [
+      {
+        id: "IN",
+        name: "India",
+        iso2Name: "IN",
+        iso3Name: "IND",
+      },
+    ],
+    portfolioOwner: "Renew Power",
+    assetOwners: [
+      {
+        id: "6438f5f51725504e53c94356",
+        name: "Renew Power",
+      },
+    ],
+    annualApproximateCreditVolume: 300000,
+    engagement: {
+      state: "COMPLETED",
+      dueDate: "2023-06-05T16:00:00.000Z",
+      type: "Issuance",
+      isOverdue: true,
+    },
+  },
+  {
     id: "6c94356",
     projectName:
       "Songtao, Tongren, Wanshan and Yuping Rural MethaneSongtao, Tongren, Wanshan and Yuping Rural Methane Songtao, Tongren, Wanshan and Yuping Rural Methane",
@@ -199,7 +229,7 @@ export const Primary: Story = {
     };
     return (
       <ProjectListTable
-        projectsType="Active"
+        projectsType="ACTIVE"
         headers={headers}
         tableData={projectLists}
         onViewButton={showId}
@@ -208,14 +238,30 @@ export const Primary: Story = {
   },
 };
 
-export const EmptyTable: Story = {
+export const EmptyTableActive: Story = {
   render: () => {
     const showId = (id: any) => {
       console.log(id);
     };
     return (
       <ProjectListTable
-        projectsType="Inactive"
+        projectsType="ACTIVE"
+        headers={headers}
+        tableData={[]}
+        onViewButton={showId}
+      />
+    );
+  },
+};
+
+export const EmptyTableInactive: Story = {
+  render: () => {
+    const showId = (id: any) => {
+      console.log(id);
+    };
+    return (
+      <ProjectListTable
+        projectsType="INACTIVE"
         headers={headers}
         tableData={[]}
         onViewButton={showId}
