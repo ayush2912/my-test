@@ -85,6 +85,7 @@ export interface ProjectRowItem {
     dueDate: string;
     type: string;
     isOverdue: boolean;
+    completedDate: string;
   };
 }
 
@@ -131,7 +132,7 @@ function ProjectListTable({
         ? "OVERDUE"
         : statusLabel +
           (statusLabel === "COMPLETED"
-            ? " ON " + convertToMonthNameFormat(v.engagement.dueDate)
+            ? " ON " + convertToMonthNameFormat(v.engagement.completedDate)
             : "");
     return {
       rowId: v.id,

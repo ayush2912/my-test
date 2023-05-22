@@ -130,6 +130,7 @@ const projectLists: ProjectRowItem[] = [
       dueDate: "2023-06-05T16:00:00.000Z",
       type: "Issuance",
       isOverdue: false,
+      completedDate: "2023-05-25T00:00:00.000Z",
     },
   },
   {
@@ -160,6 +161,7 @@ const projectLists: ProjectRowItem[] = [
       dueDate: "2023-06-05T16:00:00.000Z",
       type: "Issuance",
       isOverdue: true,
+      completedDate: "2023-05-25T00:00:00.000Z",
     },
   },
   {
