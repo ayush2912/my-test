@@ -4,20 +4,17 @@ import styled from "styled-components";
 import Icon from "./Icon";
 import Text from "./Text";
 
-// Define the type for the options
 interface Option {
   value: string;
   label: string;
 }
 
-// Define the type for the props
 interface DropdownProps {
   options: Option[];
   value: string;
   onChange: (value: string) => void;
 }
 
-// Define the styled components
 const DropdownContainer = styled.div`
   position: relative;
   display: inline-block;
@@ -68,7 +65,7 @@ const DropdownListItem = styled.li`
   }
 `;
 
-const Dropdown = ({ options, value, onChange }: any) => {
+const Dropdown = ({ options, value, onChange }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -84,13 +81,13 @@ const Dropdown = ({ options, value, onChange }: any) => {
     <DropdownContainer>
       <DropdownButton onClick={toggleDropdown}>
         <Text type="button">
-          {options.find((v: any) => v.value === value)?.label}
+          {options.find((v: Option) => v.value === value)?.label}
         </Text>
-        <Icon name="chevronDown" size="big" />
+        <Icon name="chevronDown" size="small" />
       </DropdownButton>
       {isOpen && (
         <DropdownList>
-          {options.map((option: any) => (
+          {options.map((option: Option) => (
             <DropdownListItem
               key={option.value}
               onClick={() => handleOptionClick(option)}
