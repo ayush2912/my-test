@@ -27,9 +27,32 @@ export const Content = styled.div`
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   white-space: pre-wrap;
-  max-height: 50px;
   cursor: default;
-  max-width: 200px;
+  width: 100%;
+`;
+
+export const ProjectNameColumn = styled.div`
+  max-width: 196px;
+  max-height: 48px;
+`;
+
+export const RegistryColumn = styled.div`
+  max-width: 122px;
+  max-height: 48px;
+`;
+
+export const TypeColumn = styled.div`
+  max-width: 126px;
+  max-height: 48px;
+`;
+export const SingleLineColumn = styled.div`
+  max-width: 102px;
+  max-height: 24px;
+`;
+
+export const AssetColumn = styled.div`
+  max-width: 132px;
+  max-height: 48px;
 `;
 
 const FlagHolder = styled.div`
@@ -81,6 +104,12 @@ function ProjectListTable({
   onViewButton: (id: string) => void;
   projectsType: string;
 }) {
+  const emptyStateSubTitle = {
+    ACTIVE: "You will be notified when there are any projects to view",
+    INACTIVE:
+      "Please check the ‘Active’ tab to view projects that are currently active under this account.",
+  }[projectsType] as string;
+
   const cellContentMapper = (v: ProjectRowItem) => {
     const selectedIconName = {
       IN_PROGRESS: "inProgress",
@@ -97,48 +126,55 @@ function ProjectListTable({
       OVERDUE: "OVERDUE",
     }[v.engagement.state] as ProjectStateTypes;
 
-    const iconTooltip = v.engagement.isOverdue
-      ? "OVERDUE"
-      : statusLabel +
-        (statusLabel === "COMPLETED"
-          ? " ON " + convertToMonthNameFormat(v.engagement.dueDate)
-          : "");
+    const iconTooltip =
+      v.engagement.isOverdue && statusLabel !== "COMPLETED"
+        ? "OVERDUE"
+        : statusLabel +
+          (statusLabel === "COMPLETED"
+            ? " ON " + convertToMonthNameFormat(v.engagement.dueDate)
+            : "");
     return {
       rowId: v.id,
       projectName: (
-        <Tooltip text={v.projectName}>
-          <Content>
-            <Text type="bodyBold" color="default">
-              {v.projectName}
-            </Text>
-          </Content>
-        </Tooltip>
+        <ProjectNameColumn>
+          <Tooltip text={v.projectName}>
+            <Content>
+              <Text type="bodyBold" color="default">
+                {v.projectName}
+              </Text>
+            </Content>
+          </Tooltip>
+        </ProjectNameColumn>
       ),
       registyNameID: (
-        <Content>
-          <Text type="body" color="subdued">
-            {v.registryName}
-          </Text>
-          <br />
-          <Tooltip text={v.registryId}>
+        <RegistryColumn>
+          <Content>
             <Text type="body" color="subdued">
-              {v.registryId}
+              {v.registryName}
             </Text>
-          </Tooltip>
-        </Content>
+            <br />
+            <Tooltip text={v.registryId}>
+              <Text type="body" color="subdued">
+                {v.registryId}
+              </Text>
+            </Tooltip>
+          </Content>
+        </RegistryColumn>
       ),
       projectTypeSubtype: (
-        <Content>
-          <Text type="body" color="subdued">
-            {v.projectTypes.map((type) => type).join(", ")}
-          </Text>
-          <br />
-          <Tooltip text={v.subTypes.map((type) => type).join(", ")}>
+        <TypeColumn>
+          <Content>
             <Text type="body" color="subdued">
-              {v.subTypes.map((type) => type).join(", ")}
+              {v.projectTypes.map((type) => type).join(", ")}
             </Text>
-          </Tooltip>
-        </Content>
+            <br />
+            <Tooltip text={v.subTypes.map((type) => type).join(", ")}>
+              <Text type="body" color="subdued">
+                {v.subTypes.map((type) => type).join(", ")}
+              </Text>
+            </Tooltip>
+          </Content>
+        </TypeColumn>
       ),
       coutries: (
         <>
@@ -154,29 +190,35 @@ function ProjectListTable({
         </>
       ),
       portfolioOwners: (
-        <Content>
-          <Tooltip text={v.portfolioOwner}>
-            <Text type="body" color="subdued">
-              {v.portfolioOwner}
-            </Text>
-          </Tooltip>
-        </Content>
+        <SingleLineColumn>
+          <Content>
+            <Tooltip text={v.portfolioOwner}>
+              <Text type="body" color="subdued">
+                {v.portfolioOwner}
+              </Text>
+            </Tooltip>
+          </Content>
+        </SingleLineColumn>
       ),
       assetOwners: (
-        <Tooltip text={v.assetOwners.map((owner) => owner.name).join(", ")}>
-          <Content>
-            <Text type="body" color="subdued">
-              {v.assetOwners.map((owner) => owner.name).join(", ")}
-            </Text>
-          </Content>
-        </Tooltip>
+        <AssetColumn>
+          <Tooltip text={v.assetOwners.map((owner) => owner.name).join(", ")}>
+            <Content>
+              <Text type="body" color="subdued">
+                {v.assetOwners.map((owner) => owner.name).join(", ")}
+              </Text>
+            </Content>
+          </Tooltip>
+        </AssetColumn>
       ),
       annualApproximateCreditVolume: (
-        <Content>
-          <Text type="body" color="subdued">
-            {numberFormatter(v.annualApproximateCreditVolume, 0)}
-          </Text>
-        </Content>
+        <SingleLineColumn>
+          <Content>
+            <Text type="body" color="subdued">
+              {numberFormatter(v.annualApproximateCreditVolume, 0)}
+            </Text>
+          </Content>
+        </SingleLineColumn>
       ),
       engagement: (
         <div>
@@ -209,8 +251,8 @@ function ProjectListTable({
         headers={headers}
         tableData={tableData}
         cellContentMapper={cellContentMapper}
-        emptyStateTitle={`No ${projectsType} Projects`}
-        emptyStateSubTitle="You will be notified when there are any projects to view"
+        emptyStateTitle={`No ${projectsType.toLowerCase()} projects`}
+        emptyStateSubTitle={emptyStateSubTitle}
       />
     </>
   );
