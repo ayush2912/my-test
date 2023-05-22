@@ -59,6 +59,7 @@ const Bar = styled.div<{
   cursor: pointer;
   overflow: visible;
   white-space: nowrap;
+
   &:hover {
     text-decoration: underline;
   }
@@ -69,6 +70,12 @@ const Bar = styled.div<{
 const TextWrapper = styled.div`
   width: 224px;
   white-space: normal;
+`;
+
+const ProjectNameText = styled(Text)`
+  &:hover {
+    font-weight: bold !important;
+  }
 `;
 
 export const ProjectBar = ({
@@ -192,7 +199,11 @@ export const ProjectBar = ({
             </ModalContent>
           </BarPopup>
         )}
-        <Text type={showPopup ? "linkTextBold" : "bodyBold"} color="default">
+        <Text
+          type={showPopup ? "linkTextBold" : "bodyBold"}
+          color="default"
+          hoverStyles="font-weight: bold"
+        >
           {projectData.name}
         </Text>
       </Bar>
