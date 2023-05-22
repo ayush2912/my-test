@@ -22,6 +22,7 @@ const DocItem: DocumentInfo = {
   source: "Consultant",
   fileFormat: "pdf",
   size: "1.3 MB",
+  id: "123",
 };
 
 export const Primary: Story = {

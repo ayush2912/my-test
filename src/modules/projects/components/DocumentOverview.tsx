@@ -17,6 +17,7 @@ import { convertToMonthNameFormat } from "../../../utils/dateTimeFormatter";
 const ButtonCss = styled.button`
   &:hover {
     background-color: #bdc3c7;
+    
   }
   border: 1px solid #e1e4e8;
   justify-content: center;
@@ -24,6 +25,7 @@ const ButtonCss = styled.button`
   align-items: center;
   background: #ffffff;
   border-radius: 8px;
+  cursor: pointer;
   display: flex;
   height: 32px;s
   padding: 8px;
@@ -48,6 +50,7 @@ const FlexBox = styled.div.attrs((props: { gap: string }) => props)`
 
 const DocumentDetails = styled.div`
   flex-grow: 1;
+  cursor: default;
 `;
 
 const DotDivider = styled.div`
@@ -63,6 +66,7 @@ export interface DocumentInfo {
   source: string;
   name: string;
   size: string;
+  id: string;
 }
 
 export default function DocumentOverwiewItem({
