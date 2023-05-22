@@ -4,7 +4,8 @@ import styled from "styled-components";
 
 import { BarPopup } from "./BarPopup";
 import { useOutsideAlerter } from "../../../hooks/useOutsiderAlerter";
-import EyeButton from "../../EyeButton";
+import Button from "../../Button";
+import Icon from "../../Icon";
 import Text from "../../Text";
 import { IProjectBarData } from "../GanttChart.types";
 import useGanttChartControls from "../useGanttChartControls";
@@ -14,6 +15,7 @@ export const ModalHeader = styled.div`
   display: flex;
   justify-content: space-between;
   white-space: normal;
+  align-items: center;
 `;
 
 export const ModalContent = styled.div`
@@ -125,11 +127,15 @@ export const ProjectBar = ({
                 </Text>
               </TextWrapper>
 
-              <EyeButton
+              <Button
+                type="secondary"
+                isIcon
                 onClick={() => {
                   projectData.onViewClick(projectData.id);
                 }}
-              />
+              >
+                <Icon name="eyeIcon" size="xsmall" />
+              </Button>
             </ModalHeader>
 
             <ModalContent>

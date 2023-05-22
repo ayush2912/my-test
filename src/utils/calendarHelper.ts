@@ -130,7 +130,7 @@ export const getCalendarHeaderAndWidth = (
   const weeklyHeaderData = [...Array(Number(numberOfMonths)).keys()].map(
     (v) => {
       const newDate = moment(startOfYear).add(v, "months");
-      const month = newDate.format("MMM").toUpperCase();
+      const month = newDate.format("MMM");
       const year = newDate.format("YYYY");
 
       const sundays = getAllSundays(newDate.year(), newDate.month());

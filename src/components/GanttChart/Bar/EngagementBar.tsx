@@ -5,7 +5,8 @@ import { BarPopup } from "./BarPopup";
 import { ModalContent, ModalHeader, TextHolder } from "./ProjectBar";
 import { useOutsideAlerter } from "../../../hooks/useOutsiderAlerter";
 import { convertToMonthNameFormat } from "../../../utils/dateTimeFormatter";
-import EyeButton from "../../EyeButton";
+import Button from "../../Button";
+import Icon from "../../Icon";
 import StatusTag, { StatusType } from "../../StatusTag";
 import Text from "../../Text";
 import { IMappedEngagement } from "../GanttChart.types";
@@ -127,11 +128,15 @@ export const EngagementBar = ({
               <Text type="captionBold" color="default">
                 {engagementData.type}
               </Text>
-              <EyeButton
+              <Button
+                type="secondary"
+                isIcon
                 onClick={() => {
                   engagementData.onViewClick(engagementData.projectId);
                 }}
-              />
+              >
+                <Icon name="eyeIcon" size="xsmall" />
+              </Button>
             </ModalHeader>
             <div style={{ margin: "5px 0px" }}>
               <StatusTag

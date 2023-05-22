@@ -13,7 +13,7 @@ import { ReactComponent as InformationIcon } from "../assets/icons/generic/infor
 import { ReactComponent as MessageIcon } from "../assets/icons/generic/message.svg";
 
 interface IconProps {
-  size?: "small" | "big";
+  size: "xsmall" | "small" | "big";
   color?: string;
   hoverColor?: string;
   strokecolor?: string;
@@ -26,8 +26,8 @@ const svgStyles = ({
   strokecolor,
 }: IconProps): CSSObject => {
   return {
-    height: `${size === "small" ? 18 : 24}px`,
-    width: `${size === "small" ? 18 : 24}px`,
+    height: `${{ xsmall: 16, small: 24, big: 40 }[size]}px`,
+    width: `${{ xsmall: 16, small: 24, big: 40 }[size]}px`,
     "& path": {
       stroke: strokecolor,
       fill: color,
@@ -60,12 +60,12 @@ const StyledIcon = styled.svg<IconProps>`
 
 export default function Icon({
   name,
-  size,
+  size = "small",
   color,
   strokeColor,
 }: {
   name: IconNameType;
-  size?: "small" | "big";
+  size?: "xsmall" | "small" | "big";
   color?: string;
   strokeColor?: string;
 }) {
