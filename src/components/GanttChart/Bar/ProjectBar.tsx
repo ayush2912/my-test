@@ -4,7 +4,8 @@ import styled from "styled-components";
 
 import { BarPopup } from "./BarPopup";
 import { useOutsideAlerter } from "../../../hooks/useOutsiderAlerter";
-import EyeButton from "../../EyeButton";
+import Button from "../../Button";
+import Icon from "../../Icon";
 import Text from "../../Text";
 import { IProjectBarData } from "../GanttChart.types";
 import useGanttChartControls from "../useGanttChartControls";
@@ -14,6 +15,7 @@ export const ModalHeader = styled.div`
   display: flex;
   justify-content: space-between;
   white-space: normal;
+  align-items: center;
 `;
 
 export const ModalContent = styled.div`
@@ -57,6 +59,7 @@ const Bar = styled.div<{
   cursor: pointer;
   overflow: visible;
   white-space: nowrap;
+
   &:hover {
     text-decoration: underline;
   }
@@ -67,6 +70,12 @@ const Bar = styled.div<{
 const TextWrapper = styled.div`
   width: 224px;
   white-space: normal;
+`;
+
+const ProjectNameText = styled(Text)`
+  &:hover {
+    font-weight: bold !important;
+  }
 `;
 
 export const ProjectBar = ({
@@ -125,11 +134,15 @@ export const ProjectBar = ({
                 </Text>
               </TextWrapper>
 
-              <EyeButton
+              <Button
+                type="secondary"
+                isIcon
                 onClick={() => {
                   projectData.onViewClick(projectData.id);
                 }}
-              />
+              >
+                <Icon name="eyeIcon" size="xsmall" />
+              </Button>
             </ModalHeader>
 
             <ModalContent>
@@ -186,7 +199,11 @@ export const ProjectBar = ({
             </ModalContent>
           </BarPopup>
         )}
-        <Text type={showPopup ? "linkTextBold" : "bodyBold"} color="default">
+        <Text
+          type={showPopup ? "linkTextBold" : "bodyBold"}
+          color="default"
+          hoverStyles="font-weight: bold"
+        >
           {projectData.name}
         </Text>
       </Bar>
