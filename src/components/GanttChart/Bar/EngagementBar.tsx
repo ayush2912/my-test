@@ -90,7 +90,17 @@ export const EngagementBar = ({
     event: React.MouseEvent<HTMLDivElement>,
   ) => {
     setShowPopup(true);
-    setPopupPosition({ top: event.clientY, left: event.clientX });
+    const windowHeight = window.innerHeight;
+    const clientY = event.clientY;
+    const windowWidth = window.innerWidth;
+    const clientX = event.clientX;
+
+    const newPositionLeft =
+      clientX + 300 > windowWidth ? Math.max(clientX - 300, 0) : clientX;
+    const newPositionTop =
+      clientY + 180 > windowHeight ? Math.max(clientY - 180, 0) : clientY;
+
+    setPopupPosition({ top: newPositionTop, left: newPositionLeft });
   };
 
   const handlePopupMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
