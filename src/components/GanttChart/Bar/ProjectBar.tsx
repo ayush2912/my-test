@@ -72,12 +72,6 @@ const TextWrapper = styled.div`
   white-space: normal;
 `;
 
-const ProjectNameText = styled(Text)`
-  &:hover {
-    font-weight: bold !important;
-  }
-`;
-
 export const ProjectBar = ({
   projectData,
 }: {
@@ -90,7 +84,7 @@ export const ProjectBar = ({
     .map((type: { id: string; name: string }) => type.name)
     .join(", ");
   const barRef = useRef(null);
-  const popupRef = useRef(null);
+  const popupRef = useRef<HTMLDivElement>(null);
 
   useOutsideAlerter(barRef, () => {
     if (showPopup) setShowPopup(false);
@@ -100,7 +94,17 @@ export const ProjectBar = ({
     event: React.MouseEvent<HTMLDivElement>,
   ) => {
     setShowPopup(true);
-    setPopupPosition({ top: event.clientY, left: event.clientX });
+    const windowHeight = window.innerHeight;
+    const clientY = event.clientY;
+    const windowWidth = window.innerWidth;
+    const clientX = event.clientX;
+
+    const newPositionLeft =
+      clientX + 300 > windowWidth ? Math.max(clientX - 300, 0) : clientX;
+    const newPositionTop =
+      clientY + 180 > windowHeight ? Math.max(clientY - 180, 0) : clientY;
+
+    setPopupPosition({ top: newPositionTop, left: newPositionLeft });
   };
 
   const handlePopupMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
