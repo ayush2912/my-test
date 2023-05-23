@@ -51,7 +51,7 @@ export interface DocumentInfo {
   id: string;
 }
 
-export default function DocumentOverwiewItem({
+export default function DocumentListItem({
   documentInfo,
   onClickDownload,
   onGetInfo,

@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import DocumentOverwiewItem, { DocumentInfo } from "./DocumentOverview";
+import DocumentListItem, { DocumentInfo } from "./DocumentListItem";
 
-const meta: Meta<typeof DocumentOverwiewItem> = {
-  title: "Projects/Components/DocumentOverwiewItem",
-  component: DocumentOverwiewItem,
+const meta: Meta<typeof DocumentListItem> = {
+  title: "Projects/Components/DocumentListItem",
+  component: DocumentListItem,
 };
 
 export default meta;
-type Story = StoryObj<typeof DocumentOverwiewItem>;
+type Story = StoryObj<typeof DocumentListItem>;
 
 const DocItem: DocumentInfo = {
   //   fields not in use yet
@@ -27,7 +27,7 @@ const DocItem: DocumentInfo = {
 
 export const Primary: Story = {
   render: () => (
-    <DocumentOverwiewItem
+    <DocumentListItem
       onClickDownload={() => console.log("download file")}
       onGetInfo={() => console.log("check info")}
       documentInfo={DocItem}
