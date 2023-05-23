@@ -11,27 +11,9 @@ import { ReactComponent as XlsxFileIcon } from "../../../assets/icons/fileTypes/
 import { ReactComponent as DownloadIcon } from "../../../assets/icons/generic/download.svg";
 import { ReactComponent as FileIcon } from "../../../assets/icons/generic/file.svg";
 import { ReactComponent as InfoIcon } from "../../../assets/icons/generic/info.svg";
+import Button from "../../../components/Button";
 import Text from "../../../components/Text";
 import { convertToMonthNameFormat } from "../../../utils/dateTimeFormatter";
-
-const ButtonCss = styled.button`
-  &:hover {
-    background-color: #bdc3c7;
-    
-  }
-  border: 1px solid #e1e4e8;
-  justify-content: center;
-  flex-direction: row;
-  align-items: center;
-  background: #ffffff;
-  border-radius: 8px;
-  cursor: pointer;
-  display: flex;
-  height: 32px;s
-  padding: 8px;
-  width: 32px;
-  gap: 8px;
-`;
 
 const DocumentItemContainer = styled.div`
   justify-content: left;
@@ -120,13 +102,17 @@ export default function DocumentOverwiewItem({
       </DocumentDetails>
 
       <FlexBox gap="8px">
-        <ButtonCss onClick={onGetInfo}>
+        <Button type="secondary" isIcon={true} onClick={() => onGetInfo()}>
           <InfoIcon />
-        </ButtonCss>
+        </Button>
 
-        <ButtonCss onClick={onClickDownload}>
+        <Button
+          type="secondary"
+          isIcon={true}
+          onClick={() => onClickDownload()}
+        >
           <DownloadIcon />
-        </ButtonCss>
+        </Button>
       </FlexBox>
     </DocumentItemContainer>
   );
