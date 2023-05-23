@@ -49,24 +49,6 @@ export const Default: Story = {
   ),
 };
 
-export const MultipleDocs: Story = {
-  render: () => (
-    <>
-      <DocumentListItem
-        onClickDownload={() => console.log("download file")}
-        onGetInfo={() => console.log("check info")}
-        documentInfo={DocItem}
-      />
-
-      <DocumentListItem
-        onClickDownload={() => console.log("download file")}
-        onGetInfo={() => console.log("check info")}
-        documentInfo={DocItem}
-      />
-    </>
-  ),
-};
-
 export const withoutInfoButtonAndSource: Story = {
   render: () => (
     <DocumentListItem
