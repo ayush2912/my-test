@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import styled from "styled-components";
 
 import DocumentListItem, { DocumentInfo } from "./DocumentListItem";
 
@@ -10,11 +9,6 @@ const meta: Meta<typeof DocumentListItem> = {
 
 export default meta;
 type Story = StoryObj<typeof DocumentListItem>;
-
-const Divider = styled.div`
-  height: 1px;
-  background: #e1e4e8;
-`;
 
 const DocItem: DocumentInfo = {
   //   fields not in use yet
@@ -31,7 +25,7 @@ const DocItem: DocumentInfo = {
   id: "123",
 };
 
-export const Primary: Story = {
+export const Default: Story = {
   render: () => (
     <DocumentListItem
       onClickDownload={() => console.log("download file")}
@@ -44,19 +38,17 @@ export const Primary: Story = {
 export const MultipleDocs: Story = {
   render: () => (
     <>
-      <Divider />
       <DocumentListItem
         onClickDownload={() => console.log("download file")}
         onGetInfo={() => console.log("check info")}
         documentInfo={DocItem}
       />
-      <Divider />
+
       <DocumentListItem
         onClickDownload={() => console.log("download file")}
         onGetInfo={() => console.log("check info")}
         documentInfo={DocItem}
       />
-      <Divider />
     </>
   ),
 };

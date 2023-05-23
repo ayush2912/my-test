@@ -22,6 +22,11 @@ const DocumentItemContainer = styled.div`
   height: 84px;
   width: 100%;
   gap: 8px;
+  border-top: 1px solid #e1e4e8;
+
+  &:last-child {
+    border-bottom: 1px solid #e1e4e8;
+  }
 `;
 
 const FlexBox = styled.div.attrs((props: { gap: string }) => props)`
