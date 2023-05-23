@@ -131,6 +131,7 @@ type EngamentStateTypes =
   | "OVERDUE";
 
 export interface EngagementItem {
+  id: string;
   name: string;
   state: EngamentStateTypes;
   startDate: Date;
@@ -151,9 +152,11 @@ interface EngagementStatus {
 function EngagementTable({
   headers,
   tableData,
+  onViewDocument,
 }: {
   headers: { name: string; fieldName: string }[];
   tableData: EngagementItem[];
+  onViewDocument: (id: string) => void;
 }) {
   const cellContentMapper = (v: EngagementItem) => {
     const [showTasks, setShowTasks] = useState(false);
@@ -168,7 +171,9 @@ function EngagementTable({
       OVERDUE: { label: "OVERDUE", type: "warning" },
     }[v.state] as EngagementStatus;
     const isEngamentDiscontinued = v.state === "DISCONTINUED";
+
     return {
+      rowId: v.id,
       engagements: (
         <>
           <ColumnWrapper>
@@ -278,8 +283,8 @@ function EngagementTable({
           {v.document > 0 ? (
             <Button
               type="ghost"
-              onClick={() => () => {
-                console.log("document");
+              onClick={() => {
+                onViewDocument(v.id);
               }}
             >
               <Icon name="file" />
