@@ -50,7 +50,7 @@ const DotDivider = styled.div`
 export interface DocumentInfo {
   fileFormat: string;
   createdAt: string;
-  source: string;
+  source?: string;
   name: string;
   size: string;
   id: string;
@@ -63,7 +63,7 @@ export default function DocumentListItem({
 }: {
   documentInfo: DocumentInfo;
   onClickDownload: () => void;
-  onGetInfo: () => void;
+  onGetInfo?: () => void;
 }) {
   const fileFormatIcon = {
     doc: <DocFileIcon />,
@@ -98,18 +98,23 @@ export default function DocumentListItem({
             {convertToMonthNameFormat(documentInfo.createdAt)}
           </Text>
 
-          <DotDivider />
-
-          <Text type="caption" color="subdued">
-            {documentInfo.source}
-          </Text>
+          {documentInfo.source && (
+            <>
+              <DotDivider />
+              <Text type="caption" color="subdued">
+                {documentInfo.source}
+              </Text>
+            </>
+          )}
         </FlexBox>
       </DocumentDetails>
 
       <FlexBox gap="8px">
-        <Button type="secondary" isIcon={true} onClick={() => onGetInfo()}>
-          <InfoIcon />
-        </Button>
+        {onGetInfo && (
+          <Button type="secondary" isIcon={true} onClick={() => onGetInfo()}>
+            <InfoIcon />
+          </Button>
+        )}
 
         <Button
           type="secondary"
