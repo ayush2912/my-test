@@ -23,7 +23,7 @@ const DocumentItemContainer = styled.div`
   width: 100%;
   gap: 8px;
   border-top: 1px solid #e1e4e8;
-
+  padding-right: 8px;
   &:last-child {
     border-bottom: 1px solid #e1e4e8;
   }
