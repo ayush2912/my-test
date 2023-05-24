@@ -27,7 +27,7 @@ export const ModalContent = styled.div`
 
 export const TextHolder = styled.div`
   display: flex;
-  align-items: top;
+  align-items: start;
   gap: 4px;
 `;
 
