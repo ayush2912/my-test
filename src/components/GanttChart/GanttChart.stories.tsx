@@ -200,6 +200,18 @@ MultipleProjects.args = {
           iso2Name: "IN",
           iso3Name: "IND",
         },
+        {
+          id: "CHN",
+          name: "China",
+          iso2Name: "CH",
+          iso3Name: "CHN",
+        },
+        {
+          id: "BRA",
+          name: "Brazil",
+          iso2Name: "BR",
+          iso3Name: "BRA",
+        },
       ],
       isActive: true,
       engagements: [

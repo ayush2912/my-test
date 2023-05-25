@@ -27,7 +27,7 @@ export const ModalContent = styled.div`
 
 export const TextHolder = styled.div`
   display: flex;
-  align-items: center;
+  align-items: start;
   gap: 4px;
 `;
 
@@ -172,7 +172,7 @@ export const ProjectBar = ({
                 <Text type="caption" color="subdued">
                   Countries :
                 </Text>
-                <div style={{ display: "flex", gap: "8px" }}>
+                <div>
                   {projectData.countries.map(
                     (country: { iso3Name: string; name: string }) => (
                       <CountriesContainer key={country?.iso3Name}>
