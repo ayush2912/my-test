@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
-import styled from "styled-components";
+import { ReactNode, forwardRef } from "react";
+import styled, { css } from "styled-components";
 
 type TypeStyle =
   | "heading1"
@@ -24,25 +24,42 @@ type TextColor =
   | "warning"
   | "success";
 
-const StyledText = styled.span<{ type: TypeStyle; color: TextColor }>`
+const StyledText = styled.span<{
+  type: TypeStyle;
+  color: TextColor;
+  hoverStyles?: string;
+}>`
   font-size: ${(props) => props.theme.typography[props.type].size}px;
   font-weight: ${(props) => props.theme.typography[props.type].weight};
+  font-family: "Open Sans";
   line-height: ${(props) => props.theme.typography[props.type].lineHeight}px;
   color: ${(props) => props.theme.colors.text[props.color]};
+  ${(props) =>
+    props.hoverStyles &&
+    css`
+      &:hover {
+        ${props.hoverStyles};
+      }
+    `};
 `;
 
-export default function Text({
-  type,
-  color = "default",
-  children,
-}: {
-  type: TypeStyle;
-  color?: TextColor;
-  children: ReactNode;
-}) {
+export default forwardRef(function Text(
+  {
+    type,
+    color = "default",
+    children,
+    hoverStyles,
+  }: {
+    type: TypeStyle;
+    color?: TextColor;
+    children: ReactNode;
+    hoverStyles?: string;
+  },
+  ref?: React.Ref<HTMLDivElement>,
+) {
   return (
-    <StyledText type={type} color={color}>
+    <StyledText ref={ref} type={type} color={color} hoverStyles={hoverStyles}>
       {children}
     </StyledText>
   );
-}
+});

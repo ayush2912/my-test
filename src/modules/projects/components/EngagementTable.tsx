@@ -11,7 +11,7 @@ import Modal from "../../../components/Modal";
 import StatusTag, { StatusType } from "../../../components/StatusTag";
 import Text from "../../../components/Text";
 import Tooltip from "../../../components/Tooltip";
-import { convertToEuropeanDateFormat } from "../../../utils/dateTimeFormatter";
+import { convertToMonthNameFormat } from "../../../utils/dateTimeFormatter";
 
 const StyledTable = styled.table`
   table-layout: auto;
@@ -132,6 +132,7 @@ type EngamentStateTypes =
   | "OVERDUE";
 
 export interface EngagementItem {
+  id: string;
   name: string;
   state: EngamentStateTypes;
   startDate: Date;
@@ -152,9 +153,11 @@ interface EngagementStatus {
 function EngagementTable({
   headers,
   tableData,
+  onViewDocument,
 }: {
   headers: { name: string; fieldName: string }[];
   tableData: EngagementItem[];
+  onViewDocument: (id: string) => void;
 }) {
   const cellContentMapper = (v: EngagementItem) => {
     const [showTasks, setShowTasks] = useState(false);
@@ -169,7 +172,9 @@ function EngagementTable({
       OVERDUE: { label: "OVERDUE", type: "warning" },
     }[v.state] as EngagementStatus;
     const isEngamentDiscontinued = v.state === "DISCONTINUED";
+
     return {
+      rowId: v.id,
       engagements: (
         <>
           <ColumnWrapper>
@@ -198,7 +203,7 @@ function EngagementTable({
                   >
                     Completed on{" "}
                     {v?.completedDate &&
-                      convertToEuropeanDateFormat(v.completedDate)}
+                      convertToMonthNameFormat(v.completedDate)}
                   </Text>
                 </>
               )}
@@ -218,7 +223,7 @@ function EngagementTable({
                 Desk fills out the details, they will be available here for you
                 to read.
               </Text>
-              <DividerDiv></DividerDiv>
+              <DividerDiv />
 
               {v.attributes.map((attribute, index) => {
                 return (
@@ -236,12 +241,12 @@ function EngagementTable({
       ),
       startDate: (
         <Text type="body" color={"subdued"}>
-          {convertToEuropeanDateFormat(v.startDate)}
+          {convertToMonthNameFormat(v.startDate)}
         </Text>
       ),
       dueDate: (
         <Text type="body" color={v.state === "OVERDUE" ? "warning" : "subdued"}>
-          {convertToEuropeanDateFormat(v.dueDate)}
+          {convertToMonthNameFormat(v.dueDate)}
         </Text>
       ),
       state: (
@@ -281,12 +286,12 @@ function EngagementTable({
           {v.document > 0 ? (
             <Button
               type="ghost"
-              onClick={() => () => {
-                console.log("document");
+              onClick={() => {
+                onViewDocument(v.id);
               }}
             >
               <Icon name="file" />
-              <Text type="bodyBold">{20}</Text>
+              <Text type="bodyBold">{v.document}</Text>
             </Button>
           ) : (
             <EmptyState>

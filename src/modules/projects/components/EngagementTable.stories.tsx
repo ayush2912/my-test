@@ -13,6 +13,7 @@ type Story = StoryObj<typeof EngagementTable>;
 
 const projectEngagementsTableData: EngagementItem[] = [
   {
+    id: "asdf-23fedf2-eertgdfgsderf2f-esf3fes-f3",
     name: "Engagement 1",
     state: "COMPLETED",
     startDate: new Date("2023-01-10T06:20:44.069Z"),
@@ -50,6 +51,7 @@ const projectEngagementsTableData: EngagementItem[] = [
     ],
   },
   {
+    id: "asdf-23ff2-ef2f-esf3fesdfhdfgh-f3",
     name: "Engagement 1",
     state: "OVERDUE",
     startDate: new Date("2023-01-10T06:20:44.069Z"),
@@ -70,6 +72,7 @@ const projectEngagementsTableData: EngagementItem[] = [
     ],
   },
   {
+    id: "asdf-23fedf2-ef2f-qweqw-esf3fes-f3",
     name: "Engagement 1",
     state: "IN_PROGRESS",
     startDate: new Date("2023-01-10T06:20:44.069Z"),
@@ -112,6 +115,7 @@ const projectEngagementsTableData: EngagementItem[] = [
     ],
   },
   {
+    id: "asdf-23fedf2-ef2f-dfghdf-f3",
     name: "Engagement 1",
     state: "NOT_STARTED",
     startDate: new Date("2023-01-10T06:20:44.069Z"),
@@ -132,6 +136,7 @@ const projectEngagementsTableData: EngagementItem[] = [
     ],
   },
   {
+    id: "asdf-23fsf3fdhfghfes-f3",
     name: "Engagement 1",
     state: "DISCONTINUED",
     startDate: new Date("2023-01-10T06:20:44.069Z"),
@@ -152,6 +157,7 @@ const projectEngagementsTableData: EngagementItem[] = [
     ],
   },
   {
+    id: "asdf-23ghjhjhfed12312es-f3",
     name: "Engagement 3",
     state: "COMPLETED",
     startDate: new Date("2023-01-10T06:20:44.069Z"),
@@ -195,7 +201,10 @@ export const Primary: Story = {
     <EngagementTable
       headers={EngagementTableHeaders}
       tableData={projectEngagementsTableData}
-    ></EngagementTable>
+      onViewDocument={(id: string) => {
+        console.log("hello this is document", id);
+      }}
+    />
   ),
 };
 
@@ -204,6 +213,9 @@ export const EmptyTable: Story = {
     <EngagementTable
       headers={EngagementTableHeaders}
       tableData={[]}
-    ></EngagementTable>
+      onViewDocument={(id: string) => {
+        console.log("hello this is document", id);
+      }}
+    />
   ),
 };

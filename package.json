@@ -1,7 +1,7 @@
 {
   "name": "@climateconnectdigital/offsetmax-web-app",
   "private": false,
-  "version": "1.1.7",
+  "version": "1.1.36",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
@@ -24,6 +24,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.9",
+    "react-world-flags": "^1.5.1",
     "styled-components": "^5.3.9",
     "vite-plugin-svgr": "^2.4.0",
     "zod": "^3.21.4",
@@ -41,6 +42,7 @@
     "@testing-library/react": "^14.0.0",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
+    "@types/react-world-flags": "^1.4.2",
     "@typescript-eslint/eslint-plugin": "^5.59.0",
     "@typescript-eslint/parser": "^5.59.0",
     "@vitejs/plugin-react": "^3.1.0",

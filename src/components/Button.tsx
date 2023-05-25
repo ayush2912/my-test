@@ -3,6 +3,7 @@ import styled, { DefaultTheme, css, useTheme } from "styled-components";
 
 type ButtonProps = {
   large?: boolean;
+  isIcon?: boolean;
   textColor?: string;
   backgroundColor?: string;
   border?: string;
@@ -45,6 +46,13 @@ const StyledButton = styled.button<ButtonProps>`
     `}
 
   ${(props) =>
+    props.isIcon &&
+    css`
+      padding: 8px;
+      border: 1px solid #e1e4e8;
+    `}
+
+  ${(props) =>
     props.disabled &&
     css`
       opacity: 0.33;
@@ -62,12 +70,14 @@ export default function Button({
   children,
   disabled,
   large,
+  isIcon,
   type = "primary",
 }: {
   onClick: () => void;
   children: ReactNode;
   disabled?: boolean;
   large?: boolean;
+  isIcon?: boolean;
   type?: "primary" | "secondary" | "ghost";
 }) {
   const theme: DefaultTheme = useTheme();
@@ -97,6 +107,7 @@ export default function Button({
   return (
     <StyledButton
       large={large}
+      isIcon={isIcon}
       disabled={disabled}
       {...selectedButtonStyles}
       onClick={onClick}
