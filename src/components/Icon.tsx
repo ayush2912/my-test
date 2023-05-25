@@ -1,85 +1,91 @@
 import styled, { CSSObject } from "styled-components";
 
-import { ReactComponent as ArrowDown } from "../../src/assets/icons/arrows/arrow-down.svg";
-import { ReactComponent as ArrowLeft } from "../../src/assets/icons/arrows/arrow-left.svg";
-import { ReactComponent as ArrowRight } from "../../src/assets/icons/arrows/arrow-right.svg";
-import { ReactComponent as ArrowUp } from "../../src/assets/icons/arrows/arrow-up.svg";
-import { ReactComponent as CaretDown } from "../../src/assets/icons/arrows/caret-down.svg";
-import { ReactComponent as CaretLeft } from "../../src/assets/icons/arrows/caret-left.svg";
-// import { ReactComponent as CaretRight } from "../../src/assets/icons/arrows/caret-right.svg";
-import { ReactComponent as CaretUp } from "../../src/assets/icons/arrows/caret-up.svg";
-import { ReactComponent as ChevronButtonIcon } from "../../src/assets/icons/arrows/chevron-button.svg";
-import { ReactComponent as ChevronDown } from "../../src/assets/icons/arrows/chevron-down.svg";
-import { ReactComponent as ChevronLeft } from "../../src/assets/icons/arrows/chevron-left.svg";
-import { ReactComponent as ChevronRight } from "../../src/assets/icons/arrows/chevron-right.svg";
-import { ReactComponent as ChevronUp } from "../../src/assets/icons/arrows/chevron-up.svg";
-import { ReactComponent as ChevronsDown } from "../../src/assets/icons/arrows/chevrons-down.svg";
-import { ReactComponent as ChevronsLeft } from "../../src/assets/icons/arrows/chevrons-left.svg";
-import { ReactComponent as ChevronsRight } from "../../src/assets/icons/arrows/chevrons-right.svg";
-import { ReactComponent as ChevronsUp } from "../../src/assets/icons/arrows/chevrons-up.svg";
-import { ReactComponent as Discontinued } from "../../src/assets/icons/feedback/discontinued.svg";
-import { ReactComponent as ErrorIcon } from "../../src/assets/icons/feedback/error.svg";
-import { ReactComponent as InProgressIcon } from "../../src/assets/icons/feedback/in-progress.svg";
-import { ReactComponent as NotStartedIcon } from "../../src/assets/icons/feedback/not-started.svg";
-import { ReactComponent as SuccessIcon } from "../../src/assets/icons/feedback/success.svg";
-import { ReactComponent as WaitingFeedBackIcon } from "../../src/assets/icons/feedback/waiting.svg";
-import { ReactComponent as AustraliaFlagIcon } from "../../src/assets/icons/flags/australia.svg";
-import { ReactComponent as BrazilFlagIcon } from "../../src/assets/icons/flags/brazil.svg";
-import { ReactComponent as CanadaFlagIcon } from "../../src/assets/icons/flags/canada.svg";
-import { ReactComponent as ChinaFlagIcon } from "../../src/assets/icons/flags/china.svg";
-import { ReactComponent as ColumbiaFlagIcon } from "../../src/assets/icons/flags/columbia.svg";
-import { ReactComponent as FranceFlagIcon } from "../../src/assets/icons/flags/france.svg";
-import { ReactComponent as GermanyFlagIcon } from "../../src/assets/icons/flags/germany.svg";
-import { ReactComponent as IndiaFlagIcon } from "../../src/assets/icons/flags/india.svg";
-import { ReactComponent as RussiaFlagIcon } from "../../src/assets/icons/flags/russia.svg";
-import { ReactComponent as SpainFlagIcon } from "../../src/assets/icons/flags/spain.svg";
-import { ReactComponent as UnitedKingdomFlagIcon } from "../../src/assets/icons/flags/united-kingdom.svg";
-import { ReactComponent as UnitedStatesFlagIcon } from "../../src/assets/icons/flags/united-states.svg";
-// import { ReactComponent as AlertNoticationIcon } from "../../src/assets/icons/generic/alert-notication.svg";
-import { ReactComponent as AlertIcon } from "../../src/assets/icons/generic/alert.svg";
-import { ReactComponent as CalendarTimeIcon } from "../../src/assets/icons/generic/calendar-time.svg";
-import { ReactComponent as CalendarIcon } from "../../src/assets/icons/generic/calendar.svg";
-import { ReactComponent as ChartIcon } from "../../src/assets/icons/generic/chart.svg";
-import { ReactComponent as CloseIcon } from "../../src/assets/icons/generic/close.svg";
-import { ReactComponent as DotsIcon } from "../../src/assets/icons/generic/dots.svg";
-import { ReactComponent as DownloadIcon } from "../../src/assets/icons/generic/download.svg";
-import { ReactComponent as EditIcon } from "../../src/assets/icons/generic/edit.svg";
-import { ReactComponent as EyeOffIcon } from "../../src/assets/icons/generic/eye-Off.svg";
-import { ReactComponent as EyeIcon } from "../../src/assets/icons/generic/eye.svg";
-import { ReactComponent as FilePdfIcon } from "../../src/assets/icons/generic/file-pdf.svg";
-import { ReactComponent as FileIcon } from "../../src/assets/icons/generic/file.svg";
-import { ReactComponent as FiltersIcon } from "../../src/assets/icons/generic/filters.svg";
-import { ReactComponent as HomeIcon } from "../../src/assets/icons/generic/home.svg";
-import { ReactComponent as InformationIcon } from "../../src/assets/icons/generic/information.svg";
-import { ReactComponent as MessageIcon } from "../../src/assets/icons/generic/message.svg";
-import { ReactComponent as MinusIcon } from "../../src/assets/icons/generic/minus.svg";
-import { ReactComponent as MoneyIcon } from "../../src/assets/icons/generic/money.svg";
-import { ReactComponent as PlaceholderIcon } from "../../src/assets/icons/generic/placeholder.svg";
-import { ReactComponent as PlusIcon } from "../../src/assets/icons/generic/plus.svg";
-import { ReactComponent as PriceVariationIcon } from "../../src/assets/icons/generic/price-variation.svg";
-import { ReactComponent as SearchIcon } from "../../src/assets/icons/generic/search.svg";
-import { ReactComponent as SendIcon } from "../../src/assets/icons/generic/send.svg";
-import { ReactComponent as SettingsIcon } from "../../src/assets/icons/generic/settings.svg";
-import { ReactComponent as TrashIcon } from "../../src/assets/icons/generic/trash.svg";
-import { ReactComponent as UnarchiveIcon } from "../../src/assets/icons/generic/unarchive.svg";
-import { ReactComponent as UploadIcon } from "../../src/assets/icons/generic/upload.svg";
-import { ReactComponent as WaitingIcon } from "../../src/assets/icons/generic/waiting.svg";
-import { ReactComponent as BidsIcon } from "../../src/assets/icons/menu/bids.svg";
-import { ReactComponent as ProjectsIcon } from "../../src/assets/icons/menu/projects.svg";
-import { ReactComponent as UserManagementIcon } from "../../src/assets/icons/menu/user-management.svg";
+import { ReactComponent as ArrowDown } from "../assets/icons/arrows/arrow-down.svg";
+import { ReactComponent as ArrowLeft } from "../assets/icons/arrows/arrow-left.svg";
+import { ReactComponent as ArrowRight } from "../assets/icons/arrows/arrow-right.svg";
+import { ReactComponent as ArrowUp } from "../assets/icons/arrows/arrow-up.svg";
+import { ReactComponent as CaretDown } from "../assets/icons/arrows/caret-down.svg";
+import { ReactComponent as CaretLeft } from "../assets/icons/arrows/caret-left.svg";
+// import { ReactComponent as CaretRight } from "../assets/icons/arrows/caret-right.svg";
+import { ReactComponent as CaretUp } from "../assets/icons/arrows/caret-up.svg";
+import { ReactComponent as ChevronButtonIcon } from "../assets/icons/arrows/chevron-button.svg";
+import { ReactComponent as ChevronDownIcon } from "../assets/icons/arrows/chevron-down.svg";
+import { ReactComponent as ChevronLeft } from "../assets/icons/arrows/chevron-left.svg";
+import { ReactComponent as ChevronRight } from "../assets/icons/arrows/chevron-right.svg";
+import { ReactComponent as ChevronUp } from "../assets/icons/arrows/chevron-up.svg";
+import { ReactComponent as ChevronsLeft } from "../assets/icons/arrows/chevrons-left.svg";
+import { ReactComponent as ChevronsRight } from "../assets/icons/arrows/chevrons-right.svg";
+import { ReactComponent as ChevronsUp } from "../assets/icons/arrows/chevrons-up.svg";
+import { ReactComponent as Discontinued } from "../assets/icons/feedback/discontinued.svg";
+import { ReactComponent as ErrorIcon } from "../assets/icons/feedback/error.svg";
+import { ReactComponent as InProgressIcon } from "../assets/icons/feedback/in-progress.svg";
+import { ReactComponent as NotStartedIcon } from "../assets/icons/feedback/not-started.svg";
+import { ReactComponent as SuccessIcon } from "../assets/icons/feedback/success.svg";
+import { ReactComponent as WaitingFeedBackIcon } from "../assets/icons/feedback/waiting.svg";
+import { ReactComponent as AustraliaFlagIcon } from "../assets/icons/flags/australia.svg";
+import { ReactComponent as BrazilFlagIcon } from "../assets/icons/flags/brazil.svg";
+import { ReactComponent as CanadaFlagIcon } from "../assets/icons/flags/canada.svg";
+import { ReactComponent as ChinaFlagIcon } from "../assets/icons/flags/china.svg";
+import { ReactComponent as ColumbiaFlagIcon } from "../assets/icons/flags/columbia.svg";
+import { ReactComponent as FranceFlagIcon } from "../assets/icons/flags/france.svg";
+import { ReactComponent as GermanyFlagIcon } from "../assets/icons/flags/germany.svg";
+import { ReactComponent as IndiaFlagIcon } from "../assets/icons/flags/india.svg";
+import { ReactComponent as RussiaFlagIcon } from "../assets/icons/flags/russia.svg";
+import { ReactComponent as SpainFlagIcon } from "../assets/icons/flags/spain.svg";
+import { ReactComponent as UnitedKingdomFlagIcon } from "../assets/icons/flags/united-kingdom.svg";
+import { ReactComponent as UnitedStatesFlagIcon } from "../assets/icons/flags/united-states.svg";
+// import { ReactComponent as AlertNoticationIcon } from "../assets/icons/generic/alert-notication.svg";
+import { ReactComponent as AlertIcon } from "../assets/icons/generic/alert.svg";
+import { ReactComponent as CalendarTimeIcon } from "../assets/icons/generic/calendar-time.svg";
+import { ReactComponent as CalendarIcon } from "../assets/icons/generic/calendar.svg";
+import { ReactComponent as ChartIcon } from "../assets/icons/generic/chart.svg";
+import { ReactComponent as CloseIcon } from "../assets/icons/generic/close.svg";
+import { ReactComponent as DotsIcon } from "../assets/icons/generic/dots.svg";
+import { ReactComponent as DownloadIcon } from "../assets/icons/generic/download.svg";
+import { ReactComponent as EditIcon } from "../assets/icons/generic/edit.svg";
+import { ReactComponent as EyeOffIcon } from "../assets/icons/generic/eye-Off.svg";
+import { ReactComponent as EyeIcon } from "../assets/icons/generic/eyeIcon.svg";
+import { ReactComponent as FilePdfIcon } from "../assets/icons/generic/file-pdf.svg";
+import { ReactComponent as FileIcon } from "../assets/icons/generic/file.svg";
+import { ReactComponent as FiltersIcon } from "../assets/icons/generic/filters.svg";
+import { ReactComponent as HomeIcon } from "../assets/icons/generic/home.svg";
+import { ReactComponent as InformationIcon } from "../assets/icons/generic/information.svg";
+import { ReactComponent as MessageIcon } from "../assets/icons/generic/message.svg";
+import { ReactComponent as MinusIcon } from "../assets/icons/generic/minus.svg";
+import { ReactComponent as MoneyIcon } from "../assets/icons/generic/money.svg";
+import { ReactComponent as PlaceholderIcon } from "../assets/icons/generic/placeholder.svg";
+import { ReactComponent as PlusIcon } from "../assets/icons/generic/plus.svg";
+import { ReactComponent as PriceVariationIcon } from "../assets/icons/generic/price-variation.svg";
+import { ReactComponent as SearchIcon } from "../assets/icons/generic/search.svg";
+import { ReactComponent as SendIcon } from "../assets/icons/generic/send.svg";
+import { ReactComponent as SettingsIcon } from "../assets/icons/generic/settings.svg";
+import { ReactComponent as TrashIcon } from "../assets/icons/generic/trash.svg";
+import { ReactComponent as UnarchiveIcon } from "../assets/icons/generic/unarchive.svg";
+import { ReactComponent as UploadIcon } from "../assets/icons/generic/upload.svg";
+import { ReactComponent as WaitingIcon } from "../assets/icons/generic/waiting.svg";
+import { ReactComponent as BidsIcon } from "../assets/icons/menu/bids.svg";
+import { ReactComponent as ProjectsIcon } from "../assets/icons/menu/projects.svg";
+import { ReactComponent as UserManagementIcon } from "../assets/icons/menu/user-management.svg";
 
 interface IconProps {
-  size?: "small" | "big";
+  size: "xsmall" | "small" | "big";
   color?: string;
   hoverColor?: string;
+  strokecolor?: string;
 }
 
-const svgStyles = ({ size, color, hoverColor }: IconProps): CSSObject => {
+const svgStyles = ({
+  size,
+  color,
+  hoverColor,
+  strokecolor,
+}: IconProps): CSSObject => {
   return {
-    height: `${size === "small" ? 18 : 24}px`,
-    width: `${size === "small" ? 18 : 24}px`,
+    height: `${{ xsmall: 16, small: 24, big: 40 }[size]}px`,
+    width: `${{ xsmall: 16, small: 24, big: 40 }[size]}px`,
     "& path": {
-      stroke: color,
+      stroke: strokecolor,
+      fill: color,
     },
     "&:hover path": {
       stroke: hoverColor,
@@ -109,11 +115,11 @@ const icons = {
   // caretRight: CaretRight,
   caretUp: CaretUp,
   chevronButton: ChevronButtonIcon,
-  chevronDown: ChevronDown,
+
   chevronLeft: ChevronLeft,
   chevronRight: ChevronRight,
   chevronUp: ChevronUp,
-  chevronsDown: ChevronsDown,
+
   chevronsLeft: ChevronsLeft,
   chevronsRight: ChevronsRight,
   chevronsUp: ChevronsUp,
@@ -121,6 +127,7 @@ const icons = {
   success: SuccessIcon,
   message: MessageIcon,
   file: FileIcon,
+  eyeIcon: EyeIcon,
   notStarted: NotStartedIcon,
   inProgress: InProgressIcon,
   discontinued: Discontinued,
@@ -136,9 +143,11 @@ const icons = {
   download: DownloadIcon,
   edit: EditIcon,
   eyeOff: EyeOffIcon,
-  eye: EyeIcon,
+
   filePdf: FilePdfIcon,
   filters: FiltersIcon,
+  // chevronButton: ChevronButtonIcon,
+  chevronDown: ChevronDownIcon,
   information: InformationIcon,
   minus: MinusIcon,
   money: MoneyIcon,
@@ -165,12 +174,23 @@ const StyledIcon = styled.svg<IconProps>`
 
 export default function Icon({
   name,
-  size,
+  size = "small",
+  color,
+  strokeColor,
 }: {
   name: IconNameType;
-  size?: "small" | "big";
+  size?: "xsmall" | "small" | "big";
+  color?: string;
+  strokeColor?: string;
 }) {
   const SelectedIcon = icons[name];
 
-  return <StyledIcon as={SelectedIcon} size={size} />;
+  return (
+    <StyledIcon
+      as={SelectedIcon}
+      size={size}
+      color={color}
+      strokecolor={strokeColor}
+    />
+  );
 }

@@ -2,6 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 
 import TaskList, { TaskListProps } from "./TaskList";
+import HandShake from "../../../assets/images/HandShake.png";
 import Button from "../../../components/Button";
 import Card from "../../../components/Card";
 import Icon from "../../../components/Icon";
@@ -9,7 +10,7 @@ import LabelValue from "../../../components/labelValuePair";
 import Modal from "../../../components/Modal";
 import StatusTag, { StatusType } from "../../../components/StatusTag";
 import Text from "../../../components/Text";
-import { convertToEuropeanDateFormat } from "../../../utils/dateTimeFormatter";
+import { convertToMonthNameFormat } from "../../../utils/dateTimeFormatter";
 
 const StyledTable = styled.table`
   table-layout: auto;
@@ -103,6 +104,25 @@ const EmptyState = styled.div`
   cursor: default;
 `;
 
+const TableTitle = styled.div`
+  margin-bottom: 40px;
+`;
+
+const EmptyStateImageDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 53px 0px 36px 0px;
+`;
+const EmptyStateTextContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  width: 308px;
+  margin: auto;
+  gap: 8px;
+`;
+
 type EngamentStateTypes =
   | "NOT_STARTED"
   | "IN_PROGRESS"
@@ -111,6 +131,7 @@ type EngamentStateTypes =
   | "OVERDUE";
 
 export interface EngagementItem {
+  id: string;
   name: string;
   state: EngamentStateTypes;
   startDate: Date;
@@ -118,7 +139,8 @@ export interface EngagementItem {
   completedDate?: Date;
   notes: string;
   document: number;
-  attributes: { name: string; value: string }[];
+  isOverdue: boolean;
+  attributes: { name: string; value: string; type: string }[];
   tasks: TaskListProps[];
 }
 
@@ -130,9 +152,11 @@ interface EngagementStatus {
 function EngagementTable({
   headers,
   tableData,
+  onViewDocument,
 }: {
   headers: { name: string; fieldName: string }[];
   tableData: EngagementItem[];
+  onViewDocument: (id: string) => void;
 }) {
   const cellContentMapper = (v: EngagementItem) => {
     const [showTasks, setShowTasks] = useState(false);
@@ -147,7 +171,9 @@ function EngagementTable({
       OVERDUE: { label: "OVERDUE", type: "warning" },
     }[v.state] as EngagementStatus;
     const isEngamentDiscontinued = v.state === "DISCONTINUED";
+
     return {
+      rowId: v.id,
       engagements: (
         <>
           <ColumnWrapper>
@@ -168,10 +194,13 @@ function EngagementTable({
               {v.state === "COMPLETED" && (
                 <>
                   <span> &bull; </span>
-                  <Text type="caption" color="success">
+                  <Text
+                    type="caption"
+                    color={v.isOverdue ? "warning" : "success"}
+                  >
                     Completed on{" "}
                     {v?.completedDate &&
-                      convertToEuropeanDateFormat(v.completedDate)}
+                      convertToMonthNameFormat(v.completedDate)}
                   </Text>
                 </>
               )}
@@ -191,7 +220,7 @@ function EngagementTable({
                 Desk fills out the details, they will be available here for you
                 to read.
               </Text>
-              <DividerDiv></DividerDiv>
+              <DividerDiv />
 
               {v.attributes.map((attribute, index) => {
                 return (
@@ -199,6 +228,7 @@ function EngagementTable({
                     key={index}
                     label={attribute?.name}
                     value={attribute?.value}
+                    type={attribute?.type}
                   />
                 );
               })}
@@ -208,18 +238,23 @@ function EngagementTable({
       ),
       startDate: (
         <Text type="body" color={"subdued"}>
-          {convertToEuropeanDateFormat(v.startDate)}
+          {convertToMonthNameFormat(v.startDate)}
         </Text>
       ),
       dueDate: (
         <Text type="body" color={v.state === "OVERDUE" ? "warning" : "subdued"}>
-          {convertToEuropeanDateFormat(v.dueDate)}
+          {convertToMonthNameFormat(v.dueDate)}
         </Text>
       ),
-      state: <StatusTag name={statusTag.label} type={statusTag.type} />,
+      state: (
+        <StatusTag
+          name={statusTag.label}
+          type={v.isOverdue ? "warning" : statusTag.type}
+        />
+      ),
       note: (
         <>
-          {v.notes.length > 0 ? (
+          {v.notes ? (
             <Button type="ghost" onClick={() => setShowNote(true)}>
               <Icon name="message" />
             </Button>
@@ -248,12 +283,12 @@ function EngagementTable({
           {v.document > 0 ? (
             <Button
               type="ghost"
-              onClick={() => () => {
-                console.log("document");
+              onClick={() => {
+                onViewDocument(v.id);
               }}
             >
               <Icon name="file" />
-              <Text type="bodyBold">{20}</Text>
+              <Text type="bodyBold">{v.document}</Text>
             </Button>
           ) : (
             <EmptyState>
@@ -273,6 +308,7 @@ function EngagementTable({
         <TaskListCell colSpan={headers.length}>
           {v.tasks.map((v) => (
             <TaskList
+              isOverdue={v.isOverdue}
               key={v.type}
               type={v.type}
               startDate={v.startDate}
@@ -288,6 +324,12 @@ function EngagementTable({
 
   return (
     <Card width={850}>
+      <TableTitle>
+        <Text color="default" type="heading3">
+          Engagements & Tasks
+        </Text>
+      </TableTitle>
+
       <StyledTable>
         <thead>
           <tr>
@@ -332,6 +374,25 @@ function EngagementTable({
             ))}
         </tbody>
       </StyledTable>
+
+      {tableData.length === 0 && (
+        <div>
+          <EmptyStateImageDiv>
+            <img src={HandShake} />
+          </EmptyStateImageDiv>
+
+          <EmptyStateTextContent>
+            <Text color="default" type="heading3">
+              No engagements listed yet
+            </Text>
+
+            <Text color="subdued" type="body">
+              You will be notified when there are any updates about the
+              engagements and tasks
+            </Text>
+          </EmptyStateTextContent>
+        </div>
+      )}
     </Card>
   );
 }

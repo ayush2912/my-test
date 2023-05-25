@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Icon, { IconNameType } from "../../../components/Icon";
 import Text from "../../../components/Text";
 import Tooltip from "../../../components/Tooltip";
-import { convertToEuropeanDateFormat } from "../../../utils/dateTimeFormatter";
+import { convertToMonthNameFormat } from "../../../utils/dateTimeFormatter";
 
 const StyledTaskContainer = styled.div`
   border-top: 1px solid #e1e4e8;
@@ -40,6 +40,7 @@ export type TaskListProps = {
   startDate: Date;
   dueDate: Date;
   completedDate?: Date;
+  isOverdue: boolean;
   state: "IN_PROGRESS" | "COMPLETED" | "NOT_STARTED" | "DISCONTINUED";
 };
 
@@ -49,6 +50,7 @@ export default function TaskList({
   dueDate,
   state,
   completedDate,
+  isOverdue,
 }: TaskListProps) {
   const selectedIconName = {
     IN_PROGRESS: "inProgress",
@@ -59,34 +61,51 @@ export default function TaskList({
 
   const tooltipTextContent = {
     IN_PROGRESS: "IN PROGRESS",
-    COMPLETED: `Completed on ${
-      completedDate && convertToEuropeanDateFormat(completedDate)
+    COMPLETED: `COMPLETED ON ${
+      completedDate && convertToMonthNameFormat(completedDate)
     }`,
     NOT_STARTED: "NOT STARTED",
-    DISCONTINUED: "discontinued",
+    DISCONTINUED: "DISCONTINUED",
   }[state] as string;
 
   return (
     <StyledTaskContainer>
       <Tooltip text={tooltipTextContent}>
-        <Icon name={selectedIconName} />
+        <Icon
+          name={selectedIconName}
+          color={isOverdue && state !== "DISCONTINUED" ? "#E0A008" : ""}
+        />
       </Tooltip>
 
       <ColumnWrapper>
         <TextWithMarginBottom
           type="body"
-          color={status === "DISCONTINUED" ? "disabled" : "default"}
+          color={state === "DISCONTINUED" ? "disabled" : "default"}
         >
           {type}
         </TextWithMarginBottom>
-        <Text
-          type="body"
-          color={status === "DISCONTINUED" ? "disabled" : "subdued"}
-        >
-          {`${convertToEuropeanDateFormat(
-            startDate,
-          )} - ${convertToEuropeanDateFormat(dueDate)}`}
-        </Text>
+
+        <div style={{ display: "flex", gap: "4px" }}>
+          <Text
+            type="body"
+            color={state === "DISCONTINUED" ? "disabled" : "subdued"}
+          >
+            {convertToMonthNameFormat(startDate)} -{" "}
+          </Text>
+
+          <Text
+            type="body"
+            color={
+              isOverdue && state !== "DISCONTINUED"
+                ? "warning"
+                : state === "DISCONTINUED"
+                ? "disabled"
+                : "subdued"
+            }
+          >
+            {convertToMonthNameFormat(dueDate)}
+          </Text>
+        </div>
       </ColumnWrapper>
     </StyledTaskContainer>
   );

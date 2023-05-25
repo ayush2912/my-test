@@ -14,28 +14,46 @@ export const Primary: Story = {
   render: () => (
     <>
       <TaskList
-        name="Task 1"
+        isOverdue={false}
+        type="Task 1"
         startDate={new Date("2023-01-10T06:20:44.069Z")}
         dueDate={new Date("2030-01-05T08:52:29.962Z")}
-        status="COMPLETED"
+        state="COMPLETED"
       />
       <TaskList
-        name="Task 2"
+        isOverdue={false}
+        type="Task 2"
         startDate={new Date("2023-01-10T06:20:44.069Z")}
         dueDate={new Date("2030-01-05T08:52:29.962Z")}
-        status="NOT_STARTED"
+        state="NOT_STARTED"
       />
       <TaskList
-        name="Task 3"
+        isOverdue={false}
+        type="Task 3"
         startDate={new Date("2023-01-10T06:20:44.069Z")}
         dueDate={new Date("2030-01-05T08:52:29.962Z")}
-        status="IN_PROGRESS"
+        state="IN_PROGRESS"
       />
       <TaskList
-        name="Task 4"
+        isOverdue={false}
+        type="Task 7"
         startDate={new Date("2023-01-10T06:20:44.069Z")}
         dueDate={new Date("2030-01-05T08:52:29.962Z")}
-        status="DISCONTINUED"
+        state="DISCONTINUED"
+      />
+      <TaskList
+        isOverdue={true}
+        type="Task 5"
+        startDate={new Date("2023-01-10T06:20:44.069Z")}
+        dueDate={new Date("2030-01-05T08:52:29.962Z")}
+        state="IN_PROGRESS"
+      />
+      <TaskList
+        isOverdue
+        type="Task 6"
+        startDate={new Date("2023-01-10T06:20:44.069Z")}
+        dueDate={new Date("2030-01-05T08:52:29.962Z")}
+        state="COMPLETED"
       />
     </>
   ),
