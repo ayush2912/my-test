@@ -23,7 +23,7 @@ const DocumentItemContainer = styled.div`
   width: 100%;
   gap: 8px;
   border-top: 1px solid #e1e4e8;
-
+  padding-right: 8px;
   &:last-child {
     border-bottom: 1px solid #e1e4e8;
   }
@@ -62,8 +62,8 @@ export default function DocumentListItem({
   onGetInfo,
 }: {
   documentInfo: DocumentInfo;
-  onClickDownload: () => void;
-  onGetInfo?: () => void;
+  onClickDownload: (id: string) => void;
+  onGetInfo?: (id: string) => void;
 }) {
   const fileFormatIcon = {
     doc: <DocFileIcon />,
@@ -111,7 +111,11 @@ export default function DocumentListItem({
 
       <FlexBox gap="8px">
         {onGetInfo && (
-          <Button type="secondary" isIcon={true} onClick={() => onGetInfo()}>
+          <Button
+            type="secondary"
+            isIcon={true}
+            onClick={() => onGetInfo(documentInfo.id)}
+          >
             <InfoIcon />
           </Button>
         )}
@@ -119,7 +123,7 @@ export default function DocumentListItem({
         <Button
           type="secondary"
           isIcon={true}
-          onClick={() => onClickDownload()}
+          onClick={() => onClickDownload(documentInfo.id)}
         >
           <DownloadIcon />
         </Button>

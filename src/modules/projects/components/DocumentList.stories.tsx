@@ -77,12 +77,12 @@ const documentListData = [
   },
 ];
 
-const downloadFile = () => {
-  console.log("something");
+const downloadFile = (id: string) => {
+  console.log("something", id);
 };
 
-const goToDetailsPage = () => {
-  console.log("something");
+const goToDetailsPage = (id: string) => {
+  console.log("something", id);
 };
 
 export const Default: Story = {

@@ -288,7 +288,7 @@ function EngagementTable({
               }}
             >
               <Icon name="file" />
-              <Text type="bodyBold">{20}</Text>
+              <Text type="bodyBold">{v.document}</Text>
             </Button>
           ) : (
             <EmptyState>
