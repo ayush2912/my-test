@@ -50,6 +50,10 @@ const StyledButton = styled.button<ButtonProps>`
     css`
       padding: 8px;
       border: 1px solid #e1e4e8;
+
+      &:hover {
+        border: 1px solid #363c46;
+      }
     `}
 
   ${(props) =>
