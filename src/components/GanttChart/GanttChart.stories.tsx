@@ -81,8 +81,8 @@ EmptyState.args = {
   projectEngagementData: [],
 };
 
-export const GanttChartWithoutEngagements = Template.bind({});
-GanttChartWithoutEngagements.args = {
+export const NoEngagements = Template.bind({});
+NoEngagements.args = {
   projectEngagementData: [
     {
       id: "6438f5f51725504e53c94356",
@@ -114,8 +114,8 @@ GanttChartWithoutEngagements.args = {
   ],
 };
 
-export const GanttChartWithoutTasks = Template.bind({});
-GanttChartWithoutTasks.args = {
+export const NoTasks = Template.bind({});
+NoTasks.args = {
   projectEngagementData: [
     {
       id: "6438f5f51725504e53c94356",
@@ -176,8 +176,8 @@ GanttChartWithoutTasks.args = {
   ],
 };
 
-export const GanttChartWithMultipleProjects = Template.bind({});
-GanttChartWithMultipleProjects.args = {
+export const MultipleProjects = Template.bind({});
+MultipleProjects.args = {
   projectEngagementData: [
     {
       id: "6438f5f51725504e53c94356",
@@ -199,6 +199,18 @@ GanttChartWithMultipleProjects.args = {
           name: "India",
           iso2Name: "IN",
           iso3Name: "IND",
+        },
+        {
+          id: "CHN",
+          name: "China",
+          iso2Name: "CH",
+          iso3Name: "CHN",
+        },
+        {
+          id: "BRA",
+          name: "Brazil",
+          iso2Name: "BR",
+          iso3Name: "BRA",
         },
       ],
       isActive: true,
