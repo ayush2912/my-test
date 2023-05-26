@@ -75,10 +75,18 @@ const documentListData = [
     fileFormat: "pdf",
     size: "1.3 MB",
   },
+  {
+    id: "6438f5f5sdfdsdfdsfdsf172sdfdf5504e5c94347",
+    createdAt: "2019-08-24T14:15:22Z",
+    name: "Geographical Location & Address",
+    source: "Client",
+    fileFormat: "png",
+    size: "1.3 MB",
+  },
 ];
 
-const downloadFile = (id: string) => {
-  console.log("something", id);
+const downloadFile = (id: string, name: string, extension: string) => {
+  console.log("something", id, name, extension);
 };
 
 const goToDetailsPage = (id: string) => {

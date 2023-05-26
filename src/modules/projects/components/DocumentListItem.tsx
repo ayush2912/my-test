@@ -4,6 +4,7 @@ import { ReactComponent as DocFileIcon } from "../../../assets/icons/fileTypes/d
 import { ReactComponent as DocXFileIcon } from "../../../assets/icons/fileTypes/docXFileIcon.svg";
 import { ReactComponent as JpgFileIcon } from "../../../assets/icons/fileTypes/jpgFileIcon.svg";
 import { ReactComponent as PdfFileIcon } from "../../../assets/icons/fileTypes/pdfFileIcon.svg";
+import { ReactComponent as PngFileIcon } from "../../../assets/icons/fileTypes/pngFileIcon.svg";
 import { ReactComponent as PptFileIcon } from "../../../assets/icons/fileTypes/pptFileIcon.svg";
 import { ReactComponent as PptxFileIcon } from "../../../assets/icons/fileTypes/pptxFileIcon.svg";
 import { ReactComponent as XlsFileIcon } from "../../../assets/icons/fileTypes/xlsFileIcon.svg";
@@ -59,10 +60,11 @@ export default function DocumentListItem({
   onGetInfo,
 }: {
   documentInfo: DocumentInfo;
-  onClickDownload: (id: string) => void;
+  onClickDownload: (id: string, name: string, extension: string) => void;
   onGetInfo?: (id: string) => void;
 }) {
   const fileFormatIcon = {
+    png: <PngFileIcon />,
     doc: <DocFileIcon />,
     docx: <DocXFileIcon />,
     jpg: <JpgFileIcon />,
@@ -120,7 +122,13 @@ export default function DocumentListItem({
         <Button
           type="secondary"
           isIcon={true}
-          onClick={() => onClickDownload(documentInfo.id)}
+          onClick={() =>
+            onClickDownload(
+              documentInfo.id,
+              documentInfo.name,
+              documentInfo.fileFormat,
+            )
+          }
         >
           <DownloadIcon />
         </Button>
