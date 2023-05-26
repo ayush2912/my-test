@@ -8,10 +8,9 @@ export const DocumentList = ({
   onGetInfo, // function to take in document id, to navigate (old project)
 }: {
   data: IDocumentList;
-  onClickDownload: (id: string) => void;
+  onClickDownload: (id: string, name: string, extension: string) => void;
   onGetInfo: (id: string) => void;
 }) => {
-  console.log(data, "initialization");
   return (
     <>
       {data.map((v) => {
