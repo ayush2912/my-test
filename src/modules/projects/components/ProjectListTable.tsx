@@ -1,7 +1,7 @@
 import Flag from "react-world-flags";
 import styled from "styled-components";
 
-import { Tooltip } from "../../../components";
+import { Button, Tooltip } from "../../../components";
 import EyeButton from "../../../components/EyeButton";
 import Icon, { IconNameType } from "../../../components/Icon";
 import Table from "../../../components/Table";
@@ -243,7 +243,11 @@ function ProjectListTable({
           </div>
         </div>
       ),
-      viewButton: <EyeButton onClick={() => onViewButton(v.id)} />,
+      viewButton: (
+        <Button type="secondary" isIcon onClick={() => onViewButton(v.id)}>
+          <Icon name="eyeIcon" size="xsmall" />
+        </Button>
+      ),
     };
   };
   return (
