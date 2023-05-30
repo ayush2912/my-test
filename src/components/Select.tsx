@@ -19,7 +19,7 @@ const Selected = styled.div<{ isPrimary: boolean }>`
   border: 1px solid ${(props) => (props.isPrimary ? "#3c76f1" : "#E1E4E8")};
 `;
 
-const OptionsScroller = styled.div`
+const OptionsCard = styled.div`
   width: 100%;
   margin-top: 4px;
   overflow-x: auto;
@@ -93,10 +93,10 @@ interface Ioption {
 
 const Select = ({
   options,
+  onSelect,
   selected,
   isPrimary,
   placeholder,
-  onSelect,
 }: {
   isPrimary: boolean;
   selected?: Ioption;
@@ -142,7 +142,7 @@ const Select = ({
       </Selected>
 
       {showOptions && (
-        <OptionsScroller>
+        <OptionsCard>
           {options && (
             <Options>
               {options.map((option) => (
@@ -154,7 +154,7 @@ const Select = ({
               ))}
             </Options>
           )}
-        </OptionsScroller>
+        </OptionsCard>
       )}
     </div>
   );
