@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
 
+import Icon from "./Icon";
 import Text from "./Text";
 
 const Selected = styled.div<{ isPrimary: boolean }>`
@@ -25,7 +26,7 @@ const OptionsScroller = styled.div`
   max-height: 352px;
   position: absolute;
   border-radius: 12px;
-  padding: 8px 16px 8px 16px;
+  padding: 8px 16px;
   box-shadow: 0px 8px 24px -6px rgba(0, 0, 0, 0.16),
     0px 0px 1px rgba(0, 0, 0, 0.4);
 
@@ -94,17 +95,20 @@ const Select = ({
   selected,
   isPrimary,
   placeholder,
+  onSelect,
 }: {
   isPrimary: boolean;
   selected?: Ioption;
   options?: Ioption[];
   placeholder?: string;
+  onSelect: (value: Ioption) => void;
 }) => {
   const [selectedOption, setSelected] = useState(selected);
   const [showOptions, setShowOptions] = useState(false);
 
   const onOptionSelect = (selectedOption: Ioption) => {
     setSelected(selectedOption);
+    onSelect(selectedOption);
     setShowOptions(false);
   };
 
@@ -128,6 +132,12 @@ const Select = ({
             {placeholder}
           </Text>
         )}
+
+        <Icon
+          name={showOptions ? "chevronUp" : "chevronDown"}
+          size="small"
+          strokeColor={isPrimary ? "#3C76F1" : "#8992A3"}
+        />
       </Selected>
 
       {showOptions && (
