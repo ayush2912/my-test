@@ -23,10 +23,11 @@ const OptionsScroller = styled.div`
   width: 100%;
   margin-top: 4px;
   overflow-x: auto;
+  padding: 8px 16px;
   max-height: 352px;
   position: absolute;
+  background: #ffffff;
   border-radius: 12px;
-  padding: 8px 16px;
   box-shadow: 0px 8px 24px -6px rgba(0, 0, 0, 0.16),
     0px 0px 1px rgba(0, 0, 0, 0.4);
 

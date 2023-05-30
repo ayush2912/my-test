@@ -76,17 +76,20 @@ export const Primary: Story = {
 
 export const Secondary: Story = {
   render: () => (
-    <Select
-      options={options}
-      isPrimary={false}
-      placeholder="Placeholder"
-      selected={{
-        value: "SelecteValue",
-        displayValue: "Display Value",
-        subValue: "(sub value)",
-      }}
-      onSelect={(val) => console.log(val)}
-    />
+    <>
+      <Select
+        options={options}
+        isPrimary={false}
+        placeholder="Placeholder"
+        selected={{
+          value: "SelecteValue",
+          displayValue: "Display Value",
+          subValue: "(sub value)",
+        }}
+        onSelect={(val) => console.log(val)}
+      />
+      <div>hello</div>
+    </>
   ),
 };
 
