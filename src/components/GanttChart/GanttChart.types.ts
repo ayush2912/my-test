@@ -97,20 +97,10 @@ export interface IMappedEngagement {
   attributes: Attribute[];
   createdAt: string;
   updatedAt: string;
-  project: {
-    id: string;
-    name: string;
-    registry: Registry;
-    registryProjectId: string;
-    types: Type[];
-    countries: Country[];
-    bar: IBar;
-    onViewClick: (id: string) => void;
-  };
+
   bar: IBar;
   onViewClick: (id: string) => void;
   tasks: (Task & { bar: IBar })[];
 }
 
 export type IMappedEngagements = IMappedEngagement[];
-export type IProjectBarData = IMappedEngagement["project"];

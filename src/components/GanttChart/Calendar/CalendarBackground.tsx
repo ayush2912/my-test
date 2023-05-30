@@ -32,9 +32,9 @@ export const StyledCalendarBackground = styled.div<CalendarBackgroundProps>`
       rgba(225, 228, 232, 0.5) 1px,
       transparent 1px
     ),
-    linear-gradient(to bottom, transparent 40px, rgba(241, 242, 244, 0.5) 1px);
+    linear-gradient(to bottom, transparent 48px, rgba(241, 242, 244, 0.5) 1px);
 
   background-size: ${({ view }) =>
       ({ weekly: 155, monthly: 40, yearly: 124 }[view])}px
-    80px;
+    96px;
 `;

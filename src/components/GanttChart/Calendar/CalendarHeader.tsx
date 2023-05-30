@@ -9,24 +9,31 @@ import {
   IYearlyHeader,
 } from "../Calendar/Calendar.types";
 
-const HeaderContainer = styled.div`
+const CalendarHeaderContainer = styled.div`
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #e1e4e8;
+  padding-top: 24px;
+  padding-bottom: 8px;
+`;
+
+const TopRowContainer = styled.div`
   display: flex;
   flex-direction: row;
 
   text-transform: uppercase;
   font-size: 12px;
   color: #999999;
-  height: 24px;
-  margin-top: 8px;
+  height: 16px;
 
+  margin-bottom: 8px;
   justify-content: center;
   align-items: center;
 `;
 
-const RowContainer = styled.div`
+const BottomRowContainer = styled.div`
   display: flex;
   align-items: center;
-  border-bottom: 1px solid #e1e4e8;
 `;
 
 const DayContainer = styled.div`
@@ -68,16 +75,16 @@ const SundayContainer = styled.div<{ lastWeek: boolean }>`
 
 const MonthlyHeader = ({ data }: { data: IMonthlyHeader }) => {
   return (
-    <RowContainer>
+    <CalendarHeaderContainer>
       {data?.map(({ month, year, days }) => (
         <div key={`${month}${year}`}>
-          <HeaderContainer>
+          <TopRowContainer>
             <Text type="smallText" color="subdued">
               {`${month} ${year}`}
             </Text>
-          </HeaderContainer>
+          </TopRowContainer>
 
-          <RowContainer>
+          <BottomRowContainer>
             {days.map(({ day }) => (
               <DayContainer key={day}>
                 <Text type="captionBold" color="subdued">
@@ -85,25 +92,25 @@ const MonthlyHeader = ({ data }: { data: IMonthlyHeader }) => {
                 </Text>
               </DayContainer>
             ))}
-          </RowContainer>
+          </BottomRowContainer>
         </div>
       ))}
-    </RowContainer>
+    </CalendarHeaderContainer>
   );
 };
 
 const YearlyHeader = ({ data }: { data: IYearlyHeader }) => {
   return (
-    <RowContainer>
+    <CalendarHeaderContainer>
       {data?.map(({ year, months }) => (
         <div key={year}>
-          <HeaderContainer>
+          <TopRowContainer>
             <Text type="smallText" color="subdued">
               {`${year}`}
             </Text>
-          </HeaderContainer>
+          </TopRowContainer>
 
-          <RowContainer>
+          <BottomRowContainer>
             {months.map(({ month }) => (
               <MonthContainer key={month}>
                 <Text type="captionBold" color="subdued">
@@ -111,25 +118,25 @@ const YearlyHeader = ({ data }: { data: IYearlyHeader }) => {
                 </Text>
               </MonthContainer>
             ))}
-          </RowContainer>
+          </BottomRowContainer>
         </div>
       ))}
-    </RowContainer>
+    </CalendarHeaderContainer>
   );
 };
 
 const WeeklyHeader = ({ data }: { data: IWeeklyHeader }) => {
   return (
-    <RowContainer>
+    <CalendarHeaderContainer>
       {data?.map(({ year, month, sundays }, index) => (
         <div key={month + year}>
-          <HeaderContainer>
+          <TopRowContainer>
             <Text type="smallText" color="subdued">
               {`${month} ${year}`}
             </Text>
-          </HeaderContainer>
+          </TopRowContainer>
 
-          <RowContainer>
+          <BottomRowContainer>
             {sundays.map((s, i) => (
               <SundayContainer
                 key={s + month + year}
@@ -140,10 +147,10 @@ const WeeklyHeader = ({ data }: { data: IWeeklyHeader }) => {
                 </Text>
               </SundayContainer>
             ))}
-          </RowContainer>
+          </BottomRowContainer>
         </div>
       ))}
-    </RowContainer>
+    </CalendarHeaderContainer>
   );
 };
 export const CalendarHeader = ({

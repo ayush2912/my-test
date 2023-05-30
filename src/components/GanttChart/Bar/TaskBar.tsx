@@ -13,7 +13,7 @@ import useGanttChartControls from "../useGanttChartControls";
 const Container = styled.div`
   display: flex;
   align-items: center;
-  height: 40px;
+  height: 48px;
   padding: 8px 0px;
   user-select: none;
 `;

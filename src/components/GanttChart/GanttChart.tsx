@@ -9,9 +9,11 @@ import { CalendarBackground } from "./Calendar/CalendarBackground";
 import { CalendarHeader } from "./Calendar/CalendarHeader";
 import { IMappedEngagements } from "./GanttChart.types";
 import { GanttChartControls } from "./GanttChartControls";
+import { TaskListItem } from "./TaskListItem";
 import useGanttChartControls from "./useGanttChartControls";
 import EmptyBox from "../../assets/images/empty-box.png";
 import Card from "../Card";
+import Icon from "../Icon";
 import Text from "../Text";
 
 const EmptyStateContainer = styled.div`
@@ -41,6 +43,8 @@ const LeftPanel = styled.div<{
 }>`
   flex: ${({ isCollapsed }) => (isCollapsed ? "0 0 24px" : "0 0 385px")};
   transition: flex 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
 
   overflow: hidden;
   min-width: 24px;
@@ -52,7 +56,6 @@ const RightPanel = styled.div`
   flex-direction: column;
 
   width: 100%;
-  padding-top: 24px;
   border-top: 1px solid #e1e4e8;
   overflow-x: scroll;
 
@@ -78,6 +81,16 @@ const LeftPanelHeader = styled.div`
   border-right: 1px solid #e1e4e8;
 `;
 
+const ProjectNameContainer = styled.div`
+  padding: 2px 40px 11px 16px;
+  width: 385px;
+`;
+const CollapseButtonContainer = styled.div`
+  display: flex;
+  justify-content: end;
+  height: 24px;
+`;
+
 const TaskListContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -86,7 +99,6 @@ const TaskListContainer = styled.div`
 const LeftPanelBody = styled.div`
   display: flex;
   flex-direction: column;
-  height: 411px;
   overflow-y: scroll;
 
   /* Hide the scrollbar */
@@ -101,11 +113,6 @@ const LeftPanelBody = styled.div`
   ::-webkit-scrollbar-thumb {
     background: transparent;
   }
-`;
-
-const TaskListItem = styled.div`
-  height: 628px;
-  width: 385px;
 `;
 
 export const GanttChart = ({
@@ -132,11 +139,6 @@ export const GanttChart = ({
       calendarBgWrapperRef.current?.removeEventListener("wheel", onScroll);
     };
   }, []);
-
-  useEffect(() => {
-    if (calendarBackgroundRef.current && taskListContainerRef.current)
-      taskListContainerRef.current.style.height = `${calendarBackgroundRef.current.clientHeight}px`;
-  }, [calendarBackgroundRef]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -168,19 +170,21 @@ export const GanttChart = ({
       <ContainerWrapper>
         <LeftPanel isCollapsed={isCollapsed}>
           <LeftPanelHeader>
-            <button onClick={handleCollapse}>collapse</button>
+            <CollapseButtonContainer>
+              <span onClick={handleCollapse}>
+                <Icon name="chevronsLeft" size="xsmall" />
+              </span>
+            </CollapseButtonContainer>
+            <ProjectNameContainer>
+              Songtao, Tongren, Wanshan and Yuping Rural Methane project
+            </ProjectNameContainer>
           </LeftPanelHeader>
           <LeftPanelBody ref={leftPanelBodyRef}>
             <TaskListContainer ref={taskListContainerRef}>
-              <TaskListItem>DVR (Draft Validation Report)</TaskListItem>
-              <TaskListItem>Engagement of consultant lore..</TaskListItem>
-              <TaskListItem>Project signed</TaskListItem>
-              <TaskListItem>Appointment of DOE</TaskListItem>
-              <TaskListItem>DVR (Draft Validation Report)</TaskListItem>
-              <TaskListItem>DVR (Draft Validation Report)</TaskListItem>
-              <TaskListItem>DVR (Draft Validation Report)</TaskListItem>
-              <TaskListItem>DVR (Draft Validation Report)</TaskListItem>
-              <TaskListItem>DVR (Draft Validation Report)</TaskListItem>
+              <TaskListItem key={12312321} name={"Engagement"} />
+              {mappedProjectEngagements[0].tasks.map((v) => (
+                <TaskListItem key={v.id} name={v.type} />
+              ))}
             </TaskListContainer>
           </LeftPanelBody>
         </LeftPanel>
@@ -201,7 +205,6 @@ export const GanttChart = ({
                   {mappedProjectEngagements.map((v) => {
                     return (
                       <>
-                        <ProjectBar key={v.id + "p"} projectData={v.project} />
                         <EngagementBar key={v.id + "e"} engagementData={v} />
                         {v.tasks.map((v) => (
                           <TaskBar key={v.id} taskData={v} />
