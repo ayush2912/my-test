@@ -1,11 +1,27 @@
+import { ReactNode, forwardRef } from "react";
 import styled from "styled-components";
 
 import { TemporalView } from "./Calendar.types";
 
-export const CalendarBackground = styled.div<{
+type CalendarBackgroundProps = {
   width: number;
   view: TemporalView;
-}>`
+  children: ReactNode;
+};
+export const CalendarBackground = forwardRef<
+  HTMLDivElement,
+  CalendarBackgroundProps
+>(({ width, view, children }, ref) => {
+  return (
+    <StyledCalendarBackground ref={ref} width={width} view={view}>
+      {children}
+    </StyledCalendarBackground>
+  );
+});
+
+CalendarBackground.displayName = "CalendarBackground";
+
+export const StyledCalendarBackground = styled.div<CalendarBackgroundProps>`
   display: flex;
   flex-direction: column;
   width: ${({ width }) => width}px;

@@ -78,11 +78,29 @@ const LeftPanelHeader = styled.div`
   border-right: 1px solid #e1e4e8;
 `;
 
+const TaskListContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
 const LeftPanelBody = styled.div`
   display: flex;
   flex-direction: column;
   height: 411px;
   overflow-y: scroll;
+
+  /* Hide the scrollbar */
+  ::-webkit-scrollbar {
+    width: 0.5rem; /* Adjust the width as needed */
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: transparent;
+  }
 `;
 
 const TaskListItem = styled.div`
@@ -99,6 +117,9 @@ export const GanttChart = ({
 }) => {
   const { view, onScroll } = useGanttChartControls();
   const calendarBgWrapperRef = useRef<HTMLDivElement | null>(null);
+  const calendarBackgroundRef = useRef<HTMLDivElement | null>(null);
+  const taskListContainerRef = useRef<HTMLDivElement | null>(null);
+  const leftPanelBodyRef = useRef<HTMLDivElement | null>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const handleCollapse = () => {
@@ -112,6 +133,35 @@ export const GanttChart = ({
     };
   }, []);
 
+  useEffect(() => {
+    if (calendarBackgroundRef.current && taskListContainerRef.current)
+      taskListContainerRef.current.style.height = `${calendarBackgroundRef.current.clientHeight}px`;
+  }, [calendarBackgroundRef]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (calendarBgWrapperRef.current && leftPanelBodyRef.current) {
+        leftPanelBodyRef.current.scrollTop =
+          calendarBgWrapperRef.current.scrollTop;
+      }
+    };
+    const handleLeftBodyPanelScroll = () => {
+      if (calendarBgWrapperRef.current && leftPanelBodyRef.current) {
+        calendarBgWrapperRef.current.scrollTop =
+          leftPanelBodyRef.current.scrollTop;
+      }
+    };
+
+    calendarBgWrapperRef.current?.addEventListener("scroll", handleScroll);
+    leftPanelBodyRef.current?.addEventListener(
+      "scroll",
+      handleLeftBodyPanelScroll,
+    );
+
+    return () =>
+      calendarBgWrapperRef.current?.removeEventListener("scroll", handleScroll);
+  }, [leftPanelBodyRef, calendarBgWrapperRef]);
+
   return (
     <Card>
       <GanttChartControls />
@@ -120,16 +170,18 @@ export const GanttChart = ({
           <LeftPanelHeader>
             <button onClick={handleCollapse}>collapse</button>
           </LeftPanelHeader>
-          <LeftPanelBody>
-            <TaskListItem>DVR (Draft Validation Report)</TaskListItem>
-            <TaskListItem>DVR (Draft Validation Report)</TaskListItem>
-            <TaskListItem>DVR (Draft Validation Report)</TaskListItem>
-            <TaskListItem>DVR (Draft Validation Report)</TaskListItem>
-            <TaskListItem>DVR (Draft Validation Report)</TaskListItem>
-            <TaskListItem>DVR (Draft Validation Report)</TaskListItem>
-            <TaskListItem>DVR (Draft Validation Report)</TaskListItem>
-            <TaskListItem>DVR (Draft Validation Report)</TaskListItem>
-            <TaskListItem>DVR (Draft Validation Report)</TaskListItem>
+          <LeftPanelBody ref={leftPanelBodyRef}>
+            <TaskListContainer ref={taskListContainerRef}>
+              <TaskListItem>DVR (Draft Validation Report)</TaskListItem>
+              <TaskListItem>Engagement of consultant lore..</TaskListItem>
+              <TaskListItem>Project signed</TaskListItem>
+              <TaskListItem>Appointment of DOE</TaskListItem>
+              <TaskListItem>DVR (Draft Validation Report)</TaskListItem>
+              <TaskListItem>DVR (Draft Validation Report)</TaskListItem>
+              <TaskListItem>DVR (Draft Validation Report)</TaskListItem>
+              <TaskListItem>DVR (Draft Validation Report)</TaskListItem>
+              <TaskListItem>DVR (Draft Validation Report)</TaskListItem>
+            </TaskListContainer>
           </LeftPanelBody>
         </LeftPanel>
 
@@ -141,7 +193,11 @@ export const GanttChart = ({
                 ref={calendarBgWrapperRef}
                 width={calendar.width[view]}
               >
-                <CalendarBackground width={calendar.width[view]} view={view}>
+                <CalendarBackground
+                  ref={calendarBackgroundRef}
+                  width={calendar.width[view]}
+                  view={view}
+                >
                   {mappedProjectEngagements.map((v) => {
                     return (
                       <>
