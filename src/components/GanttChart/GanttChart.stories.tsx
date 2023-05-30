@@ -63,9 +63,8 @@ const Template: StoryFn<GanttChartProps> = ({
       style={{
         display: "flex",
         flexDirection: "column",
-        width: 1000,
+        width: 1200,
         height: 600,
-        boxSizing: "border-box",
       }}
     >
       <GanttChart
@@ -340,6 +339,60 @@ MultipleProjects.args = {
               startDate: "2021-03-11T00:00:00Z",
               dueDate: "2022-09-15T00:00:00Z",
               completedDate: "2023-09-24T08:22:20.099Z",
+              isOverdue: true,
+              state: "NOT_STARTED",
+              stateHistory: [
+                {
+                  state: "NOT_STARTED",
+                  stateUpdatedAt: "2019-08-24T14:15:22Z",
+                },
+              ],
+              createdAt: "2023-04-11T14:15:22Z",
+              updatedAt: "2023-04-24T14:15:22Z",
+            },
+            {
+              id: "63b863d2fdbasdf223b24e1e9f12",
+              engagementId: "63bd887fa62f3170407d1c42",
+              type: "Project Design Document",
+              startDate: "2021-02-11T00:00:00Z",
+              dueDate: "2022-09-15T00:00:00Z",
+              completedDate: "2022-09-24T08:22:20.099Z",
+              isOverdue: true,
+              state: "NOT_STARTED",
+              stateHistory: [
+                {
+                  state: "NOT_STARTED",
+                  stateUpdatedAt: "2019-08-24T14:15:22Z",
+                },
+              ],
+              createdAt: "2023-04-11T14:15:22Z",
+              updatedAt: "2023-04-24T14:15:22Z",
+            },
+            {
+              id: "63b863d2fdbasdf223b24e1e9f12",
+              engagementId: "63bd887fa62f3170407d1c42",
+              type: "Project Design Document",
+              startDate: "2021-02-11T00:00:00Z",
+              dueDate: "2022-09-15T00:00:00Z",
+              completedDate: "2022-09-24T08:22:20.099Z",
+              isOverdue: true,
+              state: "NOT_STARTED",
+              stateHistory: [
+                {
+                  state: "NOT_STARTED",
+                  stateUpdatedAt: "2019-08-24T14:15:22Z",
+                },
+              ],
+              createdAt: "2023-04-11T14:15:22Z",
+              updatedAt: "2023-04-24T14:15:22Z",
+            },
+            {
+              id: "63b863d2fdbasdf223b24e1e9f12",
+              engagementId: "63bd887fa62f3170407d1c42",
+              type: "Project Design Document",
+              startDate: "2021-02-11T00:00:00Z",
+              dueDate: "2022-09-15T00:00:00Z",
+              completedDate: "2022-09-24T08:22:20.099Z",
               isOverdue: true,
               state: "NOT_STARTED",
               stateHistory: [

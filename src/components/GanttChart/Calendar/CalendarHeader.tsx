@@ -26,6 +26,7 @@ const HeaderContainer = styled.div`
 const RowContainer = styled.div`
   display: flex;
   align-items: center;
+  border-bottom: 1px solid #e1e4e8;
 `;
 
 const DayContainer = styled.div`
