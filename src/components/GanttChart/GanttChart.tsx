@@ -94,11 +94,16 @@ const HeaderRightPanel = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
+
   height: fit-content;
+  width: calc(100% - 385px);
+
+  overflow-x: scroll;
+
   margin-right: 8px;
   pointer-events: none;
-  width: calc(100% - 385px);
-  overflow-x: scroll;
+
+  border-top: 1px solid #e1e4e8;
 
   &::-webkit-scrollbar {
     height: 0px;
@@ -180,7 +185,9 @@ export const GanttChart = ({
 
   return (
     <Card>
+      {/* controls */}
       <GanttChartControls />
+
       {/* header */}
       <HeaderContainer>
         <HeaderLeftPanel isCollapsed={isCollapsed}>
@@ -199,6 +206,7 @@ export const GanttChart = ({
           <CalendarHeader calendarHeader={calendar.header} view={view} />
         </HeaderRightPanel>
       </HeaderContainer>
+
       {/* body */}
       <BodyContainer>
         <LeftPanel isCollapsed={isCollapsed}>
@@ -217,28 +225,24 @@ export const GanttChart = ({
 
         <RightPanel ref={calendarBodyRef} onScroll={onBodyScroll}>
           {mappedProjectEngagements.length ? (
-            <>
-              {/* <CalendarBackgroundWrapper> */}
-              <CalendarBackground
-                ref={calendarBackgroundRef}
-                width={calendar.width[view]}
-                view={view}
-              >
-                {/* <TodayFocus offsetLeft={1000} calendarBoxWidth={1000} /> */}
+            <CalendarBackground
+              ref={calendarBackgroundRef}
+              width={calendar.width[view]}
+              view={view}
+            >
+              {/* <TodayFocus offsetLeft={1000} calendarBoxWidth={1000} /> */}
 
-                {mappedProjectEngagements.map((v) => {
-                  return (
-                    <>
-                      <EngagementBar key={v.id + "e"} engagementData={v} />
-                      {v.tasks.map((v) => (
-                        <TaskBar key={v.id} taskData={v} />
-                      ))}
-                    </>
-                  );
-                })}
-              </CalendarBackground>
-              {/* </CalendarBackgroundWrapper> */}
-            </>
+              {mappedProjectEngagements.map((v) => {
+                return (
+                  <>
+                    <EngagementBar key={v.id + "e"} engagementData={v} />
+                    {v.tasks.map((v) => (
+                      <TaskBar key={v.id} taskData={v} />
+                    ))}
+                  </>
+                );
+              })}
+            </CalendarBackground>
           ) : (
             <EmptyStateContainer>
               <img src={EmptyBox} />
