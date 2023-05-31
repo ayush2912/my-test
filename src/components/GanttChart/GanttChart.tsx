@@ -56,7 +56,7 @@ const CollapseButtonContainer = styled.div`
 `;
 
 const Content = styled.div`
-  width: 200%;
+  width: 100%;
   height: fit-content;
   background: green;
 `;
@@ -72,7 +72,6 @@ const Header = styled.div`
 
 const Body = styled.div`
   width: fit-content;
-  background: blue;
   display: flex;
   height: 100%;
 `;
@@ -85,6 +84,7 @@ const LeftPanel = styled.div<{ isCollapsed: boolean }>`
   z-index: 3;
   border-right: 1px solid #e1e4e8;
   box-shadow: 2px 0px 4px rgba(0, 0, 0, 0.1);
+  background: white;
 `;
 
 const LeftPanelHeader = styled.div<{ isCollapsed: boolean }>`
@@ -149,10 +149,14 @@ export const GanttChart = ({
           </Header>
           <Body>
             <LeftPanel isCollapsed={isCollapsed}>
-              <TaskListItem key={12312321} name={"Engagement"} />
-              {mappedProjectEngagements[0].tasks.map((v) => (
-                <TaskListItem key={v.id} name={v.type} />
-              ))}
+              {!isCollapsed && (
+                <>
+                  <TaskListItem key={12312321} name={"Engagement"} />
+                  {mappedProjectEngagements[0].tasks.map((v) => (
+                    <TaskListItem key={v.id} name={v.type} />
+                  ))}
+                </>
+              )}
             </LeftPanel>
             <CalendarBackground width={calendar.width[view]} view={view}>
               {view === "monthly" && (

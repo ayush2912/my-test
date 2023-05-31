@@ -168,7 +168,9 @@ export const CalendarHeader = ({
 }) => {
   return (
     <CalendarHeaderContainer>
-      <TodayFocus offsetLeft={offsetForToday * 40} calendarBoxWidth={40} />
+      {view === "monthly" && (
+        <TodayFocus offsetLeft={offsetForToday * 40} calendarBoxWidth={40} />
+      )}
       {
         {
           monthly: <MonthlyHeader data={calendarHeader.monthly} />,
