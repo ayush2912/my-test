@@ -58,7 +58,6 @@ const CollapseButtonContainer = styled.div`
 const Content = styled.div`
   width: 100%;
   height: fit-content;
-  background: green;
 `;
 
 const Header = styled.div`
@@ -151,9 +150,19 @@ export const GanttChart = ({
             <LeftPanel isCollapsed={isCollapsed}>
               {!isCollapsed && (
                 <>
-                  <TaskListItem key={12312321} name={"Engagement"} />
+                  <TaskListItem
+                    key={12312321}
+                    name={"Engagement"}
+                    source=""
+                    isOverDue={false}
+                  />
                   {mappedProjectEngagements[0].tasks.map((v) => (
-                    <TaskListItem key={v.id} name={v.type} />
+                    <TaskListItem
+                      key={v.id}
+                      name={v.type}
+                      source="client"
+                      isOverDue={true}
+                    />
                   ))}
                 </>
               )}

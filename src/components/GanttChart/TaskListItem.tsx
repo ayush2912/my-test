@@ -40,7 +40,7 @@ export const TaskListItem = ({
 }: {
   name: string;
   source: string;
-  isOverDue: string;
+  isOverDue: boolean;
 }) => {
   return (
     <StyledTaskListItem>
