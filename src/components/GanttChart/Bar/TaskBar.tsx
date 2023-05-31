@@ -16,7 +16,6 @@ const Container = styled.div`
   height: 48px;
   padding: 8px 0px;
   user-select: none;
-  z-index: 2;
 `;
 
 const Bar = styled.div<{
@@ -31,7 +30,7 @@ const Bar = styled.div<{
   min-width: 24px;
   border-radius: 4px;
   margin-left: ${({ offsetFromLeft }) => offsetFromLeft}px;
-
+  z-index: 2;
   cursor: pointer;
   padding: 4px 8px;
   border: 2px solid #8aadf7;

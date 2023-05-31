@@ -18,7 +18,6 @@ const Container = styled.div`
   height: 48px;
   padding: 8px 0px;
   user-select: none;
-  z-index: 2;
 `;
 
 const Bar = styled.div<{
@@ -37,7 +36,7 @@ const Bar = styled.div<{
   cursor: pointer;
   padding: 4px 8px;
   background-color: ${(props) => props.theme.colors.primary[600]};
-
+  z-index: 2;
   &:hover {
     box-shadow: 0px 0px 0px 4px #b1c8f9;
   }
