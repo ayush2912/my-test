@@ -46,3 +46,18 @@ export const Ghost: Story = {
     </Button>
   ),
 };
+
+export const CustomSecondaryBorder: Story = {
+  render: () => (
+    <Button
+      border="1px solid #E1E4E8"
+      large={true}
+      type="secondary"
+      onClick={() => {
+        console.log("Custom button click");
+      }}
+    >
+      Click Me
+    </Button>
+  ),
+};
