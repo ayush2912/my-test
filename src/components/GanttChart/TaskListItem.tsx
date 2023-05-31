@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 import Icon from "../Icon";
 import Text from "../Text";
+import Tooltip from "../Tooltip";
 
 const StyledTaskListItem = styled.div`
   width: 385px;
@@ -37,15 +38,21 @@ export const TaskListItem = ({
   name,
   source,
   isOverDue,
+  overdueDays,
 }: {
   name: string;
   source: string;
-  isOverDue: boolean;
+  isOverDue: string;
+  overdueDays?: string | number;
 }) => {
   return (
     <StyledTaskListItem>
       <div>
-        {isOverDue && <Icon name="watch" />}
+        {isOverDue && (
+          <Tooltip text={`DELAYED BY ${overdueDays} DAYS`}>
+            <Icon name="watch" />
+          </Tooltip>
+        )}
         <Text color="default" type="body">
           {name}
         </Text>
