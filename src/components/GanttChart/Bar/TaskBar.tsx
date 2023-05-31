@@ -16,6 +16,7 @@ const Container = styled.div`
   height: 48px;
   padding: 8px 0px;
   user-select: none;
+  z-index: 2;
 `;
 
 const Bar = styled.div<{
@@ -30,7 +31,7 @@ const Bar = styled.div<{
   min-width: 24px;
   border-radius: 4px;
   margin-left: ${({ offsetFromLeft }) => offsetFromLeft}px;
-  margin-right: 8px;
+
   cursor: pointer;
   padding: 4px 8px;
   border: 2px solid #8aadf7;
@@ -114,76 +115,78 @@ export const TaskBar = ({ taskData }: { taskData: Task & { bar: IBar } }) => {
   }, [scrollEvent]);
 
   return (
-    <Container>
-      <Bar
-        ref={barRef}
-        width={taskData.bar.width[view]}
-        offsetFromLeft={taskData.bar.offsetFromLeft[view]}
-        onMouseDown={handleContainerMouseDown}
-        focus={showPopup}
-      >
-        {showPopup && (
-          <BarPopup
-            ref={popupRef}
-            onMouseDown={handlePopupMouseDown}
-            top={popupPosition.top}
-            left={popupPosition.left}
-          >
-            <ModalHeader>
-              <Text type="captionBold" color="default">
-                {taskData.type}
+    <>
+      {showPopup && (
+        <BarPopup
+          ref={popupRef}
+          onMouseDown={handlePopupMouseDown}
+          top={popupPosition.top}
+          left={popupPosition.left}
+        >
+          <ModalHeader>
+            <Text type="captionBold" color="default">
+              {taskData.type}
+            </Text>
+          </ModalHeader>
+          <div style={{ margin: "5px 0px" }}>
+            <StatusTag
+              name={statusTag.label}
+              type={taskData.isOverdue ? "warning" : statusTag.type}
+            />
+          </div>
+
+          <ModalContent>
+            <TextHolder>
+              <Text type="caption" color="subdued">
+                Start date :
               </Text>
-            </ModalHeader>
-            <div style={{ margin: "5px 0px" }}>
-              <StatusTag
-                name={statusTag.label}
-                type={taskData.isOverdue ? "warning" : statusTag.type}
-              />
-            </div>
+              <Text type="caption" color="default">
+                {convertToMonthNameFormat(taskData.startDate)}
+              </Text>
+            </TextHolder>
 
-            <ModalContent>
+            <TextHolder>
+              <Text type="caption" color="subdued">
+                Due date :
+              </Text>
+              <Text type="caption" color="default">
+                {convertToMonthNameFormat(taskData.dueDate)}
+              </Text>
+            </TextHolder>
+            {taskData.completedDate && (
               <TextHolder>
                 <Text type="caption" color="subdued">
-                  Start date :
+                  Completion date :
                 </Text>
+
                 <Text type="caption" color="default">
-                  {convertToMonthNameFormat(taskData.startDate)}
+                  {convertToMonthNameFormat(taskData.completedDate)}
                 </Text>
               </TextHolder>
-
-              <TextHolder>
-                <Text type="caption" color="subdued">
-                  Due date :
-                </Text>
-                <Text type="caption" color="default">
-                  {convertToMonthNameFormat(taskData.dueDate)}
-                </Text>
-              </TextHolder>
-              {taskData.completedDate && (
-                <TextHolder>
-                  <Text type="caption" color="subdued">
-                    Completion date :
-                  </Text>
-
-                  <Text type="caption" color="default">
-                    {convertToMonthNameFormat(taskData.completedDate)}
-                  </Text>
-                </TextHolder>
-              )}
-            </ModalContent>
-          </BarPopup>
-        )}
-        {!isTextOverflowing && (
-          <Text ref={contentRef} type="caption" color="default">
+            )}
+          </ModalContent>
+        </BarPopup>
+      )}
+      <Container>
+        <Bar
+          ref={barRef}
+          width={taskData.bar.width[view]}
+          offsetFromLeft={taskData.bar.offsetFromLeft[view]}
+          onMouseDown={handleContainerMouseDown}
+          focus={showPopup}
+        >
+          {!isTextOverflowing && (
+            <Text ref={contentRef} type="caption" color="default">
+              {taskData.type}
+            </Text>
+          )}
+        </Bar>
+        {isTextOverflowing && (
+          <Text type="caption" color="default">
             {taskData.type}
           </Text>
         )}
-      </Bar>
-      {isTextOverflowing && (
-        <Text type="caption" color="default">
-          {taskData.type}
-        </Text>
-      )}
-    </Container>
+      </Container>
+    </>
   );
 };

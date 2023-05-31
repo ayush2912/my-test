@@ -13,4 +13,5 @@ export const BarPopup = styled.div<PopupPosition>`
   background-color: #ffffff;
   top: ${({ top }) => top}px;
   left: ${({ left }) => left}px;
+  z-index: 9999;
 `;

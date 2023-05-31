@@ -18,6 +18,7 @@ const Container = styled.div`
   height: 48px;
   padding: 8px 0px;
   user-select: none;
+  z-index: 2;
 `;
 
 const Bar = styled.div<{
@@ -119,83 +120,85 @@ export const EngagementBar = ({
   }, [scrollEvent]);
 
   return (
-    <Container>
-      <Bar
-        ref={barRef}
-        width={engagementData.bar.width[view]}
-        offsetFromLeft={engagementData.bar.offsetFromLeft[view]}
-        onMouseDown={handleContainerMouseDown}
-        focus={showPopup}
-      >
-        {showPopup && (
-          <BarPopup
-            ref={popupRef}
-            onMouseDown={handlePopupMouseDown}
-            top={popupPosition.top}
-            left={popupPosition.left}
-          >
-            <ModalHeader>
-              <Text type="captionBold" color="default">
-                {engagementData.type}
+    <>
+      {showPopup && (
+        <BarPopup
+          ref={popupRef}
+          onMouseDown={handlePopupMouseDown}
+          top={popupPosition.top}
+          left={popupPosition.left}
+        >
+          <ModalHeader>
+            <Text type="captionBold" color="default">
+              {engagementData.type}
+            </Text>
+            <Button
+              type="secondary"
+              isIcon
+              onClick={() => {
+                engagementData.onViewClick(engagementData.projectId);
+              }}
+            >
+              <Icon name="eyeIcon" size="xsmall" />
+            </Button>
+          </ModalHeader>
+          <div style={{ margin: "5px 0px" }}>
+            <StatusTag
+              name={statusTag.label}
+              type={engagementData.isOverdue ? "warning" : statusTag.type}
+            />
+          </div>
+          <ModalContent>
+            <TextHolder>
+              <Text type="caption" color="subdued">
+                Start date :
               </Text>
-              <Button
-                type="secondary"
-                isIcon
-                onClick={() => {
-                  engagementData.onViewClick(engagementData.projectId);
-                }}
-              >
-                <Icon name="eyeIcon" size="xsmall" />
-              </Button>
-            </ModalHeader>
-            <div style={{ margin: "5px 0px" }}>
-              <StatusTag
-                name={statusTag.label}
-                type={engagementData.isOverdue ? "warning" : statusTag.type}
-              />
-            </div>
-            <ModalContent>
-              <TextHolder>
-                <Text type="caption" color="subdued">
-                  Start date :
-                </Text>
-                <Text type="caption" color="default">
-                  {convertToMonthNameFormat(engagementData.startDate)}
-                </Text>
-              </TextHolder>
+              <Text type="caption" color="default">
+                {convertToMonthNameFormat(engagementData.startDate)}
+              </Text>
+            </TextHolder>
 
+            <TextHolder>
+              <Text type="caption" color="subdued">
+                Due date :
+              </Text>
+              <Text type="caption" color="default">
+                {convertToMonthNameFormat(engagementData.dueDate)}
+              </Text>
+            </TextHolder>
+            {engagementData.completedDate && (
               <TextHolder>
                 <Text type="caption" color="subdued">
-                  Due date :
+                  Completion date :
                 </Text>
                 <Text type="caption" color="default">
-                  {convertToMonthNameFormat(engagementData.dueDate)}
+                  {convertToMonthNameFormat(engagementData.completedDate)}
                 </Text>
               </TextHolder>
-              {engagementData.completedDate && (
-                <TextHolder>
-                  <Text type="caption" color="subdued">
-                    Completion date :
-                  </Text>
-                  <Text type="caption" color="default">
-                    {convertToMonthNameFormat(engagementData.completedDate)}
-                  </Text>
-                </TextHolder>
-              )}
-            </ModalContent>
-          </BarPopup>
-        )}
-        {!isTextOverflowing && (
-          <Text ref={contentRef} type="caption" color="white">
+            )}
+          </ModalContent>
+        </BarPopup>
+      )}
+      <Container>
+        <Bar
+          ref={barRef}
+          width={engagementData.bar.width[view]}
+          offsetFromLeft={engagementData.bar.offsetFromLeft[view]}
+          onMouseDown={handleContainerMouseDown}
+          focus={showPopup}
+        >
+          {!isTextOverflowing && (
+            <Text ref={contentRef} type="caption" color="white">
+              {engagementData.type}
+            </Text>
+          )}
+        </Bar>
+        {isTextOverflowing && (
+          <Text type="caption" color="default">
             {engagementData.type}
           </Text>
         )}
-      </Bar>
-      {isTextOverflowing && (
-        <Text type="caption" color="default">
-          {engagementData.type}
-        </Text>
-      )}
-    </Container>
+      </Container>
+    </>
   );
 };

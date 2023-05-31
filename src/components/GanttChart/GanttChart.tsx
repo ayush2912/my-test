@@ -230,7 +230,7 @@ export const GanttChart = ({
               width={calendar.width[view]}
               view={view}
             >
-              {/* <TodayFocus offsetLeft={1000} calendarBoxWidth={1000} /> */}
+              <TodayFocus offsetLeft={1000} calendarBoxWidth={48} />
 
               {mappedProjectEngagements.map((v) => {
                 return (

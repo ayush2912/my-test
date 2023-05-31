@@ -11,7 +11,8 @@ const StyledDiv = styled.div<TodayFocusProps>`
   border: none;
   position: absolute;
   margin-left: ${(props) => props.offsetLeft}px;
-  height: 48px;
+  height: 100%;
+  z-index: 1;
 `;
 
 const TodayFocus = (props: TodayFocusProps) => {
