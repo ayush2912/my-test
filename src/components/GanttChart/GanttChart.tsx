@@ -83,17 +83,21 @@ const LeftPanel = styled.div<{ isCollapsed: boolean }>`
   width: ${({ isCollapsed }) => (isCollapsed ? 24 : 385)}px;
   overflow: hidden;
   z-index: 3;
+  border-right: 1px solid #e1e4e8;
+  box-shadow: 2px 0px 4px rgba(0, 0, 0, 0.1);
 `;
 
 const LeftPanelHeader = styled.div<{ isCollapsed: boolean }>`
   width: ${({ isCollapsed }) => (isCollapsed ? 24 : 385)}px;
   position: sticky;
   left: 0;
+  z-index: 2;
   overflow: hidden;
   background: white;
   border-top: 1px solid #e1e4e8;
   border-bottom: 1px solid #e1e4e8;
   border-right: 1px solid #e1e4e8;
+  box-shadow: 2px 0px 4px rgba(0, 0, 0, 0.1);
 `;
 
 export const GanttChart = ({
@@ -124,7 +128,6 @@ export const GanttChart = ({
       {/* controls */}
       <GanttChartControls />
 
-      {/* body */}
       <Container ref={calendarBodyRef}>
         <Content>
           <Header>
@@ -138,7 +141,11 @@ export const GanttChart = ({
                 Songtao, Tongren, Wanshan and Yuping Rural Methane project
               </ProjectNameContainer>
             </LeftPanelHeader>
-            <CalendarHeader calendarHeader={calendar.header} view={view} />
+            <CalendarHeader
+              calendarHeader={calendar.header}
+              view={view}
+              offsetForToday={calendar.offsetForToday}
+            />
           </Header>
           <Body>
             <LeftPanel isCollapsed={isCollapsed}>
@@ -148,7 +155,12 @@ export const GanttChart = ({
               ))}
             </LeftPanel>
             <CalendarBackground width={calendar.width[view]} view={view}>
-              <TodayFocus offsetLeft={1000} calendarBoxWidth={48} />
+              {view === "monthly" && (
+                <TodayFocus
+                  offsetLeft={calendar.offsetForToday * 40}
+                  calendarBoxWidth={48}
+                />
+              )}
 
               {mappedProjectEngagements.map((v) => {
                 return (

@@ -14,6 +14,7 @@ const StyledDiv = styled.div<TodayFocusProps>`
   height: 100%;
   z-index: 1;
   opacity: 0.3;
+  top: 0;
 `;
 
 const TodayFocus = (props: TodayFocusProps) => {

@@ -182,10 +182,17 @@ export const memoizedCalendarData = (
     earliestStartDate,
     latestEndDate,
   );
+  const today = moment();
+  const offsetForToday = today.diff(
+    moment(earliestStartDate).startOf("year"),
+    "days",
+  );
+
   return {
     earliestStartDate,
     latestEndDate,
     header: calendarHeader,
     width: calendarWidth,
+    offsetForToday,
   };
 };

@@ -8,13 +8,17 @@ import {
   IWeeklyHeader,
   IYearlyHeader,
 } from "../Calendar/Calendar.types";
+import TodayFocus from "../TodayFocus";
 
 const CalendarHeaderContainer = styled.div`
   display: flex;
   align-items: center;
+  border-top: 1px solid #e1e4e8;
   border-bottom: 1px solid #e1e4e8;
   padding-top: 24px;
   padding-bottom: 8px;
+  position: relative;
+  z-index: 1;
 `;
 
 const TopRowContainer = styled.div`
@@ -75,7 +79,7 @@ const SundayContainer = styled.div<{ lastWeek: boolean }>`
 
 const MonthlyHeader = ({ data }: { data: IMonthlyHeader }) => {
   return (
-    <CalendarHeaderContainer>
+    <>
       {data?.map(({ month, year, days }) => (
         <div key={`${month}${year}`}>
           <TopRowContainer>
@@ -95,13 +99,13 @@ const MonthlyHeader = ({ data }: { data: IMonthlyHeader }) => {
           </BottomRowContainer>
         </div>
       ))}
-    </CalendarHeaderContainer>
+    </>
   );
 };
 
 const YearlyHeader = ({ data }: { data: IYearlyHeader }) => {
   return (
-    <CalendarHeaderContainer>
+    <>
       {data?.map(({ year, months }) => (
         <div key={year}>
           <TopRowContainer>
@@ -121,13 +125,13 @@ const YearlyHeader = ({ data }: { data: IYearlyHeader }) => {
           </BottomRowContainer>
         </div>
       ))}
-    </CalendarHeaderContainer>
+    </>
   );
 };
 
 const WeeklyHeader = ({ data }: { data: IWeeklyHeader }) => {
   return (
-    <CalendarHeaderContainer>
+    <>
       {data?.map(({ year, month, sundays }, index) => (
         <div key={month + year}>
           <TopRowContainer>
@@ -150,18 +154,21 @@ const WeeklyHeader = ({ data }: { data: IWeeklyHeader }) => {
           </BottomRowContainer>
         </div>
       ))}
-    </CalendarHeaderContainer>
+    </>
   );
 };
 export const CalendarHeader = ({
   calendarHeader,
   view,
+  offsetForToday,
 }: {
   calendarHeader: ICalendarHeader;
   view: TemporalView;
+  offsetForToday: number;
 }) => {
   return (
-    <>
+    <CalendarHeaderContainer>
+      <TodayFocus offsetLeft={offsetForToday * 40} calendarBoxWidth={40} />
       {
         {
           monthly: <MonthlyHeader data={calendarHeader.monthly} />,
@@ -169,6 +176,6 @@ export const CalendarHeader = ({
           weekly: <WeeklyHeader data={calendarHeader.weekly} />,
         }[view]
       }
-    </>
+    </CalendarHeaderContainer>
   );
 };
