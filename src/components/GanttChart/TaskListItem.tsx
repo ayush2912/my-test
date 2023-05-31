@@ -47,7 +47,7 @@ export const TaskListItem = ({
       <div>
         {isOverDue && <Icon name="watch" />}
         <Text color="default" type="body">
-          {name} + {"blah blah blah"}
+          {name}
         </Text>
       </div>
 
