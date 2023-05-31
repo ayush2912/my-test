@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 import { EngagementBar } from "./Bar/EngagementBar";
-import { ProjectBar } from "./Bar/ProjectBar";
 import { TaskBar } from "./Bar/TaskBar";
 import { ICalendar } from "./Calendar/Calendar.types";
 import { CalendarBackground } from "./Calendar/CalendarBackground";
@@ -10,6 +9,7 @@ import { CalendarHeader } from "./Calendar/CalendarHeader";
 import { IMappedEngagements } from "./GanttChart.types";
 import { GanttChartControls } from "./GanttChartControls";
 import { TaskListItem } from "./TaskListItem";
+import TodayFocus from "./TodayFocus";
 import useGanttChartControls from "./useGanttChartControls";
 import EmptyBox from "../../assets/images/empty-box.png";
 import Card from "../Card";
@@ -24,20 +24,28 @@ const EmptyStateContainer = styled.div`
   align-items: center;
 `;
 
-const CalendarBackgroundWrapper = styled.div<{ width: number }>`
+const BodyContainer = styled.div`
   display: flex;
-  flex-direction: column;
+  height: 500px;
   overflow-y: scroll;
   overflow-x: hidden;
-  height: 500px;
-  width: ${(props) => props.width}px;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: none;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #c4c9d1;
+    border-radius: 16px;
+  }
 `;
 
-const ContainerWrapper = styled.div`
+const HeaderContainer = styled.div`
   display: flex;
-  height: 500px;
+  overflow-y: scroll;
 `;
-
 const LeftPanel = styled.div<{
   isCollapsed: boolean;
 }>`
@@ -45,45 +53,79 @@ const LeftPanel = styled.div<{
   transition: flex 0.3s ease-in-out;
   display: flex;
   flex-direction: column;
-
-  overflow: hidden;
   min-width: 24px;
+
+  height: fit-content;
 `;
 
 const RightPanel = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
+  height: fit-content;
+  margin-right: 8px;
 
-  width: 100%;
-  border-top: 1px solid #e1e4e8;
+  width: calc(100% - 385px);
   overflow-x: scroll;
 
   &::-webkit-scrollbar {
     height: 8px;
   }
-
   &::-webkit-scrollbar-track {
     background-color: none;
   }
-
   &::-webkit-scrollbar-thumb {
     background-color: #c4c9d1;
     border-radius: 16px;
   }
 `;
+const HeaderLeftPanel = styled.div<{
+  isCollapsed: boolean;
+}>`
+  flex: ${({ isCollapsed }) => (isCollapsed ? "0 0 24px" : "0 0 385px")};
+  transition: flex 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  min-width: 24px;
 
-const LeftPanelHeader = styled.div`
+  height: fit-content;
+`;
+const HeaderRightPanel = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+  margin-right: 8px;
+  pointer-events: none;
+  width: calc(100% - 385px);
+  overflow-x: scroll;
+
+  &::-webkit-scrollbar {
+    height: 0px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: transparent;
+  }
+`;
+
+const LeftPanelHeaderContainer = styled.div`
+  display: flex;
+  flex-direction: column;
   height: 82px;
-  width: "100%";
+
   border-top: 1px solid #e1e4e8;
   border-bottom: 1px solid #e1e4e8;
   border-right: 1px solid #e1e4e8;
 `;
 
-const ProjectNameContainer = styled.div`
+const ProjectNameContainer = styled.div<{ isCollapsed: boolean }>`
   padding: 2px 40px 11px 16px;
   width: 385px;
+  visibility: ${({ isCollapsed }) => (isCollapsed ? "hidden" : "visible")};
+  transition: visibility 0.1s ease-in-out;
 `;
 const CollapseButtonContainer = styled.div`
   display: flex;
@@ -91,28 +133,16 @@ const CollapseButtonContainer = styled.div`
   height: 24px;
 `;
 
-const TaskListContainer = styled.div`
+const TaskListContainer = styled.div<{ isCollapsed: boolean }>`
   display: flex;
   flex-direction: column;
+  visibility: ${({ isCollapsed }) => (isCollapsed ? "hidden" : "visible")};
+  transition: visibility 0.1s ease-in-out;
 `;
 
 const LeftPanelBody = styled.div`
   display: flex;
   flex-direction: column;
-  overflow-y: scroll;
-
-  /* Hide the scrollbar */
-  ::-webkit-scrollbar {
-    width: 0.5rem; /* Adjust the width as needed */
-  }
-
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: transparent;
-  }
 `;
 
 export const GanttChart = ({
@@ -123,64 +153,60 @@ export const GanttChart = ({
   calendar: ICalendar;
 }) => {
   const { view, onScroll } = useGanttChartControls();
-  const calendarBgWrapperRef = useRef<HTMLDivElement | null>(null);
   const calendarBackgroundRef = useRef<HTMLDivElement | null>(null);
   const taskListContainerRef = useRef<HTMLDivElement | null>(null);
   const leftPanelBodyRef = useRef<HTMLDivElement | null>(null);
+  const calendarHeaderRef = useRef<HTMLDivElement | null>(null);
+  const calendarBodyRef = useRef<HTMLDivElement | null>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const handleCollapse = () => {
     setIsCollapsed(!isCollapsed);
   };
+
   useEffect(() => {
-    calendarBgWrapperRef.current?.addEventListener("wheel", onScroll);
+    calendarBodyRef.current?.addEventListener("wheel", onScroll);
 
     return () => {
-      calendarBgWrapperRef.current?.removeEventListener("wheel", onScroll);
+      calendarBodyRef.current?.removeEventListener("wheel", onScroll);
     };
   }, []);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (calendarBgWrapperRef.current && leftPanelBodyRef.current) {
-        leftPanelBodyRef.current.scrollTop =
-          calendarBgWrapperRef.current.scrollTop;
-      }
-    };
-    const handleLeftBodyPanelScroll = () => {
-      if (calendarBgWrapperRef.current && leftPanelBodyRef.current) {
-        calendarBgWrapperRef.current.scrollTop =
-          leftPanelBodyRef.current.scrollTop;
-      }
-    };
-
-    calendarBgWrapperRef.current?.addEventListener("scroll", handleScroll);
-    leftPanelBodyRef.current?.addEventListener(
-      "scroll",
-      handleLeftBodyPanelScroll,
-    );
-
-    return () =>
-      calendarBgWrapperRef.current?.removeEventListener("scroll", handleScroll);
-  }, [leftPanelBodyRef, calendarBgWrapperRef]);
+  const onBodyScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    if (calendarHeaderRef.current) {
+      calendarHeaderRef.current.scrollLeft = e.currentTarget.scrollLeft;
+    }
+  };
 
   return (
     <Card>
       <GanttChartControls />
-      <ContainerWrapper>
-        <LeftPanel isCollapsed={isCollapsed}>
-          <LeftPanelHeader>
+      {/* header */}
+      <HeaderContainer>
+        <HeaderLeftPanel isCollapsed={isCollapsed}>
+          <LeftPanelHeaderContainer>
             <CollapseButtonContainer>
               <span onClick={handleCollapse}>
                 <Icon name="chevronsLeft" size="xsmall" />
               </span>
             </CollapseButtonContainer>
-            <ProjectNameContainer>
+            <ProjectNameContainer isCollapsed={isCollapsed}>
               Songtao, Tongren, Wanshan and Yuping Rural Methane project
             </ProjectNameContainer>
-          </LeftPanelHeader>
+          </LeftPanelHeaderContainer>
+        </HeaderLeftPanel>
+        <HeaderRightPanel ref={calendarHeaderRef}>
+          <CalendarHeader calendarHeader={calendar.header} view={view} />
+        </HeaderRightPanel>
+      </HeaderContainer>
+      {/* body */}
+      <BodyContainer>
+        <LeftPanel isCollapsed={isCollapsed}>
           <LeftPanelBody ref={leftPanelBodyRef}>
-            <TaskListContainer ref={taskListContainerRef}>
+            <TaskListContainer
+              ref={taskListContainerRef}
+              isCollapsed={isCollapsed}
+            >
               <TaskListItem key={12312321} name={"Engagement"} />
               {mappedProjectEngagements[0].tasks.map((v) => (
                 <TaskListItem key={v.id} name={v.type} />
@@ -189,31 +215,29 @@ export const GanttChart = ({
           </LeftPanelBody>
         </LeftPanel>
 
-        <RightPanel>
+        <RightPanel ref={calendarBodyRef} onScroll={onBodyScroll}>
           {mappedProjectEngagements.length ? (
             <>
-              <CalendarHeader calendarHeader={calendar.header} view={view} />
-              <CalendarBackgroundWrapper
-                ref={calendarBgWrapperRef}
+              {/* <CalendarBackgroundWrapper> */}
+              <CalendarBackground
+                ref={calendarBackgroundRef}
                 width={calendar.width[view]}
+                view={view}
               >
-                <CalendarBackground
-                  ref={calendarBackgroundRef}
-                  width={calendar.width[view]}
-                  view={view}
-                >
-                  {mappedProjectEngagements.map((v) => {
-                    return (
-                      <>
-                        <EngagementBar key={v.id + "e"} engagementData={v} />
-                        {v.tasks.map((v) => (
-                          <TaskBar key={v.id} taskData={v} />
-                        ))}
-                      </>
-                    );
-                  })}
-                </CalendarBackground>
-              </CalendarBackgroundWrapper>
+                {/* <TodayFocus offsetLeft={1000} calendarBoxWidth={1000} /> */}
+
+                {mappedProjectEngagements.map((v) => {
+                  return (
+                    <>
+                      <EngagementBar key={v.id + "e"} engagementData={v} />
+                      {v.tasks.map((v) => (
+                        <TaskBar key={v.id} taskData={v} />
+                      ))}
+                    </>
+                  );
+                })}
+              </CalendarBackground>
+              {/* </CalendarBackgroundWrapper> */}
             </>
           ) : (
             <EmptyStateContainer>
@@ -229,7 +253,7 @@ export const GanttChart = ({
             </EmptyStateContainer>
           )}
         </RightPanel>
-      </ContainerWrapper>
+      </BodyContainer>
     </Card>
   );
 };

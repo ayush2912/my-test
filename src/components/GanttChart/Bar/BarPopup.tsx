@@ -5,7 +5,7 @@ export interface PopupPosition {
   left: number;
 }
 export const BarPopup = styled.div<PopupPosition>`
-  position: absolute;
+  position: fixed;
   border-radius: 8px;
   box-shadow: ${(props) => props.theme.shadow.md};
   padding: 12px;
