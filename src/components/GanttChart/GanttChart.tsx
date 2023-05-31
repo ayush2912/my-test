@@ -6,6 +6,7 @@ import { TaskBar } from "./Bar/TaskBar";
 import { ICalendar } from "./Calendar/Calendar.types";
 import { CalendarBackground } from "./Calendar/CalendarBackground";
 import { CalendarHeader } from "./Calendar/CalendarHeader";
+import { EngagementListItem } from "./EngagementListItem";
 import { IMappedEngagements } from "./GanttChart.types";
 import { GanttChartControls } from "./GanttChartControls";
 import { TaskListItem } from "./TaskListItem";
@@ -148,6 +149,12 @@ export const GanttChart = ({
           </Header>
           <Body>
             <LeftPanel isCollapsed={isCollapsed}>
+              <EngagementListItem
+                type="Issuance"
+                state="IN_PROGRESS"
+                onClick={() => console.log("hello")}
+              />
+
               {!isCollapsed && (
                 <>
                   <TaskListItem
