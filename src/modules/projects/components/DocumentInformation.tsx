@@ -2,7 +2,6 @@ import { useState } from "react";
 import styled from "styled-components";
 
 import { DocumentList } from "./DocumentList";
-import { DocumentInfo } from "./DocumentListItem";
 import Accordion from "../../../components/Accordion";
 import Icon from "../../../components/Icon";
 import { SidePanel } from "../../../components/SidePanel";
@@ -32,8 +31,7 @@ export interface VersionHistory {
 
 const DocInfoHeader = styled.div`
   display: flex;
-  align-items: center;
-  margin: 18px;
+  padding: 15px 15px 15px 5px;
   gap: 10px;
 `;
 
@@ -43,7 +41,21 @@ const DocDetailParameter = styled.div`
 `;
 
 const DocDetailContainer = styled.div`
+  padding: 8px;
+`;
+
+const SidePanelContainer = styled.div`
   padding: 10px;
+`;
+
+const StyledHr = styled.hr`
+  border: none;
+  height: 1px;
+  background-color: #e1e4e8;
+`;
+
+const LeftArrowIconWrapper = styled.div`
+  cursor: pointer;
 `;
 
 function DocumentInformation({
@@ -54,18 +66,8 @@ function DocumentInformation({
   versionHistory: VersionHistory[];
 }) {
   const [openDocDetails, setOpenDocDetails] = useState(false);
+
   const [openVersionHistory, setOpenVersionHistory] = useState(false);
-  //   const documentDetails = {
-  //     name: "Project for Conservation",
-  //     projectId: 12345,
-  //     engagement: "Feasibility Study",
-  //     documentName: "Detailed project report",
-  //     state: "Active",
-  //     fileFormat: "PDF",
-  //     size: "1.3 MB",
-  //     source: "Consulant",
-  //     registryApprovalDate: new Date(),
-  //   };
 
   const toggleDocDetailsAccordion = () => {
     setOpenDocDetails(!openDocDetails);
@@ -165,37 +167,46 @@ function DocumentInformation({
 
   const renderVersionHistory = () => {
     return (
-      <DocumentList
-        data={versionHistory}
-        // onClickDownload={downloadFile}
-        // onGetInfo={goToDetailsPage}
-      />
+      <div>
+        <DocumentList
+          data={versionHistory}
+          // onClickDownload={downloadFile}
+          // onGetInfo={goToDetailsPage}
+        />
+      </div>
     );
   };
 
   return (
     <SidePanel isOn={true}>
-      <DocInfoHeader>
-        <Icon name="information" />
+      <SidePanelContainer>
+        <DocInfoHeader>
+          <LeftArrowIconWrapper>
+            <Icon name="arrowLeft" />
+          </LeftArrowIconWrapper>
 
-        <Text type="heading3" color="default">
-          {"Document Information"}
-        </Text>
-      </DocInfoHeader>
-      <Accordion
-        isOpen={openDocDetails}
-        title={"Document details"}
-        toggleAccordion={toggleDocDetailsAccordion}
-      >
-        {renderDocumentDetails()}
-      </Accordion>
-      <Accordion
-        isOpen={openVersionHistory}
-        toggleAccordion={toggleVersionHistoryAccordion}
-        title={"Version History"}
-      >
-        {renderVersionHistory()}
-      </Accordion>
+          <Text type="heading3" color="default">
+            {"Document Information"}
+          </Text>
+        </DocInfoHeader>
+        <Accordion
+          isOpen={openDocDetails}
+          title={"Document details"}
+          toggleAccordion={toggleDocDetailsAccordion}
+        >
+          {renderDocumentDetails()}
+        </Accordion>
+        <Accordion
+          isOpen={openVersionHistory}
+          toggleAccordion={toggleVersionHistoryAccordion}
+          title={"Version History"}
+        >
+          <StyledHr />
+          {/* <hr /> */}
+          {renderVersionHistory()}
+        </Accordion>
+        {!openVersionHistory ? <StyledHr /> : null}
+      </SidePanelContainer>
     </SidePanel>
   );
 }

@@ -14,9 +14,8 @@ interface AccordionProps {
 // Styled Components
 const AccordionContainer = styled.div`
   border-top: 1px solid #e1e4e8;
-  border-bottom: 1px solid #e1e4e8;
-  border-radius: 4px;
-  margin-bottom: 10px;
+  // border-bottom: 1px solid #e1e4e8;
+  // margin-bottom: 10px;
 `;
 
 const ChevronButtonIconWrapper = styled.div<{ isOpen: boolean }>`
@@ -28,7 +27,7 @@ const ChevronButtonIconWrapper = styled.div<{ isOpen: boolean }>`
 
 const AccordionHeader = styled.div`
   background-color: #fff;
-  margin: 18px;
+  padding: 18px 18px 18px 8px;
   color: #363c46;
   font-weight: 500;
   cursor: pointer;
@@ -37,7 +36,6 @@ const AccordionHeader = styled.div`
 `;
 
 const AccordionContent = styled.div`
-  padding: 10px;
   display: block;
 `;
 
