@@ -34,7 +34,7 @@ const Bar = styled.div<{
   margin-left: ${({ offsetFromLeft }) => offsetFromLeft}px;
   z-index: 2;
   cursor: pointer;
-  padding: 4px 8px;
+  padding: ${({ width }) => (width < 40 ? "0px 4px" : "4px 8px")};
   background-color: ${(props) =>
     props.theme.colors.semantic[props.statusInfo.type].default};
   gap: 12px;
@@ -132,7 +132,7 @@ export const TaskBar = ({
   useEffect(() => {
     setShowPopup(false);
   }, [scrollEvent]);
-
+  console.log(taskData.bar.width[view]);
   return (
     <>
       {showPopup && (
