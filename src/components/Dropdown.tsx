@@ -18,6 +18,7 @@ interface DropdownProps {
 const DropdownContainer = styled.div`
   position: relative;
   display: inline-block;
+  width: 100%;
 `;
 
 const DropdownButton = styled.button`
@@ -25,13 +26,13 @@ const DropdownButton = styled.button`
   align-items: center;
   background-color: white;
   border: 1px solid #ccc;
-  border-color: ${(prop) => prop.theme.colors.neutral[700]};
+  border-color: ${(prop) => prop.theme.colors.neutral[100]};
+  justify-content: space-between;
+  width: 100%;
   padding: 8px 16px;
   border-radius: 8px;
   cursor: pointer;
-  width: 120px;
   text-align: left;
-
   &:hover {
     background-color: ${(props) => props.theme.colors.neutral[200]};
   }

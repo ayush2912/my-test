@@ -20,6 +20,9 @@ const Selected = styled.div<{ isPrimary: boolean }>`
 `;
 
 const OptionsCard = styled.div`
+  left: 0;
+  top: 100%;
+  z-index: 10;
   width: 100%;
   margin-top: 4px;
   overflow-x: auto;
@@ -114,7 +117,7 @@ const Select = ({
   };
 
   return (
-    <div style={{ position: "relative" }}>
+    <div style={{ position: "relative", width: "100%" }}>
       <Selected
         isPrimary={isPrimary}
         onClick={() => setShowOptions(!showOptions)}
