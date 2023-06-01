@@ -20,7 +20,7 @@ const Dot = styled.div<{ color: string }>`
   background: ${(props) => props.color};
 `;
 
-const GantChartLengend = () => {
+const GanttChartLengend = () => {
   return (
     <Legend>
       <div>
@@ -45,4 +45,4 @@ const GantChartLengend = () => {
   );
 };
 
-export default GantChartLengend;
+export default GanttChartLengend;

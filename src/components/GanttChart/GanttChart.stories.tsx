@@ -10,7 +10,7 @@ interface GanttChartProps {
 }
 
 const meta: Meta = {
-  title: "GanttChart",
+  title: "Gantt Chart/ Chart",
   component: GanttChart,
 };
 
