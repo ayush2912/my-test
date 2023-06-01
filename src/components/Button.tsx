@@ -76,6 +76,7 @@ export default function Button({
   large,
   isIcon,
   type = "primary",
+  border,
 }: {
   onClick: () => void;
   children: ReactNode;
@@ -83,6 +84,7 @@ export default function Button({
   large?: boolean;
   isIcon?: boolean;
   type?: "primary" | "secondary" | "ghost";
+  border?: string;
 }) {
   const theme: DefaultTheme = useTheme();
 
@@ -115,6 +117,7 @@ export default function Button({
       disabled={disabled}
       {...selectedButtonStyles}
       onClick={onClick}
+      border={border}
     >
       <ButtonContentWrapper>{children}</ButtonContentWrapper>
     </StyledButton>
