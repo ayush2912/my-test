@@ -21,7 +21,7 @@ export const Drawer = styled.div<{ isOn: boolean }>`
   width: 672px;
   background: white;
   transition: right 300ms ease-in-out;
-
+  overflow: auto;
   ${({ isOn }) =>
     !isOn &&
     css`

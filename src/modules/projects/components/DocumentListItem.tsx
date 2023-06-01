@@ -88,13 +88,13 @@ export default function DocumentListItem({
 
         <FlexBox gap="4px">
           <Text type="caption" color="subdued">
-            {documentInfo.size}
+            {convertToMonthNameFormat(documentInfo.createdAt)}
           </Text>
 
           <DotDivider />
 
           <Text type="caption" color="subdued">
-            {convertToMonthNameFormat(documentInfo.createdAt)}
+            {documentInfo.size}
           </Text>
 
           {documentInfo.source && (
