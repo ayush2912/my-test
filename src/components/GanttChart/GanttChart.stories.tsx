@@ -223,10 +223,10 @@ MultipleProjects.args = {
               dueDate: "2022-09-15T00:00:00Z",
               completedDate: "2023-09-24T08:22:20.099Z",
               isOverdue: true,
-              state: "NOT_STARTED",
+              state: "IN_PROGRESS",
               stateHistory: [
                 {
-                  state: "NOT_STARTED",
+                  state: "IN_PROGRESS",
                   stateUpdatedAt: "2019-08-24T14:15:22Z",
                 },
               ],
@@ -241,10 +241,10 @@ MultipleProjects.args = {
               dueDate: "2022-09-15T00:00:00Z",
               completedDate: "2022-09-24T08:22:20.099Z",
               isOverdue: true,
-              state: "NOT_STARTED",
+              state: "COMPLETED",
               stateHistory: [
                 {
-                  state: "NOT_STARTED",
+                  state: "COMPLETED",
                   stateUpdatedAt: "2019-08-24T14:15:22Z",
                 },
               ],

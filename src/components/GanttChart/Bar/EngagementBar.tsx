@@ -187,7 +187,7 @@ export const EngagementBar = ({
           focus={showPopup}
         >
           {!isTextOverflowing && (
-            <Text ref={contentRef} type="caption" color="white">
+            <Text ref={contentRef} type="captionBold" color="white">
               {engagementData.type}
             </Text>
           )}

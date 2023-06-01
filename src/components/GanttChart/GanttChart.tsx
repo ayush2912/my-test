@@ -196,7 +196,11 @@ export const GanttChart = ({
                   <>
                     <EngagementBar key={v.id + "e"} engagementData={v} />
                     {v.tasks.map((v) => (
-                      <TaskBar key={v.id} taskData={v} />
+                      <TaskBar
+                        key={v.id}
+                        taskData={v}
+                        isOverDue={v.isOverdue}
+                      />
                     ))}
                   </>
                 );
