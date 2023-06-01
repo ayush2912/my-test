@@ -149,19 +149,12 @@ export const GanttChart = ({
           </Header>
           <Body>
             <LeftPanel isCollapsed={isCollapsed}>
-              <EngagementListItem
-                type="Issuance"
-                state="IN_PROGRESS"
-                onClick={() => console.log("hello")}
-              />
-
               {!isCollapsed && (
                 <>
-                  <TaskListItem
-                    key={12312321}
-                    name={"Engagement"}
-                    source=""
-                    isOverDue={false}
+                  <EngagementListItem
+                    type="Issuance"
+                    state="IN_PROGRESS"
+                    onClick={() => console.log("hello")}
                   />
                   {mappedProjectEngagements[0].tasks.map((v) => (
                     <TaskListItem
