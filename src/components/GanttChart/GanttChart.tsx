@@ -15,6 +15,7 @@ import useGanttChartControls from "./useGanttChartControls";
 import EmptyBox from "../../assets/images/empty-box.png";
 import Card from "../Card";
 import Icon from "../Icon";
+import Text from "../Text";
 
 const EmptyStateContainer = styled.div`
   display: flex;
@@ -138,82 +139,82 @@ export const GanttChart = ({
   return (
     <Card>
       <GanttChartControls onTodayButtonClick={focusToday} />
-
-      <Container ref={calendarBodyRef}>
-        <Content>
-          <Header>
-            <LeftPanelHeader isCollapsed={isCollapsed}>
-              <CollapseButtonContainer>
-                <span onClick={handleCollapse}>
-                  <Icon name="chevronsLeft" size="xsmall" />
-                </span>
-              </CollapseButtonContainer>
-              <ProjectNameContainer isCollapsed={isCollapsed}>
-                Songtao, Tongren, Wanshan and Yuping Rural Methane project
-              </ProjectNameContainer>
-            </LeftPanelHeader>
-            <CalendarHeader
-              calendarHeader={calendar.header}
-              view={view}
-              offsetForToday={calendar.offsetForToday}
-              todayRef={todayRef}
-            />
-          </Header>
-          <Body>
-            <LeftPanel isCollapsed={isCollapsed}>
-              {!isCollapsed && (
-                <>
-                  <EngagementListItem
-                    type="Issuance"
-                    state="IN_PROGRESS"
-                    onClick={() => console.log("hello")}
-                  />
-                  {mappedProjectEngagements[0].tasks.map((v) => (
-                    <TaskListItem
-                      key={v.id}
-                      name={v.type}
-                      source="client"
-                      isOverDue={true}
-                    />
-                  ))}
-                </>
-              )}
-            </LeftPanel>
-            <CalendarBackground width={calendar.width[view]} view={view}>
-              {view === "monthly" && (
-                <TodayFocus
-                  offsetLeft={calendar.offsetForToday * 40}
-                  calendarBoxWidth={48}
-                />
-              )}
-
-              {mappedProjectEngagements.map((v) => {
-                return (
+      {mappedProjectEngagements.length ? (
+        <Container ref={calendarBodyRef}>
+          <Content>
+            <Header>
+              <LeftPanelHeader isCollapsed={isCollapsed}>
+                <CollapseButtonContainer>
+                  <span onClick={handleCollapse}>
+                    <Icon name="chevronsLeft" size="xsmall" />
+                  </span>
+                </CollapseButtonContainer>
+                <ProjectNameContainer isCollapsed={isCollapsed}>
+                  Songtao, Tongren, Wanshan and Yuping Rural Methane project
+                </ProjectNameContainer>
+              </LeftPanelHeader>
+              <CalendarHeader
+                calendarHeader={calendar.header}
+                view={view}
+                offsetForToday={calendar.offsetForToday}
+                todayRef={todayRef}
+              />
+            </Header>
+            <Body>
+              <LeftPanel isCollapsed={isCollapsed}>
+                {!isCollapsed && (
                   <>
-                    <EngagementBar key={v.id + "e"} engagementData={v} />
-                    {v.tasks.map((v) => (
-                      <TaskBar key={v.id} taskData={v} />
+                    <EngagementListItem
+                      type="Issuance"
+                      state="IN_PROGRESS"
+                      onClick={() => console.log("hello")}
+                    />
+                    {mappedProjectEngagements[0].tasks.map((v) => (
+                      <TaskListItem
+                        key={v.id}
+                        name={v.type}
+                        source="client"
+                        isOverDue={true}
+                      />
                     ))}
                   </>
-                );
-              })}
-            </CalendarBackground>
-          </Body>
-        </Content>
+                )}
+              </LeftPanel>
+              <CalendarBackground width={calendar.width[view]} view={view}>
+                {view === "monthly" && (
+                  <TodayFocus
+                    offsetLeft={calendar.offsetForToday * 40}
+                    calendarBoxWidth={48}
+                  />
+                )}
 
-        {/*      
-            <EmptyStateContainer>
-              <img src={EmptyBox} />
-              <Text type="heading3">No data available</Text>
+                {mappedProjectEngagements.map((v) => {
+                  return (
+                    <>
+                      <EngagementBar key={v.id + "e"} engagementData={v} />
+                      {v.tasks.map((v) => (
+                        <TaskBar key={v.id} taskData={v} />
+                      ))}
+                    </>
+                  );
+                })}
+              </CalendarBackground>
+            </Body>
+          </Content>
+        </Container>
+      ) : (
+        <EmptyStateContainer>
+          <img src={EmptyBox} />
+          <Text type="heading3">No data available</Text>
 
-              <div style={{ width: 336, textAlign: "center" }}>
-                <Text type="body" color="subdued">
-                  No active engagements or tasks to show. You will be notified
-                  when an engagement is added.
-                </Text>
-              </div>
-            </EmptyStateContainer> */}
-      </Container>
+          <div style={{ width: 336, textAlign: "center" }}>
+            <Text type="body" color="subdued">
+              No active engagements or tasks to show. You will be notified when
+              an engagement is added.
+            </Text>
+          </div>
+        </EmptyStateContainer>
+      )}
     </Card>
   );
 };
