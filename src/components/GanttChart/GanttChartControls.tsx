@@ -7,6 +7,7 @@ import useGanttChartControls from "./useGanttChartControls";
 import Button from "../Button";
 import Dropdown from "../Dropdown";
 import Select from "../Select";
+import Text from "../Text";
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -81,7 +82,9 @@ export const GanttChartControls = ({
           type="secondary"
           onClick={onTodayButtonClick}
         >
-          Today
+          <Text color="default" type="button">
+            Today
+          </Text>
         </Button>
 
         <DropDownBox>

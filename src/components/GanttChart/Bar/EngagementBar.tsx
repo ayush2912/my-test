@@ -35,17 +35,17 @@ const Bar = styled.div<{
   margin-right: 8px;
   cursor: pointer;
   padding: 4px 8px;
-  background-color: ${(props) => props.theme.colors.primary[600]};
+  background-color: ${(props) => props.theme.colors.neutral[600]};
   z-index: 2;
   &:hover {
-    box-shadow: 0px 0px 0px 4px #b1c8f9;
+    box-shadow: 0px 0px 0px 4px #c4c9d1;
   }
 
   &:active {
-    box-shadow: 0px 0px 0px 4px #b1c8f9;
+    box-shadow: 0px 0px 0px 4px #c4c9d1;
   }
 
-  ${({ focus }) => (focus ? "box-shadow: 0px 0px 0px 4px #b1c8f9;" : "")}
+  ${({ focus }) => (focus ? "box-shadow: 0px 0px 0px 4px #C4C9D1" : "")}
 `;
 
 type EngagmentStateTypes =
