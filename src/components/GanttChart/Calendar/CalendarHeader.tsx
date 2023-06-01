@@ -65,13 +65,14 @@ const MonthContainer = styled.div`
   border-radius: 4px;
 `;
 
-const SundayContainer = styled.div<{ lastWeek: boolean }>`
+const SundayContainer = styled.div`
   display: flex;
+  justify-content: center;
   align-items: center;
   background-color: "transparent";
   color: "#999999";
 
-  width: ${(props) => (props.lastWeek ? 0 : 155)}px;
+  width: 155px;
   padding: 4px 0px;
   font-size: 14px;
   border-radius: 4px;
@@ -142,10 +143,7 @@ const WeeklyHeader = ({ data }: { data: IWeeklyHeader }) => {
 
           <BottomRowContainer>
             {sundays.map((s, i) => (
-              <SundayContainer
-                key={s + month + year}
-                lastWeek={index === data.length - 1 && i === sundays.length - 1}
-              >
+              <SundayContainer key={s + month + year}>
                 <Text type="captionBold" color="subdued">
                   {`${s} ${i === 0 ? month : ""}`}
                 </Text>
