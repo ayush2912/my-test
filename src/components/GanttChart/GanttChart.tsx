@@ -85,6 +85,7 @@ const LeftPanel = styled.div<{ isCollapsed: boolean }>`
   border-right: 1px solid #e1e4e8;
   box-shadow: 2px 0px 4px rgba(0, 0, 0, 0.1);
   background: white;
+  transition: width 0.3s ease-in-out;
 `;
 
 const LeftPanelHeader = styled.div<{ isCollapsed: boolean }>`
@@ -98,6 +99,7 @@ const LeftPanelHeader = styled.div<{ isCollapsed: boolean }>`
   border-bottom: 1px solid #e1e4e8;
   border-right: 1px solid #e1e4e8;
   box-shadow: 2px 0px 4px rgba(0, 0, 0, 0.1);
+  transition: width 0.3s ease-in-out;
 `;
 
 export const GanttChart = ({

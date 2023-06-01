@@ -221,7 +221,7 @@ MultipleProjects.args = {
               type: "Project Design Document",
               startDate: "2021-03-11T00:00:00Z",
               dueDate: "2022-09-15T00:00:00Z",
-              completedDate: "2023-09-24T08:22:20.099Z",
+              completedDate: null,
               isOverdue: true,
               state: "NOT_STARTED",
               stateHistory: [
