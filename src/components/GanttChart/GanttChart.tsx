@@ -106,7 +106,7 @@ export const GanttChart = ({
   mappedProjectEngagements: IMappedEngagements;
   calendar: ICalendar;
 }) => {
-  const { view, onScroll } = useGanttChartControls();
+  const { view, onScroll, changeView } = useGanttChartControls();
   const calendarBodyRef = useRef<HTMLDivElement | null>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const todayRef = useRef<HTMLDivElement | null>(null);
@@ -124,17 +124,19 @@ export const GanttChart = ({
   }, []);
 
   const focusToday = () => {
-    if (todayRef.current)
-      todayRef.current.scrollIntoView({
-        behavior: "auto",
-        block: "center",
-        inline: "center",
-      });
+    changeView("monthly");
+    setTimeout(() => {
+      if (todayRef.current)
+        todayRef.current.scrollIntoView({
+          behavior: "auto",
+          block: "center",
+          inline: "center",
+        });
+    }, 500);
   };
 
   return (
     <Card>
-      {/* controls */}
       <GanttChartControls onTodayButtonClick={focusToday} />
 
       <Container ref={calendarBodyRef}>
