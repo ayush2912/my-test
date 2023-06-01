@@ -44,16 +44,25 @@ export const GanttChartControls = ({
   ];
 
   const selectOptions = [
-    { value: "value 1", displayValue: "Display Value" },
+    {
+      value: "value 1",
+      displayValue: "Feasibility study",
+      subValue: "(14 May 2023 - 16 Apr 2024)",
+    },
     {
       value: "value 2",
-      displayValue: "Value with sub value",
-      subValue: "(sub value)",
+      displayValue: "Registration",
+      subValue: "(14 Sep 2023 - 16 Mar 2024)",
     },
     {
       value: "long value",
-      displayValue:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+      displayValue: "Issuance",
+      subValue: "(26 Oct 2023- 16 Apr 2024)",
+    },
+    {
+      value: "long value",
+      displayValue: "Issuance",
+      subValue: "(14 Nov 2023- 15 May 2024)",
     },
   ];
 

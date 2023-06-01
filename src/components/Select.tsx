@@ -150,9 +150,14 @@ const Select = ({
             <Options>
               {options.map((option) => (
                 <li key={option.value} onClick={() => onOptionSelect(option)}>
-                  <Text color="default" type="body">
-                    {option?.displayValue}
-                  </Text>
+                  <TextHolder>
+                    <Text color="default" type="body">
+                      {option?.displayValue}
+                    </Text>
+                    <Text color="subdued" type="caption">
+                      {option?.subValue}
+                    </Text>
+                  </TextHolder>
                 </li>
               ))}
             </Options>
