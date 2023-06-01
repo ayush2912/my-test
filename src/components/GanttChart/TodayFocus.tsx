@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import styled from "styled-components";
 
 type TodayFocusProps = {
@@ -17,8 +18,12 @@ const StyledDiv = styled.div<TodayFocusProps>`
   top: 0;
 `;
 
-const TodayFocus = (props: TodayFocusProps) => {
-  return <StyledDiv {...props} />;
-};
+export const TodayFocus = forwardRef<HTMLDivElement, TodayFocusProps>(
+  (props, ref) => {
+    return <StyledDiv ref={ref} {...props} />;
+  },
+);
+
+TodayFocus.displayName = "TodayFocus";
 
 export default TodayFocus;

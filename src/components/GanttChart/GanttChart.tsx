@@ -15,7 +15,6 @@ import useGanttChartControls from "./useGanttChartControls";
 import EmptyBox from "../../assets/images/empty-box.png";
 import Card from "../Card";
 import Icon from "../Icon";
-import Text from "../Text";
 
 const EmptyStateContainer = styled.div`
   display: flex;
@@ -110,6 +109,7 @@ export const GanttChart = ({
   const { view, onScroll } = useGanttChartControls();
   const calendarBodyRef = useRef<HTMLDivElement | null>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const todayRef = useRef<HTMLDivElement | null>(null);
 
   const handleCollapse = () => {
     setIsCollapsed(!isCollapsed);
@@ -123,10 +123,19 @@ export const GanttChart = ({
     };
   }, []);
 
+  const focusToday = () => {
+    if (todayRef.current)
+      todayRef.current.scrollIntoView({
+        behavior: "auto",
+        block: "center",
+        inline: "center",
+      });
+  };
+
   return (
     <Card>
       {/* controls */}
-      <GanttChartControls />
+      <GanttChartControls onTodayButtonClick={focusToday} />
 
       <Container ref={calendarBodyRef}>
         <Content>
@@ -145,6 +154,7 @@ export const GanttChart = ({
               calendarHeader={calendar.header}
               view={view}
               offsetForToday={calendar.offsetForToday}
+              todayRef={todayRef}
             />
           </Header>
           <Body>

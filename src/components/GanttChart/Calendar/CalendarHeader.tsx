@@ -161,15 +161,21 @@ export const CalendarHeader = ({
   calendarHeader,
   view,
   offsetForToday,
+  todayRef,
 }: {
   calendarHeader: ICalendarHeader;
   view: TemporalView;
   offsetForToday: number;
+  todayRef: React.RefObject<HTMLDivElement>;
 }) => {
   return (
     <CalendarHeaderContainer>
       {view === "monthly" && (
-        <TodayFocus offsetLeft={offsetForToday * 40} calendarBoxWidth={40} />
+        <TodayFocus
+          ref={todayRef}
+          offsetLeft={offsetForToday * 40}
+          calendarBoxWidth={40}
+        />
       )}
       {
         {

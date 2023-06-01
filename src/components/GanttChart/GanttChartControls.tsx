@@ -14,7 +14,11 @@ const ButtonContainer = styled.div`
   margin-bottom: 24px;
   gap: 16px;
 `;
-export const GanttChartControls = () => {
+export const GanttChartControls = ({
+  onTodayButtonClick,
+}: {
+  onTodayButtonClick: () => void;
+}) => {
   const { view, changeView } = useGanttChartControls();
 
   const options = [
@@ -33,9 +37,7 @@ export const GanttChartControls = () => {
         border="1px solid #E1E4E8"
         large={true}
         type="secondary"
-        onClick={() => {
-          console.log("focus today");
-        }}
+        onClick={onTodayButtonClick}
       >
         Today
       </Button>
