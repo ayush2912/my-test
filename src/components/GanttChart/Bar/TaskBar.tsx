@@ -33,10 +33,10 @@ const Bar = styled.div<{
   z-index: 2;
   cursor: pointer;
   padding: 4px 8px;
-  border: 2px solid #8aadf7;
   background-color: #8aadf7;
   overflow: hidden;
   white-space: nowrap;
+
   &:active {
     box-shadow: 0px 0px 0px 4px #b1c8f9;
   }
