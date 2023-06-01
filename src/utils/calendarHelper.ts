@@ -79,7 +79,7 @@ export const getCalendarHeaderAndWidth = (
 
   const numberOfDays = Math.round(endOfYear.diff(startOfYear, "days", true));
 
-  const numberOfWeeks = Math.round(endOfYear.diff(startOfYear, "weeks", true));
+  // const numberOfWeeks = Math.round(endOfYear.diff(startOfYear, "weeks", true));
 
   const numberOfYears = Math.round(endOfYear.diff(startOfYear, "years", true));
 
@@ -142,6 +142,10 @@ export const getCalendarHeaderAndWidth = (
       };
     },
   );
+
+  const numberOfWeeks = weeklyHeaderData.reduce((total, curr) => {
+    return total + curr.sundays.length;
+  }, 0);
 
   return {
     calendarWidth: {
