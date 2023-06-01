@@ -6,7 +6,7 @@ import StatusTag, { StatusType } from "../StatusTag";
 import Text from "../Text";
 
 const StyledEngagementListItem = styled.div`
-  height: 64px;
+  height: 48px;
   display: flex;
   align-items: center;
   background-color: #ffffff;
