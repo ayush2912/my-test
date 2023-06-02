@@ -15,7 +15,7 @@ import useGanttChartControls from "../useGanttChartControls";
 const Container = styled.div`
   display: flex;
   align-items: center;
-  height: 40px;
+  height: 48px;
   padding: 8px 0px;
   user-select: none;
 `;
@@ -35,17 +35,17 @@ const Bar = styled.div<{
   margin-right: 8px;
   cursor: pointer;
   padding: 4px 8px;
-  background-color: ${(props) => props.theme.colors.primary[600]};
-
+  background-color: ${(props) => props.theme.colors.neutral[600]};
+  z-index: 2;
   &:hover {
-    box-shadow: 0px 0px 0px 4px #b1c8f9;
+    box-shadow: 0px 0px 0px 4px #c4c9d1;
   }
 
   &:active {
-    box-shadow: 0px 0px 0px 4px #b1c8f9;
+    box-shadow: 0px 0px 0px 4px #c4c9d1;
   }
 
-  ${({ focus }) => (focus ? "box-shadow: 0px 0px 0px 4px #b1c8f9;" : "")}
+  ${({ focus }) => (focus ? "box-shadow: 0px 0px 0px 4px #C4C9D1" : "")}
 `;
 
 type EngagmentStateTypes =
@@ -119,83 +119,85 @@ export const EngagementBar = ({
   }, [scrollEvent]);
 
   return (
-    <Container>
-      <Bar
-        ref={barRef}
-        width={engagementData.bar.width[view]}
-        offsetFromLeft={engagementData.bar.offsetFromLeft[view]}
-        onMouseDown={handleContainerMouseDown}
-        focus={showPopup}
-      >
-        {showPopup && (
-          <BarPopup
-            ref={popupRef}
-            onMouseDown={handlePopupMouseDown}
-            top={popupPosition.top}
-            left={popupPosition.left}
-          >
-            <ModalHeader>
-              <Text type="captionBold" color="default">
-                {engagementData.type}
+    <>
+      {showPopup && (
+        <BarPopup
+          ref={popupRef}
+          onMouseDown={handlePopupMouseDown}
+          top={popupPosition.top}
+          left={popupPosition.left}
+        >
+          <ModalHeader>
+            <Text type="captionBold" color="default">
+              {engagementData.type}
+            </Text>
+            <Button
+              type="secondary"
+              isIcon
+              onClick={() => {
+                engagementData.onViewClick(engagementData.projectId);
+              }}
+            >
+              <Icon name="eyeIcon" size="xsmall" />
+            </Button>
+          </ModalHeader>
+          <div style={{ margin: "5px 0px" }}>
+            <StatusTag
+              name={statusTag.label}
+              type={engagementData.isOverdue ? "warning" : statusTag.type}
+            />
+          </div>
+          <ModalContent>
+            <TextHolder>
+              <Text type="caption" color="subdued">
+                Start date :
               </Text>
-              <Button
-                type="secondary"
-                isIcon
-                onClick={() => {
-                  engagementData.onViewClick(engagementData.projectId);
-                }}
-              >
-                <Icon name="eyeIcon" size="xsmall" />
-              </Button>
-            </ModalHeader>
-            <div style={{ margin: "5px 0px" }}>
-              <StatusTag
-                name={statusTag.label}
-                type={engagementData.isOverdue ? "warning" : statusTag.type}
-              />
-            </div>
-            <ModalContent>
-              <TextHolder>
-                <Text type="caption" color="subdued">
-                  Start date :
-                </Text>
-                <Text type="caption" color="default">
-                  {convertToMonthNameFormat(engagementData.startDate)}
-                </Text>
-              </TextHolder>
+              <Text type="caption" color="default">
+                {convertToMonthNameFormat(engagementData.startDate)}
+              </Text>
+            </TextHolder>
 
+            <TextHolder>
+              <Text type="caption" color="subdued">
+                Due date :
+              </Text>
+              <Text type="caption" color="default">
+                {convertToMonthNameFormat(engagementData.dueDate)}
+              </Text>
+            </TextHolder>
+            {engagementData.completedDate && (
               <TextHolder>
                 <Text type="caption" color="subdued">
-                  Due date :
+                  Completion date :
                 </Text>
                 <Text type="caption" color="default">
-                  {convertToMonthNameFormat(engagementData.dueDate)}
+                  {convertToMonthNameFormat(engagementData.completedDate)}
                 </Text>
               </TextHolder>
-              {engagementData.completedDate && (
-                <TextHolder>
-                  <Text type="caption" color="subdued">
-                    Completion date :
-                  </Text>
-                  <Text type="caption" color="default">
-                    {convertToMonthNameFormat(engagementData.completedDate)}
-                  </Text>
-                </TextHolder>
-              )}
-            </ModalContent>
-          </BarPopup>
-        )}
-        {!isTextOverflowing && (
-          <Text ref={contentRef} type="caption" color="white">
+            )}
+          </ModalContent>
+        </BarPopup>
+      )}
+      <Container>
+        <Bar
+          ref={barRef}
+          width={engagementData.bar.width[view]}
+          offsetFromLeft={engagementData.bar.offsetFromLeft[view]}
+          onMouseDown={handleContainerMouseDown}
+          focus={showPopup}
+        >
+          {!isTextOverflowing && (
+            <Text ref={contentRef} type="captionBold" color="white">
+              {engagementData.type}
+            </Text>
+          )}
+        </Bar>
+        {isTextOverflowing && (
+          <Text type="caption" color="default">
             {engagementData.type}
           </Text>
         )}
-      </Bar>
-      {isTextOverflowing && (
-        <Text type="caption" color="default">
-          {engagementData.type}
-        </Text>
-      )}
-    </Container>
+      </Container>
+    </>
   );
 };

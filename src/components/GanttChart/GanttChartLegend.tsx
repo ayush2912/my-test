@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import Text from "../../../components/Text";
+import Text from "../Text";
 
 const Legend = styled.div`
   gap: 16px;
@@ -20,7 +20,7 @@ const Dot = styled.div<{ color: string }>`
   background: ${(props) => props.color};
 `;
 
-const GantChartLengend = () => {
+const GanttChartLengend = () => {
   return (
     <Legend>
       <div>
@@ -45,4 +45,4 @@ const GantChartLengend = () => {
   );
 };
 
-export default GantChartLengend;
+export default GanttChartLengend;
