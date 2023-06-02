@@ -180,7 +180,7 @@ export const TaskBar = ({
                 <Text type="caption" color="default">
                   {convertToMonthNameFormat(taskData.dueDate)}
                 </Text>
-                {taskData.state !== "COMPLETED" &&
+                {taskData.state === "IN_PROGRESS" &&
                   moment() > moment(taskData.dueDate) && (
                     <>
                       <Icon name="watch" size="xsmall" />
@@ -202,7 +202,7 @@ export const TaskBar = ({
                     {convertToMonthNameFormat(taskData.completedDate)}
                   </Text>
 
-                  {taskData.state !== "COMPLETED" &&
+                  {taskData.state === "COMPLETED" &&
                     moment(taskData.completedDate) >
                       moment(taskData.dueDate) && (
                       <>
