@@ -132,7 +132,7 @@ export const TaskBar = ({
   useEffect(() => {
     setShowPopup(false);
   }, [scrollEvent]);
-  console.log(taskData.bar.width[view]);
+
   return (
     <>
       {showPopup && (
