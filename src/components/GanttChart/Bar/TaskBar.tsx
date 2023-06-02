@@ -197,9 +197,26 @@ export const TaskBar = ({
                   Completion date :
                 </Text>
 
-                <Text type="caption" color="default">
-                  {convertToMonthNameFormat(taskData.completedDate)}
-                </Text>
+                <TextHolder>
+                  <Text type="caption" color="default">
+                    {convertToMonthNameFormat(taskData.completedDate)}
+                  </Text>
+
+                  {taskData.state !== "COMPLETED" &&
+                    moment(taskData.completedDate) >
+                      moment(taskData.dueDate) && (
+                      <>
+                        <Icon name="watch" size="xsmall" />
+                        <Text type="smallText" color="subdued">
+                          (
+                          {moment(taskData.dueDate).from(
+                            taskData.completedDate,
+                          )}
+                          )
+                        </Text>
+                      </>
+                    )}
+                </TextHolder>
               </TextHolder>
             )}
           </ModalContent>
