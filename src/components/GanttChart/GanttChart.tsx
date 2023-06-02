@@ -54,6 +54,7 @@ const CollapseButtonContainer = styled.div`
   display: flex;
   justify-content: end;
   height: 24px;
+  padding: 10px 12px;
 `;
 
 const Content = styled.div`
@@ -148,7 +149,10 @@ export const GanttChart = ({
               <LeftPanelHeader isCollapsed={isCollapsed}>
                 <CollapseButtonContainer>
                   <span onClick={handleCollapse}>
-                    <Icon name="chevronsLeft" size="xsmall" />
+                    <Icon
+                      name={isCollapsed ? "chevronsRight" : "chevronsLeft"}
+                      size="xsmall"
+                    />
                   </span>
                 </CollapseButtonContainer>
                 <ProjectNameContainer isCollapsed={isCollapsed}>
@@ -195,7 +199,11 @@ export const GanttChart = ({
                     <>
                       <EngagementBar key={v.id + "e"} engagementData={v} />
                       {v.tasks.map((v) => (
-                        <TaskBar key={v.id} taskData={v} />
+                        <TaskBar
+                          isOverDue={v.isOverdue}
+                          key={v.id}
+                          taskData={v}
+                        />
                       ))}
                     </>
                   );

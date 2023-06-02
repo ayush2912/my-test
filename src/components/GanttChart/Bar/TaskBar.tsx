@@ -5,6 +5,7 @@ import { BarPopup } from "./BarPopup";
 import { ModalContent, ModalHeader, TextHolder } from "./ProjectBar";
 import { useOutsideAlerter } from "../../../hooks/useOutsiderAlerter";
 import { convertToMonthNameFormat } from "../../../utils/dateTimeFormatter";
+import Icon from "../../Icon";
 import StatusTag, { StatusType } from "../../StatusTag";
 import Text from "../../Text";
 import { IBar, Task } from "../GanttChart.types";
@@ -22,6 +23,7 @@ const Bar = styled.div<{
   width: number;
   offsetFromLeft: number;
   focus: boolean;
+  statusInfo: TaskStatus;
 }>`
   display: flex;
   align-items: center;
@@ -32,19 +34,22 @@ const Bar = styled.div<{
   margin-left: ${({ offsetFromLeft }) => offsetFromLeft}px;
   z-index: 2;
   cursor: pointer;
-  padding: 4px 8px;
-  background-color: #8aadf7;
+  padding: ${({ width }) => (width < 40 ? "0px 4px" : "4px 8px")};
+  background-color: ${(props) =>
+    props.theme.colors.semantic[props.statusInfo.type].default};
+  gap: 12px;
   overflow: hidden;
   white-space: nowrap;
 
   &:active {
-    box-shadow: 0px 0px 0px 4px #b1c8f9;
+    box-shadow: ${(props) => `0px 0px 0px 4px ${props.statusInfo.borderColor}`};
   }
   &:hover {
-    box-shadow: 0px 0px 0px 4px #b1c8f9;
+    box-shadow: ${(props) => `0px 0px 0px 4px ${props.statusInfo.borderColor}`};
   }
 
-  ${({ focus }) => (focus ? "box-shadow: 0px 0px 0px 4px #b1c8f9;" : "")}
+  ${({ focus, statusInfo }) =>
+    focus ? `box-shadow: 0px 0px 0px 4px ${statusInfo.borderColor}` : ""}
 `;
 
 type TaskStateTypes =
@@ -56,19 +61,34 @@ type TaskStateTypes =
 interface TaskStatus {
   label: TaskStateTypes;
   type: StatusType;
+  borderColor?: string;
 }
 
-export const TaskBar = ({ taskData }: { taskData: Task & { bar: IBar } }) => {
+export const TaskBar = ({
+  taskData,
+  isOverDue,
+}: {
+  taskData: Task & { bar: IBar };
+  isOverDue: boolean;
+}) => {
   const { view, scrollEvent } = useGanttChartControls();
   const [isTextOverflowing, setIsTextOverflowing] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
 
   const statusTag = {
-    NOT_STARTED: { label: "NOT STARTED", type: "disabled" },
-    IN_PROGRESS: { label: "IN PROGRESS", type: "information" },
+    NOT_STARTED: {
+      borderColor: "#E7E8EA",
+      label: "NOT STARTED",
+      type: "disabled",
+    },
+    IN_PROGRESS: {
+      borderColor: "#B7DDF9",
+      label: "IN PROGRESS",
+      type: "information",
+    },
     DISCONTINUED: { label: "DISCONTINUED", type: "error" },
-    COMPLETED: { label: "COMPLETED", type: "success" },
+    COMPLETED: { borderColor: "#BDE2D7", label: "COMPLETED", type: "success" },
     OVERDUE: { label: "OVERDUE", type: "warning" },
   }[taskData.state] as TaskStatus;
 
@@ -112,7 +132,7 @@ export const TaskBar = ({ taskData }: { taskData: Task & { bar: IBar } }) => {
   useEffect(() => {
     setShowPopup(false);
   }, [scrollEvent]);
-
+  console.log(taskData.bar.width[view]);
   return (
     <>
       {showPopup && (
@@ -173,9 +193,23 @@ export const TaskBar = ({ taskData }: { taskData: Task & { bar: IBar } }) => {
           offsetFromLeft={taskData.bar.offsetFromLeft[view]}
           onMouseDown={handleContainerMouseDown}
           focus={showPopup}
+          statusInfo={statusTag}
         >
+          {isOverDue && (
+            <Icon
+              size="xsmall"
+              strokeColor={
+                taskData.state === "NOT_STARTED" ? "#363C46" : "white"
+              }
+              name="watch"
+            />
+          )}
           {!isTextOverflowing && (
-            <Text ref={contentRef} type="caption" color="default">
+            <Text
+              ref={contentRef}
+              type="caption"
+              color={taskData.state === "NOT_STARTED" ? "default" : "white"}
+            >
               {taskData.type}
             </Text>
           )}
