@@ -67,3 +67,27 @@ Completed.args = {
   },
   isOverDue: false,
 };
+
+export const NotStartedOverdue = Template.bind({});
+NotStartedOverdue.args = {
+  taskData: notStartedTask,
+  isOverDue: true,
+};
+
+export const InProgressOverdue = Template.bind({});
+InProgressOverdue.args = {
+  taskData: {
+    ...notStartedTask,
+    state: "IN_PROGRESS",
+  },
+  isOverDue: true,
+};
+
+export const CompletedOverdue = Template.bind({});
+CompletedOverdue.args = {
+  taskData: {
+    ...notStartedTask,
+    state: "COMPLETED",
+  },
+  isOverDue: true,
+};
