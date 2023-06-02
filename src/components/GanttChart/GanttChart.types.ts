@@ -39,7 +39,7 @@ export type IBar = {
     weekly: number;
   };
 };
-export interface Task {
+export interface ITask {
   id: string;
   engagementId: string;
   type: string;
@@ -49,6 +49,7 @@ export interface Task {
   isOverdue: boolean;
   state: string;
   stateHistory: StateHistory[];
+  assignee: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -65,7 +66,7 @@ export interface Engagement {
   stateHistory: StateHistory[];
   isOverdue: boolean;
   attributes: Attribute[];
-  tasks: Task[];
+  tasks: ITask[];
   createdAt: string;
   updatedAt: string;
 }
@@ -100,7 +101,7 @@ export interface IMappedEngagement {
 
   bar: IBar;
   onViewClick: (id: string) => void;
-  tasks: (Task & { bar: IBar })[];
+  tasks: (ITask & { bar: IBar })[];
 }
 
 export type IMappedEngagements = IMappedEngagement[];

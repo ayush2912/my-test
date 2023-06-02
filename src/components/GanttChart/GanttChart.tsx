@@ -177,12 +177,7 @@ export const GanttChart = ({
                       onClick={() => console.log("hello")}
                     />
                     {mappedProjectEngagements[0].tasks.map((v) => (
-                      <TaskListItem
-                        key={v.id}
-                        name={v.type}
-                        source="client"
-                        isOverDue={true}
-                      />
+                      <TaskListItem key={v.id} data={v} />
                     ))}
                   </>
                 )}

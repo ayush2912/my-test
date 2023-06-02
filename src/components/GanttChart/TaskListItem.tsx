@@ -1,5 +1,6 @@
 import styled from "styled-components";
 
+import { ITask } from "./GanttChart.types";
 import Icon from "../Icon";
 import Text from "../Text";
 import Tooltip from "../Tooltip";
@@ -34,35 +35,27 @@ const StyledTaskListItem = styled.div`
   }
 `;
 
-export const TaskListItem = ({
-  name,
-  source,
-  isOverDue,
-  overdueDays,
-}: {
-  name: string;
-  source: string;
-  isOverDue: boolean;
-  overdueDays?: string | number;
-}) => {
+export const TaskListItem = ({ data }: { data: ITask }) => {
   return (
     <StyledTaskListItem>
       <div>
-        {isOverDue && (
-          <Tooltip text={`DELAYED BY ${overdueDays} DAYS`}>
+        {data.isOverdue && (
+          <Tooltip text={`DELAYED BY ${1} DAYS`}>
             <Icon name="watch" />
           </Tooltip>
         )}
         <Text color="default" type="body">
-          {name}
+          {data.type}
         </Text>
       </div>
 
       <div>
         <Text color="subdued" type="caption">
-          {source}
+          {data.assignee}
         </Text>
       </div>
     </StyledTaskListItem>
   );
 };
+
+export default TaskListItem;

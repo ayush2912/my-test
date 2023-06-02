@@ -24,7 +24,7 @@ type TextColor =
   | "warning"
   | "success";
 
-const StyledText = styled.span<{
+const StyledText = styled.p<{
   type: TypeStyle;
   color: TextColor;
   hoverStyles?: string;
