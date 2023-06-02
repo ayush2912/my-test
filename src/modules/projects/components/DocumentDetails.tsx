@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Text from "../../../components/Text";
 import { convertToMonthNameFormat } from "../../../utils/dateTimeFormatter";
 
-export interface DocumentDetail {
+export interface IDocumentDetails {
   name: string;
   projectId: number;
   engagement: string;
@@ -27,7 +27,7 @@ const DocDetailContainer = styled.div`
 function DocumentDetails({
   documentDetails,
 }: {
-  documentDetails: DocumentDetails;
+  documentDetails: IDocumentDetails;
 }) {
   return (
     <DocDetailContainer>

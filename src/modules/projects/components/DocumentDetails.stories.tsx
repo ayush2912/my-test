@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import DocumentDetails, { DocumentDetail } from "./DocumentDetails";
+import DocumentDetails, { IDocumentDetail } from "./DocumentDetails";
 
 const meta: Meta<typeof DocumentDetails> = {
   title: "Projects/Components/Document Details",
@@ -11,7 +11,7 @@ export default meta;
 
 type Story = StoryObj<typeof DocumentDetails>;
 
-const documentDetailsData: DocumentDetail = {
+const documentDetailsData: IDocumentDetail = {
   name: "Project for Conservation",
   projectId: 12345,
   engagement: "Feasibility Study",
