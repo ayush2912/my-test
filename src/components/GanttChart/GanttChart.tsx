@@ -55,6 +55,7 @@ const CollapseButtonContainer = styled.div`
   justify-content: end;
   height: 24px;
   padding: 10px 12px;
+  cursor: pointer;
 `;
 
 const Content = styled.div`

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import styled from "styled-components";
 
 import { TemporalView } from "./Calendar/Calendar.types";
@@ -35,13 +34,7 @@ export const GanttChartControls = ({
 }: {
   onTodayButtonClick: () => void;
 }) => {
-  const { view, changeView } = useGanttChartControls();
-
-  const options = [
-    { value: "monthly", label: "Daily" },
-    { value: "weekly", label: "Weekly" },
-    { value: "yearly", label: "Monthly" },
-  ];
+  const { view, changeView, temporalViewOptions } = useGanttChartControls();
 
   const selectOptions = [
     {
@@ -98,7 +91,7 @@ export const GanttChartControls = ({
 
         <DropDownBox>
           <Dropdown
-            options={options}
+            options={temporalViewOptions}
             value={view}
             onChange={handleDropdownChange}
           />
