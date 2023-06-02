@@ -14,7 +14,7 @@ import { ReactComponent as FileIcon } from "../../../assets/icons/generic/file.s
 import { ReactComponent as InfoIcon } from "../../../assets/icons/generic/info.svg";
 import Button from "../../../components/Button";
 import Text from "../../../components/Text";
-import { convertToMonthNameFormat } from "../../../utils/dateTimeFormatter";
+import { convertToDateTimeFormat } from "../../../utils/dateTimeFormatter";
 
 const DocumentItemContainer = styled.div`
   justify-content: left;
@@ -88,7 +88,7 @@ export default function DocumentListItem({
 
         <FlexBox gap="4px">
           <Text type="caption" color="subdued">
-            {convertToMonthNameFormat(documentInfo.createdAt)}
+            {convertToDateTimeFormat(documentInfo.createdAt)}
           </Text>
 
           <DotDivider />

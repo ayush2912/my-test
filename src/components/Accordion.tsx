@@ -36,6 +36,7 @@ const AccordionHeader = styled.div`
 `;
 
 const AccordionContent = styled.div`
+  padding: 18px 18px 18px 8px;
   display: block;
 `;
 
