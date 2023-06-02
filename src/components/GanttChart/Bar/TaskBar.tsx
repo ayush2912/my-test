@@ -1,3 +1,4 @@
+import moment from "moment";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
@@ -148,10 +149,7 @@ export const TaskBar = ({
             </Text>
           </ModalHeader>
           <div style={{ margin: "5px 0px" }}>
-            <StatusTag
-              name={statusTag.label}
-              type={taskData.isOverdue ? "warning" : statusTag.type}
-            />
+            <StatusTag name={statusTag.label} type={statusTag.type} />
           </div>
 
           <ModalContent>
@@ -159,18 +157,39 @@ export const TaskBar = ({
               <Text type="caption" color="subdued">
                 Start date :
               </Text>
-              <Text type="caption" color="default">
-                {convertToMonthNameFormat(taskData.startDate)}
-              </Text>
+              <TextHolder>
+                <Text type="caption" color="default">
+                  {convertToMonthNameFormat(taskData.startDate)}
+                </Text>
+                {taskData.state === "NOT_STARTED" && (
+                  <>
+                    <Icon name="watch" size="xsmall" />
+                    <Text type="smallText" color="subdued">
+                      ({moment(taskData.startDate).fromNow()})
+                    </Text>
+                  </>
+                )}
+              </TextHolder>
             </TextHolder>
 
             <TextHolder>
               <Text type="caption" color="subdued">
                 Due date :
               </Text>
-              <Text type="caption" color="default">
-                {convertToMonthNameFormat(taskData.dueDate)}
-              </Text>
+              <TextHolder>
+                <Text type="caption" color="default">
+                  {convertToMonthNameFormat(taskData.dueDate)}
+                </Text>
+                {taskData.state !== "COMPLETED" &&
+                  moment() > moment(taskData.dueDate) && (
+                    <>
+                      <Icon name="watch" size="xsmall" />
+                      <Text type="smallText" color="subdued">
+                        ({moment(taskData.dueDate).fromNow()})
+                      </Text>
+                    </>
+                  )}
+              </TextHolder>
             </TextHolder>
             {taskData.completedDate && (
               <TextHolder>
