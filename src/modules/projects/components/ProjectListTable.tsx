@@ -128,12 +128,10 @@ function ProjectListTable({
     }[v.engagement.state] as ProjectStateTypes;
 
     const iconTooltip =
-      v.engagement.isOverdue && statusLabel !== "COMPLETED"
-        ? "OVERDUE"
-        : statusLabel +
-          (statusLabel === "COMPLETED" && v.engagement.completedDate
-            ? " ON " + convertToMonthNameFormat(v.engagement.completedDate)
-            : "");
+      statusLabel +
+      (statusLabel === "COMPLETED" && v.engagement.completedDate
+        ? " ON " + convertToMonthNameFormat(v.engagement.completedDate)
+        : "");
     return {
       rowId: v.id,
       projectName: (
@@ -225,10 +223,7 @@ function ProjectListTable({
         <div>
           <div style={{ display: "flex", alignContent: "center" }}>
             <Tooltip text={iconTooltip}>
-              <Icon
-                name={selectedIconName}
-                color={v.engagement.isOverdue ? "#E0A008" : ""}
-              />
+              <Icon name={selectedIconName} />
             </Tooltip>
             <Tooltip text={v.engagement.type}>
               <Text type="bodyBold" color="default">
