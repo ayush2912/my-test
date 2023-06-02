@@ -34,30 +34,8 @@ export const GanttChartControls = ({
 }: {
   onTodayButtonClick: () => void;
 }) => {
-  const { view, changeView, temporalViewOptions } = useGanttChartControls();
-
-  const selectOptions = [
-    {
-      value: "value 1",
-      displayValue: "Feasibility study",
-      subValue: "(14 May 2023 - 16 Apr 2024)",
-    },
-    {
-      value: "value 2",
-      displayValue: "Registration",
-      subValue: "(14 Sep 2023 - 16 Mar 2024)",
-    },
-    {
-      value: "long value",
-      displayValue: "Issuance",
-      subValue: "(26 Oct 2023- 16 Apr 2024)",
-    },
-    {
-      value: "long value",
-      displayValue: "Issuance",
-      subValue: "(14 Nov 2023- 15 May 2024)",
-    },
-  ];
+  const { view, changeView, temporalViewOptions, engagementOptions } =
+    useGanttChartControls();
 
   const handleDropdownChange = (value: string) => {
     changeView(value as TemporalView);
@@ -69,7 +47,7 @@ export const GanttChartControls = ({
         <SelectBox>
           <Select
             isPrimary={false}
-            options={selectOptions}
+            options={engagementOptions}
             placeholder="Select Engagement Type"
             onSelect={(value) => console.log(value)}
           />
