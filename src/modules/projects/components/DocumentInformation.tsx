@@ -32,7 +32,8 @@ export interface VersionHistory {
 const DocInfoHeader = styled.div`
   display: flex;
   padding: 15px 15px 15px 5px;
-  gap: 10px;
+  gap: 15px;
+  align-items: flex-end;
 `;
 
 const DocDetailParameter = styled.div`
@@ -182,7 +183,7 @@ function DocumentInformation({
       <SidePanelContainer>
         <DocInfoHeader>
           <LeftArrowIconWrapper>
-            <Icon name="arrowLeft" />
+            <Icon name="arrowLeft" size="xsmall" />
           </LeftArrowIconWrapper>
 
           <Text type="heading3" color="default">
