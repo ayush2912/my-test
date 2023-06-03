@@ -19,6 +19,7 @@ export const Primary: Story = {
         startDate={new Date("2023-01-10T06:20:44.069Z")}
         dueDate={new Date("2030-01-05T08:52:29.962Z")}
         state="COMPLETED"
+        assignee="Client"
       />
       <TaskList
         isOverdue={false}
@@ -26,6 +27,7 @@ export const Primary: Story = {
         startDate={new Date("2023-01-10T06:20:44.069Z")}
         dueDate={new Date("2030-01-05T08:52:29.962Z")}
         state="NOT_STARTED"
+        assignee="Client"
       />
       <TaskList
         isOverdue={false}
@@ -33,6 +35,7 @@ export const Primary: Story = {
         startDate={new Date("2023-01-10T06:20:44.069Z")}
         dueDate={new Date("2030-01-05T08:52:29.962Z")}
         state="IN_PROGRESS"
+        assignee="Client"
       />
       <TaskList
         isOverdue={false}
@@ -40,6 +43,7 @@ export const Primary: Story = {
         startDate={new Date("2023-01-10T06:20:44.069Z")}
         dueDate={new Date("2030-01-05T08:52:29.962Z")}
         state="DISCONTINUED"
+        assignee="Client"
       />
       <TaskList
         isOverdue={true}
@@ -47,6 +51,7 @@ export const Primary: Story = {
         startDate={new Date("2023-01-10T06:20:44.069Z")}
         dueDate={new Date("2030-01-05T08:52:29.962Z")}
         state="IN_PROGRESS"
+        assignee="Client"
       />
       <TaskList
         isOverdue
@@ -54,6 +59,7 @@ export const Primary: Story = {
         startDate={new Date("2023-01-10T06:20:44.069Z")}
         dueDate={new Date("2030-01-05T08:52:29.962Z")}
         state="COMPLETED"
+        assignee="Client"
       />
     </>
   ),

@@ -15,12 +15,14 @@ const Template: StoryFn<{
 const engagementData = {
   id: "yourId",
   projectId: "yourProjectId",
+  projectName: "I am a project name",
   type: "Issuance",
   startDate: "2023-06-01T00:00:00Z",
   dueDate: "2023-06-10T00:00:00Z",
   completedDate: null,
   notes: "Your notes here",
   state: "IN_PROGRESS",
+
   stateHistory: [
     {
       state: "State 1",
