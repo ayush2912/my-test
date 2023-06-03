@@ -98,10 +98,9 @@ export interface IMappedEngagement {
   attributes: Attribute[];
   createdAt: string;
   updatedAt: string;
-
   bar: IBar;
   onViewClick: (id: string) => void;
-  tasks: (ITask & { bar: IBar })[];
+  tasks: ITaskBar[];
 }
-
+export type ITaskBar = ITask & { bar: IBar };
 export type IMappedEngagements = IMappedEngagement[];
