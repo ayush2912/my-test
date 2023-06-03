@@ -1,5 +1,6 @@
 import styled from "styled-components";
 
+import { IMappedEngagement } from "./GanttChart.types";
 import Button from "../Button";
 import Icon from "../Icon";
 import StatusTag, { StatusType } from "../StatusTag";
@@ -33,33 +34,31 @@ interface EngagementStatus {
   type: StatusType;
 }
 
-export const EngagementListItem = ({
-  type,
-  state,
-  onClick,
-}: {
-  type: string;
-  state: string;
-  onClick: () => void;
-}) => {
+export const EngagementListItem = ({ data }: { data: IMappedEngagement }) => {
   const statusTag = {
     IN_PROGRESS: { label: "IN PROGRESS", type: "information" },
     NOT_STARTED: { label: "NOT STARTED", type: "disabled" },
     DISCONTINUED: { label: "DISCONTINUED", type: "error" },
     COMPLETED: { label: "COMPLETED", type: "success" },
     OVERDUE: { label: "OVERDUE", type: "warning" },
-  }[state] as EngagementStatus;
+  }[data.state] as EngagementStatus;
 
   return (
     <StyledEngagementListItem>
       <div>
         <Text color="default" type="bodyBold">
-          {type}
+          {data.type}
         </Text>
         <StatusTag name={statusTag.label} type={statusTag.type} />
       </div>
       <div>
-        <Button isIcon onClick={onClick} type="secondary">
+        <Button
+          isIcon
+          onClick={() => {
+            data.onViewClick(data.projectId);
+          }}
+          type="secondary"
+        >
           <Icon name="eyeIcon" size="xsmall" />
         </Button>
       </div>

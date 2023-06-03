@@ -87,6 +87,7 @@ export interface ProjectEngagement {
 export interface IMappedEngagement {
   id: string;
   projectId: string;
+  projectName: string;
   type: string;
   startDate: string;
   dueDate: string;

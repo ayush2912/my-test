@@ -1,6 +1,9 @@
 import { create } from "zustand";
 
 import { TemporalView } from "./Calendar/Calendar.types";
+import { IMappedEngagement } from "./GanttChart.types";
+import { convertToMonthNameFormat } from "../../utils/dateTimeFormatter";
+import { ISelectOption } from "../Select";
 
 interface GanttChartControls {
   view: TemporalView;
@@ -8,14 +11,15 @@ interface GanttChartControls {
   scrollEvent: WheelEvent;
   onScroll: (scrollEvent: WheelEvent) => void;
   temporalViewOptions: { label: string; value: string }[];
-  engagementOptions: {
-    value: string;
-    displayValue: string;
-    subValue: string;
-  }[];
+  engagements: IMappedEngagement[];
+  setEngagements: (engagements: IMappedEngagement[]) => void;
+  engagementOptions: ISelectOption[];
+  setEngagementOptions: (engagementOptions: ISelectOption[]) => void;
+  selectedEngagement: IMappedEngagement;
+  setSelectedEngagement: (selectedEngagementId: string) => void;
 }
 
-const useGanttChartControls = create<GanttChartControls>((set) => ({
+const useGanttChartControls = create<GanttChartControls>((set, get) => ({
   view: "yearly",
   changeView: (selectedView: TemporalView) => set({ view: selectedView }),
   scrollEvent: {} as WheelEvent,
@@ -25,28 +29,29 @@ const useGanttChartControls = create<GanttChartControls>((set) => ({
     { value: "weekly", label: "Weekly" },
     { value: "yearly", label: "Monthly" },
   ],
-  engagementOptions: [
-    {
-      value: "value 1",
-      displayValue: "Feasibility study",
-      subValue: "(14 May 2023 - 16 Apr 2024)",
-    },
-    {
-      value: "value 2",
-      displayValue: "Registration",
-      subValue: "(14 Sep 2023 - 16 Mar 2024)",
-    },
-    {
-      value: "long value",
-      displayValue: "Issuance",
-      subValue: "(26 Oct 2023- 16 Apr 2024)",
-    },
-    {
-      value: "long value",
-      displayValue: "Issuance",
-      subValue: "(14 Nov 2023- 15 May 2024)",
-    },
-  ],
+  engagements: [] as IMappedEngagement[],
+  setEngagementOptions: (engagementOptions: ISelectOption[]) =>
+    set({ engagementOptions }),
+  engagementOptions: [],
+  selectedEngagement: {} as IMappedEngagement,
+  setSelectedEngagement: (selectedEngagementId: string) => {
+    set({
+      selectedEngagement: get().engagements.find(
+        (v) => v.id === selectedEngagementId,
+      ),
+    });
+  },
+  setEngagements: (engagements: IMappedEngagement[]) => {
+    const engagementOptions = engagements.map((v) => ({
+      value: v.id,
+      label: v.type,
+      sublabel: `(${convertToMonthNameFormat(
+        v.startDate,
+      )} - ${convertToMonthNameFormat(v.dueDate)})`,
+    }));
+    if (engagements.length) set({ selectedEngagement: engagements[0] });
+    set({ engagements, engagementOptions });
+  },
 }));
 
 export default useGanttChartControls;
