@@ -98,7 +98,6 @@ export const TaskBar = ({
     taskData.dueDate,
     taskData?.completedDate,
   );
-  console.log(completionDelay);
   const statusTag = {
     NOT_STARTED: {
       borderColor: "#E7E8EA",
