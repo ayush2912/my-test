@@ -315,6 +315,7 @@ function EngagementTable({
               dueDate={v.dueDate}
               completedDate={v?.completedDate}
               state={isEngamentDiscontinued ? "DISCONTINUED" : v.state}
+              assignee={v.assignee}
             />
           ))}
         </TaskListCell>
