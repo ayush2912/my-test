@@ -1,6 +1,6 @@
 import DocumentListItem, { DocumentInfo } from "./DocumentListItem";
 
-type IDocumentList = DocumentInfo[];
+export type IDocumentList = DocumentInfo[];
 
 export const DocumentList = ({
   data, // Document List Page in old project, map
