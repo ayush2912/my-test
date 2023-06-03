@@ -3,46 +3,42 @@ import styled from "styled-components";
 import Text from "../Text";
 
 const Legend = styled.div`
-  gap: 16px;
   display: flex;
-
-  div {
-    gap: 8px;
-    display: flex;
-    align-items: center;
-  }
+  gap: 16px;
 `;
 
 const Dot = styled.div<{ color: string }>`
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: ${(props) => props.color};
+  background-color: ${(props) => props.color};
 `;
 
-const GanttChartLengend = () => {
+const LegendItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+const GanttChartLegend = () => {
+  const legendItems = [
+    { color: "#c4c9d1", label: "Not started" },
+    { color: "#0084F4", label: "In progress" },
+    { color: "#00A676", label: "Completed" },
+  ];
+
   return (
     <Legend>
-      <div>
-        <Dot color="#c4c9d1" />
-        <Text color="subdued" type="caption">
-          Not started
-        </Text>
-      </div>
-      <div>
-        <Dot color="#0084F4" />
-        <Text color="subdued" type="caption">
-          In progress
-        </Text>
-      </div>
-      <div>
-        <Dot color="#00A676" />
-        <Text color="subdued" type="caption">
-          Completed
-        </Text>
-      </div>
+      {legendItems.map((item, index) => (
+        <LegendItem key={index}>
+          <Dot color={item.color} />
+          <Text color="subdued" type="caption">
+            {item.label}
+          </Text>
+        </LegendItem>
+      ))}
     </Legend>
   );
 };
 
-export default GanttChartLengend;
+export default GanttChartLegend;

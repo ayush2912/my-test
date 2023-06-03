@@ -3,15 +3,32 @@ import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 import { BarPopup } from "./BarPopup";
-import { ModalContent, ModalHeader, TextHolder } from "./ProjectBar";
 import { useOutsideAlerter } from "../../../hooks/useOutsiderAlerter";
 import { convertToMonthNameFormat } from "../../../utils/dateTimeFormatter";
 import Icon from "../../Icon";
 import StatusTag, { StatusType } from "../../StatusTag";
 import Text from "../../Text";
-import { IBar, Task } from "../GanttChart.types";
+import { IBar, ITask } from "../GanttChart.types";
 import useGanttChartControls from "../useGanttChartControls";
 
+export const ModalHeader = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  white-space: normal;
+  align-items: center;
+`;
+export const ModalContent = styled.div`
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+export const TextHolder = styled.div`
+  display: flex;
+  align-items: start;
+  gap: 4px;
+`;
 const Container = styled.div`
   display: flex;
   align-items: center;
@@ -73,7 +90,7 @@ export const TaskBar = ({
   taskData,
   isOverDue,
 }: {
-  taskData: Task & { bar: IBar };
+  taskData: ITask & { bar: IBar };
   isOverDue: boolean;
 }) => {
   const { view, scrollEvent } = useGanttChartControls();

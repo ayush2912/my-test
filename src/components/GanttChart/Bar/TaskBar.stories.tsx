@@ -1,7 +1,7 @@
 import type { Meta, StoryFn } from "@storybook/react";
 
 import { TaskBar } from "./TaskBar";
-import { Task, IBar } from "../GanttChart.types";
+import { ITask, IBar } from "../GanttChart.types";
 
 export default {
   title: "Gantt Chart/Task Bar",
@@ -9,7 +9,7 @@ export default {
 } as Meta;
 
 const Template: StoryFn<{
-  taskData: Task & { bar: IBar };
+  taskData: ITask & { bar: IBar };
   isOverDue: boolean;
 }> = (args) => <TaskBar {...args} />;
 
@@ -30,6 +30,7 @@ const notStartedTask = {
   ],
   createdAt: "2023-04-11T14:15:22Z",
   updatedAt: "2023-04-24T14:15:22Z",
+  assignee: "Client",
   bar: {
     offsetFromLeft: {
       monthly: 0,
