@@ -11,13 +11,7 @@ export default meta;
 type Story = StoryObj<typeof DocumentListItem>;
 
 const DocItem: DocumentInfo = {
-  //   fields not in use yet
-  //   id: "6438f5f51725504e53c94347",
-  //   updatedAt: "2019-08-24T14:15:22Z",
-  //   type: "Carbon document",
-  //   state: "ACTIVE",
-  //   registryApprovalDate: "2019-08-24T14:15:22Z",
-  createdAt: "2019-08-24T14:15:22Z",
+  date: "2019-08-24T14:15:22Z",
   name: "Detailed project report",
   source: "Consultant",
   fileFormat: "pdf",
@@ -26,13 +20,7 @@ const DocItem: DocumentInfo = {
 };
 
 const VersionDocItem: DocumentInfo = {
-  //   fields not in use yet
-  //   id: "6438f5f51725504e53c94347",
-  //   updatedAt: "2019-08-24T14:15:22Z",
-  //   type: "Carbon document",
-  //   state: "ACTIVE",
-  //   registryApprovalDate: "2019-08-24T14:15:22Z",
-  createdAt: "2019-08-24T14:15:22Z",
+  date: "2019-08-24T14:15:22Z",
   name: "Detailed project report",
   fileFormat: "pdf",
   size: "1.3 MB",

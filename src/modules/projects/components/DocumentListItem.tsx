@@ -47,7 +47,7 @@ const DotDivider = styled.div`
 
 export interface DocumentInfo {
   fileFormat: string;
-  createdAt: string;
+  date: string;
   source?: string;
   name: string;
   size: string;
@@ -88,7 +88,7 @@ export default function DocumentListItem({
 
         <FlexBox gap="4px">
           <Text type="caption" color="subdued">
-            {convertToDateTimeFormat(documentInfo.createdAt)}
+            {convertToDateTimeFormat(documentInfo.date)}
           </Text>
 
           <DotDivider />
