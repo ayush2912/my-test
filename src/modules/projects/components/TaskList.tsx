@@ -93,29 +93,29 @@ export default function TaskList({
   };
 
   const displayAlarmClockIcon = () => {
-    if (
-      state === "NOT_STARTED" &&
-      calculateFromToday(new Date(), startDate) === "Today > inputDate"
-    ) {
-      alarmClockTooltipContent["text"] =
-        "STARTS IN" + differenceInDates(new Date(), startDate) + " days";
-      return true;
-    } else if (
-      state === "IN_PROGRESS" &&
-      calculateFromToday(new Date(), dueDate) === "Today > inputDate"
-    ) {
-      alarmClockTooltipContent["text"] =
-        "DELAYED BY " + differenceInDates(dueDate, new Date()) + " days";
-      return true;
-    } else if (
-      state === "COMPLETED" &&
-      calculateFromToday(completedDate, dueDate) === "Today > inputDate"
-    ) {
-      alarmClockTooltipContent["text"] =
-        "COMPLETED BEFORE " +
-        differenceInDates(completedDate, dueDate) +
-        " days";
-      return true;
+    if (isOverdue) {
+      if (
+        state === "NOT_STARTED" &&
+        calculateFromToday(new Date(), startDate) === "Today > inputDate"
+      ) {
+        alarmClockTooltipContent["text"] =
+          "DELAYED BY" + differenceInDates(new Date(), startDate) + " days";
+        return true;
+      } else if (
+        state === "IN_PROGRESS" &&
+        calculateFromToday(new Date(), dueDate) === "Today > inputDate"
+      ) {
+        alarmClockTooltipContent["text"] =
+          "DELAYED BY " + differenceInDates(dueDate, new Date()) + " days";
+        return true;
+      } else if (
+        state === "COMPLETED" &&
+        calculateFromToday(completedDate, dueDate) === "Today > inputDate"
+      ) {
+        alarmClockTooltipContent["text"] =
+          "DELAYED BY " + differenceInDates(completedDate, dueDate) + " days";
+        return true;
+      }
     }
   };
 
