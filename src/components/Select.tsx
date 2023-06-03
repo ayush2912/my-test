@@ -126,10 +126,10 @@ const Select = ({
         {selected ? (
           <TextHolder>
             <Text color={isPrimary ? "primary" : "default"} type="button">
-              {selectedOption.label}
+              {selectedOption?.label}
             </Text>
             <Text color="subdued" type="caption">
-              {selectedOption.sublabel}
+              {selectedOption?.sublabel}
             </Text>
           </TextHolder>
         ) : (
