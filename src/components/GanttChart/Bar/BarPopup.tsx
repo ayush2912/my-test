@@ -9,7 +9,8 @@ export const BarPopup = styled.div<PopupPosition>`
   border-radius: 8px;
   box-shadow: ${(props) => props.theme.shadow.md};
   padding: 12px;
-  width: 304px;
+  min-width: 304px;
+  max-width: fit;
   padding: 16px;
   background-color: #ffffff;
   top: ${({ top }) => top}px;
