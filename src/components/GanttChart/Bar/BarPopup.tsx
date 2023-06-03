@@ -5,12 +5,14 @@ export interface PopupPosition {
   left: number;
 }
 export const BarPopup = styled.div<PopupPosition>`
-  position: absolute;
+  position: fixed;
   border-radius: 8px;
   box-shadow: ${(props) => props.theme.shadow.md};
   padding: 12px;
   width: 304px;
+  padding: 16px;
   background-color: #ffffff;
   top: ${({ top }) => top}px;
   left: ${({ left }) => left}px;
+  z-index: 9999;
 `;

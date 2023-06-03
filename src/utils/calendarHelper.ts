@@ -79,7 +79,7 @@ export const getCalendarHeaderAndWidth = (
 
   const numberOfDays = Math.round(endOfYear.diff(startOfYear, "days", true));
 
-  const numberOfWeeks = Math.round(endOfYear.diff(startOfYear, "weeks", true));
+  // const numberOfWeeks = Math.round(endOfYear.diff(startOfYear, "weeks", true));
 
   const numberOfYears = Math.round(endOfYear.diff(startOfYear, "years", true));
 
@@ -143,6 +143,10 @@ export const getCalendarHeaderAndWidth = (
     },
   );
 
+  const numberOfWeeks = weeklyHeaderData.reduce((total, curr) => {
+    return total + curr.sundays.length;
+  }, 0);
+
   return {
     calendarWidth: {
       monthly: numberOfDays * 40,
@@ -182,10 +186,17 @@ export const memoizedCalendarData = (
     earliestStartDate,
     latestEndDate,
   );
+  const today = moment();
+  const offsetForToday = today.diff(
+    moment(earliestStartDate).startOf("year"),
+    "days",
+  );
+
   return {
     earliestStartDate,
     latestEndDate,
     header: calendarHeader,
     width: calendarWidth,
+    offsetForToday,
   };
 };

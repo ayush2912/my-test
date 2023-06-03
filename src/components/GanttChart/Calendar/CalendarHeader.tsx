@@ -8,22 +8,34 @@ import {
   IWeeklyHeader,
   IYearlyHeader,
 } from "../Calendar/Calendar.types";
+import TodayFocus from "../TodayFocus";
 
-const HeaderContainer = styled.div`
+const CalendarHeaderContainer = styled.div`
+  display: flex;
+  align-items: center;
+  border-top: 1px solid #e1e4e8;
+  border-bottom: 1px solid #e1e4e8;
+  padding-top: 24px;
+  padding-bottom: 8px;
+  position: relative;
+  z-index: 1;
+`;
+
+const TopRowContainer = styled.div`
   display: flex;
   flex-direction: row;
 
   text-transform: uppercase;
   font-size: 12px;
   color: #999999;
-  height: 24px;
-  margin-top: 8px;
+  height: 16px;
 
+  margin-bottom: 8px;
   justify-content: center;
   align-items: center;
 `;
 
-const RowContainer = styled.div`
+const BottomRowContainer = styled.div`
   display: flex;
   align-items: center;
 `;
@@ -53,13 +65,14 @@ const MonthContainer = styled.div`
   border-radius: 4px;
 `;
 
-const SundayContainer = styled.div<{ lastWeek: boolean }>`
+const SundayContainer = styled.div`
   display: flex;
+  justify-content: center;
   align-items: center;
   background-color: "transparent";
   color: "#999999";
 
-  width: ${(props) => (props.lastWeek ? 0 : 155)}px;
+  width: 155px;
   padding: 4px 0px;
   font-size: 14px;
   border-radius: 4px;
@@ -67,16 +80,16 @@ const SundayContainer = styled.div<{ lastWeek: boolean }>`
 
 const MonthlyHeader = ({ data }: { data: IMonthlyHeader }) => {
   return (
-    <RowContainer>
+    <>
       {data?.map(({ month, year, days }) => (
         <div key={`${month}${year}`}>
-          <HeaderContainer>
+          <TopRowContainer>
             <Text type="smallText" color="subdued">
               {`${month} ${year}`}
             </Text>
-          </HeaderContainer>
+          </TopRowContainer>
 
-          <RowContainer>
+          <BottomRowContainer>
             {days.map(({ day }) => (
               <DayContainer key={day}>
                 <Text type="captionBold" color="subdued">
@@ -84,25 +97,25 @@ const MonthlyHeader = ({ data }: { data: IMonthlyHeader }) => {
                 </Text>
               </DayContainer>
             ))}
-          </RowContainer>
+          </BottomRowContainer>
         </div>
       ))}
-    </RowContainer>
+    </>
   );
 };
 
 const YearlyHeader = ({ data }: { data: IYearlyHeader }) => {
   return (
-    <RowContainer>
+    <>
       {data?.map(({ year, months }) => (
         <div key={year}>
-          <HeaderContainer>
+          <TopRowContainer>
             <Text type="smallText" color="subdued">
               {`${year}`}
             </Text>
-          </HeaderContainer>
+          </TopRowContainer>
 
-          <RowContainer>
+          <BottomRowContainer>
             {months.map(({ month }) => (
               <MonthContainer key={month}>
                 <Text type="captionBold" color="subdued">
@@ -110,50 +123,58 @@ const YearlyHeader = ({ data }: { data: IYearlyHeader }) => {
                 </Text>
               </MonthContainer>
             ))}
-          </RowContainer>
+          </BottomRowContainer>
         </div>
       ))}
-    </RowContainer>
+    </>
   );
 };
 
 const WeeklyHeader = ({ data }: { data: IWeeklyHeader }) => {
   return (
-    <RowContainer>
+    <>
       {data?.map(({ year, month, sundays }, index) => (
         <div key={month + year}>
-          <HeaderContainer>
+          <TopRowContainer>
             <Text type="smallText" color="subdued">
               {`${month} ${year}`}
             </Text>
-          </HeaderContainer>
+          </TopRowContainer>
 
-          <RowContainer>
+          <BottomRowContainer>
             {sundays.map((s, i) => (
-              <SundayContainer
-                key={s + month + year}
-                lastWeek={index === data.length - 1 && i === sundays.length - 1}
-              >
+              <SundayContainer key={s + month + year}>
                 <Text type="captionBold" color="subdued">
                   {`${s} ${i === 0 ? month : ""}`}
                 </Text>
               </SundayContainer>
             ))}
-          </RowContainer>
+          </BottomRowContainer>
         </div>
       ))}
-    </RowContainer>
+    </>
   );
 };
 export const CalendarHeader = ({
   calendarHeader,
   view,
+  offsetForToday,
+  todayRef,
 }: {
   calendarHeader: ICalendarHeader;
   view: TemporalView;
+  offsetForToday: number;
+  todayRef: React.RefObject<HTMLDivElement>;
 }) => {
   return (
-    <>
+    <CalendarHeaderContainer>
+      {view === "monthly" && (
+        <TodayFocus
+          ref={todayRef}
+          offsetLeft={offsetForToday * 40}
+          calendarBoxWidth={40}
+        />
+      )}
       {
         {
           monthly: <MonthlyHeader data={calendarHeader.monthly} />,
@@ -161,6 +182,6 @@ export const CalendarHeader = ({
           weekly: <WeeklyHeader data={calendarHeader.weekly} />,
         }[view]
       }
-    </>
+    </CalendarHeaderContainer>
   );
 };
