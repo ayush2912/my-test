@@ -30,6 +30,7 @@ const notStartedTask = {
   ],
   createdAt: "2023-04-11T14:15:22Z",
   updatedAt: "2023-04-24T14:15:22Z",
+  assignee: "Client",
   bar: {
     offsetFromLeft: {
       monthly: 0,
