@@ -7,13 +7,12 @@ import { ICalendar } from "./Calendar/Calendar.types";
 import { CalendarBackground } from "./Calendar/CalendarBackground";
 import { CalendarHeader } from "./Calendar/CalendarHeader";
 import { EngagementListItem } from "./EngagementListItem";
-import { IMappedEngagement, IMappedEngagements } from "./GanttChart.types";
+import { IMappedEngagements } from "./GanttChart.types";
 import { GanttChartControls } from "./GanttChartControls";
 import { TaskListItem } from "./TaskListItem";
 import TodayFocus from "./TodayFocus";
 import useGanttChartControls from "./useGanttChartControls";
 import EmptyBox from "../../assets/images/empty-box.png";
-import { convertToMonthNameFormat } from "../../utils/dateTimeFormatter";
 import Card from "../Card";
 import Icon from "../Icon";
 import Text from "../Text";
@@ -173,15 +172,12 @@ export const GanttChart = ({
                 todayRef={todayRef}
               />
             </Header>
+
             <Body>
               <LeftPanel isCollapsed={isCollapsed}>
                 {!isCollapsed && (
                   <>
-                    <EngagementListItem
-                      type="Issuance"
-                      state="IN_PROGRESS"
-                      onClick={() => console.log("hello")}
-                    />
+                    <EngagementListItem data={selectedEngagement} />
                     {selectedEngagement.tasks.map((v) => (
                       <TaskListItem key={v.id} data={v} />
                     ))}
