@@ -244,10 +244,10 @@ const projectLists: ProjectRowItem[] = [
     ],
     annualApproximateCreditVolume: 300000,
     engagement: {
-      // state: "NOT_STARTED",
-      // dueDate: "2023-06-05T16:00:00.000Z",
-      // type: "Feasibility study",
-      // isOverdue: false,
+      state: "NOT_STARTED",
+      dueDate: "2023-06-05T16:00:00.000Z",
+      type: "Feasibility study",
+      isOverdue: false,
     },
   },
 ];
