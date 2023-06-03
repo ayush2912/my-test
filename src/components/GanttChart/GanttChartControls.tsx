@@ -34,11 +34,21 @@ export const GanttChartControls = ({
 }: {
   onTodayButtonClick: () => void;
 }) => {
-  const { view, changeView, temporalViewOptions, engagementOptions } =
-    useGanttChartControls();
+  const {
+    view,
+    changeView,
+    temporalViewOptions,
+    engagementOptions,
+    selectedEngagement,
+    setSelectedEngagement,
+  } = useGanttChartControls();
 
   const handleDropdownChange = (value: string) => {
     changeView(value as TemporalView);
+  };
+
+  const handleSelectEngagement = (engagementId: string) => {
+    setSelectedEngagement(engagementId);
   };
 
   return (
@@ -46,10 +56,11 @@ export const GanttChartControls = ({
       <div>
         <SelectBox>
           <Select
+            selected={selectedEngagement.id}
             isPrimary={false}
             options={engagementOptions}
             placeholder="Select Engagement Type"
-            onSelect={(value) => console.log(value)}
+            onSelect={handleSelectEngagement}
           />
         </SelectBox>
         <GanttChartLengend />

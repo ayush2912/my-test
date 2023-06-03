@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 
 import { EngagementBar } from "./Bar/EngagementBar";
@@ -7,7 +7,7 @@ import { ICalendar } from "./Calendar/Calendar.types";
 import { CalendarBackground } from "./Calendar/CalendarBackground";
 import { CalendarHeader } from "./Calendar/CalendarHeader";
 import { EngagementListItem } from "./EngagementListItem";
-import { IMappedEngagements } from "./GanttChart.types";
+import { IMappedEngagement, IMappedEngagements } from "./GanttChart.types";
 import { GanttChartControls } from "./GanttChartControls";
 import { TaskListItem } from "./TaskListItem";
 import TodayFocus from "./TodayFocus";
@@ -112,7 +112,7 @@ export const GanttChart = ({
   engagements: IMappedEngagements;
   calendar: ICalendar;
 }) => {
-  const { view, onScroll, changeView, setEngagementOptions } =
+  const { view, onScroll, changeView, selectedEngagement, setEngagements } =
     useGanttChartControls();
   const calendarBodyRef = useRef<HTMLDivElement | null>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -131,14 +131,7 @@ export const GanttChart = ({
   }, []);
 
   useEffect(() => {
-    const engagementOptions = engagements.map((v) => ({
-      value: v.id,
-      displayValue: v.type,
-      subValue: `(${convertToMonthNameFormat(
-        v.startDate,
-      )} - ${convertToMonthNameFormat(v.dueDate)})`,
-    }));
-    setEngagementOptions(engagementOptions);
+    setEngagements(engagements);
   }, [engagements]);
 
   const focusToday = () => {
@@ -156,7 +149,7 @@ export const GanttChart = ({
   return (
     <Card>
       <GanttChartControls onTodayButtonClick={focusToday} />
-      {engagements.length ? (
+      {selectedEngagement.id ? (
         <Container ref={calendarBodyRef}>
           <Content>
             <Header>
@@ -170,7 +163,7 @@ export const GanttChart = ({
                   </span>
                 </CollapseButtonContainer>
                 <ProjectNameContainer isCollapsed={isCollapsed}>
-                  Songtao, Tongren, Wanshan and Yuping Rural Methane project
+                  {selectedEngagement.projectName}
                 </ProjectNameContainer>
               </LeftPanelHeader>
               <CalendarHeader
@@ -189,7 +182,7 @@ export const GanttChart = ({
                       state="IN_PROGRESS"
                       onClick={() => console.log("hello")}
                     />
-                    {engagements[0].tasks.map((v) => (
+                    {selectedEngagement.tasks.map((v) => (
                       <TaskListItem key={v.id} data={v} />
                     ))}
                   </>
@@ -202,21 +195,15 @@ export const GanttChart = ({
                     calendarBoxWidth={48}
                   />
                 )}
-
-                {engagements.map((v) => {
-                  return (
-                    <>
-                      <EngagementBar key={v.id + "e"} engagementData={v} />
-                      {v.tasks.map((v) => (
-                        <TaskBar
-                          isOverDue={v.isOverdue}
-                          key={v.id}
-                          taskData={v}
-                        />
-                      ))}
-                    </>
-                  );
-                })}
+                <>
+                  <EngagementBar
+                    key={selectedEngagement.id}
+                    engagementData={selectedEngagement}
+                  />
+                  {selectedEngagement.tasks.map((v) => (
+                    <TaskBar isOverDue={v.isOverdue} key={v.id} taskData={v} />
+                  ))}
+                </>
               </CalendarBackground>
             </Body>
           </Content>

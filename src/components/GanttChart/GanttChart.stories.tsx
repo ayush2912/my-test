@@ -21,12 +21,12 @@ export default meta;
 const Template: StoryFn<GanttChartProps> = ({
   projectEngagementData,
 }: GanttChartProps) => {
-  const [selectedProjectId, setSelectedProjectId] = useState();
+  const [selectedProjectId, setSelectedProjectId] = useState("");
   const calendar = memoizedCalendarData(projectEngagementData);
 
   const projectIdOptions = projectEngagementData.map((v) => ({
     value: v.id,
-    displayValue: v.name,
+    label: v.name,
   }));
 
   const mappedProjectEngagements = projectEngagementData.flatMap((project) =>
@@ -37,6 +37,7 @@ const Template: StoryFn<GanttChartProps> = ({
         engagement.completedDate ? new Date(engagement.completedDate) : null,
         calendar.earliestStartDate,
       );
+
       return {
         ...engagement,
         projectName: project.name,
@@ -74,11 +75,12 @@ const Template: StoryFn<GanttChartProps> = ({
       }}
     >
       <Select
+        selected={selectedProjectId}
         isPrimary={true}
         options={projectIdOptions}
         placeholder="Placeholder"
         onSelect={(val) => {
-          setSelectedProjectId(val.value);
+          setSelectedProjectId(val);
         }}
       />
       <GanttChart engagements={selectedEngagements} calendar={calendar} />
@@ -1184,7 +1186,7 @@ MultipleProjects.args = {
             {
               id: "63b863d2fdbf66b24e1e2142314231fwdsfx9f12",
               engagementId: "63bd887fa62f3170407d1c42",
-              type: "Project Design Document",
+              type: "Super Important Task",
               startDate: "2021-02-11T00:00:00Z",
               dueDate: "2021-02-15T00:00:00Z",
               completedDate: "2021-02-13T00:00:00Z",
@@ -1204,7 +1206,7 @@ MultipleProjects.args = {
             {
               id: "63fdfdfdfdfdsdff223b24e1e9f12",
               engagementId: "63bd887fa62f3170407d1c42",
-              type: "Project Design Document",
+              type: "Feasibility Study Task",
               startDate: "2021-02-11T00:00:00Z",
               dueDate: "2022-09-15T00:00:00Z",
               completedDate: "2022-09-24T08:22:20.099Z",
@@ -1413,63 +1415,6 @@ MultipleProjects.args = {
             },
             {
               id: "63fdfddfsdff223b24e1e9f12",
-              engagementId: "63bd887fa62f3170407d1c42",
-              type: "Some Important Task",
-              startDate: "2021-02-11T00:00:00Z",
-              dueDate: "2022-09-15T00:00:00Z",
-              completedDate: "2022-09-24T08:22:20.099Z",
-              isOverdue: true,
-              state: "NOT_STARTED",
-              stateHistory: [
-                {
-                  state: "NOT_STARTED",
-                  stateUpdatedAt: "2019-08-24T14:15:22Z",
-                },
-              ],
-              assignee: "Client",
-              createdAt: "2023-04-11T14:15:22Z",
-              updatedAt: "2023-04-24T14:15:22Z",
-            },
-            {
-              id: "63fdfddfsdff223b24e1e9f1",
-              engagementId: "63bd887fa62f3170407d1c42",
-              type: "Some Important Task",
-              startDate: "2021-02-11T00:00:00Z",
-              dueDate: "2022-09-15T00:00:00Z",
-              completedDate: "2022-09-24T08:22:20.099Z",
-              isOverdue: true,
-              state: "NOT_STARTED",
-              stateHistory: [
-                {
-                  state: "NOT_STARTED",
-                  stateUpdatedAt: "2019-08-24T14:15:22Z",
-                },
-              ],
-              assignee: "Client",
-              createdAt: "2023-04-11T14:15:22Z",
-              updatedAt: "2023-04-24T14:15:22Z",
-            },
-            {
-              id: "63fdfddfsdff223e1e9f12",
-              engagementId: "63bd887fa62f3170407d1c42",
-              type: "Some Important Task",
-              startDate: "2021-02-11T00:00:00Z",
-              dueDate: "2022-09-15T00:00:00Z",
-              completedDate: "2022-09-24T08:22:20.099Z",
-              isOverdue: true,
-              state: "NOT_STARTED",
-              stateHistory: [
-                {
-                  state: "NOT_STARTED",
-                  stateUpdatedAt: "2019-08-24T14:15:22Z",
-                },
-              ],
-              assignee: "Client",
-              createdAt: "2023-04-11T14:15:22Z",
-              updatedAt: "2023-04-24T14:15:22Z",
-            },
-            {
-              id: "63fdfddf4e1e9f12",
               engagementId: "63bd887fa62f3170407d1c42",
               type: "Some Important Task",
               startDate: "2021-02-11T00:00:00Z",
