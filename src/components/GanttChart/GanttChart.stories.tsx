@@ -1,9 +1,11 @@
 import type { Meta } from "@storybook/react";
 import { StoryFn } from "@storybook/react";
+import { useMemo, useState } from "react";
 
 import { GanttChart } from "./GanttChart";
 import { ProjectEngagement } from "./GanttChart.types";
 import { getBarInfo, memoizedCalendarData } from "../../utils/calendarHelper";
+import Select from "../Select";
 
 interface GanttChartProps {
   projectEngagementData: ProjectEngagement[];
@@ -19,7 +21,13 @@ export default meta;
 const Template: StoryFn<GanttChartProps> = ({
   projectEngagementData,
 }: GanttChartProps) => {
+  const [selectedProjectId, setSelectedProjectId] = useState("");
   const calendar = memoizedCalendarData(projectEngagementData);
+
+  const projectIdOptions = projectEngagementData.map((v) => ({
+    value: v.id,
+    label: v.name,
+  }));
 
   const mappedProjectEngagements = projectEngagementData.flatMap((project) =>
     project.engagements.map((engagement) => {
@@ -29,8 +37,10 @@ const Template: StoryFn<GanttChartProps> = ({
         engagement.completedDate ? new Date(engagement.completedDate) : null,
         calendar.earliestStartDate,
       );
+
       return {
         ...engagement,
+        projectName: project.name,
         bar: engagementBar,
         onViewClick: (id: string) =>
           console.log(`navigate to project details ${id}`),
@@ -46,6 +56,15 @@ const Template: StoryFn<GanttChartProps> = ({
       };
     }),
   );
+
+  const selectedEngagements = useMemo(() => {
+    if (!selectedProjectId) return [];
+
+    return mappedProjectEngagements.filter(
+      (v) => v.projectId === selectedProjectId,
+    );
+  }, [selectedProjectId, mappedProjectEngagements]);
+
   return (
     <div
       style={{
@@ -55,10 +74,16 @@ const Template: StoryFn<GanttChartProps> = ({
         height: 600,
       }}
     >
-      <GanttChart
-        mappedProjectEngagements={mappedProjectEngagements}
-        calendar={calendar}
+      <Select
+        selected={selectedProjectId}
+        isPrimary={true}
+        options={projectIdOptions}
+        placeholder="Placeholder"
+        onSelect={(val) => {
+          setSelectedProjectId(val);
+        }}
       />
+      <GanttChart engagements={selectedEngagements} calendar={calendar} />
     </div>
   );
 };
@@ -68,100 +93,100 @@ EmptyState.args = {
   projectEngagementData: [],
 };
 
-export const NoEngagements = Template.bind({});
-NoEngagements.args = {
-  projectEngagementData: [
-    {
-      id: "6438f5f51725504e53c94356",
-      name: "150 MW Solar Project in Karnataka by Avaada Solar",
-      registry: {
-        id: "6438f5f51725504e53c94356",
-        name: "Verra",
-      },
-      registryProjectId: "1851",
-      types: [
-        {
-          id: "6438f6b71725504e53c94357",
-          name: "Renewables",
-        },
-      ],
-      countries: [
-        {
-          id: "IN",
-          name: "India",
-          iso2Name: "IN",
-          iso3Name: "IND",
-        },
-      ],
-      isActive: true,
-      engagements: [],
-      createdAt: "2023-06-05T16:00:00.000Z",
-      updatedAt: "2023-06-08T16:00:00.000Z",
-    },
-  ],
-};
+// export const NoEngagements = Template.bind({});
+// NoEngagements.args = {
+//   projectEngagementData: [
+//     {
+//       id: "6438f5f51725504e53c94356",
+//       name: "150 MW Solar Project in Karnataka by Avaada Solar",
+//       registry: {
+//         id: "6438f5f51725504e53c94356",
+//         name: "Verra",
+//       },
+//       registryProjectId: "1851",
+//       types: [
+//         {
+//           id: "6438f6b71725504e53c94357",
+//           name: "Renewables",
+//         },
+//       ],
+//       countries: [
+//         {
+//           id: "IN",
+//           name: "India",
+//           iso2Name: "IN",
+//           iso3Name: "IND",
+//         },
+//       ],
+//       isActive: true,
+//       engagements: [],
+//       createdAt: "2023-06-05T16:00:00.000Z",
+//       updatedAt: "2023-06-08T16:00:00.000Z",
+//     },
+//   ],
+// };
 
-export const NoTasks = Template.bind({});
-NoTasks.args = {
-  projectEngagementData: [
-    {
-      id: "6438f5f51725504e53c94356",
-      name: "150 MW Solar Project in Karnataka by Avaada Solar",
-      registry: {
-        id: "6438f5f51725504e53c94356",
-        name: "Verra",
-      },
-      registryProjectId: "1851",
-      types: [
-        {
-          id: "6438f6b71725504e53c94357",
-          name: "Renewables",
-        },
-      ],
-      countries: [
-        {
-          id: "IN",
-          name: "India",
-          iso2Name: "IN",
-          iso3Name: "IND",
-        },
-      ],
-      isActive: true,
-      engagements: [
-        {
-          id: "6438f5f51725504e53c94347",
-          projectId: "6438f5f51725504e53c94356",
-          type: "Registration",
-          startDate: "2021-01-16T14:01:22Z",
-          dueDate: "2022-05-14T14:15:22Z",
-          completedDate: "2022-05-29T14:15:22Z",
-          notes: "Project Document Added",
-          state: "NOT_STARTED",
-          stateHistory: [
-            {
-              state: "NOT_STARTED",
-              stateUpdatedAt: "2019-08-24T14:15:22Z",
-            },
-          ],
-          isOverdue: true,
-          attributes: [
-            {
-              name: "Registry ID",
-              type: "string",
-              value: "S00208",
-              key: "REGISTRY_ID",
-            },
-          ],
-          tasks: [],
-          createdAt: "2023-06-05T16:00:00.000Z",
-          updatedAt: "2023-06-07T16:00:00.000Z",
-        },
-      ],
-      createdAt: "2023-06-05T16:00:00.000Z",
-      updatedAt: "2023-06-08T16:00:00.000Z",
-    },
-  ],
-};
+// export const NoTasks = Template.bind({});
+// NoTasks.args = {
+//   projectEngagementData: [
+//     {
+//       id: "6438f5f51725504e53c94356",
+//       name: "150 MW Solar Project in Karnataka by Avaada Solar",
+//       registry: {
+//         id: "6438f5f51725504e53c94356",
+//         name: "Verra",
+//       },
+//       registryProjectId: "1851",
+//       types: [
+//         {
+//           id: "6438f6b71725504e53c94357",
+//           name: "Renewables",
+//         },
+//       ],
+//       countries: [
+//         {
+//           id: "IN",
+//           name: "India",
+//           iso2Name: "IN",
+//           iso3Name: "IND",
+//         },
+//       ],
+//       isActive: true,
+//       engagements: [
+//         {
+//           id: "6438f5f51725504e53c94347",
+//           projectId: "6438f5f51725504e53c94356",
+//           type: "Registration",
+//           startDate: "2021-01-16T14:01:22Z",
+//           dueDate: "2022-05-14T14:15:22Z",
+//           completedDate: "2022-05-29T14:15:22Z",
+//           notes: "Project Document Added",
+//           state: "NOT_STARTED",
+//           stateHistory: [
+//             {
+//               state: "NOT_STARTED",
+//               stateUpdatedAt: "2019-08-24T14:15:22Z",
+//             },
+//           ],
+//           isOverdue: true,
+//           attributes: [
+//             {
+//               name: "Registry ID",
+//               type: "string",
+//               value: "S00208",
+//               key: "REGISTRY_ID",
+//             },
+//           ],
+//           tasks: [],
+//           createdAt: "2023-06-05T16:00:00.000Z",
+//           updatedAt: "2023-06-07T16:00:00.000Z",
+//         },
+//       ],
+//       createdAt: "2023-06-05T16:00:00.000Z",
+//       updatedAt: "2023-06-08T16:00:00.000Z",
+//     },
+//   ],
+// };
 
 export const MultipleProjects = Template.bind({});
 MultipleProjects.args = {
@@ -192,7 +217,7 @@ MultipleProjects.args = {
       engagements: [
         {
           id: "6438f5f517255023453c94347",
-          projectId: "6438f5f51725504e53c94356",
+          projectId: "6438f5f517255dfde53c94356",
           type: "Registration",
           startDate: "2021-01-16T14:01:22Z",
           dueDate: "2022-05-14T14:15:22Z",
@@ -240,7 +265,7 @@ MultipleProjects.args = {
               type: "GSC",
               startDate: "2021-01-11T00:00:00Z",
               dueDate: "2022-09-15T00:00:00Z",
-              completedDate: null,
+              completedDate: "2022-09-16T00:00:00Z",
               isOverdue: false,
               state: "COMPLETED",
               stateHistory: [
@@ -335,9 +360,9 @@ MultipleProjects.args = {
               type: "Project Design Document",
               startDate: "2021-02-11T00:00:00Z",
               dueDate: "2021-02-14T00:00:00Z",
-              completedDate: "2021-02-14T00:00:00Z",
+              completedDate: "2021-03-14T00:00:00Z",
               isOverdue: true,
-              state: "NOT_STARTED",
+              state: "COMPLETED",
               stateHistory: [
                 {
                   state: "NOT_STARTED",
@@ -354,9 +379,9 @@ MultipleProjects.args = {
               type: "Project Design Document",
               startDate: "2021-02-11T00:00:00Z",
               dueDate: "2022-09-15T00:00:00Z",
-              completedDate: "2022-09-24T08:22:20.099Z",
+              completedDate: "2023-03-14T00:00:00Z",
               isOverdue: true,
-              state: "NOT_STARTED",
+              state: "COMPLETED",
               stateHistory: [
                 {
                   state: "NOT_STARTED",
@@ -373,9 +398,10 @@ MultipleProjects.args = {
               type: "Project Design Document",
               startDate: "2021-02-11T00:00:00Z",
               dueDate: "2022-09-15T00:00:00Z",
-              completedDate: "2022-09-24T08:22:20.099Z",
+              completedDate: "2024-09-24T08:22:20.099Z",
               isOverdue: true,
-              state: "NOT_STARTED",
+              state: "COMPLETED",
+
               stateHistory: [
                 {
                   state: "NOT_STARTED",
@@ -774,103 +800,9 @@ MultipleProjects.args = {
       createdAt: "2023-06-05T16:00:00.000Z",
       updatedAt: "2023-06-08T16:00:00.000Z",
     },
-  ],
-};
-
-export const NoScrollView = Template.bind({});
-NoScrollView.args = {
-  projectEngagementData: [
     {
-      id: "6438f5f51725504e53c94356",
-      name: "150 MW Solar Project in Karnataka by Avaada Solar",
-      registry: {
-        id: "6438f5f51725504e53c94356",
-        name: "Verra",
-      },
-      registryProjectId: "1851",
-      types: [
-        {
-          id: "6438f6b71725504e53c94357",
-          name: "Renewables",
-        },
-      ],
-      countries: [
-        {
-          id: "IN",
-          name: "India",
-          iso2Name: "IN",
-          iso3Name: "IND",
-        },
-        {
-          id: "CHN",
-          name: "China",
-          iso2Name: "CH",
-          iso3Name: "CHN",
-        },
-        {
-          id: "BRA",
-          name: "Brazil",
-          iso2Name: "BR",
-          iso3Name: "BRA",
-        },
-      ],
-      isActive: true,
-      engagements: [
-        {
-          id: "6438f5f5172fef504e53c94347",
-          projectId: "6438f5f51725504e53c94356",
-          type: "Registration",
-          startDate: "2021-02-16T14:01:22Z",
-          dueDate: "2021-02-16T14:15:22Z",
-          completedDate: null,
-          notes: "Project Document Added",
-          state: "NOT_STARTED",
-          stateHistory: [
-            {
-              state: "NOT_STARTED",
-              stateUpdatedAt: "2019-08-24T14:15:22Z",
-            },
-          ],
-          isOverdue: true,
-          attributes: [
-            {
-              name: "Registry ID",
-              type: "string",
-              value: "S00208",
-              key: "REGISTRY_ID",
-            },
-          ],
-          tasks: [
-            {
-              id: "63b863d2fdfghgfh66b24e1e9f12",
-              engagementId: "63bd887fa62f3170407d1c42",
-              type: "Project Design Document",
-              startDate: "2021-03-11T00:00:00Z",
-              dueDate: "2021-03-12T00:00:00Z",
-              completedDate: null,
-              isOverdue: true,
-              state: "NOT_STARTED",
-              stateHistory: [
-                {
-                  state: "NOT_STARTED",
-                  stateUpdatedAt: "2019-08-24T14:15:22Z",
-                },
-              ],
-              assignee: "Client",
-              createdAt: "2023-04-11T14:15:22Z",
-              updatedAt: "2023-04-24T14:15:22Z",
-            },
-          ],
-          createdAt: "2023-06-05T16:00:00.000Z",
-          updatedAt: "2023-06-07T16:00:00.000Z",
-        },
-      ],
-      createdAt: "2023-06-05T16:00:00.000Z",
-      updatedAt: "2023-06-08T16:00:00.000Z",
-    },
-    {
-      id: "6438f5f517255dfde53c94356",
-      name: "150 MW Solar Project in Karnataka by Avaada Solar",
+      id: "6438f5f5172helloe53c94356",
+      name: "Songtao, Tongren, Wanshan and Yuping Rural Methane Pro",
       registry: {
         id: "6438f5f51725504e53c94356",
         name: "Verra",
@@ -894,7 +826,7 @@ NoScrollView.args = {
       engagements: [
         {
           id: "6438f5f517255023453c94347",
-          projectId: "6438f5f51725504e53c94356",
+          projectId: "6438f5f5172helloe53c94356",
           type: "Registration",
           startDate: "2021-01-16T14:01:22Z",
           dueDate: "2022-05-14T14:15:22Z",
@@ -921,9 +853,29 @@ NoScrollView.args = {
               id: "63b863d2fdbf66b24e1e2142314231fwdsfx9f12",
               engagementId: "63bd887fa62f3170407d1c42",
               type: "Project Design Document",
-              startDate: "2021-03-11T00:00:00Z",
+              startDate: "2021-02-11T00:00:00Z",
+              dueDate: "2021-02-15T00:00:00Z",
+              completedDate: "2021-02-13T00:00:00Z",
+              isOverdue: true,
+              state: "IN_PROGRESS",
+              stateHistory: [
+                {
+                  state: "IN_PROGRESS",
+                  stateUpdatedAt: "2019-08-24T14:15:22Z",
+                },
+              ],
+              assignee: "Client",
+              createdAt: "2023-04-11T14:15:22Z",
+              updatedAt: "2023-04-24T14:15:22Z",
+            },
+
+            {
+              id: "63fdfdfdfdfdsdff223b24e1e9f12",
+              engagementId: "63bd887fa62f3170407d1c42",
+              type: "Project Design Document",
+              startDate: "2021-02-11T00:00:00Z",
               dueDate: "2022-09-15T00:00:00Z",
-              completedDate: "2023-09-24T08:22:20.099Z",
+              completedDate: "2022-09-24T08:22:20.099Z",
               isOverdue: true,
               state: "NOT_STARTED",
               stateHistory: [
@@ -932,15 +884,540 @@ NoScrollView.args = {
                   stateUpdatedAt: "2019-08-24T14:15:22Z",
                 },
               ],
-              assignee: "Consultant",
+              assignee: "Client",
+              createdAt: "2023-04-11T14:15:22Z",
+              updatedAt: "2023-04-24T14:15:22Z",
+            },
+            {
+              id: "63fdfdfdfdfdsdf23b24e1e9f12",
+              engagementId: "63bd887fa62f3170407d1c42",
+              type: "Project Design Document",
+              startDate: "2021-02-11T00:00:00Z",
+              dueDate: "2022-09-15T00:00:00Z",
+              completedDate: "2022-09-24T08:22:20.099Z",
+              isOverdue: true,
+              state: "NOT_STARTED",
+              stateHistory: [
+                {
+                  state: "NOT_STARTED",
+                  stateUpdatedAt: "2019-08-24T14:15:22Z",
+                },
+              ],
+              assignee: "Client",
+              createdAt: "2023-04-11T14:15:22Z",
+              updatedAt: "2023-04-24T14:15:22Z",
+            },
+            {
+              id: "63fdfddfsdff223b24e19f12",
+              engagementId: "63bd887fa62f3170407d1c42",
+              type: "Some Important Task",
+              startDate: "2021-02-11T00:00:00Z",
+              dueDate: "2022-09-15T00:00:00Z",
+              completedDate: "2022-09-24T08:22:20.099Z",
+              isOverdue: true,
+              state: "NOT_STARTED",
+              stateHistory: [
+                {
+                  state: "NOT_STARTED",
+                  stateUpdatedAt: "2019-08-24T14:15:22Z",
+                },
+              ],
+              assignee: "Client",
+              createdAt: "2023-04-11T14:15:22Z",
+              updatedAt: "2023-04-24T14:15:22Z",
+            },
+            {
+              id: "63fdfddfsdff223b3324e1e9f12",
+              engagementId: "63bd887fa62f3170407d1c42",
+              type: "Some Important Task",
+              startDate: "2021-02-11T00:00:00Z",
+              dueDate: "2022-09-15T00:00:00Z",
+              completedDate: "2022-09-24T08:22:20.099Z",
+              isOverdue: true,
+              state: "NOT_STARTED",
+              stateHistory: [
+                {
+                  state: "NOT_STARTED",
+                  stateUpdatedAt: "2019-08-24T14:15:22Z",
+                },
+              ],
+              assignee: "Client",
+              createdAt: "2023-04-11T14:15:22Z",
+              updatedAt: "2023-04-24T14:15:22Z",
+            },
+            {
+              id: "63fdfddfsdff223b24e1e93f12",
+              engagementId: "63bd887fa62f3170407d1c42",
+              type: "Some Important Task",
+              startDate: "2021-02-11T00:00:00Z",
+              dueDate: "2022-09-15T00:00:00Z",
+              completedDate: "2022-09-24T08:22:20.099Z",
+              isOverdue: true,
+              state: "NOT_STARTED",
+              stateHistory: [
+                {
+                  state: "NOT_STARTED",
+                  stateUpdatedAt: "2019-08-24T14:15:22Z",
+                },
+              ],
+              assignee: "Client",
+              createdAt: "2023-04-11T14:15:22Z",
+              updatedAt: "2023-04-24T14:15:22Z",
+            },
+            {
+              id: "63fdfddfsdff223b24e1e9ff12",
+              engagementId: "63bd887fa62f3170407d1c42",
+              type: "Some Important Task",
+              startDate: "2021-02-11T00:00:00Z",
+              dueDate: "2022-09-15T00:00:00Z",
+              completedDate: "2022-09-24T08:22:20.099Z",
+              isOverdue: true,
+              state: "NOT_STARTED",
+              stateHistory: [
+                {
+                  state: "NOT_STARTED",
+                  stateUpdatedAt: "2019-08-24T14:15:22Z",
+                },
+              ],
+              assignee: "Client",
+              createdAt: "2023-04-11T14:15:22Z",
+              updatedAt: "2023-04-24T14:15:22Z",
+            },
+            {
+              id: "63fdfddfsdff223b24e1e9333f12",
+              engagementId: "63bd887fa62f3170407d1c42",
+              type: "Some Important Task",
+              startDate: "2021-02-11T00:00:00Z",
+              dueDate: "2022-09-15T00:00:00Z",
+              completedDate: "2022-09-24T08:22:20.099Z",
+              isOverdue: true,
+              state: "NOT_STARTED",
+              stateHistory: [
+                {
+                  state: "NOT_STARTED",
+                  stateUpdatedAt: "2019-08-24T14:15:22Z",
+                },
+              ],
+              assignee: "Client",
+              createdAt: "2023-04-11T14:15:22Z",
+              updatedAt: "2023-04-24T14:15:22Z",
+            },
+            {
+              id: "63fdfddfsdff223b24e1e9flkk12",
+              engagementId: "63bd887fa62f3170407d1c42",
+              type: "Some Important Task",
+              startDate: "2021-02-11T00:00:00Z",
+              dueDate: "2022-09-15T00:00:00Z",
+              completedDate: "2022-09-24T08:22:20.099Z",
+              isOverdue: true,
+              state: "NOT_STARTED",
+              stateHistory: [
+                {
+                  state: "NOT_STARTED",
+                  stateUpdatedAt: "2019-08-24T14:15:22Z",
+                },
+              ],
+              assignee: "Client",
+              createdAt: "2023-04-11T14:15:22Z",
+              updatedAt: "2023-04-24T14:15:22Z",
+            },
+            {
+              id: "63fdfddfsdff223b2400e1e9f12",
+              engagementId: "63bd887fa62f3170407d1c42",
+              type: "Some Important Task",
+              startDate: "2021-02-11T00:00:00Z",
+              dueDate: "2022-09-15T00:00:00Z",
+              completedDate: "2022-09-24T08:22:20.099Z",
+              isOverdue: true,
+              state: "NOT_STARTED",
+              stateHistory: [
+                {
+                  state: "NOT_STARTED",
+                  stateUpdatedAt: "2019-08-24T14:15:22Z",
+                },
+              ],
+              assignee: "Client",
               createdAt: "2023-04-11T14:15:22Z",
               updatedAt: "2023-04-24T14:15:22Z",
             },
 
             {
-              id: "63b863d2fdbasdf223b24egq34gwavfsq34ergwfads1e9f12",
+              id: "63fdfddfsd3b24e1e9f12",
+              engagementId: "63bd887fa62f3170407d1c42",
+              type: "Some Important Task",
+              startDate: "2021-02-11T00:00:00Z",
+              dueDate: "2022-09-15T00:00:00Z",
+              completedDate: "2022-09-24T08:22:20.099Z",
+              isOverdue: true,
+              state: "NOT_STARTED",
+              stateHistory: [
+                {
+                  state: "NOT_STARTED",
+                  stateUpdatedAt: "2019-08-24T14:15:22Z",
+                },
+              ],
+              assignee: "Client",
+              createdAt: "2023-04-11T14:15:22Z",
+              updatedAt: "2023-04-24T14:15:22Z",
+            },
+            {
+              id: "63fdfddfs4e1e9f12",
+              engagementId: "63bd887fa62f3170407d1c42",
+              type: "Some Important Task",
+              startDate: "2021-02-11T00:00:00Z",
+              dueDate: "2022-09-15T00:00:00Z",
+              completedDate: "2022-09-24T08:22:20.099Z",
+              isOverdue: true,
+              state: "NOT_STARTED",
+              stateHistory: [
+                {
+                  state: "NOT_STARTED",
+                  stateUpdatedAt: "2019-08-24T14:15:22Z",
+                },
+              ],
+              assignee: "Client",
+              createdAt: "2023-04-11T14:15:22Z",
+              updatedAt: "2023-04-24T14:15:22Z",
+            },
+            {
+              id: "63fdfddfsdff223b24e1e9f12",
+              engagementId: "63bd887fa62f3170407d1c42",
+              type: "Some Important Task",
+              startDate: "2021-02-11T00:00:00Z",
+              dueDate: "2022-09-15T00:00:00Z",
+              completedDate: "2022-09-24T08:22:20.099Z",
+              isOverdue: true,
+              state: "NOT_STARTED",
+              stateHistory: [
+                {
+                  state: "NOT_STARTED",
+                  stateUpdatedAt: "2019-08-24T14:15:22Z",
+                },
+              ],
+              assignee: "Client",
+              createdAt: "2023-04-11T14:15:22Z",
+              updatedAt: "2023-04-24T14:15:22Z",
+            },
+            {
+              id: "63fdfddfsdff223b24e1e9f1",
+              engagementId: "63bd887fa62f3170407d1c42",
+              type: "Some Important Task",
+              startDate: "2021-02-11T00:00:00Z",
+              dueDate: "2022-09-15T00:00:00Z",
+              completedDate: "2022-09-24T08:22:20.099Z",
+              isOverdue: true,
+              state: "NOT_STARTED",
+              stateHistory: [
+                {
+                  state: "NOT_STARTED",
+                  stateUpdatedAt: "2019-08-24T14:15:22Z",
+                },
+              ],
+              assignee: "Client",
+              createdAt: "2023-04-11T14:15:22Z",
+              updatedAt: "2023-04-24T14:15:22Z",
+            },
+            {
+              id: "63fdfddfsdff223e1e9f12",
+              engagementId: "63bd887fa62f3170407d1c42",
+              type: "Some Important Task",
+              startDate: "2021-02-11T00:00:00Z",
+              dueDate: "2022-09-15T00:00:00Z",
+              completedDate: "2022-09-24T08:22:20.099Z",
+              isOverdue: true,
+              state: "NOT_STARTED",
+              stateHistory: [
+                {
+                  state: "NOT_STARTED",
+                  stateUpdatedAt: "2019-08-24T14:15:22Z",
+                },
+              ],
+              assignee: "Client",
+              createdAt: "2023-04-11T14:15:22Z",
+              updatedAt: "2023-04-24T14:15:22Z",
+            },
+            {
+              id: "63fdfddf4e1e9f12",
+              engagementId: "63bd887fa62f3170407d1c42",
+              type: "Some Important Task",
+              startDate: "2021-02-11T00:00:00Z",
+              dueDate: "2022-09-15T00:00:00Z",
+              completedDate: "2022-09-24T08:22:20.099Z",
+              isOverdue: true,
+              state: "NOT_STARTED",
+              stateHistory: [
+                {
+                  state: "NOT_STARTED",
+                  stateUpdatedAt: "2019-08-24T14:15:22Z",
+                },
+              ],
+              assignee: "Client",
+              createdAt: "2023-04-11T14:15:22Z",
+              updatedAt: "2023-04-24T14:15:22Z",
+            },
+          ],
+          createdAt: "2023-06-05T16:00:00.000Z",
+          updatedAt: "2023-06-07T16:00:00.000Z",
+        },
+        {
+          id: "6438f5f517255023453c94347hello",
+          projectId: "6438f5f5172helloe53c94356",
+          type: "Issuance",
+          startDate: "2021-01-16T14:01:22Z",
+          dueDate: "2022-05-14T14:15:22Z",
+          completedDate: "2022-05-29T14:15:22Z",
+          notes: "Project Document Added",
+          state: "NOT_STARTED",
+          stateHistory: [
+            {
+              state: "NOT_STARTED",
+              stateUpdatedAt: "2019-08-24T14:15:22Z",
+            },
+          ],
+          isOverdue: true,
+          attributes: [
+            {
+              name: "Registry ID",
+              type: "string",
+              value: "S00208",
+              key: "REGISTRY_ID",
+            },
+          ],
+          tasks: [
+            {
+              id: "63b863d2fdbf66b24e1e2142314231fwdsfx9f12",
+              engagementId: "63bd887fa62f3170407d1c42",
+              type: "Super Important Task",
+              startDate: "2021-02-11T00:00:00Z",
+              dueDate: "2021-02-15T00:00:00Z",
+              completedDate: "2021-02-13T00:00:00Z",
+              isOverdue: true,
+              state: "IN_PROGRESS",
+              stateHistory: [
+                {
+                  state: "IN_PROGRESS",
+                  stateUpdatedAt: "2019-08-24T14:15:22Z",
+                },
+              ],
+              assignee: "Client",
+              createdAt: "2023-04-11T14:15:22Z",
+              updatedAt: "2023-04-24T14:15:22Z",
+            },
+
+            {
+              id: "63fdfdfdfdfdsdff223b24e1e9f12",
+              engagementId: "63bd887fa62f3170407d1c42",
+              type: "Feasibility Study Task",
+              startDate: "2021-02-11T00:00:00Z",
+              dueDate: "2022-09-15T00:00:00Z",
+              completedDate: "2022-09-24T08:22:20.099Z",
+              isOverdue: true,
+              state: "NOT_STARTED",
+              stateHistory: [
+                {
+                  state: "NOT_STARTED",
+                  stateUpdatedAt: "2019-08-24T14:15:22Z",
+                },
+              ],
+              assignee: "Client",
+              createdAt: "2023-04-11T14:15:22Z",
+              updatedAt: "2023-04-24T14:15:22Z",
+            },
+            {
+              id: "63fdfdfdfdfdsdf23b24e1e9f12",
               engagementId: "63bd887fa62f3170407d1c42",
               type: "Project Design Document",
+              startDate: "2021-02-11T00:00:00Z",
+              dueDate: "2022-09-15T00:00:00Z",
+              completedDate: "2022-09-24T08:22:20.099Z",
+              isOverdue: true,
+              state: "NOT_STARTED",
+              stateHistory: [
+                {
+                  state: "NOT_STARTED",
+                  stateUpdatedAt: "2019-08-24T14:15:22Z",
+                },
+              ],
+              assignee: "Client",
+              createdAt: "2023-04-11T14:15:22Z",
+              updatedAt: "2023-04-24T14:15:22Z",
+            },
+            {
+              id: "63fdfddfsdff223b24e19f12",
+              engagementId: "63bd887fa62f3170407d1c42",
+              type: "Some Important Task",
+              startDate: "2021-02-11T00:00:00Z",
+              dueDate: "2022-09-15T00:00:00Z",
+              completedDate: "2022-09-24T08:22:20.099Z",
+              isOverdue: true,
+              state: "NOT_STARTED",
+              stateHistory: [
+                {
+                  state: "NOT_STARTED",
+                  stateUpdatedAt: "2019-08-24T14:15:22Z",
+                },
+              ],
+              assignee: "Client",
+              createdAt: "2023-04-11T14:15:22Z",
+              updatedAt: "2023-04-24T14:15:22Z",
+            },
+            {
+              id: "63fdfddfsdff223b3324e1e9f12",
+              engagementId: "63bd887fa62f3170407d1c42",
+              type: "Some Important Task",
+              startDate: "2021-02-11T00:00:00Z",
+              dueDate: "2022-09-15T00:00:00Z",
+              completedDate: "2022-09-24T08:22:20.099Z",
+              isOverdue: true,
+              state: "NOT_STARTED",
+              stateHistory: [
+                {
+                  state: "NOT_STARTED",
+                  stateUpdatedAt: "2019-08-24T14:15:22Z",
+                },
+              ],
+              assignee: "Client",
+              createdAt: "2023-04-11T14:15:22Z",
+              updatedAt: "2023-04-24T14:15:22Z",
+            },
+            {
+              id: "63fdfddfsdff223b24e1e93f12",
+              engagementId: "63bd887fa62f3170407d1c42",
+              type: "Some Important Task",
+              startDate: "2021-02-11T00:00:00Z",
+              dueDate: "2022-09-15T00:00:00Z",
+              completedDate: "2022-09-24T08:22:20.099Z",
+              isOverdue: true,
+              state: "NOT_STARTED",
+              stateHistory: [
+                {
+                  state: "NOT_STARTED",
+                  stateUpdatedAt: "2019-08-24T14:15:22Z",
+                },
+              ],
+              assignee: "Client",
+              createdAt: "2023-04-11T14:15:22Z",
+              updatedAt: "2023-04-24T14:15:22Z",
+            },
+            {
+              id: "63fdfddfsdff223b24e1e9ff12",
+              engagementId: "63bd887fa62f3170407d1c42",
+              type: "Some Important Task",
+              startDate: "2021-02-11T00:00:00Z",
+              dueDate: "2022-09-15T00:00:00Z",
+              completedDate: "2022-09-24T08:22:20.099Z",
+              isOverdue: true,
+              state: "NOT_STARTED",
+              stateHistory: [
+                {
+                  state: "NOT_STARTED",
+                  stateUpdatedAt: "2019-08-24T14:15:22Z",
+                },
+              ],
+              assignee: "Client",
+              createdAt: "2023-04-11T14:15:22Z",
+              updatedAt: "2023-04-24T14:15:22Z",
+            },
+            {
+              id: "63fdfddfsdff223b24e1e9333f12",
+              engagementId: "63bd887fa62f3170407d1c42",
+              type: "Some Important Task",
+              startDate: "2021-02-11T00:00:00Z",
+              dueDate: "2022-09-15T00:00:00Z",
+              completedDate: "2022-09-24T08:22:20.099Z",
+              isOverdue: true,
+              state: "NOT_STARTED",
+              stateHistory: [
+                {
+                  state: "NOT_STARTED",
+                  stateUpdatedAt: "2019-08-24T14:15:22Z",
+                },
+              ],
+              assignee: "Client",
+              createdAt: "2023-04-11T14:15:22Z",
+              updatedAt: "2023-04-24T14:15:22Z",
+            },
+            {
+              id: "63fdfddfsdff223b24e1e9flkk12",
+              engagementId: "63bd887fa62f3170407d1c42",
+              type: "Some Important Task",
+              startDate: "2021-02-11T00:00:00Z",
+              dueDate: "2022-09-15T00:00:00Z",
+              completedDate: "2022-09-24T08:22:20.099Z",
+              isOverdue: true,
+              state: "NOT_STARTED",
+              stateHistory: [
+                {
+                  state: "NOT_STARTED",
+                  stateUpdatedAt: "2019-08-24T14:15:22Z",
+                },
+              ],
+              assignee: "Client",
+              createdAt: "2023-04-11T14:15:22Z",
+              updatedAt: "2023-04-24T14:15:22Z",
+            },
+            {
+              id: "63fdfddfsdff223b2400e1e9f12",
+              engagementId: "63bd887fa62f3170407d1c42",
+              type: "Some Important Task",
+              startDate: "2021-02-11T00:00:00Z",
+              dueDate: "2022-09-15T00:00:00Z",
+              completedDate: "2022-09-24T08:22:20.099Z",
+              isOverdue: true,
+              state: "NOT_STARTED",
+              stateHistory: [
+                {
+                  state: "NOT_STARTED",
+                  stateUpdatedAt: "2019-08-24T14:15:22Z",
+                },
+              ],
+              assignee: "Client",
+              createdAt: "2023-04-11T14:15:22Z",
+              updatedAt: "2023-04-24T14:15:22Z",
+            },
+
+            {
+              id: "63fdfddfsd3b24e1e9f12",
+              engagementId: "63bd887fa62f3170407d1c42",
+              type: "Some Important Task",
+              startDate: "2021-02-11T00:00:00Z",
+              dueDate: "2022-09-15T00:00:00Z",
+              completedDate: "2022-09-24T08:22:20.099Z",
+              isOverdue: true,
+              state: "NOT_STARTED",
+              stateHistory: [
+                {
+                  state: "NOT_STARTED",
+                  stateUpdatedAt: "2019-08-24T14:15:22Z",
+                },
+              ],
+              assignee: "Client",
+              createdAt: "2023-04-11T14:15:22Z",
+              updatedAt: "2023-04-24T14:15:22Z",
+            },
+            {
+              id: "63fdfddfs4e1e9f12",
+              engagementId: "63bd887fa62f3170407d1c42",
+              type: "Some Important Task",
+              startDate: "2021-02-11T00:00:00Z",
+              dueDate: "2022-09-15T00:00:00Z",
+              completedDate: "2022-09-24T08:22:20.099Z",
+              isOverdue: true,
+              state: "NOT_STARTED",
+              stateHistory: [
+                {
+                  state: "NOT_STARTED",
+                  stateUpdatedAt: "2019-08-24T14:15:22Z",
+                },
+              ],
+              assignee: "Client",
+              createdAt: "2023-04-11T14:15:22Z",
+              updatedAt: "2023-04-24T14:15:22Z",
+            },
+            {
+              id: "63fdfddfsdff223b24e1e9f12",
+              engagementId: "63bd887fa62f3170407d1c42",
+              type: "Some Important Task",
               startDate: "2021-02-11T00:00:00Z",
               dueDate: "2022-09-15T00:00:00Z",
               completedDate: "2022-09-24T08:22:20.099Z",
@@ -966,3 +1443,193 @@ NoScrollView.args = {
     },
   ],
 };
+
+// export const NoScrollView = Template.bind({});
+// NoScrollView.args = {
+//   projectEngagementData: [
+//     {
+//       id: "6438f5f51725504e53c94356",
+//       name: "150 MW Solar Project in Karnataka by Avaada Solar",
+//       registry: {
+//         id: "6438f5f51725504e53c94356",
+//         name: "Verra",
+//       },
+//       registryProjectId: "1851",
+//       types: [
+//         {
+//           id: "6438f6b71725504e53c94357",
+//           name: "Renewables",
+//         },
+//       ],
+//       countries: [
+//         {
+//           id: "IN",
+//           name: "India",
+//           iso2Name: "IN",
+//           iso3Name: "IND",
+//         },
+//         {
+//           id: "CHN",
+//           name: "China",
+//           iso2Name: "CH",
+//           iso3Name: "CHN",
+//         },
+//         {
+//           id: "BRA",
+//           name: "Brazil",
+//           iso2Name: "BR",
+//           iso3Name: "BRA",
+//         },
+//       ],
+//       isActive: true,
+//       engagements: [
+//         {
+//           id: "6438f5f5172fef504e53c94347",
+//           projectId: "6438f5f51725504e53c94356",
+//           type: "Registration",
+//           startDate: "2021-02-16T14:01:22Z",
+//           dueDate: "2021-02-16T14:15:22Z",
+//           completedDate: null,
+//           notes: "Project Document Added",
+//           state: "NOT_STARTED",
+//           stateHistory: [
+//             {
+//               state: "NOT_STARTED",
+//               stateUpdatedAt: "2019-08-24T14:15:22Z",
+//             },
+//           ],
+//           isOverdue: true,
+//           attributes: [
+//             {
+//               name: "Registry ID",
+//               type: "string",
+//               value: "S00208",
+//               key: "REGISTRY_ID",
+//             },
+//           ],
+//           tasks: [
+//             {
+//               id: "63b863d2fdfghgfh66b24e1e9f12",
+//               engagementId: "63bd887fa62f3170407d1c42",
+//               type: "Project Design Document",
+//               startDate: "2021-03-11T00:00:00Z",
+//               dueDate: "2021-03-12T00:00:00Z",
+//               completedDate: null,
+//               isOverdue: true,
+//               state: "NOT_STARTED",
+//               stateHistory: [
+//                 {
+//                   state: "NOT_STARTED",
+//                   stateUpdatedAt: "2019-08-24T14:15:22Z",
+//                 },
+//               ],
+//               assignee: "Client",
+//               createdAt: "2023-04-11T14:15:22Z",
+//               updatedAt: "2023-04-24T14:15:22Z",
+//             },
+//           ],
+//           createdAt: "2023-06-05T16:00:00.000Z",
+//           updatedAt: "2023-06-07T16:00:00.000Z",
+//         },
+//       ],
+//       createdAt: "2023-06-05T16:00:00.000Z",
+//       updatedAt: "2023-06-08T16:00:00.000Z",
+//     },
+//     {
+//       id: "6438f5f517255dfde53c94356",
+//       name: "150 MW Solar Project in Karnataka by Avaada Solar",
+//       registry: {
+//         id: "6438f5f51725504e53c94356",
+//         name: "Verra",
+//       },
+//       registryProjectId: "1851",
+//       types: [
+//         {
+//           id: "6438f6b71725504e53c94357",
+//           name: "Renewables",
+//         },
+//       ],
+//       countries: [
+//         {
+//           id: "IN",
+//           name: "India",
+//           iso2Name: "IN",
+//           iso3Name: "IND",
+//         },
+//       ],
+//       isActive: true,
+//       engagements: [
+//         {
+//           id: "6438f5f517255023453c94347",
+//           projectId: "6438f5f51725504e53c94356",
+//           type: "Registration",
+//           startDate: "2021-01-16T14:01:22Z",
+//           dueDate: "2022-05-14T14:15:22Z",
+//           completedDate: "2022-05-29T14:15:22Z",
+//           notes: "Project Document Added",
+//           state: "NOT_STARTED",
+//           stateHistory: [
+//             {
+//               state: "NOT_STARTED",
+//               stateUpdatedAt: "2019-08-24T14:15:22Z",
+//             },
+//           ],
+//           isOverdue: true,
+//           attributes: [
+//             {
+//               name: "Registry ID",
+//               type: "string",
+//               value: "S00208",
+//               key: "REGISTRY_ID",
+//             },
+//           ],
+//           tasks: [
+//             {
+//               id: "63b863d2fdbf66b24e1e2142314231fwdsfx9f12",
+//               engagementId: "63bd887fa62f3170407d1c42",
+//               type: "Project Design Document",
+//               startDate: "2021-03-11T00:00:00Z",
+//               dueDate: "2022-09-15T00:00:00Z",
+//               completedDate: "2023-09-24T08:22:20.099Z",
+//               isOverdue: true,
+//               state: "NOT_STARTED",
+//               stateHistory: [
+//                 {
+//                   state: "NOT_STARTED",
+//                   stateUpdatedAt: "2019-08-24T14:15:22Z",
+//                 },
+//               ],
+//               assignee: "Consultant",
+//               createdAt: "2023-04-11T14:15:22Z",
+//               updatedAt: "2023-04-24T14:15:22Z",
+//             },
+
+//             {
+//               id: "63b863d2fdbasdf223b24egq34gwavfsq34ergwfads1e9f12",
+//               engagementId: "63bd887fa62f3170407d1c42",
+//               type: "Project Design Document",
+//               startDate: "2021-02-11T00:00:00Z",
+//               dueDate: "2022-09-15T00:00:00Z",
+//               completedDate: "2022-09-24T08:22:20.099Z",
+//               isOverdue: true,
+//               state: "NOT_STARTED",
+//               stateHistory: [
+//                 {
+//                   state: "NOT_STARTED",
+//                   stateUpdatedAt: "2019-08-24T14:15:22Z",
+//                 },
+//               ],
+//               assignee: "Client",
+//               createdAt: "2023-04-11T14:15:22Z",
+//               updatedAt: "2023-04-24T14:15:22Z",
+//             },
+//           ],
+//           createdAt: "2023-06-05T16:00:00.000Z",
+//           updatedAt: "2023-06-07T16:00:00.000Z",
+//         },
+//       ],
+//       createdAt: "2023-06-05T16:00:00.000Z",
+//       updatedAt: "2023-06-08T16:00:00.000Z",
+//     },
+//   ],
+// };

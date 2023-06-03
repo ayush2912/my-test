@@ -4,6 +4,7 @@ import styled from "styled-components";
 
 import { BarPopup } from "./BarPopup";
 import { useOutsideAlerter } from "../../../hooks/useOutsiderAlerter";
+import { dateDifference } from "../../../utils/dateDifference";
 import { convertToMonthNameFormat } from "../../../utils/dateTimeFormatter";
 import Icon from "../../Icon";
 import StatusTag, { StatusType } from "../../StatusTag";
@@ -97,7 +98,10 @@ export const TaskBar = ({
   const [isTextOverflowing, setIsTextOverflowing] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
-
+  const completionDelay = dateDifference(
+    taskData.dueDate,
+    taskData?.completedDate,
+  );
   const statusTag = {
     NOT_STARTED: {
       borderColor: "#E7E8EA",
@@ -229,11 +233,8 @@ export const TaskBar = ({
                       <>
                         <Icon name="watch" size="xsmall" />
                         <Text type="smallText" color="subdued">
-                          (
-                          {moment(taskData.dueDate).from(
-                            taskData.completedDate,
-                          )}
-                          )
+                          ({completionDelay[0] + "-" + completionDelay[1]}{" "}
+                          delay)
                         </Text>
                       </>
                     )}

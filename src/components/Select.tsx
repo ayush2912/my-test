@@ -88,33 +88,34 @@ const TextHolder = styled.div`
   }
 `;
 
-interface Ioption {
-  value: string | number;
-  subValue?: string | number;
-  displayValue: string | number;
+export interface ISelectOption {
+  value: string;
+  sublabel?: string;
+  label: string;
 }
 
 const Select = ({
-  options,
+  options = [],
   onSelect,
   selected,
   isPrimary,
   placeholder,
 }: {
   isPrimary: boolean;
-  selected?: Ioption;
-  options?: Ioption[];
+  selected: string;
+  options?: ISelectOption[];
   placeholder?: string;
-  onSelect: (value: Ioption) => void;
+  onSelect: (value: string) => void;
 }) => {
-  const [selectedOption, setSelected] = useState(selected);
   const [showOptions, setShowOptions] = useState(false);
 
-  const onOptionSelect = (selectedOption: Ioption) => {
-    setSelected(selectedOption);
-    onSelect(selectedOption);
+  const onOptionSelect = (selectedValue: string) => {
+    onSelect(selectedValue);
     setShowOptions(false);
   };
+
+  const selectedOption =
+    options?.find((v) => v.value === selected) || options[0];
 
   return (
     <div style={{ position: "relative", width: "100%" }}>
@@ -122,13 +123,13 @@ const Select = ({
         isPrimary={isPrimary}
         onClick={() => setShowOptions(!showOptions)}
       >
-        {selectedOption ? (
+        {selected ? (
           <TextHolder>
             <Text color={isPrimary ? "primary" : "default"} type="button">
-              {selectedOption?.displayValue}
+              {selectedOption?.label}
             </Text>
             <Text color="subdued" type="caption">
-              {selectedOption?.subValue}
+              {selectedOption?.sublabel}
             </Text>
           </TextHolder>
         ) : (
@@ -149,13 +150,16 @@ const Select = ({
           {options && (
             <Options>
               {options.map((option) => (
-                <li key={option.value} onClick={() => onOptionSelect(option)}>
+                <li
+                  key={option.value}
+                  onClick={() => onOptionSelect(option.value)}
+                >
                   <TextHolder>
                     <Text color="default" type="body">
-                      {option?.displayValue}
+                      {option?.label}
                     </Text>
                     <Text color="subdued" type="caption">
-                      {option?.subValue}
+                      {option?.sublabel}
                     </Text>
                   </TextHolder>
                 </li>

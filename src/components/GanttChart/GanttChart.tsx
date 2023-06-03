@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 
 import { EngagementBar } from "./Bar/EngagementBar";
@@ -105,13 +105,14 @@ const LeftPanelHeader = styled.div<{ isCollapsed: boolean }>`
 `;
 
 export const GanttChart = ({
-  mappedProjectEngagements,
+  engagements,
   calendar,
 }: {
-  mappedProjectEngagements: IMappedEngagements;
+  engagements: IMappedEngagements;
   calendar: ICalendar;
 }) => {
-  const { view, onScroll, changeView } = useGanttChartControls();
+  const { view, onScroll, changeView, selectedEngagement, setEngagements } =
+    useGanttChartControls();
   const calendarBodyRef = useRef<HTMLDivElement | null>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const todayRef = useRef<HTMLDivElement | null>(null);
@@ -128,6 +129,10 @@ export const GanttChart = ({
     };
   }, []);
 
+  useEffect(() => {
+    setEngagements(engagements);
+  }, [engagements]);
+
   const focusToday = () => {
     changeView("monthly");
     setTimeout(() => {
@@ -143,7 +148,7 @@ export const GanttChart = ({
   return (
     <Card>
       <GanttChartControls onTodayButtonClick={focusToday} />
-      {mappedProjectEngagements.length ? (
+      {selectedEngagement.id ? (
         <Container ref={calendarBodyRef}>
           <Content>
             <Header>
@@ -157,7 +162,7 @@ export const GanttChart = ({
                   </span>
                 </CollapseButtonContainer>
                 <ProjectNameContainer isCollapsed={isCollapsed}>
-                  Songtao, Tongren, Wanshan and Yuping Rural Methane project
+                  {selectedEngagement.projectName}
                 </ProjectNameContainer>
               </LeftPanelHeader>
               <CalendarHeader
@@ -167,16 +172,13 @@ export const GanttChart = ({
                 todayRef={todayRef}
               />
             </Header>
+
             <Body>
               <LeftPanel isCollapsed={isCollapsed}>
                 {!isCollapsed && (
                   <>
-                    <EngagementListItem
-                      type="Issuance"
-                      state="IN_PROGRESS"
-                      onClick={() => console.log("hello")}
-                    />
-                    {mappedProjectEngagements[0].tasks.map((v) => (
+                    <EngagementListItem data={selectedEngagement} />
+                    {selectedEngagement.tasks.map((v) => (
                       <TaskListItem key={v.id} data={v} />
                     ))}
                   </>
@@ -189,21 +191,15 @@ export const GanttChart = ({
                     calendarBoxWidth={48}
                   />
                 )}
-
-                {mappedProjectEngagements.map((v) => {
-                  return (
-                    <>
-                      <EngagementBar key={v.id + "e"} engagementData={v} />
-                      {v.tasks.map((v) => (
-                        <TaskBar
-                          isOverDue={v.isOverdue}
-                          key={v.id}
-                          taskData={v}
-                        />
-                      ))}
-                    </>
-                  );
-                })}
+                <>
+                  <EngagementBar
+                    key={selectedEngagement.id}
+                    engagementData={selectedEngagement}
+                  />
+                  {selectedEngagement.tasks.map((v) => (
+                    <TaskBar isOverDue={v.isOverdue} key={v.id} taskData={v} />
+                  ))}
+                </>
               </CalendarBackground>
             </Body>
           </Content>
