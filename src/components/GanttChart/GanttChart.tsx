@@ -13,6 +13,7 @@ import { TaskListItem } from "./TaskListItem";
 import TodayFocus from "./TodayFocus";
 import useGanttChartControls from "./useGanttChartControls";
 import EmptyBox from "../../assets/images/empty-box.png";
+import { convertToMonthNameFormat } from "../../utils/dateTimeFormatter";
 import Card from "../Card";
 import Icon from "../Icon";
 import Text from "../Text";
@@ -105,13 +106,14 @@ const LeftPanelHeader = styled.div<{ isCollapsed: boolean }>`
 `;
 
 export const GanttChart = ({
-  mappedProjectEngagements,
+  engagements,
   calendar,
 }: {
-  mappedProjectEngagements: IMappedEngagements;
+  engagements: IMappedEngagements;
   calendar: ICalendar;
 }) => {
-  const { view, onScroll, changeView } = useGanttChartControls();
+  const { view, onScroll, changeView, setEngagementOptions } =
+    useGanttChartControls();
   const calendarBodyRef = useRef<HTMLDivElement | null>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const todayRef = useRef<HTMLDivElement | null>(null);
@@ -128,6 +130,17 @@ export const GanttChart = ({
     };
   }, []);
 
+  useEffect(() => {
+    const engagementOptions = engagements.map((v) => ({
+      value: v.id,
+      displayValue: v.type,
+      subValue: `(${convertToMonthNameFormat(
+        v.startDate,
+      )} - ${convertToMonthNameFormat(v.dueDate)})`,
+    }));
+    setEngagementOptions(engagementOptions);
+  }, [engagements]);
+
   const focusToday = () => {
     changeView("monthly");
     setTimeout(() => {
@@ -143,7 +156,7 @@ export const GanttChart = ({
   return (
     <Card>
       <GanttChartControls onTodayButtonClick={focusToday} />
-      {mappedProjectEngagements.length ? (
+      {engagements.length ? (
         <Container ref={calendarBodyRef}>
           <Content>
             <Header>
@@ -176,7 +189,7 @@ export const GanttChart = ({
                       state="IN_PROGRESS"
                       onClick={() => console.log("hello")}
                     />
-                    {mappedProjectEngagements[0].tasks.map((v) => (
+                    {engagements[0].tasks.map((v) => (
                       <TaskListItem key={v.id} data={v} />
                     ))}
                   </>
@@ -190,7 +203,7 @@ export const GanttChart = ({
                   />
                 )}
 
-                {mappedProjectEngagements.map((v) => {
+                {engagements.map((v) => {
                   return (
                     <>
                       <EngagementBar key={v.id + "e"} engagementData={v} />
