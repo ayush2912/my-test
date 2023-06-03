@@ -35,6 +35,10 @@ const Container = styled.div`
   height: 48px;
   padding: 8px 0px;
   user-select: none;
+  div {
+    display: flex;
+    align-items: center;
+  }
 `;
 
 const Bar = styled.div<{
@@ -268,9 +272,11 @@ export const TaskBar = ({
           )}
         </Bar>
         {isTextOverflowing && (
-          <Text type="caption" color="default">
-            {taskData.type}
-          </Text>
+          <div style={{ paddingLeft: "3px" }}>
+            <Text type="caption" color="default">
+              {taskData.type}
+            </Text>
+          </div>
         )}
       </Container>
     </>
