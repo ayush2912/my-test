@@ -69,7 +69,7 @@ export const Primary: Story = {
       options={options}
       placeholder="Placeholder"
       onSelect={(val) => console.log(val)}
-      selected={{ value: "SelecteValue", label: "Display Value" }}
+      selected={"value 1"}
     />
   ),
 };
@@ -81,11 +81,7 @@ export const Secondary: Story = {
         options={options}
         isPrimary={false}
         placeholder="Placeholder"
-        selected={{
-          value: "SelecteValue",
-          label: "Display Value",
-          sublabel: "(sub value)",
-        }}
+        selected={"value 1"}
         onSelect={(val) => console.log(val)}
       />
       <div>hello</div>
@@ -98,6 +94,7 @@ export const LessOptions: Story = {
     <Select
       isPrimary={false}
       options={options2}
+      selected={"value 1"}
       placeholder="Placeholder"
       onSelect={(val) => console.log(val)}
     />
