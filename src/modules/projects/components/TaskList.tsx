@@ -3,7 +3,11 @@ import styled from "styled-components";
 import Icon, { IconNameType } from "../../../components/Icon";
 import Text from "../../../components/Text";
 import Tooltip from "../../../components/Tooltip";
-import { convertToMonthNameFormat } from "../../../utils/dateTimeFormatter";
+import {
+  convertToMonthNameFormat,
+  calculateFromToday,
+  differenceInDates,
+} from "../../../utils/dateTimeFormatter";
 
 const StyledTaskContainer = styled.div`
   border-top: 1px solid #e1e4e8;
@@ -31,8 +35,22 @@ const ColumnWrapper = styled.div`
   margin-left: 16px;
 `;
 
+const FlexContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
 const TextWithMarginBottom = styled(Text)`
   margin-bottom: 4px;
+`;
+
+const DotDivider = styled.div`
+  width: 4px;
+  height: 4px;
+  background-color: #c4c9d1;
+  border-radius: 50%;
+  margin: 0 4px;
 `;
 
 export type TaskListProps = {
@@ -42,6 +60,7 @@ export type TaskListProps = {
   completedDate?: Date;
   isOverdue: boolean;
   state: "IN_PROGRESS" | "COMPLETED" | "NOT_STARTED" | "DISCONTINUED";
+  assignee: string;
 };
 
 export default function TaskList({
@@ -51,6 +70,7 @@ export default function TaskList({
   state,
   completedDate,
   isOverdue,
+  assignee,
 }: TaskListProps) {
   const selectedIconName = {
     IN_PROGRESS: "inProgress",
@@ -68,24 +88,59 @@ export default function TaskList({
     DISCONTINUED: "DISCONTINUED",
   }[state] as string;
 
+  const alarmClockTooltipContent = {
+    text: "",
+  };
+
+  const displayAlarmClockIcon = () => {
+    if (isOverdue) {
+      if (
+        state === "NOT_STARTED" &&
+        calculateFromToday(new Date(), startDate) === "Today > inputDate"
+      ) {
+        alarmClockTooltipContent["text"] =
+          "DELAYED BY" + differenceInDates(new Date(), startDate) + " days";
+        return true;
+      } else if (
+        state === "IN_PROGRESS" &&
+        calculateFromToday(new Date(), dueDate) === "Today > inputDate"
+      ) {
+        alarmClockTooltipContent["text"] =
+          "DELAYED BY " + differenceInDates(dueDate, new Date()) + " days";
+        return true;
+      } else if (
+        state === "COMPLETED" &&
+        calculateFromToday(completedDate, dueDate) === "Today > inputDate"
+      ) {
+        alarmClockTooltipContent["text"] =
+          "DELAYED BY " + differenceInDates(completedDate, dueDate) + " days";
+        return true;
+      }
+    }
+  };
+
   return (
     <StyledTaskContainer>
       <Tooltip text={tooltipTextContent}>
-        <Icon
-          name={selectedIconName}
-          color={isOverdue && state !== "DISCONTINUED" ? "#E0A008" : ""}
-        />
+        <Icon name={selectedIconName} />
       </Tooltip>
 
       <ColumnWrapper>
-        <TextWithMarginBottom
-          type="body"
-          color={state === "DISCONTINUED" ? "disabled" : "default"}
-        >
-          {type}
-        </TextWithMarginBottom>
+        <FlexContainer>
+          <TextWithMarginBottom
+            type="body"
+            color={state === "DISCONTINUED" ? "disabled" : "default"}
+          >
+            {type}
+          </TextWithMarginBottom>
+          {displayAlarmClockIcon() && (
+            <Tooltip text={alarmClockTooltipContent.text}>
+              <Icon name="alarmClock" size="xsmall" />
+            </Tooltip>
+          )}
+        </FlexContainer>
 
-        <div style={{ display: "flex", gap: "4px" }}>
+        <div style={{ display: "flex", gap: "4px", alignItems: "center" }}>
           <Text
             type="body"
             color={state === "DISCONTINUED" ? "disabled" : "subdued"}
@@ -95,15 +150,18 @@ export default function TaskList({
 
           <Text
             type="body"
-            color={
-              isOverdue && state !== "DISCONTINUED"
-                ? "warning"
-                : state === "DISCONTINUED"
-                ? "disabled"
-                : "subdued"
-            }
+            color={state === "DISCONTINUED" ? "disabled" : "subdued"}
           >
             {convertToMonthNameFormat(dueDate)}
+          </Text>
+
+          <DotDivider />
+
+          <Text
+            type="body"
+            color={state === "DISCONTINUED" ? "disabled" : "subdued"}
+          >
+            {assignee}
           </Text>
         </div>
       </ColumnWrapper>

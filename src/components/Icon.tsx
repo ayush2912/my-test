@@ -35,6 +35,7 @@ import { ReactComponent as SpainFlagIcon } from "../assets/icons/flags/spain.svg
 import { ReactComponent as UnitedKingdomFlagIcon } from "../assets/icons/flags/united-kingdom.svg";
 import { ReactComponent as UnitedStatesFlagIcon } from "../assets/icons/flags/united-states.svg";
 // import { ReactComponent as AlertNoticationIcon } from "../assets/icons/generic/alert-notication.svg";
+import { ReactComponent as AlarmClockIcon } from "../assets/icons/generic/alarm-clock.svg";
 import { ReactComponent as AlertIcon } from "../assets/icons/generic/alert.svg";
 import { ReactComponent as CalendarTimeIcon } from "../assets/icons/generic/calendar-time.svg";
 import { ReactComponent as CalendarIcon } from "../assets/icons/generic/calendar.svg";
@@ -166,6 +167,7 @@ const icons = {
   bids: BidsIcon,
   projects: ProjectsIcon,
   userManagement: UserManagementIcon,
+  alarmClock: AlarmClockIcon,
 };
 export const IconNames = Object.keys(icons) as Array<IconNameType>;
 export type IconNameType = keyof typeof icons;
