@@ -9,7 +9,7 @@ import { convertToMonthNameFormat } from "../../../utils/dateTimeFormatter";
 import Icon from "../../Icon";
 import StatusTag, { StatusType } from "../../StatusTag";
 import Text from "../../Text";
-import { IBar, Task } from "../GanttChart.types";
+import { IBar, ITask } from "../GanttChart.types";
 import useGanttChartControls from "../useGanttChartControls";
 
 const Container = styled.div`
@@ -69,7 +69,7 @@ export const TaskBar = ({
   taskData,
   isOverDue,
 }: {
-  taskData: Task & { bar: IBar };
+  taskData: ITask & { bar: IBar };
   isOverDue: boolean;
 }) => {
   const { view, scrollEvent } = useGanttChartControls();
