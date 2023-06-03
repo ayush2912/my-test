@@ -11,55 +11,55 @@ export default meta;
 type Story = StoryObj<typeof Select>;
 
 const options = [
-  { value: "value 1", displayValue: "Display Value" },
+  { value: "value 1", label: "Display Value" },
   {
     value: "value 2",
-    displayValue: "Value with sub value",
-    subValue: "(sub value)",
+    label: "Value with sub value",
+    sublabel: "(sub value)",
   },
   {
     value: "long value",
-    displayValue:
+    label:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elit",
   },
   {
     value: "value 3",
-    displayValue: "Value with sub value",
-    subValue: "(sub value)",
+    label: "Value with sub value",
+    sublabel: "(sub value)",
   },
   {
     value: "value 4",
-    displayValue: "Value with sub value",
-    subValue: "(sub value)",
+    label: "Value with sub value",
+    sublabel: "(sub value)",
   },
   {
     value: "value 5",
-    displayValue: "Value with sub value",
-    subValue: "(sub value)",
+    label: "Value with sub value",
+    sublabel: "(sub value)",
   },
   {
     value: "value 6",
-    displayValue: "Value with sub value",
-    subValue: "(sub value)",
+    label: "Value with sub value",
+    sublabel: "(sub value)",
   },
   {
     value: "value 7",
-    displayValue: "Value with sub value",
-    subValue: "(sub value)",
+    label: "Value with sub value",
+    sublabel: "(sub value)",
   },
   {
     value: "value 8",
-    displayValue: "Value with sub value",
-    subValue: "(sub value)",
+    label: "Value with sub value",
+    sublabel: "(sub value)",
   },
 ];
 
 const options2 = [
-  { value: "value 1", displayValue: "Display Value" },
+  { value: "value 1", label: "Display Value" },
   {
     value: "value 2",
-    displayValue: "Value with sub value",
-    subValue: "(sub value)",
+    label: "Value with sub value",
+    sublabel: "(sub value)",
   },
 ];
 export const Primary: Story = {
