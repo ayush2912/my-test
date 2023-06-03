@@ -26,3 +26,8 @@ export function differenceInDates(firstDate: any, secondDate: Date | string) {
 
   return diffInDays;
 }
+
+export function convertToDateTimeFormat(dateTime: Date | string) {
+  const formatedDate = moment(dateTime)?.format("DD MMM YYYY - HH:mm");
+  return formatedDate;
+}

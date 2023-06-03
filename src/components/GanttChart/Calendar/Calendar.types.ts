@@ -34,4 +34,5 @@ export type ICalendar = {
   latestEndDate: Date;
   header: ICalendarHeader;
   width: CalendarWidth;
+  offsetForToday: number;
 };

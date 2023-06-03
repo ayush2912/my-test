@@ -64,6 +64,7 @@ import { ReactComponent as TrashIcon } from "../assets/icons/generic/trash.svg";
 import { ReactComponent as UnarchiveIcon } from "../assets/icons/generic/unarchive.svg";
 import { ReactComponent as UploadIcon } from "../assets/icons/generic/upload.svg";
 import { ReactComponent as WaitingIcon } from "../assets/icons/generic/waiting.svg";
+import { ReactComponent as WatchIcon } from "../assets/icons/generic/watch.svg";
 import { ReactComponent as BidsIcon } from "../assets/icons/menu/bids.svg";
 import { ReactComponent as ProjectsIcon } from "../assets/icons/menu/projects.svg";
 import { ReactComponent as UserManagementIcon } from "../assets/icons/menu/user-management.svg";
@@ -95,6 +96,7 @@ const svgStyles = ({
 };
 
 const icons = {
+  watch: WatchIcon,
   australiaFlag: AustraliaFlagIcon,
   brazilFlag: BrazilFlagIcon,
   canadaFlag: CanadaFlagIcon,
