@@ -11,6 +11,10 @@ export default {
 
 const Template: StoryFn = () => {
   const [showSidePanel, setShowSidePanel] = useState(false);
+
+  const onClose = () => {
+    setShowSidePanel(false);
+  };
   return (
     <>
       <Button
@@ -21,7 +25,7 @@ const Template: StoryFn = () => {
       >
         Open Side Panel
       </Button>
-      <SidePanel isOn={showSidePanel}>
+      <SidePanel isOn={showSidePanel} onClose={onClose}>
         <div style={{ textAlign: "center" }}>
           <h2>You can put your page here</h2>
           <Button
