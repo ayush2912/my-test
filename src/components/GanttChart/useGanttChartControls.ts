@@ -17,30 +17,26 @@ interface GanttChartControls {
   setEngagementOptions: (engagementOptions: ISelectOption[]) => void;
   selectedEngagement: IMappedEngagement;
   setSelectedEngagement: (selectedEngagementId: string) => void;
+  reset: () => void;
 }
 
-const useGanttChartControls = create<GanttChartControls>((set, get) => ({
-  view: "yearly",
-  changeView: (selectedView: TemporalView) => set({ view: selectedView }),
+const initialState = {
+  view: "yearly" as TemporalView,
   scrollEvent: {} as WheelEvent,
-  onScroll: (scrollEvent: WheelEvent) => set({ scrollEvent }),
   temporalViewOptions: [
     { value: "monthly", label: "Daily" },
     { value: "weekly", label: "Weekly" },
     { value: "yearly", label: "Monthly" },
   ],
   engagements: [] as IMappedEngagement[],
-  setEngagementOptions: (engagementOptions: ISelectOption[]) =>
-    set({ engagementOptions }),
   engagementOptions: [],
   selectedEngagement: {} as IMappedEngagement,
-  setSelectedEngagement: (selectedEngagementId: string) => {
-    set({
-      selectedEngagement: get().engagements.find(
-        (v) => v.id === selectedEngagementId,
-      ),
-    });
-  },
+};
+
+const useGanttChartControls = create<GanttChartControls>((set, get) => ({
+  ...initialState,
+  changeView: (selectedView: TemporalView) => set({ view: selectedView }),
+  onScroll: (scrollEvent: WheelEvent) => set({ scrollEvent }),
   setEngagements: (engagements: IMappedEngagement[]) => {
     const engagementOptions = engagements.map((v) => ({
       value: v.id,
@@ -52,6 +48,16 @@ const useGanttChartControls = create<GanttChartControls>((set, get) => ({
     if (engagements.length) set({ selectedEngagement: engagements[0] });
     set({ engagements, engagementOptions });
   },
+  setEngagementOptions: (engagementOptions: ISelectOption[]) =>
+    set({ engagementOptions }),
+  setSelectedEngagement: (selectedEngagementId: string) => {
+    set({
+      selectedEngagement: get().engagements.find(
+        (v) => v.id === selectedEngagementId,
+      ),
+    });
+  },
+  reset: () => set(() => ({ ...initialState })),
 }));
 
 export default useGanttChartControls;

@@ -118,8 +118,14 @@ export const GanttChart = ({
   engagements: IMappedEngagements;
   calendar: ICalendar;
 }) => {
-  const { view, onScroll, changeView, selectedEngagement, setEngagements } =
-    useGanttChartControls();
+  const {
+    view,
+    onScroll,
+    changeView,
+    selectedEngagement,
+    setEngagements,
+    reset,
+  } = useGanttChartControls();
   const calendarBodyRef = useRef<HTMLDivElement | null>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const todayRef = useRef<HTMLDivElement | null>(null);
@@ -138,6 +144,9 @@ export const GanttChart = ({
 
   useEffect(() => {
     setEngagements(engagements);
+    return () => {
+      reset();
+    };
   }, [engagements]);
 
   const focusToday = () => {
