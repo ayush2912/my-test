@@ -99,7 +99,7 @@ export default function TaskList({
         calculateFromToday(new Date(), startDate) === "Today > inputDate"
       ) {
         alarmClockTooltipContent["text"] =
-          "DELAYED BY" + differenceInDates(new Date(), startDate) + " days";
+          "DELAYED BY " + differenceInDates(startDate, new Date()) + " days";
         return true;
       } else if (
         state === "IN_PROGRESS" &&
@@ -113,7 +113,7 @@ export default function TaskList({
         calculateFromToday(completedDate, dueDate) === "Today > inputDate"
       ) {
         alarmClockTooltipContent["text"] =
-          "DELAYED BY " + differenceInDates(completedDate, dueDate) + " days";
+          "DELAYED BY " + differenceInDates(dueDate, completedDate) + " days";
         return true;
       }
     }

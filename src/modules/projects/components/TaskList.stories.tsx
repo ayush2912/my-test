@@ -14,18 +14,19 @@ export const Primary: Story = {
   render: () => (
     <>
       <TaskList
-        isOverdue={false}
+        isOverdue={true}
         type="Task 1"
         startDate={new Date("2023-01-10T06:20:44.069Z")}
         dueDate={new Date("2030-01-05T08:52:29.962Z")}
+        completedDate={new Date("2030-01-07T08:52:29.962Z")}
         state="COMPLETED"
         assignee="Client"
       />
       <TaskList
-        isOverdue={false}
+        isOverdue={true}
         type="Task 2"
         startDate={new Date("2023-01-10T06:20:44.069Z")}
-        dueDate={new Date("2030-01-05T08:52:29.962Z")}
+        dueDate={new Date("2030-10-05T08:52:29.962Z")}
         state="NOT_STARTED"
         assignee="Client"
       />
