@@ -18,7 +18,7 @@ export function calculateFromToday(firstDate: any, secondDate: Date | string) {
   }
 }
 
-export function differenceInDates(firstDate: any, secondDate: Date | string) {
+export function differenceInDates(firstDate: any, secondDate: any) {
   const firstMoment = moment(firstDate);
   const seondMoment = moment(secondDate);
 
