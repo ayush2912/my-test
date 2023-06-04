@@ -31,16 +31,18 @@ export const Drawer = styled.div<{ isOn: boolean }>`
 
 export const SidePanel = ({
   isOn,
-
+  onClose,
   children,
 }: {
   isOn: boolean;
-
+  onClose: () => void;
   children: ReactNode;
 }) => {
   return (
     <>
-      <Overlay isOpen={isOn} />
+      <div onClick={onClose}>
+        <Overlay isOpen={isOn} />
+      </div>
       <Drawer isOn={isOn}>{children}</Drawer>
     </>
   );
