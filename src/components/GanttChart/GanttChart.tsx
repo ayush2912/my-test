@@ -49,6 +49,13 @@ const ProjectNameContainer = styled.div<{ isCollapsed: boolean }>`
   width: 385px;
   visibility: ${({ isCollapsed }) => (isCollapsed ? "hidden" : "visible")};
   transition: visibility 0.1s ease-in-out;
+  p {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    white-space: pre-wrap;
+    -webkit-box-orient: vertical;
+  }
 `;
 const CollapseButtonContainer = styled.div`
   display: flex;
@@ -111,8 +118,14 @@ export const GanttChart = ({
   engagements: IMappedEngagements;
   calendar: ICalendar;
 }) => {
-  const { view, onScroll, changeView, selectedEngagement, setEngagements } =
-    useGanttChartControls();
+  const {
+    view,
+    onScroll,
+    changeView,
+    selectedEngagement,
+    setEngagements,
+    reset,
+  } = useGanttChartControls();
   const calendarBodyRef = useRef<HTMLDivElement | null>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const todayRef = useRef<HTMLDivElement | null>(null);
@@ -131,6 +144,9 @@ export const GanttChart = ({
 
   useEffect(() => {
     setEngagements(engagements);
+    return () => {
+      reset();
+    };
   }, [engagements]);
 
   const focusToday = () => {
@@ -162,7 +178,7 @@ export const GanttChart = ({
                   </span>
                 </CollapseButtonContainer>
                 <ProjectNameContainer isCollapsed={isCollapsed}>
-                  {selectedEngagement.projectName}
+                  <p>{selectedEngagement.projectName} </p>
                 </ProjectNameContainer>
               </LeftPanelHeader>
               <CalendarHeader
