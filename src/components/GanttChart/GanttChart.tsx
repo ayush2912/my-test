@@ -49,6 +49,13 @@ const ProjectNameContainer = styled.div<{ isCollapsed: boolean }>`
   width: 385px;
   visibility: ${({ isCollapsed }) => (isCollapsed ? "hidden" : "visible")};
   transition: visibility 0.1s ease-in-out;
+  p {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    white-space: pre-wrap;
+    -webkit-box-orient: vertical;
+  }
 `;
 const CollapseButtonContainer = styled.div`
   display: flex;
@@ -162,7 +169,7 @@ export const GanttChart = ({
                   </span>
                 </CollapseButtonContainer>
                 <ProjectNameContainer isCollapsed={isCollapsed}>
-                  {selectedEngagement.projectName}
+                  <p>{selectedEngagement.projectName} </p>
                 </ProjectNameContainer>
               </LeftPanelHeader>
               <CalendarHeader
