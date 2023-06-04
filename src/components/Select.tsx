@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import styled from "styled-components";
 
+import { useOutsideAlerter } from "./../hooks/useOutsideAlerter";
 import Icon from "./Icon";
 import Text from "./Text";
 
@@ -101,14 +102,17 @@ const Select = ({
   isPrimary,
   placeholder,
 }: {
-  isPrimary: boolean;
+  isPrimary?: boolean;
   selected: string;
   options?: ISelectOption[];
   placeholder?: string;
   onSelect: (value: string) => void;
 }) => {
   const [showOptions, setShowOptions] = useState(false);
-
+  const selectorRef = useRef(null);
+  useOutsideAlerter(selectorRef, () => {
+    if (showOptions) setShowOptions(false);
+  });
   const onOptionSelect = (selectedValue: string) => {
     onSelect(selectedValue);
     setShowOptions(false);
@@ -118,9 +122,9 @@ const Select = ({
     options?.find((v) => v.value === selected) || options[0];
 
   return (
-    <div style={{ position: "relative", width: "100%" }}>
+    <div ref={selectorRef} style={{ position: "relative", width: "100%" }}>
       <Selected
-        isPrimary={isPrimary}
+        isPrimary={Boolean(isPrimary)}
         onClick={() => setShowOptions(!showOptions)}
       >
         {selected ? (
