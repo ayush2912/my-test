@@ -80,7 +80,7 @@ const TextHolder = styled.div`
   align-items: center;
 
   //   text
-  span {
+  p {
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 1;
