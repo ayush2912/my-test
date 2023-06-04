@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 import { BarPopup } from "./BarPopup";
-import { useOutsideAlerter } from "../../../hooks/useOutsiderAlerter";
+import { useOutsideAlerter } from "../../../hooks/useOutsideAlerter";
 import { convertToMonthNameFormat } from "../../../utils/dateTimeFormatter";
 import Button from "../../Button";
 import Icon from "../../Icon";

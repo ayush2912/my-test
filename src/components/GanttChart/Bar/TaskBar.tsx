@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 import { BarPopup } from "./BarPopup";
-import { useOutsideAlerter } from "../../../hooks/useOutsiderAlerter";
+import { useOutsideAlerter } from "../../../hooks/useOutsideAlerter";
 import { dateDifference } from "../../../utils/dateDifference";
 import { convertToMonthNameFormat } from "../../../utils/dateTimeFormatter";
 import Icon from "../../Icon";
