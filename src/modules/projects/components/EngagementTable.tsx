@@ -194,10 +194,7 @@ function EngagementTable({
               {v.state === "COMPLETED" && (
                 <>
                   <span> &bull; </span>
-                  <Text
-                    type="caption"
-                    color={v.isOverdue ? "warning" : "success"}
-                  >
+                  <Text type="caption" color={"success"}>
                     Completed on{" "}
                     {v?.completedDate &&
                       convertToMonthNameFormat(v.completedDate)}
@@ -242,16 +239,11 @@ function EngagementTable({
         </Text>
       ),
       dueDate: (
-        <Text type="body" color={v.state === "OVERDUE" ? "warning" : "subdued"}>
+        <Text type="body" color={"subdued"}>
           {convertToMonthNameFormat(v.dueDate)}
         </Text>
       ),
-      state: (
-        <StatusTag
-          name={statusTag.label}
-          type={v.isOverdue ? "warning" : statusTag.type}
-        />
-      ),
+      state: <StatusTag name={statusTag.label} type={statusTag.type} />,
       note: (
         <>
           {v.notes ? (
