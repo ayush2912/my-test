@@ -12,15 +12,10 @@ export function dateDifference(
   const weekDiff = moment.duration(endDate.diff(startDate)).weeks();
   const dayDiff = moment.duration(endDate.diff(startDate)).days();
 
-  if (yearDiff) {
-    return [yearDiff, yearDiff > 1 ? "years" : "year"];
-  } else if (monthDiff) {
-    return [monthDiff, monthDiff > 1 ? "months" : "month"];
-  } else if (weekDiff) {
-    return [weekDiff, weekDiff > 1 ? "weeks" : "week"];
-  } else if (dayDiff) {
-    return [dayDiff, dayDiff > 1 ? "days" : "day"];
-  } else {
-    return ["0", "difference"];
-  }
+  if (yearDiff) return [yearDiff, yearDiff > 1 ? "years" : "year"];
+  if (monthDiff) return [monthDiff, monthDiff > 1 ? "months" : "month"];
+  if (weekDiff) return [weekDiff, weekDiff > 1 ? "weeks" : "week"];
+  if (dayDiff) return [dayDiff, dayDiff > 1 ? "days" : "day"];
+
+  return ["0", "difference"];
 }

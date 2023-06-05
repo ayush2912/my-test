@@ -1,3 +1,5 @@
+import moment from "moment";
+import { useMemo } from "react";
 import styled from "styled-components";
 
 import Icon, { IconNameType } from "../../../components/Icon";
@@ -8,6 +10,7 @@ import {
   convertToMonthNameFormat,
   calculateFromToday,
 } from "../../../utils/dateTimeFormatter";
+import { ETaskState } from "../constants/taskState";
 
 const StyledTaskContainer = styled.div`
   border-top: 1px solid #e1e4e8;
@@ -92,32 +95,44 @@ export default function TaskList({
     text: "",
   };
 
-  const displayAlarmClockIcon = () => {
-    if (isOverdue) {
-      if (
-        state === "NOT_STARTED" &&
-        calculateFromToday(new Date(), startDate) === "Today > inputDate"
-      ) {
-        alarmClockTooltipContent["text"] =
-          "DELAYED BY " + dateDifference(startDate, new Date()).join(" ");
-        return true;
-      } else if (
-        state === "IN_PROGRESS" &&
-        calculateFromToday(new Date(), dueDate) === "Today > inputDate"
-      ) {
-        alarmClockTooltipContent["text"] =
-          "DELAYED BY " + dateDifference(dueDate, new Date()).join(" ");
-        return true;
-      } else if (
-        state === "COMPLETED" &&
-        calculateFromToday(completedDate, dueDate) === "Today > inputDate"
-      ) {
-        alarmClockTooltipContent["text"] =
-          "DELAYED BY " + dateDifference(dueDate, completedDate).join(" ");
-        return true;
-      }
-    }
-  };
+  const overdueTooltipText = useMemo(() => {
+    const today = new Date();
+
+    if (state === "NOT_STARTED" && moment(today).isAfter(moment(startDate)))
+      return "DELAYED BY " + dateDifference(startDate, new Date()).join(" ");
+
+    if (
+      state === ETaskState.IN_PROGRESS &&
+      moment(today).isAfter(moment(dueDate))
+    )
+      return "DELAYED BY " + dateDifference(dueDate, new Date()).join(" ");
+
+    if (state === "COMPLETED" && moment(completedDate).isAfter(moment(dueDate)))
+      return "DELAYED BY " + dateDifference(dueDate, completedDate).join(" ");
+
+    return "";
+  }, [state, startDate, dueDate, completedDate]);
+  // const displayAlarmClockIcon = () => {
+  //   if (
+  //     state === "NOT_STARTED" &&
+  //     calculateFromToday(new Date(), startDate) === "Today > inputDate"
+  //   ) {
+  //     alarmClockTooltipContent["text"] =
+  //       "DELAYED BY " + dateDifference(startDate, new Date()).join(" ");
+  //   } else if (
+  //     state === "IN_PROGRESS" &&
+  //     calculateFromToday(new Date(), dueDate) === "Today > inputDate"
+  //   ) {
+  //     alarmClockTooltipContent["text"] =
+  //       "DELAYED BY " + dateDifference(dueDate, new Date()).join(" ");
+  //   } else if (
+  //     state === "COMPLETED" &&
+  //     calculateFromToday(completedDate, dueDate) === "Today > inputDate"
+  //   ) {
+  //     alarmClockTooltipContent["text"] =
+  //       "DELAYED BY " + dateDifference(dueDate, completedDate).join(" ");
+  //   }
+  // };
 
   return (
     <StyledTaskContainer>
@@ -133,8 +148,8 @@ export default function TaskList({
           >
             {type}
           </TextWithMarginBottom>
-          {displayAlarmClockIcon() && (
-            <Tooltip text={alarmClockTooltipContent.text}>
+          {isOverdue && (
+            <Tooltip text={overdueTooltipText}>
               <Icon name="alarmClock" size="xsmall" />
             </Tooltip>
           )}
