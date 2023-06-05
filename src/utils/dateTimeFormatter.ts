@@ -18,15 +18,6 @@ export function calculateFromToday(firstDate: any, secondDate: Date | string) {
   }
 }
 
-export function differenceInDates(firstDate: any, secondDate: any) {
-  const firstMoment = moment(firstDate);
-  const seondMoment = moment(secondDate);
-
-  const diffInDays = seondMoment.diff(firstMoment, "days");
-
-  return diffInDays;
-}
-
 export function convertToDateTimeFormat(dateTime: Date | string) {
   const formatedDate = moment(dateTime)?.format("DD MMM YYYY - HH:mm");
   return formatedDate;

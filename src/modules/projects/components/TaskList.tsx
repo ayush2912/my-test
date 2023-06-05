@@ -3,10 +3,10 @@ import styled from "styled-components";
 import Icon, { IconNameType } from "../../../components/Icon";
 import Text from "../../../components/Text";
 import Tooltip from "../../../components/Tooltip";
+import { dateDifference } from "../../../utils/dateDifference";
 import {
   convertToMonthNameFormat,
   calculateFromToday,
-  differenceInDates,
 } from "../../../utils/dateTimeFormatter";
 
 const StyledTaskContainer = styled.div`
@@ -99,21 +99,21 @@ export default function TaskList({
         calculateFromToday(new Date(), startDate) === "Today > inputDate"
       ) {
         alarmClockTooltipContent["text"] =
-          "DELAYED BY " + differenceInDates(startDate, new Date()) + " days";
+          "DELAYED BY " + dateDifference(startDate, new Date()).join(" ");
         return true;
       } else if (
         state === "IN_PROGRESS" &&
         calculateFromToday(new Date(), dueDate) === "Today > inputDate"
       ) {
         alarmClockTooltipContent["text"] =
-          "DELAYED BY " + differenceInDates(dueDate, new Date()) + " days";
+          "DELAYED BY " + dateDifference(dueDate, new Date()).join(" ");
         return true;
       } else if (
         state === "COMPLETED" &&
         calculateFromToday(completedDate, dueDate) === "Today > inputDate"
       ) {
         alarmClockTooltipContent["text"] =
-          "DELAYED BY " + differenceInDates(dueDate, completedDate) + " days";
+          "DELAYED BY " + dateDifference(dueDate, completedDate).join(" ");
         return true;
       }
     }

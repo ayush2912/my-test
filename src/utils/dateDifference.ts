@@ -1,8 +1,8 @@
 import moment from "moment";
 
 export function dateDifference(
-  startDateTime: string | null,
-  endDateTime: string | null,
+  startDateTime: string | Date | undefined | null,
+  endDateTime: string | Date | undefined | null,
 ) {
   const startDate = moment(startDateTime);
   const endDate = moment(endDateTime);
