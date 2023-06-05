@@ -32,7 +32,7 @@ function DocumentDetails({
   return (
     <DocDetailContainer>
       <DocDetailParameter>
-        <Text type="smallText" color="subdued">
+        <Text type="caption" color="subdued">
           {"Project Name"}
         </Text>
         <Text type="body" color="default">
@@ -41,7 +41,7 @@ function DocumentDetails({
       </DocDetailParameter>
       <br />
       <DocDetailParameter>
-        <Text type="smallText" color="subdued">
+        <Text type="caption" color="subdued">
           {"Project ID"}
         </Text>
         <Text type="body" color="default">
@@ -50,7 +50,7 @@ function DocumentDetails({
       </DocDetailParameter>
       <br />
       <DocDetailParameter>
-        <Text type="smallText" color="subdued">
+        <Text type="caption" color="subdued">
           {"Engagement"}
         </Text>
         <Text type="body" color="default">
@@ -59,7 +59,7 @@ function DocumentDetails({
       </DocDetailParameter>
       <br />
       <DocDetailParameter>
-        <Text type="smallText" color="subdued">
+        <Text type="caption" color="subdued">
           {"Document name"}
         </Text>
         <Text type="body" color="default">
@@ -68,7 +68,7 @@ function DocumentDetails({
       </DocDetailParameter>
       <br />
       <DocDetailParameter>
-        <Text type="smallText" color="subdued">
+        <Text type="caption" color="subdued">
           {"State"}
         </Text>
         <Text type="body" color="default">
@@ -77,7 +77,7 @@ function DocumentDetails({
       </DocDetailParameter>
       <br />
       <DocDetailParameter>
-        <Text type="smallText" color="subdued">
+        <Text type="caption" color="subdued">
           {"File Format"}
         </Text>
         <Text type="body" color="default">
@@ -86,7 +86,7 @@ function DocumentDetails({
       </DocDetailParameter>
       <br />
       <DocDetailParameter>
-        <Text type="smallText" color="subdued">
+        <Text type="caption" color="subdued">
           {"Size"}
         </Text>
         <Text type="body" color="default">
@@ -95,7 +95,7 @@ function DocumentDetails({
       </DocDetailParameter>
       <br />
       <DocDetailParameter>
-        <Text type="smallText" color="subdued">
+        <Text type="caption" color="subdued">
           {"Source"}
         </Text>
         <Text type="body" color="default">
@@ -104,7 +104,7 @@ function DocumentDetails({
       </DocDetailParameter>
       <br />
       <DocDetailParameter>
-        <Text type="smallText" color="subdued">
+        <Text type="caption" color="subdued">
           {"Registry approval date"}
         </Text>
         <Text type="body" color="default">
