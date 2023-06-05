@@ -5,7 +5,7 @@ import styled from "styled-components";
 import Icon, { IconNameType } from "../../../components/Icon";
 import Text from "../../../components/Text";
 import Tooltip from "../../../components/Tooltip";
-import { dateDifference } from "../../../utils/dateDifference";
+import { getDateDifference } from "../../../utils/dateDifference";
 import {
   convertToMonthNameFormat,
   calculateFromToday,
@@ -91,48 +91,20 @@ export default function TaskList({
     DISCONTINUED: "DISCONTINUED",
   }[state] as string;
 
-  const alarmClockTooltipContent = {
-    text: "",
-  };
-
   const overdueTooltipText = useMemo(() => {
     const today = new Date();
 
-    if (state === "NOT_STARTED" && moment(today).isAfter(moment(startDate)))
-      return "DELAYED BY " + dateDifference(startDate, new Date()).join(" ");
+    if (state === ETaskState.NOT_STARTED)
+      return getDateDifference(startDate, today).join("-") + " DELAY";
 
-    if (
-      state === ETaskState.IN_PROGRESS &&
-      moment(today).isAfter(moment(dueDate))
-    )
-      return "DELAYED BY " + dateDifference(dueDate, new Date()).join(" ");
+    if (state === ETaskState.IN_PROGRESS)
+      return getDateDifference(dueDate, today).join("-") + " DELAY";
 
-    if (state === "COMPLETED" && moment(completedDate).isAfter(moment(dueDate)))
-      return "DELAYED BY " + dateDifference(dueDate, completedDate).join(" ");
+    if (state === ETaskState.COMPLETED)
+      return `${getDateDifference(dueDate, completedDate).join("-")} DELAY`;
 
     return "";
   }, [state, startDate, dueDate, completedDate]);
-  // const displayAlarmClockIcon = () => {
-  //   if (
-  //     state === "NOT_STARTED" &&
-  //     calculateFromToday(new Date(), startDate) === "Today > inputDate"
-  //   ) {
-  //     alarmClockTooltipContent["text"] =
-  //       "DELAYED BY " + dateDifference(startDate, new Date()).join(" ");
-  //   } else if (
-  //     state === "IN_PROGRESS" &&
-  //     calculateFromToday(new Date(), dueDate) === "Today > inputDate"
-  //   ) {
-  //     alarmClockTooltipContent["text"] =
-  //       "DELAYED BY " + dateDifference(dueDate, new Date()).join(" ");
-  //   } else if (
-  //     state === "COMPLETED" &&
-  //     calculateFromToday(completedDate, dueDate) === "Today > inputDate"
-  //   ) {
-  //     alarmClockTooltipContent["text"] =
-  //       "DELAYED BY " + dateDifference(dueDate, completedDate).join(" ");
-  //   }
-  // };
 
   return (
     <StyledTaskContainer>
