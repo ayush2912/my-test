@@ -228,8 +228,7 @@ export const GanttChart = ({
 
           <div style={{ width: 336, textAlign: "center" }}>
             <Text type="body" color="subdued">
-              No active engagements or tasks to show. You will be notified when
-              an engagement is added.
+              Try selecting a project and an engagement.
             </Text>
           </div>
         </EmptyStateContainer>
