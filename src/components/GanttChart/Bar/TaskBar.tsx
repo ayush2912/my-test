@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 import { BarPopup } from "./BarPopup";
 import { useOutsideAlerter } from "../../../hooks/useOutsideAlerter";
-import { getDateDifference } from "../../../utils/dateDifference";
+import { getOverdueTooltipText } from "../../../utils/dateDifference";
 import { convertToMonthNameFormat } from "../../../utils/dateTimeFormatter";
 import Icon from "../../Icon";
 import StatusTag, { StatusType } from "../../StatusTag";
@@ -94,14 +94,18 @@ export const TaskBar = ({
   taskData: ITask & { bar: IBar };
   isOverDue: boolean;
 }) => {
+  const { state, startDate, dueDate, completedDate } = taskData;
+
   const { view, scrollEvent } = useGanttChartControls();
   const [isTextOverflowing, setIsTextOverflowing] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
-  const completionDelay = getDateDifference(
-    taskData.dueDate,
-    taskData?.completedDate,
-  );
+  const completionDelay = getOverdueTooltipText({
+    state,
+    startDate,
+    dueDate,
+    completedDate,
+  });
   const statusTag = {
     NOT_STARTED: {
       borderColor: "#E7E8EA",
@@ -233,8 +237,7 @@ export const TaskBar = ({
                       <>
                         <Icon name="watch" size="xsmall" />
                         <Text type="smallText" color="subdued">
-                          ({completionDelay[0] + "-" + completionDelay[1]}{" "}
-                          delay)
+                          {completionDelay}
                         </Text>
                       </>
                     )}

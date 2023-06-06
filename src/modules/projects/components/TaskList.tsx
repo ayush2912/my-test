@@ -1,16 +1,11 @@
-import moment from "moment";
 import { useMemo } from "react";
 import styled from "styled-components";
 
 import Icon, { IconNameType } from "../../../components/Icon";
 import Text from "../../../components/Text";
 import Tooltip from "../../../components/Tooltip";
-import { getDateDifference } from "../../../utils/dateDifference";
-import {
-  convertToMonthNameFormat,
-  calculateFromToday,
-} from "../../../utils/dateTimeFormatter";
-import { ETaskState } from "../constants/taskState";
+import { getOverdueTooltipText } from "../../../utils/dateDifference";
+import { convertToMonthNameFormat } from "../../../utils/dateTimeFormatter";
 
 const StyledTaskContainer = styled.div`
   border-top: 1px solid #e1e4e8;
@@ -92,18 +87,7 @@ export default function TaskList({
   }[state] as string;
 
   const overdueTooltipText = useMemo(() => {
-    const today = new Date();
-
-    if (state === ETaskState.NOT_STARTED)
-      return getDateDifference(startDate, today).join("-") + " DELAY";
-
-    if (state === ETaskState.IN_PROGRESS)
-      return getDateDifference(dueDate, today).join("-") + " DELAY";
-
-    if (state === ETaskState.COMPLETED)
-      return `${getDateDifference(dueDate, completedDate).join("-")} DELAY`;
-
-    return "";
+    return getOverdueTooltipText({ state, startDate, dueDate, completedDate });
   }, [state, startDate, dueDate, completedDate]);
 
   return (

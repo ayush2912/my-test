@@ -1,15 +1,29 @@
 import moment from "moment";
 
-export function getDateDifference(
-  startDateTime: string | Date | undefined | null,
-  endDateTime: string | Date | undefined | null,
-) {
-  const startDate = moment(startDateTime);
-  const endDate = moment(endDateTime);
+import { ETaskState } from "../modules/projects/constants/taskState";
 
-  const monthDiff = moment.duration(endDate.diff(startDate)).months();
-  const dayDiff = moment.duration(endDate.diff(startDate)).days();
+export function getOverdueTooltipText({
+  state,
+  startDate,
+  dueDate,
+  completedDate,
+}: {
+  state: string;
+  startDate: string | Date | undefined | null;
+  dueDate: string | Date | undefined | null;
+  completedDate: string | Date | undefined | null;
+}) {
+  const beginningDate = moment(
+    state === ETaskState.NOT_STARTED ? startDate : dueDate,
+  );
+  const endDate = moment(
+    state === ETaskState.COMPLETED ? completedDate : new Date(),
+  );
 
-  if (monthDiff) return [monthDiff, monthDiff > 1 ? "MONTHS" : "MONTH"];
-  return [dayDiff, dayDiff > 1 ? "DAYS" : "DAY"];
+  const monthDiff = moment.duration(endDate.diff(beginningDate)).months();
+  const dayDiff = moment.duration(endDate.diff(beginningDate)).days();
+
+  return monthDiff
+    ? `${monthDiff}-${monthDiff > 1 ? "Months" : "Month"} delay`
+    : `${dayDiff}-${dayDiff > 1 ? "Days" : "Day"} delay`;
 }
