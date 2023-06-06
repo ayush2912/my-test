@@ -184,6 +184,15 @@ export const TaskBar = ({
           <ModalContent>
             <TextHolder>
               <Text type="caption" color="subdued">
+                Task owner :
+              </Text>
+              <Text type="caption" color="default">
+                {taskData.assignee}
+              </Text>
+            </TextHolder>
+
+            <TextHolder>
+              <Text type="caption" color="subdued">
                 Start date :
               </Text>
               <TextHolder>
