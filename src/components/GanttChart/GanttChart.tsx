@@ -140,7 +140,7 @@ export const GanttChart = ({
     return () => {
       calendarBodyRef.current?.removeEventListener("wheel", onScroll);
     };
-  }, [calendarBodyRef.current]);
+  }, [calendarBodyRef]);
 
   useEffect(() => {
     setEngagements(engagements);
