@@ -184,6 +184,7 @@ export const GanttChart = ({
               <CalendarHeader
                 calendarHeader={calendar.header}
                 view={view}
+                earliestStartDate={calendar.earliestStartDate}
                 offsetForToday={calendar.offsetForToday}
                 todayRef={todayRef}
               />

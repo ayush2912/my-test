@@ -1,5 +1,8 @@
+import moment from "moment";
+import { useEffect, useMemo, useRef } from "react";
 import styled from "styled-components";
 
+import { getFirstSundayOfYear } from "../../../utils/calendarHelper";
 import Text from "../../Text";
 import {
   ICalendarHeader,
@@ -9,6 +12,7 @@ import {
   IYearlyHeader,
 } from "../Calendar/Calendar.types";
 import TodayFocus from "../TodayFocus";
+import useGanttChartControls from "../useGanttChartControls";
 
 const CalendarHeaderContainer = styled.div`
   display: flex;
@@ -157,15 +161,50 @@ const WeeklyHeader = ({ data }: { data: IWeeklyHeader }) => {
 };
 export const CalendarHeader = ({
   calendarHeader,
-  view,
+  earliestStartDate,
   offsetForToday,
   todayRef,
 }: {
   calendarHeader: ICalendarHeader;
   view: TemporalView;
+  earliestStartDate: Date;
   offsetForToday: number;
   todayRef: React.RefObject<HTMLDivElement>;
 }) => {
+  const { view, selectedEngagement } = useGanttChartControls();
+  const earliestRef = useRef<HTMLDivElement | null>(null);
+  const earliestDateOffset = useMemo(() => {
+    return {
+      monthly:
+        moment(selectedEngagement.startDate).diff(
+          moment(earliestStartDate).startOf("year"),
+          "days",
+          true,
+        ) * 40,
+      yearly:
+        moment(selectedEngagement.startDate).diff(
+          moment(earliestStartDate).startOf("year"),
+          "months",
+          true,
+        ) * 124,
+      weekly:
+        moment(selectedEngagement.startDate).diff(
+          getFirstSundayOfYear(moment(earliestStartDate).startOf("year")),
+          "weeks",
+          true,
+        ) * 155,
+    }[view];
+  }, [view, selectedEngagement]);
+
+  useEffect(() => {
+    if (earliestRef.current)
+      earliestRef.current.scrollIntoView({
+        behavior: "auto",
+        block: "center",
+        inline: "center",
+      });
+  }, [view]);
+
   return (
     <CalendarHeaderContainer>
       {view === "monthly" && (
@@ -175,6 +214,13 @@ export const CalendarHeader = ({
           calendarBoxWidth={40}
         />
       )}
+
+      <TodayFocus
+        ref={earliestRef}
+        offsetLeft={earliestDateOffset}
+        calendarBoxWidth={40}
+      />
+
       {
         {
           monthly: <MonthlyHeader data={calendarHeader.monthly} />,
