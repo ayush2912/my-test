@@ -99,3 +99,16 @@ export const LessOptions: Story = {
     />
   ),
 };
+
+export const Disabled: Story = {
+  render: () => (
+    <Select
+      disabled={true}
+      isPrimary={false}
+      options={options2}
+      selected={"value 1"}
+      placeholder="Placeholder"
+      onSelect={(val) => console.log(val)}
+    />
+  ),
+};
