@@ -27,7 +27,7 @@ const ChevronButtonIconWrapper = styled.div<{ isOpen: boolean }>`
 
 const AccordionHeader = styled.div`
   background-color: #fff;
-  padding: 18px 18px 18px 8px;
+  padding: 22px 18px 22px 8px;
   color: #363c46;
   font-weight: 500;
   cursor: pointer;
@@ -48,11 +48,11 @@ const Accordion: FunctionComponent<AccordionProps> = ({
 }) => {
   return (
     <AccordionContainer>
-      <AccordionHeader>
+      <AccordionHeader onClick={toggleAccordion}>
         <Text type="bodyBold" color="default">
           {title}
         </Text>
-        <ChevronButtonIconWrapper isOpen={isOpen} onClick={toggleAccordion}>
+        <ChevronButtonIconWrapper isOpen={isOpen}>
           <Icon name="chevronButton" />
         </ChevronButtonIconWrapper>
       </AccordionHeader>
