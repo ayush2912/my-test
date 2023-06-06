@@ -91,6 +91,7 @@ export const EngagementBar = ({
   const barRef = useRef(null);
   const contentRef = useRef(null);
   const popupRef = useRef(null);
+
   useOutsideAlerter(barRef, () => {
     if (showPopup) setShowPopup(false);
   });
