@@ -215,10 +215,9 @@ export const CalendarHeader = ({
         />
       )}
 
-      <TodayFocus
+      <div
         ref={earliestRef}
-        offsetLeft={earliestDateOffset}
-        calendarBoxWidth={40}
+        style={{ position: "absolute", marginLeft: earliestDateOffset }}
       />
 
       {
