@@ -18,7 +18,7 @@ const projectLists: ProjectRowItem[] = [
       "Songtao, Tongren, Wanshan and Yuping Rural Methane Songtao, Tongren, Wanshan and Yuping Rural Methane",
     registryName: "verra",
     registryId: "123",
-    projectTypes: ["Renewables"],
+    projectTypes: ["Renewables and a very long project types"],
     subTypes: ["Carbon capture"],
     countries: [
       {
