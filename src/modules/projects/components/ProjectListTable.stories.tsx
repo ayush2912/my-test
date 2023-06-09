@@ -19,7 +19,7 @@ const projectLists: ProjectRowItem[] = [
     registryName: "verra",
     registryId: "123",
     projectTypes: ["Renewables and a very long project types"],
-    subTypes: ["Carbon capture"],
+    subTypes: ["Carbon capture this is a long subtypes"],
     countries: [
       {
         id: "IN",

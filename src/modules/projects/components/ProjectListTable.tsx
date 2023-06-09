@@ -161,16 +161,16 @@ function ProjectListTable({
       ),
       projectTypeSubtype: (
         <TypeColumn>
-          <Content>
-            <Text type="bodyBold" color="subdued">
+          <Tooltip text={v.projectTypes.map((type) => type).join(", ")}>
+            <Text type="bodyBold" color="subdued" ellipsis>
               {v.projectTypes.map((type) => type).join(", ")}
             </Text>
-            <Tooltip text={v.subTypes.map((type) => type).join(", ")}>
-              <Text type="body" color="subdued">
-                {v.subTypes.map((type) => type).join(", ")}
-              </Text>
-            </Tooltip>
-          </Content>
+          </Tooltip>
+          <Tooltip text={v.subTypes.map((type) => type).join(", ")}>
+            <Text type="body" color="subdued" ellipsis>
+              {v.subTypes.map((type) => type).join(", ")}
+            </Text>
+          </Tooltip>
         </TypeColumn>
       ),
       coutries: (
