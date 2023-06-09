@@ -148,7 +148,7 @@ function ProjectListTable({
       registyNameID: (
         <RegistryColumn>
           <Content>
-            <Text type="body" color="subdued">
+            <Text type="bodyBold" color="subdued">
               {v.registryName}
             </Text>
             <Tooltip text={v.registryId}>
@@ -161,16 +161,16 @@ function ProjectListTable({
       ),
       projectTypeSubtype: (
         <TypeColumn>
-          <Content>
-            <Text type="body" color="subdued">
+          <Tooltip text={v.projectTypes.map((type) => type).join(", ")}>
+            <Text type="bodyBold" color="subdued" ellipsis>
               {v.projectTypes.map((type) => type).join(", ")}
             </Text>
-            <Tooltip text={v.subTypes.map((type) => type).join(", ")}>
-              <Text type="body" color="subdued">
-                {v.subTypes.map((type) => type).join(", ")}
-              </Text>
-            </Tooltip>
-          </Content>
+          </Tooltip>
+          <Tooltip text={v.subTypes.map((type) => type).join(", ")}>
+            <Text type="body" color="subdued" ellipsis>
+              {v.subTypes.map((type) => type).join(", ")}
+            </Text>
+          </Tooltip>
         </TypeColumn>
       ),
       coutries: (
