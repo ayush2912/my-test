@@ -174,17 +174,15 @@ function ProjectListTable({
         </TypeColumn>
       ),
       coutries: (
-        <>
-          <div style={{ display: "flex", gap: "10px" }}>
-            {v.countries.map((country) => (
-              <Tooltip key={country?.iso3Name} text={country?.name}>
-                <FlagHolder>
-                  <Flag code={country?.iso3Name} />
-                </FlagHolder>
-              </Tooltip>
-            ))}
-          </div>
-        </>
+        <div style={{ display: "flex", gap: "10px" }}>
+          {v.countries.map((country) => (
+            <Tooltip key={country?.iso3Name} text={country?.name}>
+              <FlagHolder>
+                <Flag code={country?.iso3Name} />
+              </FlagHolder>
+            </Tooltip>
+          ))}
+        </div>
       ),
       portfolioOwners: (
         <SingleLineColumn>
@@ -247,16 +245,15 @@ function ProjectListTable({
       ),
     };
   };
+
   return (
-    <>
-      <Table
-        headers={headers}
-        tableData={tableData}
-        cellContentMapper={cellContentMapper}
-        emptyStateTitle={`No ${projectsType.toLowerCase()} projects`}
-        emptyStateSubTitle={emptyStateSubTitle}
-      />
-    </>
+    <Table
+      headers={headers}
+      tableData={tableData}
+      cellContentMapper={cellContentMapper}
+      emptyStateTitle={`No ${projectsType.toLowerCase()} projects`}
+      emptyStateSubTitle={emptyStateSubTitle}
+    />
   );
 }
 export default ProjectListTable;
