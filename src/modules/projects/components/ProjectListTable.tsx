@@ -151,7 +151,6 @@ function ProjectListTable({
             <Text type="body" color="subdued">
               {v.registryName}
             </Text>
-            <br />
             <Tooltip text={v.registryId}>
               <Text type="body" color="subdued">
                 {v.registryId}
@@ -166,7 +165,6 @@ function ProjectListTable({
             <Text type="body" color="subdued">
               {v.projectTypes.map((type) => type).join(", ")}
             </Text>
-            <br />
             <Tooltip text={v.subTypes.map((type) => type).join(", ")}>
               <Text type="body" color="subdued">
                 {v.subTypes.map((type) => type).join(", ")}
