@@ -174,7 +174,7 @@ function ProjectListTable({
         </TypeColumn>
       ),
       coutries: (
-        <div style={{ display: "flex", gap: "10px" }}>
+        <div style={{ display: "flex", gap: "8px" }}>
           {v.countries.map((country) => (
             <Tooltip key={country?.iso3Name} text={country?.name}>
               <FlagHolder>
