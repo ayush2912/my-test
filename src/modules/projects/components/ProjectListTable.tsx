@@ -218,23 +218,22 @@ function ProjectListTable({
       engagement: (
         <div>
           {v?.engagement?.dueDate && (
-            <>
-              <div style={{ display: "flex", alignContent: "center" }}>
-                <Tooltip text={iconTooltip}>
-                  <Icon name={selectedIconName} />
-                </Tooltip>
+            <div style={{ display: "flex", alignItems: "flex-start", gap: 4 }}>
+              <Tooltip text={iconTooltip}>
+                <Icon name={selectedIconName} />
+              </Tooltip>
+              <div>
                 <Tooltip text={v.engagement.type}>
                   <Text type="bodyBold" color="default">
                     {v.engagement.type}
                   </Text>
                 </Tooltip>
-              </div>
-              <div style={{ marginLeft: "25px" }}>
+
                 <Text type="caption" color="subdued">
                   {convertToMonthNameFormat(v.engagement.dueDate)}
                 </Text>
               </div>
-            </>
+            </div>
           )}
         </div>
       ),
