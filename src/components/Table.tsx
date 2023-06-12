@@ -32,7 +32,8 @@ const StyledTable = styled.table`
 
 const TableHeader = styled.th`
   text-align: left;
-  padding-bottom: 24px;
+  vertical-align: bottom;
+  padding-bottom: 8px;
 `;
 
 const TableBody = styled.tbody``;
@@ -57,7 +58,8 @@ const HeaderText = styled.span`
 const TableRow = styled.tr``;
 
 const TableCell = styled.td`
-  padding-bottom: 40px;
+  padding-top: 16px;
+  padding-bottom: 16px;
 `;
 
 const CellContent = styled.div`

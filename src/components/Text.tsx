@@ -28,6 +28,7 @@ const StyledText = styled.p<{
   type: TypeStyle;
   color: TextColor;
   hoverStyles?: string;
+  ellipsis?: boolean;
 }>`
   font-size: ${(props) => props.theme.typography[props.type].size}px;
   font-weight: ${(props) => props.theme.typography[props.type].weight};
@@ -41,6 +42,14 @@ const StyledText = styled.p<{
         ${props.hoverStyles};
       }
     `};
+
+  ${(props) =>
+    props.ellipsis &&
+    css`
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    `};
 `;
 
 export default forwardRef(function Text(
@@ -49,16 +58,24 @@ export default forwardRef(function Text(
     color = "default",
     children,
     hoverStyles,
+    ellipsis,
   }: {
     type: TypeStyle;
     color?: TextColor;
     children: ReactNode;
     hoverStyles?: string;
+    ellipsis?: boolean;
   },
   ref?: React.Ref<HTMLDivElement>,
 ) {
   return (
-    <StyledText ref={ref} type={type} color={color} hoverStyles={hoverStyles}>
+    <StyledText
+      ref={ref}
+      type={type}
+      color={color}
+      hoverStyles={hoverStyles}
+      ellipsis={ellipsis}
+    >
       {children}
     </StyledText>
   );
