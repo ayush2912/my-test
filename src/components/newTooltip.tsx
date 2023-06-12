@@ -1,5 +1,6 @@
-import { useRef, useEffect } from "react";
-// import  from "react-dom";
+/* eslint-disable import/default */
+import React, { useRef, useEffect } from "react";
+import ReactDOM from "react-dom";
 import styled from "styled-components";
 
 const NewTooltip = React.forwardRef(
