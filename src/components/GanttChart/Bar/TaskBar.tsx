@@ -203,7 +203,7 @@ export const TaskBar = ({
                   <>
                     <Icon name="watch" size="xsmall" />
                     <Text type="smallText" color="subdued">
-                      ({moment(taskData.startDate).fromNow()})
+                      {completionDelay}
                     </Text>
                   </>
                 )}
@@ -218,15 +218,14 @@ export const TaskBar = ({
                 <Text type="caption" color="default">
                   {convertToMonthNameFormat(taskData.dueDate)}
                 </Text>
-                {taskData.state === "IN_PROGRESS" &&
-                  moment() > moment(taskData.dueDate) && (
-                    <>
-                      <Icon name="watch" size="xsmall" />
-                      <Text type="smallText" color="subdued">
-                        ({moment(taskData.dueDate).fromNow()})
-                      </Text>
-                    </>
-                  )}
+                {taskData.state === "IN_PROGRESS" && isOverDue && (
+                  <>
+                    <Icon name="watch" size="xsmall" />
+                    <Text type="smallText" color="subdued">
+                      {completionDelay}
+                    </Text>
+                  </>
+                )}
               </TextHolder>
             </TextHolder>
             {taskData.completedDate && (
@@ -240,16 +239,14 @@ export const TaskBar = ({
                     {convertToMonthNameFormat(taskData.completedDate)}
                   </Text>
 
-                  {taskData.state === "COMPLETED" &&
-                    moment(taskData.completedDate) >
-                      moment(taskData.dueDate) && (
-                      <>
-                        <Icon name="watch" size="xsmall" />
-                        <Text type="smallText" color="subdued">
-                          {completionDelay}
-                        </Text>
-                      </>
-                    )}
+                  {taskData.state === "COMPLETED" && isOverDue && (
+                    <>
+                      <Icon name="watch" size="xsmall" />
+                      <Text type="smallText" color="subdued">
+                        {completionDelay}
+                      </Text>
+                    </>
+                  )}
                 </TextHolder>
               </TextHolder>
             )}
