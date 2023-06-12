@@ -91,6 +91,7 @@ export const EngagementBar = ({
   const barRef = useRef(null);
   const contentRef = useRef(null);
   const popupRef = useRef(null);
+
   useOutsideAlerter(barRef, () => {
     if (showPopup) setShowPopup(false);
   });
@@ -160,10 +161,7 @@ export const EngagementBar = ({
             </Button>
           </ModalHeader>
           <div style={{ margin: "5px 0px" }}>
-            <StatusTag
-              name={statusTag.label}
-              type={engagementData.isOverdue ? "warning" : statusTag.type}
-            />
+            <StatusTag name={statusTag.label} type={statusTag.type} />
           </div>
           <ModalContent>
             <TextHolder>

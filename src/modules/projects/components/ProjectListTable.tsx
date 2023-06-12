@@ -148,10 +148,9 @@ function ProjectListTable({
       registyNameID: (
         <RegistryColumn>
           <Content>
-            <Text type="body" color="subdued">
+            <Text type="bodyBold" color="subdued">
               {v.registryName}
             </Text>
-            <br />
             <Tooltip text={v.registryId}>
               <Text type="body" color="subdued">
                 {v.registryId}
@@ -162,31 +161,28 @@ function ProjectListTable({
       ),
       projectTypeSubtype: (
         <TypeColumn>
-          <Content>
-            <Text type="body" color="subdued">
+          <Tooltip text={v.projectTypes.map((type) => type).join(", ")}>
+            <Text type="bodyBold" color="subdued" ellipsis>
               {v.projectTypes.map((type) => type).join(", ")}
             </Text>
-            <br />
-            <Tooltip text={v.subTypes.map((type) => type).join(", ")}>
-              <Text type="body" color="subdued">
-                {v.subTypes.map((type) => type).join(", ")}
-              </Text>
-            </Tooltip>
-          </Content>
+          </Tooltip>
+          <Tooltip text={v.subTypes.map((type) => type).join(", ")}>
+            <Text type="body" color="subdued" ellipsis>
+              {v.subTypes.map((type) => type).join(", ")}
+            </Text>
+          </Tooltip>
         </TypeColumn>
       ),
       coutries: (
-        <>
-          <div style={{ display: "flex", gap: "10px" }}>
-            {v.countries.map((country) => (
-              <Tooltip key={country?.iso3Name} text={country?.name}>
-                <FlagHolder>
-                  <Flag code={country?.iso3Name} />
-                </FlagHolder>
-              </Tooltip>
-            ))}
-          </div>
-        </>
+        <div style={{ display: "flex", gap: "8px" }}>
+          {v.countries.map((country) => (
+            <Tooltip key={country?.iso3Name} text={country?.name}>
+              <FlagHolder>
+                <Flag code={country?.iso3Name} />
+              </FlagHolder>
+            </Tooltip>
+          ))}
+        </div>
       ),
       portfolioOwners: (
         <SingleLineColumn>
@@ -222,23 +218,22 @@ function ProjectListTable({
       engagement: (
         <div>
           {v?.engagement?.dueDate && (
-            <>
-              <div style={{ display: "flex", alignContent: "center" }}>
-                <Tooltip text={iconTooltip}>
-                  <Icon name={selectedIconName} />
-                </Tooltip>
+            <div style={{ display: "flex", alignItems: "flex-start", gap: 4 }}>
+              <Tooltip text={iconTooltip}>
+                <Icon name={selectedIconName} />
+              </Tooltip>
+              <div>
                 <Tooltip text={v.engagement.type}>
                   <Text type="bodyBold" color="default">
                     {v.engagement.type}
                   </Text>
                 </Tooltip>
-              </div>
-              <div style={{ marginLeft: "25px" }}>
+
                 <Text type="caption" color="subdued">
                   {convertToMonthNameFormat(v.engagement.dueDate)}
                 </Text>
               </div>
-            </>
+            </div>
           )}
         </div>
       ),
@@ -249,16 +244,15 @@ function ProjectListTable({
       ),
     };
   };
+
   return (
-    <>
-      <Table
-        headers={headers}
-        tableData={tableData}
-        cellContentMapper={cellContentMapper}
-        emptyStateTitle={`No ${projectsType.toLowerCase()} projects`}
-        emptyStateSubTitle={emptyStateSubTitle}
-      />
-    </>
+    <Table
+      headers={headers}
+      tableData={tableData}
+      cellContentMapper={cellContentMapper}
+      emptyStateTitle={`No ${projectsType.toLowerCase()} projects`}
+      emptyStateSubTitle={emptyStateSubTitle}
+    />
   );
 }
 export default ProjectListTable;

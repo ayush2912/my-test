@@ -12,7 +12,7 @@ export interface IDocumentDetails {
   fileFormat: string;
   size: string;
   source: string;
-  registryApprovalDate: Date;
+  registryApprovalDate: Date | null;
 }
 
 const DocDetailParameter = styled.div`
@@ -107,8 +107,11 @@ function DocumentDetails({
         <Text type="caption" color="subdued">
           {"Registry approval date"}
         </Text>
+
         <Text type="body" color="default">
-          {convertToMonthNameFormat(documentDetails.registryApprovalDate)}
+          {documentDetails.registryApprovalDate
+            ? convertToMonthNameFormat(documentDetails.registryApprovalDate)
+            : "-"}
         </Text>
       </DocDetailParameter>
     </DocDetailContainer>
