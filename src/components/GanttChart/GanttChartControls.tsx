@@ -7,6 +7,7 @@ import Button from "../Button";
 import Dropdown from "../Dropdown";
 import Select from "../Select";
 import Text from "../Text";
+import Tooltip from "../Tooltip";
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -31,8 +32,10 @@ const DropDownBox = styled.div`
 `;
 export const GanttChartControls = ({
   onTodayButtonClick,
+  selectedProjectId,
 }: {
   onTodayButtonClick: () => void;
+  selectedProjectId: string | null;
 }) => {
   const {
     view,
@@ -55,14 +58,23 @@ export const GanttChartControls = ({
     <ButtonContainer>
       <div>
         <SelectBox>
-          <Select
-            selected={selectedEngagement.id}
-            isPrimary={false}
-            options={engagementOptions}
-            placeholder="Select an engagement"
-            onSelect={handleSelectEngagement}
-          />
+          <Tooltip
+            position="right"
+            text={
+              selectedProjectId ? "" : "Select a project to view engagements"
+            }
+          >
+            <Select
+              selected={selectedEngagement.id}
+              isPrimary={false}
+              options={engagementOptions}
+              disabled={!selectedProjectId}
+              placeholder="Select an engagement"
+              onSelect={handleSelectEngagement}
+            />
+          </Tooltip>
         </SelectBox>
+
         <GanttChartLengend />
       </div>
 

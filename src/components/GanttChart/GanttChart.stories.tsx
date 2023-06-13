@@ -6,6 +6,7 @@ import { GanttChart } from "./GanttChart";
 import { ProjectEngagement } from "./GanttChart.types";
 import { getBarInfo, memoizedCalendarData } from "../../utils/calendarHelper";
 import Select from "../Select";
+import Tooltip from "../Tooltip";
 
 interface GanttChartProps {
   projectEngagementData: ProjectEngagement[];
@@ -74,16 +75,32 @@ const Template: StoryFn<GanttChartProps> = ({
         height: 600,
       }}
     >
-      <Select
-        selected={selectedProjectId}
-        isPrimary={true}
-        options={projectIdOptions}
-        placeholder="Placeholder"
-        onSelect={(val) => {
-          setSelectedProjectId(val);
-        }}
+      <div style={{ width: "523px" }}>
+        <Tooltip
+          position="right"
+          text={
+            projectIdOptions.length > 0
+              ? ""
+              : "No projects to show in the selected account(s)"
+          }
+        >
+          <Select
+            selected={selectedProjectId}
+            options={projectIdOptions}
+            placeholder="Placeholder"
+            disabled={!projectIdOptions}
+            onSelect={(val) => {
+              setSelectedProjectId(val);
+            }}
+          />
+        </Tooltip>
+      </div>
+
+      <GanttChart
+        selectedProjectId={selectedProjectId}
+        engagements={selectedEngagements}
+        calendar={calendar}
       />
-      <GanttChart engagements={selectedEngagements} calendar={calendar} />
     </div>
   );
 };

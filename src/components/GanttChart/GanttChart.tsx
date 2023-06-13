@@ -115,9 +115,11 @@ const LeftPanelHeader = styled.div<{ isCollapsed: boolean }>`
 export const GanttChart = ({
   engagements,
   calendar,
+  selectedProjectId,
 }: {
   engagements: IMappedEngagements;
   calendar: ICalendar;
+  selectedProjectId: string | null;
 }) => {
   const {
     view,
@@ -156,7 +158,10 @@ export const GanttChart = ({
 
   return (
     <Card>
-      <GanttChartControls onTodayButtonClick={focusToday} />
+      <GanttChartControls
+        selectedProjectId={selectedProjectId}
+        onTodayButtonClick={focusToday}
+      />
       {selectedEngagement.id ? (
         <Container
           onWheel={(e: any) => {
