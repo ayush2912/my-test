@@ -4,6 +4,7 @@ import styled, { DefaultTheme, css, useTheme } from "styled-components";
 type ButtonProps = {
   large?: boolean;
   isIcon?: boolean;
+  iconPosition?: string;
   textColor?: string;
   backgroundColor?: string;
   border?: string;
@@ -56,6 +57,17 @@ const StyledButton = styled.button<ButtonProps>`
       }
     `}
 
+    ${(props) =>
+    props.iconPosition === "right" &&
+    css`
+      padding: 4px 4px 4px 8px;
+    `}
+    ${(props) =>
+    props.iconPosition === "left" &&
+    css`
+      padding: 4px 8px 4px 4px;
+    `}
+   
   ${(props) =>
     props.disabled &&
     css`
@@ -77,6 +89,7 @@ export default function Button({
   isIcon,
   type = "primary",
   border,
+  iconPosition,
 }: {
   onClick: () => void;
   children: ReactNode;
@@ -85,6 +98,7 @@ export default function Button({
   isIcon?: boolean;
   type?: "primary" | "secondary" | "ghost";
   border?: string;
+  iconPosition?: string;
 }) {
   const theme: DefaultTheme = useTheme();
 
@@ -118,6 +132,7 @@ export default function Button({
       {...selectedButtonStyles}
       onClick={onClick}
       border={border}
+      iconPosition={iconPosition}
     >
       <ButtonContentWrapper>{children}</ButtonContentWrapper>
     </StyledButton>
