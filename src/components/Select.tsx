@@ -5,7 +5,8 @@ import { useOutsideAlerter } from "./../hooks/useOutsideAlerter";
 import Icon from "./Icon";
 import Text from "./Text";
 
-const Selected = styled.div<{ isPrimary: boolean }>`
+const Selected = styled.button<{ disabled: boolean; isPrimary: boolean }>`
+  width: 100%;
   height: 40px;
   display: flex;
   cursor: default;
@@ -16,8 +17,19 @@ const Selected = styled.div<{ isPrimary: boolean }>`
   justify-content: space-between;
   padding: 8px 8px 8px 16px;
 
-  background: ${(props) => (props.isPrimary ? "#d8e4fc" : "#FFFFFF")};
-  border: 1px solid ${(props) => (props.isPrimary ? "#3c76f1" : "#E1E4E8")};
+  background: ${(props) =>
+    props.disabled
+      ? props.theme.colors.neutral[50]
+      : props.isPrimary
+      ? "#d8e4fc"
+      : "#FFFFFF"};
+  border: 1px solid
+    ${(props) =>
+      props.disabled
+        ? props.theme.colors.neutral[100]
+        : props.isPrimary
+        ? "#3c76f1"
+        : "#E1E4E8"};
 `;
 
 const OptionsCard = styled.div`
@@ -99,10 +111,12 @@ const Select = ({
   options = [],
   onSelect,
   selected,
+  disabled,
   isPrimary,
   placeholder,
 }: {
   isPrimary?: boolean;
+  disabled: boolean;
   selected: string;
   options?: ISelectOption[];
   placeholder?: string;
@@ -124,12 +138,16 @@ const Select = ({
   return (
     <div ref={selectorRef} style={{ position: "relative", width: "100%" }}>
       <Selected
+        disabled={Boolean(disabled)}
         isPrimary={Boolean(isPrimary)}
         onClick={() => setShowOptions(!showOptions)}
       >
         {selected ? (
           <TextHolder>
-            <Text color={isPrimary ? "primary" : "default"} type="button">
+            <Text
+              color={disabled ? "disabled" : isPrimary ? "primary" : "default"}
+              type="button"
+            >
               {selectedOption?.label}
             </Text>
             <Text color="subdued" type="caption">
@@ -145,7 +163,7 @@ const Select = ({
         <Icon
           name={showOptions ? "chevronUp" : "chevronDown"}
           size="small"
-          strokeColor={isPrimary ? "#3C76F1" : "#8992A3"}
+          strokeColor={disabled ? "#C4C9D1" : isPrimary ? "#3C76F1" : "#8992A3"}
         />
       </Selected>
 
