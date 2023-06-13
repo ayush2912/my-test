@@ -68,6 +68,7 @@ export default function DocumentListItem({
     doc: <DocFileIcon />,
     docx: <DocXFileIcon />,
     jpg: <JpgFileIcon />,
+    jpeg: <JpgFileIcon />,
     ppt: <PptFileIcon />,
     pptx: <PptxFileIcon />,
     xls: <XlsFileIcon />,

@@ -59,7 +59,7 @@ export const GanttChartControls = ({
             selected={selectedEngagement.id}
             isPrimary={false}
             options={engagementOptions}
-            placeholder="Select Engagement Type"
+            placeholder="Select an engagement"
             onSelect={handleSelectEngagement}
           />
         </SelectBox>
