@@ -65,7 +65,7 @@ const Template: StoryFn<GanttChartProps> = ({
       (v) => v.projectId === selectedProjectId,
     );
   }, [selectedProjectId, mappedProjectEngagements]);
-
+  console.log(projectIdOptions.length > 0, "here");
   return (
     <div
       style={{
@@ -88,7 +88,7 @@ const Template: StoryFn<GanttChartProps> = ({
             selected={selectedProjectId}
             options={projectIdOptions}
             placeholder="Placeholder"
-            disabled={!projectIdOptions}
+            disabled={!(projectIdOptions.length > 0)}
             onSelect={(val) => {
               setSelectedProjectId(val);
             }}
