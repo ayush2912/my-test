@@ -1,26 +1,29 @@
 import moment from "moment";
 
-export function dateDifference(
-  startDateTime: string | null,
-  endDateTime: string | null,
-) {
-  const startDate = moment(startDateTime);
-  const endDate = moment(endDateTime);
+import { ETaskState } from "../modules/projects/constants/taskState";
 
-  const yearDiff = moment.duration(endDate.diff(startDate)).years();
-  const monthDiff = moment.duration(endDate.diff(startDate)).months();
-  const weekDiff = moment.duration(endDate.diff(startDate)).weeks();
-  const dayDiff = moment.duration(endDate.diff(startDate)).days();
+export function getOverdueTooltipText({
+  state,
+  startDate,
+  dueDate,
+  completedDate,
+}: {
+  state: string;
+  startDate: string | Date | undefined | null;
+  dueDate: string | Date | undefined | null;
+  completedDate: string | Date | undefined | null;
+}) {
+  const beginningDate = moment(
+    state === ETaskState.NOT_STARTED ? startDate : dueDate,
+  );
+  const endDate = moment(
+    state === ETaskState.COMPLETED ? completedDate : new Date(),
+  );
 
-  if (yearDiff) {
-    return [yearDiff, yearDiff > 1 ? "years" : "year"];
-  } else if (monthDiff) {
-    return [monthDiff, monthDiff > 1 ? "months" : "month"];
-  } else if (weekDiff) {
-    return [weekDiff, weekDiff > 1 ? "weeks" : "week"];
-  } else if (dayDiff) {
-    return [dayDiff, dayDiff > 1 ? "days" : "day"];
-  } else {
-    return ["0", "difference"];
-  }
+  const monthDiff = moment.duration(endDate.diff(beginningDate)).months();
+  const dayDiff = moment.duration(endDate.diff(beginningDate)).days();
+
+  return monthDiff
+    ? `${monthDiff}-${monthDiff > 1 ? "Months" : "Month"} delay`
+    : `${dayDiff}-${dayDiff > 1 ? "Days" : "Day"} delay`;
 }

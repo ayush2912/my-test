@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 import { ITask } from "./GanttChart.types";
+import { getOverdueTooltipText } from "../../utils/dateDifference";
 import Icon from "../Icon";
 import Text from "../Text";
 import Tooltip from "../Tooltip";
@@ -36,11 +37,19 @@ const StyledTaskListItem = styled.div`
 `;
 
 export const TaskListItem = ({ data }: { data: ITask }) => {
+  const { state, startDate, dueDate, completedDate } = data;
   return (
     <StyledTaskListItem>
       <div>
         {data.isOverdue && (
-          <Tooltip text={`DELAYED BY ${1} DAYS`}>
+          <Tooltip
+            text={getOverdueTooltipText({
+              state,
+              startDate,
+              dueDate,
+              completedDate,
+            })}
+          >
             <Icon name="watch" />
           </Tooltip>
         )}

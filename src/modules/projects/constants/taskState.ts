@@ -1,0 +1,5 @@
+export enum ETaskState {
+  IN_PROGRESS = "IN_PROGRESS",
+  NOT_STARTED = "NOT_STARTED",
+  COMPLETED = "COMPLETED",
+}
