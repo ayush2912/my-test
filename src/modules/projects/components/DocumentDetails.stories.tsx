@@ -23,6 +23,21 @@ const documentDetailsData: IDocumentDetails = {
   registryApprovalDate: new Date(),
 };
 
+const documentDetailsData2: IDocumentDetails = {
+  name: "",
+  projectId: null,
+  engagement: "",
+  documentName: "",
+  state: "",
+  fileFormat: "",
+  size: "",
+  source: "",
+  registryApprovalDate: null,
+};
 export const Default: Story = {
   render: () => <DocumentDetails documentDetails={documentDetailsData} />,
+};
+
+export const EmptyState: Story = {
+  render: () => <DocumentDetails documentDetails={documentDetailsData2} />,
 };

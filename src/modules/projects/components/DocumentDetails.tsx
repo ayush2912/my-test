@@ -4,14 +4,14 @@ import Text from "../../../components/Text";
 import { convertToMonthNameFormat } from "../../../utils/dateTimeFormatter";
 
 export interface IDocumentDetails {
-  name: string;
-  projectId: number;
-  engagement: string;
-  documentName: string;
-  state: string;
-  fileFormat: string;
-  size: string;
-  source: string;
+  name: string | null;
+  projectId: number | null;
+  engagement: string | null;
+  documentName: string | null;
+  state: string | null;
+  fileFormat: string | null;
+  size: string | null;
+  source: string | null;
   registryApprovalDate: Date | null;
 }
 
@@ -36,7 +36,7 @@ function DocumentDetails({
           {"Project Name"}
         </Text>
         <Text type="body" color="default">
-          {documentDetails.name}
+          {documentDetails.name ? documentDetails.name : "-"}
         </Text>
       </DocDetailParameter>
       <br />
@@ -45,7 +45,7 @@ function DocumentDetails({
           {"Project ID"}
         </Text>
         <Text type="body" color="default">
-          {documentDetails.projectId}
+          {documentDetails.projectId ? documentDetails.projectId : "-"}
         </Text>
       </DocDetailParameter>
       <br />
@@ -54,7 +54,7 @@ function DocumentDetails({
           {"Engagement"}
         </Text>
         <Text type="body" color="default">
-          {documentDetails.engagement}
+          {documentDetails.engagement ? documentDetails.engagement : "-"}
         </Text>
       </DocDetailParameter>
       <br />
@@ -63,7 +63,7 @@ function DocumentDetails({
           {"Document name"}
         </Text>
         <Text type="body" color="default">
-          {documentDetails.documentName}
+          {documentDetails.documentName ? documentDetails.documentName : "-"}
         </Text>
       </DocDetailParameter>
       <br />
@@ -72,7 +72,7 @@ function DocumentDetails({
           {"State"}
         </Text>
         <Text type="body" color="default">
-          {documentDetails.state}
+          {documentDetails.state ? documentDetails.state : "-"}
         </Text>
       </DocDetailParameter>
       <br />
@@ -81,7 +81,7 @@ function DocumentDetails({
           {"File Format"}
         </Text>
         <Text type="body" color="default">
-          {documentDetails.fileFormat}
+          {documentDetails.fileFormat ? documentDetails.fileFormat : "-"}
         </Text>
       </DocDetailParameter>
       <br />
@@ -90,7 +90,7 @@ function DocumentDetails({
           {"Size"}
         </Text>
         <Text type="body" color="default">
-          {documentDetails.size}
+          {documentDetails.size ? documentDetails.size : "-"}
         </Text>
       </DocDetailParameter>
       <br />
@@ -99,7 +99,7 @@ function DocumentDetails({
           {"Source"}
         </Text>
         <Text type="body" color="default">
-          {documentDetails.source}
+          {documentDetails.source ? documentDetails.source : "-"}
         </Text>
       </DocDetailParameter>
       <br />
