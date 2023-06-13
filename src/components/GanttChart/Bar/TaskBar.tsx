@@ -282,7 +282,7 @@ export const TaskBar = ({
           )}
         </Bar>
         {isTextOverflowing && (
-          <div style={{ paddingLeft: "3px" }}>
+          <div style={{ paddingLeft: "8px" }}>
             <Text type="caption" color="default">
               {taskData.type}
             </Text>
