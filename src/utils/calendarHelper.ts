@@ -2,7 +2,7 @@ import moment from "moment";
 
 import { ProjectEngagement } from "../components/GanttChart/GanttChart.types";
 
-function getFirstSundayOfYear(firstDayOfYear: any) {
+export function getFirstSundayOfYear(firstDayOfYear: any) {
   if (firstDayOfYear.day() !== 0) {
     firstDayOfYear.add(7 - firstDayOfYear.day(), "d");
   }
