@@ -3,7 +3,6 @@ import type { Meta, StoryObj } from "@storybook/react";
 import DocumentListItem, { DocumentInfo } from "./DocumentListItem";
 
 const meta: Meta<typeof DocumentListItem> = {
-  title: "Projects/Components/DocumentListItem",
   component: DocumentListItem,
 };
 

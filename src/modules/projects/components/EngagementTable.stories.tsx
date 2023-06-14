@@ -4,7 +4,6 @@ import EngagementTable, { EngagementItem } from "./EngagementTable";
 import { EngagementTableHeaders } from "../constants/engagementTableHeaders";
 
 const meta: Meta<typeof EngagementTable> = {
-  title: "Projects/Components/Engagement Table",
   component: EngagementTable,
 };
 
