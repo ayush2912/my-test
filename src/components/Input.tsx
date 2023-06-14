@@ -1,4 +1,3 @@
-import { isError } from "@tanstack/react-query";
 import { useState } from "react";
 import styled, { css } from "styled-components";
 
@@ -122,6 +121,7 @@ export default function Input({
       {!disabled && isError && (
         <ErrorMessage>
           <Icon name="information" size="xsmall" strokeColor="#FF647C" />
+
           <Text type="caption" color="error">
             Invalid text input
           </Text>
