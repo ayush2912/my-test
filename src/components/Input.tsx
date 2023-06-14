@@ -21,11 +21,11 @@ const InputContainer = styled.div<{
   isFocused: boolean;
   disabled?: boolean;
 }>`
-
+box-sizing: content-box;
   gap: 14px;
   display: flex;
   border-radius: 8px;
-  align-content: center;
+  align-items: center;
   height: ${(props) => (props?.size === "small" ? "32px;" : "40px;")} 
   padding: ${(props) => (props?.size === "small" ? "4px 12px;" : "8px 12px;")} 
   
