@@ -3,7 +3,6 @@ import type { Meta, StoryObj } from "@storybook/react";
 import TaskList from "./TaskList";
 
 const meta: Meta<typeof TaskList> = {
-  title: "Projects/Components/Task List",
   component: TaskList,
 };
 
