@@ -9,7 +9,6 @@ import Modal from "./Modal";
 import Text from "./Text";
 
 const meta: Meta<typeof Modal> = {
-  title: "Modal",
   component: Modal,
 };
 
