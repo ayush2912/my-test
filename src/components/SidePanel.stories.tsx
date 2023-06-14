@@ -5,7 +5,6 @@ import Button from "./Button";
 import { SidePanel } from "./SidePanel";
 
 export default {
-  title: "SidePanel",
   component: SidePanel,
 } as Meta;
 
