@@ -29,12 +29,12 @@ const InputContainer = styled.div<{
   padding: ${(props) => (props?.size === "small" ? "4px 12px;" : "8px 12px;")} 
   
   box-shadow: ${(props) =>
-    props.isError
+    props.disabled
+      ? "0 0 0 2px transparent"
+      : props.isError
       ? "0 0 0 2px #FF647C"
       : props.isFocused
       ? "0 0 0 2px #3C76F1"
-      : props.disabled
-      ? "0 0 0 2px transparent"
       : "0 0 0 1px #C4C9D1"};
 
   ${(props) =>
