@@ -28,11 +28,15 @@ const InputContainer = styled.div<{
   height: ${(props) => (props?.size === "small" ? "32px;" : "40px;")} 
   padding: ${(props) => (props?.size === "small" ? "4px 12px;" : "8px 12px;")} 
   
-  border:${(props) =>
-    props.isFocused ? "2px solid #3C76F1" : "1px solid #c4c9d1"};
-  border:${(props) => props.isError && "2px solid #FF647C"};
-  border:${(props) => props.disabled && "none"};
-  
+  box-shadow: ${(props) =>
+    props.isError
+      ? "0 0 0 2px #FF647C"
+      : props.isFocused
+      ? "0 0 0 2px #3C76F1"
+      : props.disabled
+      ? "0 0 0 2px transparent"
+      : "0 0 0 1px #C4C9D1"};
+
   ${(props) =>
     props?.disabled &&
     css`
@@ -44,11 +48,11 @@ const InputContainer = styled.div<{
     !props.isError &&
     css`
       &:hover {
-        border: ${props.isFocused ? "2px solid #3C76F1" : "2px solid #8992A3"};
+        box-shadow: ${props.isFocused
+          ? "0 0 0 2px  #3C76F1"
+          : "0 0 0 2px #8992A3"};
       }
     `}
-  
-
 
   input {
     font-family: "Open Sans";
