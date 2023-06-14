@@ -21,7 +21,6 @@ const InputContainer = styled.div<{
   isFocused: boolean;
   disabled?: boolean;
 }>`
-box-sizing: content-box;
   gap: 14px;
   display: flex;
   border-radius: 8px;
