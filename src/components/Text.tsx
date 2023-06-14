@@ -22,7 +22,8 @@ type TextColor =
   | "disabled"
   | "white"
   | "warning"
-  | "success";
+  | "success"
+  | "error";
 
 const StyledText = styled.p<{
   type: TypeStyle;
