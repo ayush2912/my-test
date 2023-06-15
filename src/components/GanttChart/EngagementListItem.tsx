@@ -53,7 +53,9 @@ export const EngagementListItem = ({ data }: { data: IMappedEngagement }) => {
       </div>
       <div>
         <Button
-          isIcon
+          isIconButton
+          lightBorderColor
+          size="large"
           onClick={() => {
             data.onViewClick(data.projectId);
           }}

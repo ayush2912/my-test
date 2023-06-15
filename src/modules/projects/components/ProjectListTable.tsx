@@ -238,7 +238,13 @@ function ProjectListTable({
         </div>
       ),
       viewButton: (
-        <Button type="secondary" isIcon onClick={() => onViewButton(v.id)}>
+        <Button
+          size="large"
+          type="secondary"
+          isIconButton
+          lightBorderColor
+          onClick={() => onViewButton(v.id)}
+        >
           <Icon name="eyeIcon" size="xsmall" />
         </Button>
       ),

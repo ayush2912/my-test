@@ -3,7 +3,6 @@ import { Meta, StoryFn } from "@storybook/react";
 import { Overlay } from "./Overlay";
 
 export default {
-  title: "Overlay",
   component: Overlay,
 } as Meta;
 

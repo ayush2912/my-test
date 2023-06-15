@@ -5,7 +5,6 @@ import Button from "./Button";
 import { SidePanel } from "./SidePanel";
 
 export default {
-  title: "SidePanel",
   component: SidePanel,
 } as Meta;
 
@@ -18,7 +17,6 @@ const Template: StoryFn = () => {
   return (
     <>
       <Button
-        type="primary"
         onClick={() => {
           setShowSidePanel(true);
         }}
