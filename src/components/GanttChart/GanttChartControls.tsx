@@ -68,7 +68,12 @@ export const GanttChartControls = ({
       </div>
 
       <div>
-        <Button lightBorderColor type="secondary" onClick={onTodayButtonClick}>
+        <Button
+          size="large"
+          lightBorderColor
+          type="secondary"
+          onClick={onTodayButtonClick}
+        >
           Today
         </Button>
 
@@ -81,13 +86,13 @@ export const GanttChartControls = ({
         </DropDownBox>
 
         <Button
-          border="1px solid #E1E4E8"
-          large={true}
+          size="large"
           type="secondary"
           onClick={() => {
-            console.log("hello");
+            console.log(view, selectedEngagement);
           }}
-          isIcon
+          isIconButton
+          lightBorderColor
         >
           <Icon name="linkCopy" />
         </Button>
