@@ -76,6 +76,7 @@ const ChevronButtonIconWrapper = styled.div<{ isExpanded: boolean }>`
 const RowWrapper = styled.div`
   display: flex;
   align-items: center;
+  gap: 8px;
 `;
 
 const InfoButton = styled.button`
@@ -101,7 +102,7 @@ const ModalContent = styled.div`
 `;
 
 const EmptyState = styled.div`
-  padding-left: 20px;
+  padding-left: 8px;
   cursor: default;
 `;
 
@@ -260,7 +261,7 @@ function EngagementTable({
             </Button>
           ) : (
             <EmptyState>
-              <Text type="body" color="default">
+              <Text type="bodyBold" color="default">
                 -
               </Text>
             </EmptyState>
@@ -293,7 +294,7 @@ function EngagementTable({
             </Button>
           ) : (
             <EmptyState>
-              <Text type="body" color="default">
+              <Text type="bodyBold" color="default">
                 -
               </Text>
             </EmptyState>
