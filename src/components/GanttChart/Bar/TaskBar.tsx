@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 import { BarPopup } from "./BarPopup";
 import { useOutsideAlerter } from "../../../hooks/useOutsideAlerter";
-import { dateDifference } from "../../../utils/dateDifference";
+import { getOverdueTooltipText } from "../../../utils/dateDifference";
 import { convertToMonthNameFormat } from "../../../utils/dateTimeFormatter";
 import Icon from "../../Icon";
 import StatusTag, { StatusType } from "../../StatusTag";
@@ -94,14 +94,18 @@ export const TaskBar = ({
   taskData: ITask & { bar: IBar };
   isOverDue: boolean;
 }) => {
+  const { state, startDate, dueDate, completedDate } = taskData;
+
   const { view, scrollEvent } = useGanttChartControls();
   const [isTextOverflowing, setIsTextOverflowing] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
-  const completionDelay = dateDifference(
-    taskData.dueDate,
-    taskData?.completedDate,
-  );
+  const completionDelay = getOverdueTooltipText({
+    state,
+    startDate,
+    dueDate,
+    completedDate,
+  });
   const statusTag = {
     NOT_STARTED: {
       borderColor: "#E7E8EA",
@@ -199,7 +203,7 @@ export const TaskBar = ({
                   <>
                     <Icon name="watch" size="xsmall" />
                     <Text type="smallText" color="subdued">
-                      ({moment(taskData.startDate).fromNow()})
+                      {completionDelay}
                     </Text>
                   </>
                 )}
@@ -214,15 +218,14 @@ export const TaskBar = ({
                 <Text type="caption" color="default">
                   {convertToMonthNameFormat(taskData.dueDate)}
                 </Text>
-                {taskData.state === "IN_PROGRESS" &&
-                  moment() > moment(taskData.dueDate) && (
-                    <>
-                      <Icon name="watch" size="xsmall" />
-                      <Text type="smallText" color="subdued">
-                        ({moment(taskData.dueDate).fromNow()})
-                      </Text>
-                    </>
-                  )}
+                {taskData.state === "IN_PROGRESS" && isOverDue && (
+                  <>
+                    <Icon name="watch" size="xsmall" />
+                    <Text type="smallText" color="subdued">
+                      {completionDelay}
+                    </Text>
+                  </>
+                )}
               </TextHolder>
             </TextHolder>
             {taskData.completedDate && (
@@ -236,17 +239,14 @@ export const TaskBar = ({
                     {convertToMonthNameFormat(taskData.completedDate)}
                   </Text>
 
-                  {taskData.state === "COMPLETED" &&
-                    moment(taskData.completedDate) >
-                      moment(taskData.dueDate) && (
-                      <>
-                        <Icon name="watch" size="xsmall" />
-                        <Text type="smallText" color="subdued">
-                          ({completionDelay[0] + "-" + completionDelay[1]}{" "}
-                          delay)
-                        </Text>
-                      </>
-                    )}
+                  {taskData.state === "COMPLETED" && isOverDue && (
+                    <>
+                      <Icon name="watch" size="xsmall" />
+                      <Text type="smallText" color="subdued">
+                        {completionDelay}
+                      </Text>
+                    </>
+                  )}
                 </TextHolder>
               </TextHolder>
             )}
@@ -282,7 +282,7 @@ export const TaskBar = ({
           )}
         </Bar>
         {isTextOverflowing && (
-          <div style={{ paddingLeft: "3px" }}>
+          <div style={{ paddingLeft: "8px" }}>
             <Text type="caption" color="default">
               {taskData.type}
             </Text>

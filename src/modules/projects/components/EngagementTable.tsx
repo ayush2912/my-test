@@ -10,6 +10,7 @@ import LabelValue from "../../../components/labelValuePair";
 import Modal from "../../../components/Modal";
 import StatusTag, { StatusType } from "../../../components/StatusTag";
 import Text from "../../../components/Text";
+import Tooltip from "../../../components/Tooltip";
 import { convertToMonthNameFormat } from "../../../utils/dateTimeFormatter";
 
 const StyledTable = styled.table`
@@ -179,13 +180,15 @@ function EngagementTable({
           <ColumnWrapper>
             <RowWrapper>
               <Text type="bodyBold">{v.name}</Text>
-              <InfoButton
-                onClick={() => {
-                  setShowEngagments(true);
-                }}
-              >
-                <Icon name="information" size="small" />
-              </InfoButton>
+              <Tooltip text="ATTRIBUTES">
+                <InfoButton
+                  onClick={() => {
+                    setShowEngagments(true);
+                  }}
+                >
+                  <Icon name="information" size="small" />
+                </InfoButton>
+              </Tooltip>
             </RowWrapper>
 
             <Text type="caption" color="subdued">
@@ -247,7 +250,12 @@ function EngagementTable({
       note: (
         <>
           {v.notes ? (
-            <Button type="ghost" onClick={() => setShowNote(true)}>
+            <Button
+              type="ghost"
+              size="small"
+              isIconButton
+              onClick={() => setShowNote(true)}
+            >
               <Icon name="message" />
             </Button>
           ) : (
@@ -278,6 +286,7 @@ function EngagementTable({
               onClick={() => {
                 onViewDocument(v.id);
               }}
+              iconPosition="left"
             >
               <Icon name="file" />
               <Text type="bodyBold">{v.document}</Text>

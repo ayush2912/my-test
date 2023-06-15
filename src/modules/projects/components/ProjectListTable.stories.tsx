@@ -3,7 +3,6 @@ import type { Meta, StoryObj } from "@storybook/react";
 import ProjectListTable, { ProjectRowItem, Headers } from "./ProjectListTable";
 
 const meta: Meta<typeof ProjectListTable> = {
-  title: "Projects/Components/ Project List Table",
   component: ProjectListTable,
 };
 

@@ -1,13 +1,11 @@
+import { useMemo } from "react";
 import styled from "styled-components";
 
 import Icon, { IconNameType } from "../../../components/Icon";
 import Text from "../../../components/Text";
 import Tooltip from "../../../components/Tooltip";
-import {
-  convertToMonthNameFormat,
-  calculateFromToday,
-  differenceInDates,
-} from "../../../utils/dateTimeFormatter";
+import { getOverdueTooltipText } from "../../../utils/dateDifference";
+import { convertToMonthNameFormat } from "../../../utils/dateTimeFormatter";
 
 const StyledTaskContainer = styled.div`
   border-top: 1px solid #e1e4e8;
@@ -88,36 +86,9 @@ export default function TaskList({
     DISCONTINUED: "DISCONTINUED",
   }[state] as string;
 
-  const alarmClockTooltipContent = {
-    text: "",
-  };
-
-  const displayAlarmClockIcon = () => {
-    if (isOverdue) {
-      if (
-        state === "NOT_STARTED" &&
-        calculateFromToday(new Date(), startDate) === "Today > inputDate"
-      ) {
-        alarmClockTooltipContent["text"] =
-          "DELAYED BY " + differenceInDates(startDate, new Date()) + " days";
-        return true;
-      } else if (
-        state === "IN_PROGRESS" &&
-        calculateFromToday(new Date(), dueDate) === "Today > inputDate"
-      ) {
-        alarmClockTooltipContent["text"] =
-          "DELAYED BY " + differenceInDates(dueDate, new Date()) + " days";
-        return true;
-      } else if (
-        state === "COMPLETED" &&
-        calculateFromToday(completedDate, dueDate) === "Today > inputDate"
-      ) {
-        alarmClockTooltipContent["text"] =
-          "DELAYED BY " + differenceInDates(dueDate, completedDate) + " days";
-        return true;
-      }
-    }
-  };
+  const overdueTooltipText = useMemo(() => {
+    return getOverdueTooltipText({ state, startDate, dueDate, completedDate });
+  }, [state, startDate, dueDate, completedDate]);
 
   return (
     <StyledTaskContainer>
@@ -133,8 +104,8 @@ export default function TaskList({
           >
             {type}
           </TextWithMarginBottom>
-          {displayAlarmClockIcon() && (
-            <Tooltip text={alarmClockTooltipContent.text}>
+          {isOverdue && (
+            <Tooltip text={overdueTooltipText}>
               <Icon name="alarmClock" size="xsmall" />
             </Tooltip>
           )}
