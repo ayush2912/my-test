@@ -68,15 +68,8 @@ export const GanttChartControls = ({
       </div>
 
       <div>
-        <Button
-          border="1px solid #E1E4E8"
-          large={true}
-          type="secondary"
-          onClick={onTodayButtonClick}
-        >
-          <Text color="default" type="button">
-            Today
-          </Text>
+        <Button lightBorderColor type="secondary" onClick={onTodayButtonClick}>
+          Today
         </Button>
 
         <DropDownBox>

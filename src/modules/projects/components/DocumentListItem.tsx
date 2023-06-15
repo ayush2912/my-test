@@ -112,7 +112,9 @@ export default function DocumentListItem({
         {onGetInfo && (
           <Button
             type="secondary"
-            isIcon={true}
+            isIconButton={true}
+            size="large"
+            lightBorderColor
             onClick={() => onGetInfo(documentInfo.id)}
           >
             <Icon name="information" size="xsmall" />
@@ -121,7 +123,9 @@ export default function DocumentListItem({
 
         <Button
           type="secondary"
-          isIcon={true}
+          isIconButton={true}
+          lightBorderColor
+          size="large"
           onClick={() =>
             onClickDownload(
               documentInfo.id,
