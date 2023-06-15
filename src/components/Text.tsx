@@ -1,7 +1,7 @@
 import { ReactNode, forwardRef } from "react";
 import styled, { css } from "styled-components";
 
-type TypeStyle =
+export type FontType =
   | "heading1"
   | "heading2"
   | "heading3"
@@ -25,14 +25,13 @@ type TextColor =
   | "success";
 
 const StyledText = styled.p<{
-  type: TypeStyle;
+  type: FontType;
   color: TextColor;
   hoverStyles?: string;
   ellipsis?: boolean;
 }>`
   font-size: ${(props) => props.theme.typography[props.type].size}px;
   font-weight: ${(props) => props.theme.typography[props.type].weight};
-  font-family: "Open Sans";
   line-height: ${(props) => props.theme.typography[props.type].lineHeight}px;
   color: ${(props) => props.theme.colors.text[props.color]};
   ${(props) =>
@@ -60,7 +59,7 @@ export default forwardRef(function Text(
     hoverStyles,
     ellipsis,
   }: {
-    type: TypeStyle;
+    type: FontType;
     color?: TextColor;
     children: ReactNode;
     hoverStyles?: string;

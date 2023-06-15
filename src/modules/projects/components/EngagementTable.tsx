@@ -124,11 +124,6 @@ const EmptyStateTextContent = styled.div`
   gap: 8px;
 `;
 
-const DocumentButtonContent = styled.div`
-  display: flex;
-  padding-right: 3px;
-`;
-
 type EngamentStateTypes =
   | "NOT_STARTED"
   | "IN_PROGRESS"
@@ -255,7 +250,12 @@ function EngagementTable({
       note: (
         <>
           {v.notes ? (
-            <Button type="ghost" onClick={() => setShowNote(true)}>
+            <Button
+              type="ghost"
+              size="small"
+              isIconButton
+              onClick={() => setShowNote(true)}
+            >
               <Icon name="message" />
             </Button>
           ) : (
@@ -286,11 +286,10 @@ function EngagementTable({
               onClick={() => {
                 onViewDocument(v.id);
               }}
+              iconPosition="left"
             >
-              <DocumentButtonContent>
-                <Icon name="file" />
-                <Text type="bodyBold">{v.document}</Text>
-              </DocumentButtonContent>
+              <Icon name="file" />
+              <Text type="bodyBold">{v.document}</Text>
             </Button>
           ) : (
             <EmptyState>
