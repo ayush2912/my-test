@@ -1,7 +1,7 @@
 {
   "name": "@climateconnectdigital/offsetmax-web-app",
   "private": false,
-  "version": "1.1.62",
+  "version": "1.1.63",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
