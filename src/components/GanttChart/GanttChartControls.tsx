@@ -5,6 +5,7 @@ import GanttChartLengend from "./GanttChartLegend";
 import useGanttChartControls from "./useGanttChartControls";
 import Button from "../Button";
 import Dropdown from "../Dropdown";
+import Icon from "../Icon";
 import Select from "../Select";
 import Text from "../Text";
 
@@ -85,6 +86,18 @@ export const GanttChartControls = ({
             onChange={handleDropdownChange}
           />
         </DropDownBox>
+
+        <Button
+          border="1px solid #E1E4E8"
+          large={true}
+          type="secondary"
+          onClick={() => {
+            console.log("hello");
+          }}
+          isIcon
+        >
+          <Icon name="linkCopy" />
+        </Button>
       </div>
     </ButtonContainer>
   );
