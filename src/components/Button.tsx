@@ -1,6 +1,8 @@
 import { ReactNode } from "react";
 import styled, { DefaultTheme, css, useTheme } from "styled-components";
 
+import { FontType } from "./Text";
+
 type IStyledButtonProps = {
   isIconButton?: boolean;
   iconPosition?: string;
@@ -12,6 +14,7 @@ type IStyledButtonProps = {
   pressedBgColor?: string;
   disabled?: boolean;
   buttonPadding: string;
+  buttonFontType: FontType;
 };
 
 const StyledButton = styled.button<IStyledButtonProps>`
@@ -24,9 +27,11 @@ const StyledButton = styled.button<IStyledButtonProps>`
   border-radius: 8px;
 
   cursor: pointer;
-  font-size: ${(props) => props.theme.typography.button.size}px;
-  font-weight: ${(props) => props.theme.typography.button.weight};
-  line-height: ${(props) => props.theme.typography.button.lineHeight}px;
+  font-size: ${(props) => props.theme.typography[props.buttonFontType].size}px;
+  font-weight: ${(props) =>
+    props.theme.typography[props.buttonFontType].weight};
+  line-height: ${(props) =>
+    props.theme.typography[props.buttonFontType].lineHeight}px;
   transition: background-color 0.3s, color 0.3s;
 
   ${(props) => props.buttonPadding}
@@ -95,6 +100,7 @@ export default function Button({
 }: IButtonProps) {
   const theme: DefaultTheme = useTheme();
 
+  // selecting up variants color
   const selectedButtonStyles = {
     primary: {
       textColor: theme.colors.text.white,
@@ -118,6 +124,14 @@ export default function Button({
     },
   }[type];
 
+  // selecting font styles
+  const selectedFontType = {
+    xsmall: "captionBold",
+    small: "bodyBold",
+    large: "button",
+  }[size] as FontType;
+
+  // selecting up button padding
   const selectedPaddingBlock = {
     xsmall: "padding-block: 4px;",
     small: "padding-block: 4px;",
@@ -146,6 +160,7 @@ export default function Button({
       onClick={onClick}
       iconPosition={iconPosition}
       buttonPadding={buttonPadding}
+      buttonFontType={selectedFontType}
     >
       <ButtonContentWrapper>{children}</ButtonContentWrapper>
     </StyledButton>
