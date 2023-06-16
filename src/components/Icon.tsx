@@ -51,6 +51,7 @@ import { ReactComponent as FileIcon } from "../assets/icons/generic/file.svg";
 import { ReactComponent as FiltersIcon } from "../assets/icons/generic/filters.svg";
 import { ReactComponent as HomeIcon } from "../assets/icons/generic/home.svg";
 import { ReactComponent as InformationIcon } from "../assets/icons/generic/information.svg";
+import { ReactComponent as LinkCopy } from "../assets/icons/generic/link-copy.svg";
 import { ReactComponent as MessageIcon } from "../assets/icons/generic/message.svg";
 import { ReactComponent as MinusIcon } from "../assets/icons/generic/minus.svg";
 import { ReactComponent as MoneyIcon } from "../assets/icons/generic/money.svg";
@@ -152,6 +153,7 @@ const icons = {
   // chevronButton: ChevronButtonIcon,
   chevronDown: ChevronDownIcon,
   information: InformationIcon,
+  linkCopy: LinkCopy,
   minus: MinusIcon,
   money: MoneyIcon,
   placeholder: PlaceholderIcon,

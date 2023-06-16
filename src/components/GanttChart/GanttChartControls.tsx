@@ -5,6 +5,7 @@ import GanttChartLengend from "./GanttChartLegend";
 import useGanttChartControls from "./useGanttChartControls";
 import Button from "../Button";
 import Dropdown from "../Dropdown";
+import Icon from "../Icon";
 import Select from "../Select";
 import Text from "../Text";
 
@@ -83,6 +84,18 @@ export const GanttChartControls = ({
             onChange={handleDropdownChange}
           />
         </DropDownBox>
+
+        <Button
+          size="large"
+          type="secondary"
+          onClick={() => {
+            navigator.clipboard.writeText(window.location.href);
+          }}
+          isIconButton
+          lightBorderColor
+        >
+          <Icon name="linkCopy" />
+        </Button>
       </div>
     </ButtonContainer>
   );
