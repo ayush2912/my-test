@@ -89,7 +89,7 @@ export const GanttChartControls = ({
           size="large"
           type="secondary"
           onClick={() => {
-            console.log(view, selectedEngagement);
+            navigator.clipboard.writeText(window.location.href);
           }}
           isIconButton
           lightBorderColor
