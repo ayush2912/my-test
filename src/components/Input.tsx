@@ -5,15 +5,33 @@ import Icon, { IconNameType } from "./Icon";
 import Text from "./Text";
 
 interface IIinputProps {
+  type?: string;
   size?: string;
   label?: string;
   isError?: boolean;
+  register?: any;
+  requiredObject?: object;
+  formFieldName?: string;
+  errorMessage?: string;
   disabled?: boolean;
   placeholder: string;
   iconName?: IconNameType;
   value?: string | number;
-  onChangeValue: (val: string | number) => void;
+  onChangeValue?: (val: string | number) => void;
+  onIconClick?: () => void;
 }
+
+const IconButton = styled.button`
+  background: none;
+  color: inherit;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const InputContainer = styled.div<{
   size?: string;
@@ -25,9 +43,9 @@ const InputContainer = styled.div<{
   display: flex;
   border-radius: 8px;
   align-items: center;
-  height: ${(props) => (props?.size === "small" ? "32px;" : "40px;")} 
-  padding: ${(props) => (props?.size === "small" ? "4px 12px;" : "8px 12px;")} 
-  
+  height: ${(props) => (props?.size === "small" ? "32px;" : "40px;")};
+  padding: ${(props) => (props?.size === "small" ? "4px 12px;" : "8px 12px;")};
+
   box-shadow: ${(props) =>
     props.disabled
       ? "0 0 0 2px transparent"
@@ -52,7 +70,7 @@ const InputContainer = styled.div<{
           ? "0 0 0 2px  #3C76F1"
           : "0 0 0 2px #8992A3"};
       }
-    `}
+    `};
 
   input {
     font-family: "Open Sans";
@@ -71,6 +89,9 @@ const InputContainer = styled.div<{
       opacity: 1;
     }
   }
+  input[type="password"]:not(:placeholder-shown) {
+    font-size: 10px;
+  }
 `;
 
 const ErrorMessage = styled.div`
@@ -81,6 +102,7 @@ const ErrorMessage = styled.div`
 `;
 
 export default function Input({
+  type,
   size,
   value,
   label,
@@ -88,7 +110,12 @@ export default function Input({
   disabled,
   iconName,
   placeholder,
+  errorMessage,
+  formFieldName,
+  register,
+  requiredObject,
   onChangeValue,
+  onIconClick,
 }: IIinputProps) {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -108,17 +135,44 @@ export default function Input({
         isError={isError}
         size={size}
       >
-        <input
-          value={value}
-          disabled={disabled}
-          placeholder={placeholder}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-          onChange={(e) => onChangeValue(e.target.value)}
-        />
-        {iconName && (
-          <Icon name={iconName} size={size === "small" ? "xsmall" : "small"} />
+        {register && (
+          <input
+            {...register(formFieldName, requiredObject)}
+            type={type}
+            value={value}
+            disabled={disabled}
+            placeholder={placeholder}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+          />
         )}
+
+        {onChangeValue && (
+          <input
+            type={type}
+            value={value}
+            disabled={disabled}
+            placeholder={placeholder}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            onChange={(e) => onChangeValue(e.target.value)}
+          />
+        )}
+
+        {iconName &&
+          (onIconClick ? (
+            <IconButton disabled={disabled} onClick={onIconClick}>
+              <Icon
+                name={iconName}
+                size={size === "small" ? "xsmall" : "small"}
+              />
+            </IconButton>
+          ) : (
+            <Icon
+              name={iconName}
+              size={size === "small" ? "xsmall" : "small"}
+            />
+          ))}
       </InputContainer>
 
       {!disabled && isError && (
@@ -126,7 +180,7 @@ export default function Input({
           <Icon name="information" size="xsmall" strokeColor="#FF647C" />
 
           <Text type="caption" color="error">
-            Invalid text input
+            {errorMessage ?? ""}
           </Text>
         </ErrorMessage>
       )}

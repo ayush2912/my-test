@@ -28,6 +28,7 @@ export const LargeWithError = {
         label="Field label"
         onChangeValue={(val) => setValue(val)}
         isError
+        errorMessage="Invalid input text"
         value={value}
       />
     );
@@ -44,6 +45,7 @@ export const LargeWithErrorWithIcon = {
         iconName="file"
         onChangeValue={(val) => setValue(val)}
         isError
+        errorMessage="Invalid input text"
         value={value}
       />
     );
@@ -114,6 +116,7 @@ export const LargeWithoutLabelError = {
         placeholder="This is an input field that is quite long"
         onChangeValue={(val) => setValue(val)}
         isError
+        errorMessage="Invalid input text"
         value={value}
       />
     );
@@ -128,6 +131,7 @@ export const LargeWithoutLabelErrorWithIcon = {
         iconName="file"
         onChangeValue={(val) => setValue(val)}
         isError
+        errorMessage="Invalid input text"
         value={value}
       />
     );
@@ -187,6 +191,7 @@ export const SmallWithError = {
         label="Field label"
         onChangeValue={(val) => setValue(val)}
         isError
+        errorMessage="Invalid input text"
         size="small"
         value={value}
       />
@@ -204,6 +209,7 @@ export const SmallWithErrorWithIcon = {
         iconName="file"
         onChangeValue={(val) => setValue(val)}
         isError
+        errorMessage="Invalid input text"
         size="small"
         value={value}
       />
@@ -280,6 +286,7 @@ export const SmallWithoutLabelError = {
         onChangeValue={(val) => setValue(val)}
         size="small"
         isError
+        errorMessage="Invalid input text"
         value={value}
       />
     );
@@ -295,6 +302,7 @@ export const SmallWithoutLabelErrorWithIcon = {
         onChangeValue={(val) => setValue(val)}
         size="small"
         isError
+        errorMessage="Invalid input text"
         value={value}
       />
     );
