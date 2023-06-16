@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 import { EngagementBar } from "./Bar/EngagementBar";
@@ -10,7 +10,7 @@ import { EngagementListItem } from "./EngagementListItem";
 import { IMappedEngagements } from "./GanttChart.types";
 import { GanttChartControls } from "./GanttChartControls";
 import { TaskListItem } from "./TaskListItem";
-import TodayFocus from "./TodayFocus";
+import { TodayFocus } from "./TodayFocus";
 import useGanttChartControls from "./useGanttChartControls";
 import EmptyBox from "../../assets/images/empty-box.png";
 import Card from "../Card";
@@ -57,6 +57,7 @@ const ProjectNameContainer = styled.div<{ isCollapsed: boolean }>`
     -webkit-box-orient: vertical;
   }
 `;
+
 const CollapseButtonContainer = styled.div`
   display: flex;
   justify-content: end;
@@ -126,21 +127,13 @@ export const GanttChart = ({
     setEngagements,
     reset,
   } = useGanttChartControls();
-  const calendarBodyRef = useRef<HTMLDivElement | null>(null);
+
   const [isCollapsed, setIsCollapsed] = useState(false);
   const todayRef = useRef<HTMLDivElement | null>(null);
 
   const handleCollapse = () => {
     setIsCollapsed(!isCollapsed);
   };
-
-  useEffect(() => {
-    calendarBodyRef.current?.addEventListener("wheel", onScroll);
-
-    return () => {
-      calendarBodyRef.current?.removeEventListener("wheel", onScroll);
-    };
-  }, [calendarBodyRef]);
 
   useEffect(() => {
     setEngagements(engagements);
@@ -165,7 +158,11 @@ export const GanttChart = ({
     <Card>
       <GanttChartControls onTodayButtonClick={focusToday} />
       {selectedEngagement.id ? (
-        <Container ref={calendarBodyRef}>
+        <Container
+          onWheel={(e: any) => {
+            onScroll(e);
+          }}
+        >
           <Content>
             <Header>
               <LeftPanelHeader isCollapsed={isCollapsed}>
