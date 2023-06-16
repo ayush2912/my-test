@@ -6,7 +6,6 @@ import Accordion from "./Accordion";
 import Text from "./Text";
 
 const meta: Meta<typeof Accordion> = {
-  title: "Accordion",
   component: Accordion,
 };
 

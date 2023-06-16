@@ -3,7 +3,6 @@ import type { Meta, StoryObj } from "@storybook/react";
 import StatusTag from "./StatusTag";
 
 const meta: Meta<typeof StatusTag> = {
-  title: "StatusTag",
   component: StatusTag,
 };
 

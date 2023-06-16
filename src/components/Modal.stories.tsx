@@ -9,7 +9,6 @@ import Modal from "./Modal";
 import Text from "./Text";
 
 const meta: Meta<typeof Modal> = {
-  title: "Modal",
   component: Modal,
 };
 
@@ -25,7 +24,7 @@ export const Normal: Story = {
     const [modalStatus, setModalStatus] = useState(false);
     return (
       <div style={{ width: 500 }}>
-        <Button large onClick={() => setModalStatus(true)}>
+        <Button size="large" onClick={() => setModalStatus(true)}>
           Open Modal
         </Button>
         <Modal

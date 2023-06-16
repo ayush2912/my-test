@@ -10,6 +10,7 @@ import LabelValue from "../../../components/labelValuePair";
 import Modal from "../../../components/Modal";
 import StatusTag, { StatusType } from "../../../components/StatusTag";
 import Text from "../../../components/Text";
+import Tooltip from "../../../components/Tooltip";
 import { convertToMonthNameFormat } from "../../../utils/dateTimeFormatter";
 
 const StyledTable = styled.table`
@@ -75,6 +76,7 @@ const ChevronButtonIconWrapper = styled.div<{ isExpanded: boolean }>`
 const RowWrapper = styled.div`
   display: flex;
   align-items: center;
+  gap: 8px;
 `;
 
 const InfoButton = styled.button`
@@ -100,7 +102,7 @@ const ModalContent = styled.div`
 `;
 
 const EmptyState = styled.div`
-  padding-left: 20px;
+  padding-left: 8px;
   cursor: default;
 `;
 
@@ -179,13 +181,15 @@ function EngagementTable({
           <ColumnWrapper>
             <RowWrapper>
               <Text type="bodyBold">{v.name}</Text>
-              <InfoButton
-                onClick={() => {
-                  setShowEngagments(true);
-                }}
-              >
-                <Icon name="information" size="small" />
-              </InfoButton>
+              <Tooltip text="ATTRIBUTES">
+                <InfoButton
+                  onClick={() => {
+                    setShowEngagments(true);
+                  }}
+                >
+                  <Icon name="information" size="small" />
+                </InfoButton>
+              </Tooltip>
             </RowWrapper>
 
             <Text type="caption" color="subdued">
@@ -247,12 +251,17 @@ function EngagementTable({
       note: (
         <>
           {v.notes ? (
-            <Button type="ghost" onClick={() => setShowNote(true)}>
+            <Button
+              type="ghost"
+              size="small"
+              isIconButton
+              onClick={() => setShowNote(true)}
+            >
               <Icon name="message" />
             </Button>
           ) : (
             <EmptyState>
-              <Text type="body" color="default">
+              <Text type="bodyBold" color="default">
                 -
               </Text>
             </EmptyState>
@@ -278,13 +287,14 @@ function EngagementTable({
               onClick={() => {
                 onViewDocument(v.id);
               }}
+              iconPosition="left"
             >
               <Icon name="file" />
               <Text type="bodyBold">{v.document}</Text>
             </Button>
           ) : (
             <EmptyState>
-              <Text type="body" color="default">
+              <Text type="bodyBold" color="default">
                 -
               </Text>
             </EmptyState>

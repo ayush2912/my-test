@@ -152,7 +152,9 @@ export const EngagementBar = ({
             </Text>
             <Button
               type="secondary"
-              isIcon
+              isIconButton
+              lightBorderColor
+              size="large"
               onClick={() => {
                 engagementData.onViewClick(engagementData.projectId);
               }}

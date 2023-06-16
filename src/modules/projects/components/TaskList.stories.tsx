@@ -3,7 +3,6 @@ import type { Meta, StoryObj } from "@storybook/react";
 import TaskList from "./TaskList";
 
 const meta: Meta<typeof TaskList> = {
-  title: "Projects/Components/Task List",
   component: TaskList,
 };
 
@@ -50,12 +49,12 @@ export const Primary: Story = {
         isOverdue={true}
         type="Task 5"
         startDate={new Date("2023-01-10T06:20:44.069Z")}
-        dueDate={new Date("2030-01-05T08:52:29.962Z")}
+        dueDate={new Date("2023-04-05T08:52:29.962Z")}
         state="IN_PROGRESS"
         assignee="Client"
       />
       <TaskList
-        isOverdue
+        isOverdue={false}
         type="Task 6"
         startDate={new Date("2023-01-10T06:20:44.069Z")}
         dueDate={new Date("2030-01-05T08:52:29.962Z")}
