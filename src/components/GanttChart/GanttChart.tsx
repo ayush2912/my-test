@@ -27,8 +27,8 @@ const EmptyStateContainer = styled.div`
 
 const Container = styled.div`
   width: 100%;
-  height: 500px;
-  overflow: auto;
+  height: 100%;
+  overflow: scroll;
   position: relative;
 
   &::-webkit-scrollbar {
@@ -66,11 +66,6 @@ const CollapseButtonContainer = styled.div`
   cursor: pointer;
 `;
 
-const Content = styled.div`
-  width: 100%;
-  height: fit-content;
-`;
-
 const Header = styled.div`
   position: sticky;
   top: 0;
@@ -81,16 +76,17 @@ const Header = styled.div`
 `;
 
 const Body = styled.div`
-  width: fit-content;
   display: flex;
-  height: 100%;
+  width: fit-content;
+  height: calc(100% - 8px - 82px);
 `;
 
 const LeftPanel = styled.div<{ isCollapsed: boolean }>`
   position: sticky;
   left: 0;
   width: ${({ isCollapsed }) => (isCollapsed ? 24 : 385)}px;
-  overflow: hidden;
+  height: fit-content;
+  min-height: 100%;
   z-index: 3;
   border-right: 1px solid #e1e4e8;
   box-shadow: 2px 0px 4px rgba(0, 0, 0, 0.1);
@@ -163,60 +159,58 @@ export const GanttChart = ({
             onScroll(e);
           }}
         >
-          <Content>
-            <Header>
-              <LeftPanelHeader isCollapsed={isCollapsed}>
-                <CollapseButtonContainer>
-                  <span onClick={handleCollapse}>
-                    <Icon
-                      name={isCollapsed ? "chevronsRight" : "chevronsLeft"}
-                      size="xsmall"
-                    />
-                  </span>
-                </CollapseButtonContainer>
-                <ProjectNameContainer isCollapsed={isCollapsed}>
-                  <p>{selectedEngagement.projectName} </p>
-                </ProjectNameContainer>
-              </LeftPanelHeader>
-              <CalendarHeader
-                calendarHeader={calendar.header}
-                view={view}
-                earliestStartDate={calendar.earliestStartDate}
-                offsetForToday={calendar.offsetForToday}
-                todayRef={todayRef}
-              />
-            </Header>
+          <Header>
+            <LeftPanelHeader isCollapsed={isCollapsed}>
+              <CollapseButtonContainer>
+                <span onClick={handleCollapse}>
+                  <Icon
+                    name={isCollapsed ? "chevronsRight" : "chevronsLeft"}
+                    size="xsmall"
+                  />
+                </span>
+              </CollapseButtonContainer>
+              <ProjectNameContainer isCollapsed={isCollapsed}>
+                <p>{selectedEngagement.projectName} </p>
+              </ProjectNameContainer>
+            </LeftPanelHeader>
+            <CalendarHeader
+              calendarHeader={calendar.header}
+              view={view}
+              earliestStartDate={calendar.earliestStartDate}
+              offsetForToday={calendar.offsetForToday}
+              todayRef={todayRef}
+            />
+          </Header>
 
-            <Body>
-              <LeftPanel isCollapsed={isCollapsed}>
-                {!isCollapsed && (
-                  <>
-                    <EngagementListItem data={selectedEngagement} />
-                    {selectedEngagement.tasks.map((v) => (
-                      <TaskListItem key={v.id} data={v} />
-                    ))}
-                  </>
-                )}
-              </LeftPanel>
-              <CalendarBackground width={calendar.width[view]} view={view}>
-                {view === "monthly" && (
-                  <TodayFocus
-                    offsetLeft={calendar.offsetForToday * 40}
-                    calendarBoxWidth={48}
-                  />
-                )}
+          <Body>
+            <LeftPanel isCollapsed={isCollapsed}>
+              {!isCollapsed && (
                 <>
-                  <EngagementBar
-                    key={selectedEngagement.id}
-                    engagementData={selectedEngagement}
-                  />
+                  <EngagementListItem data={selectedEngagement} />
                   {selectedEngagement.tasks.map((v) => (
-                    <TaskBar isOverDue={v.isOverdue} key={v.id} taskData={v} />
+                    <TaskListItem key={v.id} data={v} />
                   ))}
                 </>
-              </CalendarBackground>
-            </Body>
-          </Content>
+              )}
+            </LeftPanel>
+            <CalendarBackground width={calendar.width[view]} view={view}>
+              {view === "monthly" && (
+                <TodayFocus
+                  offsetLeft={calendar.offsetForToday * 40}
+                  calendarBoxWidth={48}
+                />
+              )}
+              <>
+                <EngagementBar
+                  key={selectedEngagement.id}
+                  engagementData={selectedEngagement}
+                />
+                {selectedEngagement.tasks.map((v) => (
+                  <TaskBar isOverDue={v.isOverdue} key={v.id} taskData={v} />
+                ))}
+              </>
+            </CalendarBackground>
+          </Body>
         </Container>
       ) : (
         <EmptyStateContainer>
