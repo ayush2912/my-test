@@ -116,7 +116,14 @@ const LeftPanelHeader = styled.div<{ isCollapsed: boolean }>`
   box-shadow: 2px 0px 4px rgba(0, 0, 0, 0.1);
   transition: width 0.3s ease-in-out;
 `;
-
+const ListItemContainer = styled.div<{ isCollapsed: boolean }>`
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  width: ${(props) => (props.isCollapsed ? 24 : 385)}px;
+  opacity: ${(props) => (props.isCollapsed ? 0 : 1)};
+  transition: all 0.3s ease-in-out;
+`;
 export const GanttChart = ({
   engagements,
   calendar,
@@ -193,14 +200,12 @@ export const GanttChart = ({
 
           <Body>
             <LeftPanel isCollapsed={isCollapsed}>
-              {!isCollapsed && (
-                <>
-                  <EngagementListItem data={selectedEngagement} />
-                  {selectedEngagement.tasks.map((v) => (
-                    <TaskListItem key={v.id} data={v} />
-                  ))}
-                </>
-              )}
+              <ListItemContainer isCollapsed={isCollapsed}>
+                <EngagementListItem data={selectedEngagement} />
+                {selectedEngagement.tasks.map((v) => (
+                  <TaskListItem key={v.id} data={v} />
+                ))}
+              </ListItemContainer>
             </LeftPanel>
             <CalendarBackground width={calendar.width[view]} view={view}>
               {view === "monthly" && (
