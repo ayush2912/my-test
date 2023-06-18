@@ -26,14 +26,6 @@ const StyledTaskListItem = styled.div`
       text-overflow: ellipsis;
     }
   }
-
-  &:nth-child(even) {
-    background-color: #f1f2f4; /* Stripe color for even list items */
-  }
-
-  &:nth-child(odd) {
-    background-color: #ffffff; /* Stripe color for odd list items */
-  }
 `;
 
 export const TaskListItem = ({ data }: { data: ITask }) => {

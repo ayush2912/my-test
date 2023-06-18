@@ -92,6 +92,13 @@ const LeftPanel = styled.div<{ isCollapsed: boolean }>`
   box-shadow: 2px 0px 4px rgba(0, 0, 0, 0.1);
   background: white;
   transition: width 0.3s ease-in-out;
+  background-color: #ffffff;
+  background-image: linear-gradient(
+    to bottom,
+    #ffffff 48px,
+    rgba(241, 242, 244, 0.5) 1px
+  );
+  background-size: 48px 96px;
 `;
 
 const LeftPanelHeader = styled.div<{ isCollapsed: boolean }>`
