@@ -99,6 +99,8 @@ const LeftPanel = styled.div<{ isCollapsed: boolean }>`
     rgba(241, 242, 244, 0.5) 1px
   );
   background-size: 48px 96px;
+
+  ${(props) => props.isCollapsed && "background-image: none"};
 `;
 
 const LeftPanelHeader = styled.div<{ isCollapsed: boolean }>`
