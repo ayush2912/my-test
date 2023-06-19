@@ -175,7 +175,7 @@ export const CalendarHeader = ({
 }) => {
   const { view } = useGanttChartControls();
   const earliestRef = useRef<HTMLDivElement | null>(null);
-  console.log(selectedEngagement);
+
   const earliestDateOffset = useMemo(() => {
     return {
       monthly:
