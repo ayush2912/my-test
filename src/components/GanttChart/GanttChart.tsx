@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 
 import { EngagementBar } from "./Bar/EngagementBar";
@@ -7,14 +7,22 @@ import { ICalendar } from "./Calendar/Calendar.types";
 import { CalendarBackground } from "./Calendar/CalendarBackground";
 import { CalendarHeader } from "./Calendar/CalendarHeader";
 import { EngagementListItem } from "./EngagementListItem";
-import { IMappedEngagements } from "./GanttChart.types";
+import {
+  IMappedEngagement,
+  IMappedEngagements,
+  ProjectEngagement,
+} from "./GanttChart.types";
 import { GanttChartControls } from "./GanttChartControls";
 import { TaskListItem } from "./TaskListItem";
 import { TodayFocus } from "./TodayFocus";
 import useGanttChartControls from "./useGanttChartControls";
 import EmptyBox from "../../assets/images/empty-box.png";
+import { useSearchParamsState } from "../../hooks/useSearchParamsState";
+import { getBarInfo, memoizedCalendarData } from "../../utils/calendarHelper";
+import { convertToMonthNameFormat } from "../../utils/dateTimeFormatter";
 import Card from "../Card";
 import Icon from "../Icon";
+import Select from "../Select";
 import Text from "../Text";
 
 const EmptyStateContainer = styled.div`
@@ -124,23 +132,34 @@ const ListItemContainer = styled.div<{ isCollapsed: boolean }>`
   opacity: ${(props) => (props.isCollapsed ? 0 : 1)};
   transition: all 0.3s ease-in-out;
 `;
+
+const GanttChartWrapper = styled.div`
+  height: calc(100vh - 320px);
+`;
 export const GanttChart = ({
-  engagements,
-  calendar,
+  projectEngagementData,
 }: {
-  engagements: IMappedEngagements;
-  calendar: ICalendar;
+  projectEngagementData: ProjectEngagement[];
 }) => {
-  const {
-    view,
-    onScroll,
-    changeView,
-    selectedEngagement,
-    setEngagements,
-    reset,
-  } = useGanttChartControls();
+  const { view, onScroll, changeView } = useGanttChartControls();
+
+  const [projectOptions, setProjectOptions] = useState<
+    { label: string; value: string }[]
+  >([]);
+
+  const [selectedProjectId, setSelectedProjectId] = useSearchParamsState(
+    "project",
+    "",
+  );
+
+  const [engagements, setEngagements] = useState<IMappedEngagements>([]);
+  const [selectedEngagementId, setSelectedEngagementId] = useSearchParamsState(
+    "engagement",
+    "",
+  );
 
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [calendar, setCalendar] = useState<any>([]);
   const todayRef = useRef<HTMLDivElement | null>(null);
 
   const handleCollapse = () => {
@@ -148,11 +167,47 @@ export const GanttChart = ({
   };
 
   useEffect(() => {
-    setEngagements(engagements);
-    return () => {
-      reset();
-    };
-  }, [engagements]);
+    setProjectOptions(
+      projectEngagementData.map((v) => ({
+        value: v.id,
+        label: v.name,
+      })),
+    );
+
+    setCalendar(memoizedCalendarData(projectEngagementData));
+
+    setEngagements(
+      projectEngagementData.flatMap((project) =>
+        project.engagements.map((engagement) => {
+          const engagementBar = getBarInfo(
+            new Date(engagement.startDate),
+            new Date(engagement.dueDate),
+            engagement.completedDate
+              ? new Date(engagement.completedDate)
+              : null,
+            calendar.earliestStartDate,
+          );
+
+          return {
+            ...engagement,
+            projectName: project.name,
+            bar: engagementBar,
+            onViewClick: (id: string) =>
+              console.log(`navigate to project details ${id}`),
+            tasks: engagement.tasks.map((task) => ({
+              ...task,
+              bar: getBarInfo(
+                new Date(task.startDate),
+                new Date(task.dueDate),
+                task.completedDate ? new Date(task.completedDate) : null,
+                calendar.earliestStartDate,
+              ),
+            })),
+          };
+        }),
+      ),
+    );
+  }, [projectEngagementData]);
 
   const focusToday = () => {
     changeView("monthly");
@@ -166,78 +221,132 @@ export const GanttChart = ({
     }, 500);
   };
 
+  const handleSelectProject = (projectId: string) => {
+    setSelectedProjectId(projectId);
+  };
+
+  useEffect(() => {
+    setSelectedEngagementId("");
+  }, [selectedProjectId]);
+
+  const engagementOptions = useMemo(
+    () =>
+      engagements
+        .filter((v) => v.projectId === selectedProjectId)
+        .map((v) => ({
+          value: v.id,
+          label: v.type,
+          sublabel: `(${convertToMonthNameFormat(
+            v.startDate,
+          )} - ${convertToMonthNameFormat(v.dueDate)})`,
+        })),
+    [selectedProjectId],
+  );
+
+  const handleSelectEngagement = (engagementId: string) => {
+    setSelectedEngagementId(engagementId);
+  };
+
+  const selectedEngagement = useMemo(() => {
+    if (!selectedEngagementId) return null;
+    return engagements?.find((v) => v.id === selectedEngagementId);
+  }, [selectedEngagementId]);
+
   return (
-    <Card>
-      <GanttChartControls onTodayButtonClick={focusToday} />
-      {selectedEngagement.id ? (
-        <Container
-          onWheel={(e: any) => {
-            onScroll(e);
-          }}
-        >
-          <Header>
-            <LeftPanelHeader isCollapsed={isCollapsed}>
-              <CollapseButtonContainer>
-                <span onClick={handleCollapse}>
-                  <Icon
-                    name={isCollapsed ? "chevronsRight" : "chevronsLeft"}
-                    size="xsmall"
-                  />
-                </span>
-              </CollapseButtonContainer>
-              <ProjectNameContainer isCollapsed={isCollapsed}>
-                <p>{selectedEngagement.projectName} </p>
-              </ProjectNameContainer>
-            </LeftPanelHeader>
-            <CalendarHeader
-              calendarHeader={calendar.header}
-              view={view}
-              earliestStartDate={calendar.earliestStartDate}
-              offsetForToday={calendar.offsetForToday}
-              todayRef={todayRef}
-            />
-          </Header>
+    <div>
+      <Text type="heading3">Engagements</Text>
+      <div style={{ width: 523, marginTop: 40, marginBottom: 24 }}>
+        <Select
+          selected={selectedProjectId}
+          options={projectOptions}
+          placeholder="Select a Project"
+          onSelect={handleSelectProject}
+        />
+      </div>
 
-          <Body>
-            <LeftPanel isCollapsed={isCollapsed}>
-              <ListItemContainer isCollapsed={isCollapsed}>
-                <EngagementListItem data={selectedEngagement} />
-                {selectedEngagement.tasks.map((v) => (
-                  <TaskListItem key={v.id} data={v} />
-                ))}
-              </ListItemContainer>
-            </LeftPanel>
-            <CalendarBackground width={calendar.width[view]} view={view}>
-              {view === "monthly" && (
-                <TodayFocus
-                  offsetLeft={calendar.offsetForToday * 40}
-                  calendarBoxWidth={48}
+      <GanttChartWrapper>
+        <Card>
+          <GanttChartControls
+            selectedEngagementId={selectedEngagement?.id || ""}
+            engagementOptions={engagementOptions}
+            onSelectEngagement={handleSelectEngagement}
+            onTodayButtonClick={focusToday}
+          />
+          {selectedEngagement ? (
+            <Container
+              onWheel={(e: any) => {
+                onScroll(e);
+              }}
+            >
+              <Header>
+                <LeftPanelHeader isCollapsed={isCollapsed}>
+                  <CollapseButtonContainer>
+                    <span onClick={handleCollapse}>
+                      <Icon
+                        name={isCollapsed ? "chevronsRight" : "chevronsLeft"}
+                        size="xsmall"
+                      />
+                    </span>
+                  </CollapseButtonContainer>
+                  <ProjectNameContainer isCollapsed={isCollapsed}>
+                    <p>{selectedEngagement.projectName} </p>
+                  </ProjectNameContainer>
+                </LeftPanelHeader>
+                <CalendarHeader
+                  calendarHeader={calendar.header}
+                  view={view}
+                  earliestStartDate={calendar.earliestStartDate}
+                  offsetForToday={calendar.offsetForToday}
+                  todayRef={todayRef}
                 />
-              )}
-              <>
-                <EngagementBar
-                  key={selectedEngagement.id}
-                  engagementData={selectedEngagement}
-                />
-                {selectedEngagement.tasks.map((v) => (
-                  <TaskBar isOverDue={v.isOverdue} key={v.id} taskData={v} />
-                ))}
-              </>
-            </CalendarBackground>
-          </Body>
-        </Container>
-      ) : (
-        <EmptyStateContainer>
-          <img src={EmptyBox} />
-          <Text type="heading3">No data available</Text>
+              </Header>
 
-          <div style={{ width: 336, textAlign: "center" }}>
-            <Text type="body" color="subdued">
-              Try selecting a project and an engagement.
-            </Text>
-          </div>
-        </EmptyStateContainer>
-      )}
-    </Card>
+              <Body>
+                <LeftPanel isCollapsed={isCollapsed}>
+                  <ListItemContainer isCollapsed={isCollapsed}>
+                    <EngagementListItem data={selectedEngagement} />
+                    {selectedEngagement.tasks.map((v) => (
+                      <TaskListItem key={v.id} data={v} />
+                    ))}
+                  </ListItemContainer>
+                </LeftPanel>
+                <CalendarBackground width={calendar.width[view]} view={view}>
+                  {view === "monthly" && (
+                    <TodayFocus
+                      offsetLeft={calendar.offsetForToday * 40}
+                      calendarBoxWidth={48}
+                    />
+                  )}
+                  <>
+                    <EngagementBar
+                      key={selectedEngagement.id}
+                      engagementData={selectedEngagement}
+                    />
+                    {selectedEngagement.tasks.map((v) => (
+                      <TaskBar
+                        isOverDue={v.isOverdue}
+                        key={v.id}
+                        taskData={v}
+                      />
+                    ))}
+                  </>
+                </CalendarBackground>
+              </Body>
+            </Container>
+          ) : (
+            <EmptyStateContainer>
+              <img src={EmptyBox} />
+              <Text type="heading3">No data available</Text>
+
+              <div style={{ width: 336, textAlign: "center" }}>
+                <Text type="body" color="subdued">
+                  Try selecting a project and an engagement.
+                </Text>
+              </div>
+            </EmptyStateContainer>
+          )}
+        </Card>
+      </GanttChartWrapper>
+    </div>
   );
 };
