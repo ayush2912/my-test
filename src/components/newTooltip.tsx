@@ -1,68 +1,80 @@
-// import { useRef, useEffect, ForwardedRef } from "react";
+// import { useState, useRef, useEffect } from "react";
 // import ReactDOM from "react-dom";
-// import styled from "styled-components";
+// import styled, { css } from "styled-components";
 
-// const TooltipContainer = styled.div`
+// interface TooltipProps {
+//   data: string;
+// }
+
+// const TooltipSpan = styled.span<{ visible: boolean }>`
 //   position: absolute;
 //   z-index: 100;
 //   max-height: 96px;
 //   width: 200px;
 //   padding: 2px 4px;
-//   vertical-align: middle;
-//   border-radius: 0.5rem;
+//   text-align: center;
+//   border-radius: 0.375rem;
 //   color: #363c46;
 //   font-size: 12px;
-//   line-height: 1rem;
-//   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+//   line-height: 1.2;
+//   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 //   font-weight: normal;
-//   background-color: rgb(255 255 255);
-//   bottom: 125%;
-//   left: 50%;
-//   transform: translateX(-50%);
+//   background-color: white;
+//   ${(props) =>
+//     props.visible
+//       ? css``
+//       : css`
+//           visibility: hidden;
+//         `}
 // `;
 
-// const NewTooltip = React.forwardRef(
-//   (
-//     { data, visible }: { data: string; visible: boolean },
-//     ref: ForwardedRef<HTMLElement>,
-//   ) => {
-//     const tooltipRef = useRef(null);
-//     const portalElement = document.getElementById("new-tooltip");
+// const TooltipIcon = styled(Icon)<IconProps>`
+//   margin-left: 10px;
+//   position: relative;
+// `;
 
-//     useEffect(() => {
-//       if (visible && ref.current && tooltipRef.current) {
-//         const triggerRect = ref.current.getBoundingClientRect();
-//         tooltipRef.current.style.left = `${triggerRect.right + 10}px`;
-//         tooltipRef.current.style.top = `${
-//           triggerRect.top +
-//           window.pageYOffset -
-//           tooltipRef.current.offsetHeight / 2
-//         }px`;
-//       }
-//     }, [visible, ref]);
+// const Tooltip: React.FC<TooltipProps> = ({ data }) => {
+//   const [visible, setVisible] = useState(false);
+//   const triggerRef = useRef<HTMLSpanElement>(null);
+//   const tooltipRef = useRef<HTMLSpanElement>(null);
+//   const portalElement = document.getElementById("tooltip-portal");
 
-//     return (
-//       <>
-//         {visible && portalElement
-//           ? ReactDOM.createPortal(
-//               <span
-//                 ref={tooltipRef}
-//                 style={{
-//                   position: "absolute",
-//                   visibility: visible ? "" : "hidden",
-//                 }}
-//               >
-//                 <TooltipContainer>{data}</TooltipContainer>
-//               </span>,
-//               portalElement,
-//             )
-//           : null}
-//       </>
-//     );
-//   },
-// );
+//   useEffect(() => {
+//     if (visible && triggerRef.current && tooltipRef.current) {
+//       const triggerRect = triggerRef.current.getBoundingClientRect();
+//       tooltipRef.current.style.left = `${triggerRect.right + 10}px`;
+//       tooltipRef.current.style.top = `${
+//         triggerRect.top +
+//         window.pageYOffset -
+//         tooltipRef.current.offsetHeight / 2
+//       }px`;
+//     }
+//   }, [visible]);
 
-// NewTooltip.displayName = "NewTooltip";
+//   return (
+//     <>
+//       <TooltipIcon
+//         ref={triggerRef}
+//         width={16}
+//         height={16}
+//         stroke="#8992A3"
+//         onMouseEnter={() => setVisible(true)}
+//         onMouseLeave={() => setVisible(false)}
+//       />
+//       {visible && portalElement
+//         ? ReactDOM.createPortal(
+//             <TooltipSpan
+//               ref={tooltipRef}
+//               style={{ position: "absolute" }}
+//               visible={visible}
+//             >
+//               {data}
+//             </TooltipSpan>,
+//             portalElement,
+//           )
+//         : null}
+//     </>
+//   );
+// };
 
-// export default NewTooltip;
-export const emptytempobj = {};
+export default Tooltip;
