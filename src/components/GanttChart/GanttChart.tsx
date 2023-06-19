@@ -245,10 +245,9 @@ export const GanttChart = ({
     setSelectedEngagementId(engagementId);
   };
 
-  const selectedEngagement = useMemo(() => {
-    if (!selectedEngagementId) return null;
-    return engagements?.find((v) => v.id === selectedEngagementId);
-  }, [selectedEngagementId]);
+  const selectedEngagement = engagements?.find(
+    (v) => v.id === selectedEngagementId,
+  );
 
   return (
     <div>
@@ -291,6 +290,7 @@ export const GanttChart = ({
                   </ProjectNameContainer>
                 </LeftPanelHeader>
                 <CalendarHeader
+                  selectedEngagement={selectedEngagement}
                   calendarHeader={calendar.header}
                   view={view}
                   earliestStartDate={calendar.earliestStartDate}

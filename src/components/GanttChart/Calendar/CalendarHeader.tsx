@@ -160,19 +160,22 @@ const WeeklyHeader = ({ data }: { data: IWeeklyHeader }) => {
   );
 };
 export const CalendarHeader = ({
+  selectedEngagement,
   calendarHeader,
   earliestStartDate,
   offsetForToday,
   todayRef,
 }: {
+  selectedEngagement: any;
   calendarHeader: ICalendarHeader;
   view: TemporalView;
   earliestStartDate: Date;
   offsetForToday: number;
   todayRef: React.RefObject<HTMLDivElement>;
 }) => {
-  const { view, selectedEngagement } = useGanttChartControls();
+  const { view } = useGanttChartControls();
   const earliestRef = useRef<HTMLDivElement | null>(null);
+  console.log(selectedEngagement);
   const earliestDateOffset = useMemo(() => {
     return {
       monthly:
