@@ -7,7 +7,6 @@ import Button from "../Button";
 import Dropdown from "../Dropdown";
 import Icon from "../Icon";
 import Select from "../Select";
-import Text from "../Text";
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -31,25 +30,20 @@ const DropDownBox = styled.div`
   width: 121px;
 `;
 export const GanttChartControls = ({
+  selectedEngagementId,
+  engagementOptions,
+  onSelectEngagement,
   onTodayButtonClick,
 }: {
+  selectedEngagementId: string;
+  engagementOptions: { label: string; value: string }[];
+  onSelectEngagement: (engagementId: string) => void;
   onTodayButtonClick: () => void;
 }) => {
-  const {
-    view,
-    changeView,
-    temporalViewOptions,
-    engagementOptions,
-    selectedEngagement,
-    setSelectedEngagement,
-  } = useGanttChartControls();
+  const { view, changeView, temporalViewOptions } = useGanttChartControls();
 
   const handleDropdownChange = (value: string) => {
     changeView(value as TemporalView);
-  };
-
-  const handleSelectEngagement = (engagementId: string) => {
-    setSelectedEngagement(engagementId);
   };
 
   return (
@@ -57,11 +51,11 @@ export const GanttChartControls = ({
       <div>
         <SelectBox>
           <Select
-            selected={selectedEngagement.id}
+            selected={selectedEngagementId}
             isPrimary={false}
             options={engagementOptions}
             placeholder="Select an engagement"
-            onSelect={handleSelectEngagement}
+            onSelect={onSelectEngagement}
           />
         </SelectBox>
         <GanttChartLengend />
