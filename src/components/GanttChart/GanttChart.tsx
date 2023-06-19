@@ -245,9 +245,9 @@ export const GanttChart = ({
     setSelectedEngagementId(engagementId);
   };
 
-  const selectedEngagement = engagements?.find(
-    (v) => v.id === selectedEngagementId,
-  );
+  const selectedEngagement = useMemo(() => {
+    return engagements?.find((v) => v.id === selectedEngagementId);
+  }, [selectedEngagementId]);
 
   return (
     <div>
