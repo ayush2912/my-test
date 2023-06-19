@@ -1,5 +1,6 @@
 import type { Meta } from "@storybook/react";
 import { StoryFn } from "@storybook/react";
+import { withRouter } from "storybook-addon-react-router-v6";
 
 import { GanttChart } from "./GanttChart";
 import { ProjectEngagement } from "./GanttChart.types";
@@ -10,6 +11,12 @@ interface GanttChartProps {
 
 const meta: Meta = {
   component: GanttChart,
+  decorators: [withRouter],
+  parameters: {
+    reactRouter: {
+      routePath: "/",
+    },
+  },
 };
 
 export default meta;

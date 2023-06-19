@@ -17,6 +17,7 @@ import { TaskListItem } from "./TaskListItem";
 import { TodayFocus } from "./TodayFocus";
 import useGanttChartControls from "./useGanttChartControls";
 import EmptyBox from "../../assets/images/empty-box.png";
+import { useSearchParamsState } from "../../hooks/useSearchParamsState";
 import { getBarInfo, memoizedCalendarData } from "../../utils/calendarHelper";
 import { convertToMonthNameFormat } from "../../utils/dateTimeFormatter";
 import Card from "../Card";
@@ -131,6 +132,10 @@ const ListItemContainer = styled.div<{ isCollapsed: boolean }>`
   opacity: ${(props) => (props.isCollapsed ? 0 : 1)};
   transition: all 0.3s ease-in-out;
 `;
+
+const GanttChartWrapper = styled.div`
+  height: calc(100vh - 320px);
+`;
 export const GanttChart = ({
   projectEngagementData,
 }: {
@@ -138,16 +143,20 @@ export const GanttChart = ({
 }) => {
   const { view, onScroll, changeView } = useGanttChartControls();
 
-  // Project
   const [projectOptions, setProjectOptions] = useState<
     { label: string; value: string }[]
   >([]);
-  const [selectedProjectId, setSelectedProjectId] = useState("");
 
-  // Engagement
-  const [selectedEngagement, setSelectedEngagement] =
-    useState<IMappedEngagement>({} as IMappedEngagement);
+  const [selectedProjectId, setSelectedProjectId] = useSearchParamsState(
+    "project",
+    "",
+  );
+
   const [engagements, setEngagements] = useState<IMappedEngagements>([]);
+  const [selectedEngagementId, setSelectedEngagementId] = useSearchParamsState(
+    "engagement",
+    "",
+  );
 
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [calendar, setCalendar] = useState<any>([]);
@@ -214,8 +223,11 @@ export const GanttChart = ({
 
   const handleSelectProject = (projectId: string) => {
     setSelectedProjectId(projectId);
-    setSelectedEngagement({} as IMappedEngagement);
   };
+
+  useEffect(() => {
+    setSelectedEngagementId("");
+  }, [selectedProjectId]);
 
   const engagementOptions = useMemo(
     () =>
@@ -232,9 +244,13 @@ export const GanttChart = ({
   );
 
   const handleSelectEngagement = (engagementId: string) => {
-    const engagement = engagements.find((v) => v.id === engagementId);
-    if (engagement) setSelectedEngagement(engagement);
+    setSelectedEngagementId(engagementId);
   };
+
+  const selectedEngagement = useMemo(() => {
+    if (!selectedEngagementId) return null;
+    return engagements?.find((v) => v.id === selectedEngagementId);
+  }, [selectedEngagementId]);
 
   return (
     <div>
@@ -248,15 +264,15 @@ export const GanttChart = ({
         />
       </div>
 
-      <div>
+      <GanttChartWrapper>
         <Card>
           <GanttChartControls
-            selectedEngagementId={selectedEngagement.id}
+            selectedEngagementId={selectedEngagement?.id || ""}
             engagementOptions={engagementOptions}
             onSelectEngagement={handleSelectEngagement}
             onTodayButtonClick={focusToday}
           />
-          {selectedEngagement.id ? (
+          {selectedEngagement ? (
             <Container
               onWheel={(e: any) => {
                 onScroll(e);
@@ -330,7 +346,7 @@ export const GanttChart = ({
             </EmptyStateContainer>
           )}
         </Card>
-      </div>
+      </GanttChartWrapper>
     </div>
   );
 };
