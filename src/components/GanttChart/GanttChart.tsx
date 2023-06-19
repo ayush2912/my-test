@@ -246,7 +246,7 @@ export const GanttChart = ({
   };
 
   const selectedEngagement = useMemo(() => {
-    if (!selectedEngagementId) return null;
+    if (selectedEngagementId === "") return null;
     return engagements?.find((v) => v.id === selectedEngagementId);
   }, [selectedEngagementId]);
 
