@@ -3,9 +3,9 @@
   "private": false,
   "version": "1.1.8",
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
+    "registry": "https://npm.pkg.github.com/@ayush2912"
   },
-  "repository": "https://github.com/climateconnectdigital/offsetmax-web-app.git",
+  "repository": "https://github.com/ayush2912/my-test.git",
   "scripts": {
     "dev": "vite",
     "build": "./bin/clean && ./bin/build && npm version patch && npm publish",
