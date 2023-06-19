@@ -14,7 +14,8 @@ const meta: Meta = {
   decorators: [withRouter],
   parameters: {
     reactRouter: {
-      routePath: "/",
+      routePath: "/projects/*",
+      browserPath: "/projects/12345",
     },
   },
 };

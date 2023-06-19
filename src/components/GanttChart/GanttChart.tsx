@@ -1,17 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import { EngagementBar } from "./Bar/EngagementBar";
 import { TaskBar } from "./Bar/TaskBar";
-import { ICalendar } from "./Calendar/Calendar.types";
 import { CalendarBackground } from "./Calendar/CalendarBackground";
 import { CalendarHeader } from "./Calendar/CalendarHeader";
 import { EngagementListItem } from "./EngagementListItem";
-import {
-  IMappedEngagement,
-  IMappedEngagements,
-  ProjectEngagement,
-} from "./GanttChart.types";
+import { IMappedEngagements, ProjectEngagement } from "./GanttChart.types";
 import { GanttChartControls } from "./GanttChartControls";
 import { TaskListItem } from "./TaskListItem";
 import { TodayFocus } from "./TodayFocus";
@@ -142,7 +138,7 @@ export const GanttChart = ({
   projectEngagementData: ProjectEngagement[];
 }) => {
   const { view, onScroll, changeView } = useGanttChartControls();
-
+  const navigate = useNavigate();
   const [projectOptions, setProjectOptions] = useState<
     { label: string; value: string }[]
   >([]);
@@ -192,8 +188,10 @@ export const GanttChart = ({
             ...engagement,
             projectName: project.name,
             bar: engagementBar,
-            onViewClick: (id: string) =>
-              console.log(`navigate to project details ${id}`),
+            onViewClick: (id: string) => {
+              navigate(`/projects/${id}`);
+            },
+
             tasks: engagement.tasks.map((task) => ({
               ...task,
               bar: getBarInfo(
