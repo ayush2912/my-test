@@ -17,7 +17,6 @@ const Template: StoryFn = () => {
   return (
     <>
       <Button
-        type="primary"
         onClick={() => {
           setShowSidePanel(true);
         }}

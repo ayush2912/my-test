@@ -76,6 +76,7 @@ const ChevronButtonIconWrapper = styled.div<{ isExpanded: boolean }>`
 const RowWrapper = styled.div`
   display: flex;
   align-items: center;
+  gap: 8px;
 `;
 
 const InfoButton = styled.button`
@@ -101,7 +102,7 @@ const ModalContent = styled.div`
 `;
 
 const EmptyState = styled.div`
-  padding-left: 20px;
+  padding-left: 8px;
   cursor: default;
 `;
 
@@ -122,11 +123,6 @@ const EmptyStateTextContent = styled.div`
   width: 308px;
   margin: auto;
   gap: 8px;
-`;
-
-const DocumentButtonContent = styled.div`
-  display: flex;
-  padding-right: 3px;
 `;
 
 type EngamentStateTypes =
@@ -255,12 +251,17 @@ function EngagementTable({
       note: (
         <>
           {v.notes ? (
-            <Button type="ghost" onClick={() => setShowNote(true)}>
+            <Button
+              type="ghost"
+              size="small"
+              isIconButton
+              onClick={() => setShowNote(true)}
+            >
               <Icon name="message" />
             </Button>
           ) : (
             <EmptyState>
-              <Text type="body" color="default">
+              <Text type="bodyBold" color="default">
                 -
               </Text>
             </EmptyState>
@@ -286,15 +287,14 @@ function EngagementTable({
               onClick={() => {
                 onViewDocument(v.id);
               }}
+              iconPosition="left"
             >
-              <DocumentButtonContent>
-                <Icon name="file" />
-                <Text type="bodyBold">{v.document}</Text>
-              </DocumentButtonContent>
+              <Icon name="file" />
+              <Text type="bodyBold">{v.document}</Text>
             </Button>
           ) : (
             <EmptyState>
-              <Text type="body" color="default">
+              <Text type="bodyBold" color="default">
                 -
               </Text>
             </EmptyState>
