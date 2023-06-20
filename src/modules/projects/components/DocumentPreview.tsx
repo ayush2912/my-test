@@ -2,9 +2,12 @@ import DocViewer, {
   DocViewerRenderers,
   IHeaderOverride,
 } from "@cyntler/react-doc-viewer";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
+import DocumentDetails from "./DocumentDetails";
+import { DocumentList } from "./DocumentList";
+import Accordion from "../../../../src/components/Accordion";
 import { ReactComponent as ArrowLeftIcon } from "../../../assets/icons/arrows/arrow-left.svg";
 import { ReactComponent as ArrowRightIcon } from "../../../assets/icons/arrows/arrow-right.svg";
 import { ReactComponent as DocFileIcon } from "../../../assets/icons/fileTypes/docFileIcon.svg";
@@ -22,15 +25,31 @@ import { ReactComponent as FullScreenIcon } from "../../../assets/icons/generic/
 import { ReactComponent as ZoomInIcon } from "../../../assets/icons/generic/zoom-in.svg";
 import { ReactComponent as ZoomOutIcon } from "../../../assets/icons/generic/zoom-out.svg";
 import Button from "../../../components/Button";
+import Icon from "../../../components/Icon";
 import Text from "../../../components/Text";
 import { convertToDateTimeFormat } from "../../../utils/dateTimeFormatter";
 
-export interface IDocumentDetails {
+interface DocumentInfo {
+  fileFormat: string;
+  date: string;
+  source?: string;
+  name: string;
+  size: string;
+  id: string;
+}
+
+interface IDocumentDetails {
+  name: string | null;
+  projectId: number | null;
+  engagement: string | null;
   documentName: string | null;
+  state: string | null;
   fileFormat: string;
   size: string | null;
   source: string | null;
-  date: Date | string;
+  registryApprovalDate: Date | string;
+  uri: string | null;
+  versionHistory: DocumentInfo[];
 }
 
 const HeaderContainer = styled.div`
@@ -41,10 +60,17 @@ const HeaderContainer = styled.div`
   padding: 20px 0px;
 `;
 
-const FlexContainer = styled.div`
+const StyledHr = styled.hr`
+  border: none;
+  height: 1px;
+  background-color: #e1e4e8;
+`;
+
+const FlexContainer = styled.div<{ openSidebar: boolean }>`
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: ${({ openSidebar }) =>
+    openSidebar ? "unset" : "space-between"};
 `;
 
 const FlexContainerDocActions = styled.div`
@@ -67,16 +93,39 @@ const DotDivider = styled.div`
   margin: 0 4px;
 `;
 
+const ChevronIconStyles = styled.div`
+  background-color: #fff;
+  border-radius: 50%;
+  display: flex;
+  position: absolute;
+  top: 50px;
+  left: -13px;
+  box-shadow: 1px 1px 4px rgba(0, 30, 53, 0.1);
+  cursor: pointer;
+`;
+
+const InfoIconStyles = styled.div`
+  margin: 50px 0 0 23px;
+`;
+
+const Drawer = styled.div<{ openSidebar: boolean }>`
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  bottom: 0;
+  right: 0px;
+  background: white;
+  transition: right 300ms ease-in-out;
+  border: 1px solid green;
+  width: ${({ openSidebar }) => (openSidebar ? "464px" : "72px")};
+`;
+
 function DocumentPreview({
   documentDetails,
   handleDownload,
-  handleLeftClick,
-  handleRightClick,
 }: {
-  documentDetails: IDocumentDetails;
+  documentDetails: IDocumentDetails[];
   handleDownload: () => void;
-  handleLeftClick: () => void;
-  handleRightClick: () => void;
 }) {
   const fileFormatIcon = {
     png: <PngFileIcon />,
@@ -89,7 +138,7 @@ function DocumentPreview({
     xls: <XlsFileIcon />,
     xlsx: <XlsxFileIcon />,
     pdf: <PdfFileIcon />,
-  }[documentDetails.fileFormat];
+  };
 
   const docsNormal = [
     {
@@ -101,6 +150,20 @@ function DocumentPreview({
   ];
 
   const [zoom, setZoom] = useState(1);
+  const [openSidebar, setOpenSidebar] = useState(false);
+  const [openDocDetails, setOpenDocDetails] = useState(false);
+  const [openVersionHistory, setOpenVersionHistory] = useState(false);
+  const [currentDocIndex, setCurrentDocIndex] = useState<number>(0);
+
+  const toggleDocDetailAccordion = () => {
+    setOpenDocDetails(!openDocDetails);
+    setOpenVersionHistory(false);
+  };
+
+  const toggleVersionHistoryAccordion = () => {
+    setOpenVersionHistory(!openVersionHistory);
+    setOpenDocDetails(false);
+  };
 
   const onClickZoomIn = () => {
     setZoom(zoom + 0.1);
@@ -114,32 +177,48 @@ function DocumentPreview({
     setZoom(1);
   };
 
+  const handleChevronClick = () => {
+    setOpenSidebar(!openSidebar);
+  };
+
   const MyHeader: IHeaderOverride = (state, previousDocument, nextDocument) => {
+    console.log("=============", state);
     if (!state.currentDocument || state.config?.header?.disableFileName) {
       return null;
     }
+    const currentFileNo = state.currentFileNo;
+
+    useEffect(() => {
+      setCurrentDocIndex(currentFileNo);
+    }, [currentFileNo]);
 
     return (
       <>
         <HeaderContainer>
-          <FlexContainer>
+          <FlexContainer openSidebar={false}>
             <DocInfoContainer>
-              <div>{fileFormatIcon || <FileIcon />}</div>
+              <div>
+                {fileFormatIcon[documentDetails[currentFileNo].fileFormat] || (
+                  <FileIcon />
+                )}
+              </div>
               <div>
                 <Text type="bodyBold" color="default">
-                  {documentDetails.documentName}
+                  {documentDetails[currentFileNo].documentName}
                 </Text>
-                <FlexContainer>
+                <FlexContainer openSidebar={false}>
                   <Text type="caption" color="subdued">
-                    {documentDetails.size}
+                    {documentDetails[currentFileNo].size}
                   </Text>
                   <DotDivider />
                   <Text type="caption" color="subdued">
-                    {convertToDateTimeFormat(documentDetails.date)}
+                    {convertToDateTimeFormat(
+                      documentDetails[currentFileNo].registryApprovalDate,
+                    )}
                   </Text>
                   <DotDivider />
                   <Text type="caption" color="subdued">
-                    {documentDetails.source}
+                    {documentDetails[currentFileNo].source}
                   </Text>
                 </FlexContainer>
               </div>
@@ -205,7 +284,7 @@ function DocumentPreview({
                 isIconButton={true}
                 lightBorderColor
                 size="large"
-                onClick={handleLeftClick}
+                onClick={previousDocument}
               >
                 <ArrowLeftIcon />
               </Button>
@@ -214,7 +293,7 @@ function DocumentPreview({
                 isIconButton={true}
                 lightBorderColor
                 size="small"
-                onClick={handleRightClick}
+                onClick={nextDocument}
               >
                 <ArrowRightIcon />
               </Button>
@@ -235,14 +314,51 @@ function DocumentPreview({
           pdfVerticalScrollByDefault: true,
           pdfZoom: {
             defaultZoom: zoom,
-            // zoomJump:  zoom },
+            zoomJump: 0.1,
           },
         }}
         documents={docsNormal}
         prefetchMethod="GET"
         pluginRenderers={DocViewerRenderers}
       />
-      <h1>dsada</h1>
+
+      <Drawer openSidebar={openSidebar}>
+        {" "}
+        <ChevronIconStyles onClick={handleChevronClick}>
+          <Icon name="chevronsLeft" />
+        </ChevronIconStyles>
+        <InfoIconStyles>
+          <FlexContainer openSidebar={openSidebar}>
+            <Icon name="information" />
+
+            {openSidebar && (
+              <div>
+                <Text type="heading3">{"Document information"}</Text>
+              </div>
+            )}
+          </FlexContainer>
+          <Accordion
+            title="Document details"
+            isOpen={openDocDetails}
+            toggleAccordion={toggleDocDetailAccordion}
+          >
+            <DocumentDetails
+              documentDetails={documentDetails[currentDocIndex]}
+            />
+          </Accordion>
+          <Accordion
+            title="Version history"
+            isOpen={openVersionHistory}
+            toggleAccordion={toggleVersionHistoryAccordion}
+          >
+            <StyledHr />
+            <DocumentList
+              onClickDownload={handleDownload}
+              data={documentDetails[currentDocIndex].versionData}
+            />
+          </Accordion>
+        </InfoIconStyles>
+      </Drawer>
     </>
   );
 }
