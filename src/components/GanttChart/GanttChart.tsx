@@ -24,7 +24,6 @@ import Card from "../Card";
 import Icon from "../Icon";
 import Select from "../Select";
 import Text from "../Text";
-import Tooltip from "../Tooltip";
 
 const EmptyStateContainer = styled.div`
   display: flex;
@@ -281,27 +280,12 @@ export const GanttChart = ({
     <div>
       <Text type="heading3">Engagements</Text>
       <div style={{ width: 523, marginTop: 40, marginBottom: 24 }}>
-        {projectOptions.length === 0 ? (
-          <Tooltip
-            position="right"
-            text="No projects to show in the selected account(s)"
-          >
-            <Select
-              disabled
-              selected={selectedProjectId}
-              options={projectOptions}
-              placeholder="Select a Project"
-              onSelect={handleSelectProject}
-            />
-          </Tooltip>
-        ) : (
-          <Select
-            selected={selectedProjectId}
-            options={projectOptions}
-            placeholder="Select a Project"
-            onSelect={handleSelectProject}
-          />
-        )}
+        <Select
+          selected={selectedProjectId}
+          options={projectOptions}
+          placeholder="Select a Project"
+          onSelect={handleSelectProject}
+        />
       </div>
 
       <GanttChartWrapper>
@@ -311,7 +295,6 @@ export const GanttChart = ({
             engagementOptions={engagementOptions}
             onSelectEngagement={handleSelectEngagement}
             onTodayButtonClick={focusToday}
-            selectedProjectId={selectedProjectId}
           />
           {selectedEngagement.id ? (
             <Container

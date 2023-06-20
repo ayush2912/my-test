@@ -6,7 +6,6 @@ import Text from "./Text";
 interface TooltipProps {
   text: string;
   children: ReactNode;
-  position: string | null;
 }
 
 const TooltipContainer = styled.div`
@@ -14,7 +13,7 @@ const TooltipContainer = styled.div`
   display: flex;
 `;
 
-const TooltipCard = styled.span<{ position: string | null }>`
+const TooltipCard = styled.span`
   visibility: hidden;
   background-color: ${(props) => props.theme.colors.background.card};
   box-shadow: ${(props) => props.theme.shadow.sm};
@@ -29,8 +28,7 @@ const TooltipCard = styled.span<{ position: string | null }>`
   z-index: 1;
 
   bottom: 125%;
-  left: ${(props) => (props.position === "right" ? "100%" : "50%")};
-
+  left: 50%;
   transform: translateX(-50%);
 
   opacity: 0;
@@ -42,15 +40,11 @@ const TooltipCard = styled.span<{ position: string | null }>`
   }
 `;
 
-const Tooltip: FunctionComponent<TooltipProps> = ({
-  text,
-  children,
-  position,
-}) => {
+const Tooltip: FunctionComponent<TooltipProps> = ({ text, children }) => {
   return (
     <TooltipContainer>
       {children}
-      <TooltipCard position={position}>
+      <TooltipCard>
         <Text type="smallTextBold">{text}</Text>
       </TooltipCard>
     </TooltipContainer>
