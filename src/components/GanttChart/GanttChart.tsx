@@ -122,7 +122,9 @@ const LeftPanelHeader = styled.div<{ isCollapsed: boolean }>`
   border-bottom: ${(props) => (props.isCollapsed ? "0px" : "1px")} solid #e1e4e8;
   border-right: 1px solid #e1e4e8;
   ${(props) =>
-    !props.isCollapsed && " box-shadow: 2px 0px 4px rgba(0, 0, 0, 0.1)"};
+    props.isCollapsed
+      ? " box-shadow: 2px -3px 4px rgba(0, 0, 0, 0.1);"
+      : "box-shadow: 2px 0px 4px rgba(0, 0, 0, 0.1);"};
 
   transition: width 0.3s ease-in-out;
 `;
