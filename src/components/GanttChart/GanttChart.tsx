@@ -262,6 +262,8 @@ export const GanttChart = ({
         engagements?.find((v) => v.id === selectedEngagementId) ||
         ({} as IMappedEngagement);
       setSelectedEngagement(selected);
+    } else {
+      setSelectedEngagement({} as IMappedEngagement);
     }
   }, [selectedEngagementId, engagements]);
 
