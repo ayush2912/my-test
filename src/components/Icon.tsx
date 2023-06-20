@@ -96,7 +96,7 @@ const svgStyles = ({
     "& path": {
       stroke: strokecolor,
       fill: color,
-      strokeWidth: strokeWidth ?? "1",
+      strokeWidth: strokeWidth,
     },
     "&:hover path": {
       stroke: hoverColor,

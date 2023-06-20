@@ -74,7 +74,7 @@ const Toaster = ({ title, subTitle, type, onDismiss }: IToasterProps) => {
         </div>
 
         <div onClick={onDismiss} className="cursor-pointer">
-          <Icon name="toasterClose" strokeColor="white" />
+          <Icon name="toasterClose" strokeWidth="0" strokeColor="white" />
         </div>
       </Content>
     </ToasterContainer>
