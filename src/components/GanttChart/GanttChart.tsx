@@ -248,8 +248,8 @@ export const GanttChart = ({
   };
 
   const handleSelectProject = (projectId: string) => {
+    setSelectedEngagementId("");
     setSelectedProjectId(projectId);
-    if (selectedProjectId) setSelectedEngagementId("");
   };
 
   const handleSelectEngagement = (engagementId: string) => {
