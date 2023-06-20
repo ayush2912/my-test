@@ -9,19 +9,14 @@ export function useSearchParamsState(
 ] {
   const [searchParams, setSearchParams] = useSearchParams();
   const acquiredSearchParam = searchParams.get(searchParamName);
-
   const searchParamsState = acquiredSearchParam ?? defaultValue;
 
   const setSearchParamsState = (newState: string) => {
-    const next = Object.assign(
-      {},
-      [...searchParams.entries()].reduce(
-        (o, [key, value]) => ({ ...o, [key]: value }),
-        {},
-      ),
-      { [searchParamName]: newState },
-    );
-    setSearchParams(next);
+    console.log(`inside ${searchParamName} before`, searchParams.toString());
+    if (searchParams.get(searchParamName)) searchParams.delete(searchParamName);
+    searchParams.set(searchParamName, newState);
+    console.log(`inside ${searchParamName} after`, searchParams.toString());
+    setSearchParams(searchParams);
   };
 
   return [searchParamsState, setSearchParamsState];

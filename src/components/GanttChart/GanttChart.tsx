@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 
 import { EngagementBar } from "./Bar/EngagementBar";
@@ -7,7 +7,11 @@ import { TaskBar } from "./Bar/TaskBar";
 import { CalendarBackground } from "./Calendar/CalendarBackground";
 import { CalendarHeader } from "./Calendar/CalendarHeader";
 import { EngagementListItem } from "./EngagementListItem";
-import { IMappedEngagements, ProjectEngagement } from "./GanttChart.types";
+import {
+  IMappedEngagement,
+  IMappedEngagements,
+  ProjectEngagement,
+} from "./GanttChart.types";
 import { GanttChartControls } from "./GanttChartControls";
 import { TaskListItem } from "./TaskListItem";
 import { TodayFocus } from "./TodayFocus";
@@ -20,7 +24,6 @@ import Card from "../Card";
 import Icon from "../Icon";
 import Select from "../Select";
 import Text from "../Text";
-import Tooltip from "../Tooltip";
 
 const EmptyStateContainer = styled.div`
   display: flex;
@@ -140,20 +143,24 @@ export const GanttChart = ({
 }) => {
   const { view, onScroll, changeView } = useGanttChartControls();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [projectOptions, setProjectOptions] = useState<
     { label: string; value: string }[]
   >([]);
 
-  const [selectedProjectId, setSelectedProjectId] = useSearchParamsState(
-    "project",
-    "",
-  );
+  const [selectedProjectId, setSelectedProjectId] = useState("");
 
   const [engagements, setEngagements] = useState<IMappedEngagements>([]);
-  const [selectedEngagementId, setSelectedEngagementId] = useSearchParamsState(
-    "engagement",
-    "",
-  );
+  const [selectedEngagementId, setSelectedEngagementId] = useState("");
+  const [engagementOptions, setEngagementOptions] = useState<
+    {
+      label: string;
+      value: string;
+    }[]
+  >([]);
+  const [selectedEngagement, setSelectedEngagement] =
+    useState<IMappedEngagement>({} as IMappedEngagement);
 
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [calendar, setCalendar] = useState<any>([]);
@@ -207,7 +214,30 @@ export const GanttChart = ({
         }),
       ),
     );
+
+    const projectId = searchParams.get("project");
+    const engagementId = searchParams.get("engagement");
+
+    if (projectId) setSelectedProjectId(projectId);
+    if (engagementId) setSelectedEngagementId(engagementId);
   }, [projectEngagementData]);
+
+  useEffect(() => {
+    if (selectedProjectId !== "") {
+      const options = engagements
+        .filter((v) => v.projectId === selectedProjectId)
+        .map((v) => ({
+          value: v.id,
+          label: v.type,
+          sublabel: `(${convertToMonthNameFormat(
+            v.startDate,
+          )} - ${convertToMonthNameFormat(v.dueDate)})`,
+        }));
+      setEngagementOptions(options);
+      searchParams.set("project", selectedProjectId);
+      setSearchParams(searchParams);
+    }
+  }, [selectedProjectId]);
 
   const focusToday = () => {
     changeView("monthly");
@@ -222,69 +252,51 @@ export const GanttChart = ({
   };
 
   const handleSelectProject = (projectId: string) => {
+    setSelectedEngagementId("");
+    searchParams.delete("engagement");
+    setSearchParams(searchParams);
     setSelectedProjectId(projectId);
-    if (selectedProjectId) setSelectedEngagementId("");
   };
-
-  const engagementOptions = useMemo(() => {
-    if (!selectedProjectId) return [];
-    return engagements
-      .filter((v) => v.projectId === selectedProjectId)
-      .map((v) => ({
-        value: v.id,
-        label: v.type,
-        sublabel: `(${convertToMonthNameFormat(
-          v.startDate,
-        )} - ${convertToMonthNameFormat(v.dueDate)})`,
-      }));
-  }, [selectedProjectId]);
 
   const handleSelectEngagement = (engagementId: string) => {
     setSelectedEngagementId(engagementId);
   };
 
-  const selectedEngagement = useMemo(() => {
-    if (selectedEngagementId === "") return null;
-    return engagements?.find((v) => v.id === selectedEngagementId);
+  useEffect(() => {
+    if (selectedEngagementId !== "") {
+      const selected =
+        engagements?.find((v) => v.id === selectedEngagementId) ||
+        ({} as IMappedEngagement);
+
+      setSelectedEngagement(selected);
+      searchParams.set("engagement", selectedEngagementId);
+      setSearchParams(searchParams);
+    } else {
+      setSelectedEngagement({} as IMappedEngagement);
+    }
   }, [selectedEngagementId]);
 
   return (
     <div>
       <Text type="heading3">Engagements</Text>
       <div style={{ width: 523, marginTop: 40, marginBottom: 24 }}>
-        {projectOptions.length === 0 ? (
-          <Tooltip
-            position="right"
-            text="No projects to show in the selected account(s)"
-          >
-            <Select
-              disabled
-              selected={selectedProjectId}
-              options={projectOptions}
-              placeholder="Select a Project"
-              onSelect={handleSelectProject}
-            />
-          </Tooltip>
-        ) : (
-          <Select
-            selected={selectedProjectId}
-            options={projectOptions}
-            placeholder="Select a Project"
-            onSelect={handleSelectProject}
-          />
-        )}
+        <Select
+          selected={selectedProjectId}
+          options={projectOptions}
+          placeholder="Select a Project"
+          onSelect={handleSelectProject}
+        />
       </div>
 
       <GanttChartWrapper>
         <Card>
           <GanttChartControls
-            selectedEngagementId={selectedEngagementId || ""}
+            selectedEngagementId={selectedEngagementId}
             engagementOptions={engagementOptions}
             onSelectEngagement={handleSelectEngagement}
             onTodayButtonClick={focusToday}
-            selectedProjectId={selectedProjectId}
           />
-          {selectedEngagement ? (
+          {selectedEngagement.id ? (
             <Container
               onWheel={(e: any) => {
                 onScroll(e);
