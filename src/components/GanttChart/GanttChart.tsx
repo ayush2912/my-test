@@ -217,13 +217,13 @@ export const GanttChart = ({
 
     const projectId = searchParams.get("project");
     const engagementId = searchParams.get("engagement");
-    console.log(projectId, engagementId);
+
     if (projectId) setSelectedProjectId(projectId);
     if (engagementId) setSelectedEngagementId(engagementId);
   }, [projectEngagementData]);
 
   useEffect(() => {
-    if (Boolean(selectedProjectId) && engagements.length) {
+    if (selectedProjectId !== "") {
       const options = engagements
         .filter((v) => v.projectId === selectedProjectId)
         .map((v) => ({
@@ -253,6 +253,8 @@ export const GanttChart = ({
 
   const handleSelectProject = (projectId: string) => {
     setSelectedEngagementId("");
+    searchParams.delete("engagement");
+    setSearchParams(searchParams);
     setSelectedProjectId(projectId);
   };
 
@@ -261,7 +263,7 @@ export const GanttChart = ({
   };
 
   useEffect(() => {
-    if (Boolean(selectedEngagementId) && engagements) {
+    if (selectedEngagementId !== "") {
       const selected =
         engagements?.find((v) => v.id === selectedEngagementId) ||
         ({} as IMappedEngagement);
@@ -270,8 +272,6 @@ export const GanttChart = ({
       searchParams.set("engagement", selectedEngagementId);
       setSearchParams(searchParams);
     } else {
-      searchParams.delete("engagement");
-      setSearchParams(searchParams);
       setSelectedEngagement({} as IMappedEngagement);
     }
   }, [selectedEngagementId]);
