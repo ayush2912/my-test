@@ -7,8 +7,6 @@ import Button from "../Button";
 import Dropdown from "../Dropdown";
 import Icon from "../Icon";
 import Select from "../Select";
-import Text from "../Text";
-import Tooltip from "../Tooltip";
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -32,48 +30,35 @@ const DropDownBox = styled.div`
   width: 121px;
 `;
 export const GanttChartControls = ({
+  selectedEngagementId,
+  engagementOptions,
+  onSelectEngagement,
   onTodayButtonClick,
   selectedProjectId,
 }: {
+  selectedEngagementId: string;
+  engagementOptions: { label: string; value: string }[];
+  onSelectEngagement: (engagementId: string) => void;
   onTodayButtonClick: () => void;
   selectedProjectId: string | null;
 }) => {
-  const {
-    view,
-    changeView,
-    temporalViewOptions,
-    engagementOptions,
-    selectedEngagement,
-    setSelectedEngagement,
-  } = useGanttChartControls();
+  const { view, changeView, temporalViewOptions } = useGanttChartControls();
 
   const handleDropdownChange = (value: string) => {
     changeView(value as TemporalView);
-  };
-
-  const handleSelectEngagement = (engagementId: string) => {
-    setSelectedEngagement(engagementId);
   };
 
   return (
     <ButtonContainer>
       <div>
         <SelectBox>
-          <Tooltip
-            position="right"
-            text={
-              selectedProjectId ? "" : "Select a project to view engagements"
-            }
-          >
-            <Select
-              selected={selectedEngagement.id}
-              isPrimary={false}
-              options={engagementOptions}
-              disabled={!selectedProjectId}
-              placeholder="Select an engagement"
-              onSelect={handleSelectEngagement}
-            />
-          </Tooltip>
+          <Select
+            selected={selectedEngagementId}
+            isPrimary={false}
+            options={engagementOptions}
+            placeholder="Select an engagement"
+            onSelect={onSelectEngagement}
+          />
         </SelectBox>
 
         <GanttChartLengend />
