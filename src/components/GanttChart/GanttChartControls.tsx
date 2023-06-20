@@ -49,7 +49,7 @@ export const GanttChartControls = ({
     setShowToaster(true);
     setTimeout(() => {
       setShowToaster(false);
-    }, 10000);
+    }, 3000);
   };
   const handleDropdownChange = (value: string) => {
     changeView(value as TemporalView);
