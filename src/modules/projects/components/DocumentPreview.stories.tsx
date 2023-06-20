@@ -32,14 +32,6 @@ interface IDocumentDetails {
   versionHistory: DocumentInfo[];
 }
 
-// const documentDetails = {
-//   documentName: "TEST DOC 1",
-//   fileFormat: "pdf",
-//   size: "1.3 MB",
-//   source: "Client",
-//   date: new Date(),
-// };
-
 const documentDetailsData: IDocumentDetails[] = [
   {
     name: "Project for Conservation",
@@ -86,23 +78,32 @@ const documentDetailsData: IDocumentDetails[] = [
       {
         fileFormat: "pdf",
         date: "2023-06-12T12:35:12.958Z",
-        source: "Client",
+        source: "Consultant",
         name: "Version 2",
-        size: "1.9 MB",
+        size: "2.1 MB",
         id: "64871100c0c09a08fc637539",
       },
       {
         fileFormat: "pdf",
         date: "2023-07-10T12:35:12.958Z",
-        source: "Client",
+        source: "Consultant",
         name: "Version 1",
-        size: "2.3 MB",
+        size: "23.3 MB",
         id: "64871100c0c09a08fc637539",
       },
     ],
   },
 ];
 
+const handleDownload = () => {
+  console.log("DOWNLOADING !!!");
+};
+
 export const Default: Story = {
-  render: () => <DocumentPreview documentDetails={documentDetailsData} />,
+  render: () => (
+    <DocumentPreview
+      documentDetails={documentDetailsData}
+      handleDownload={handleDownload}
+    />
+  ),
 };

@@ -56,8 +56,7 @@ const HeaderContainer = styled.div`
   background-color: white;
   box-shadow: 0px 8px 64px rgba(15, 34, 67, 0.06),
     0px 0px 1px rgba(15, 34, 67, 0.08);
-  border: 1px solid red;
-  padding: 20px 0px;
+  padding: 20px 24px;
 `;
 
 const StyledHr = styled.hr`
@@ -71,6 +70,8 @@ const FlexContainer = styled.div<{ openSidebar: boolean }>`
   align-items: center;
   justify-content: ${({ openSidebar }) =>
     openSidebar ? "unset" : "space-between"};
+  gap: ${({ openSidebar }) => (openSidebar ? "11px" : "0")};
+  margin-bottom: ${({ openSidebar }) => (openSidebar ? "24px" : "0")};
 `;
 
 const FlexContainerDocActions = styled.div`
@@ -108,6 +109,10 @@ const InfoIconStyles = styled.div`
   margin: 50px 0 0 23px;
 `;
 
+const DocPreviewContainer = styled.div`
+  width: 90%;
+`;
+
 const Drawer = styled.div<{ openSidebar: boolean }>`
   position: fixed;
   z-index: 10;
@@ -116,7 +121,7 @@ const Drawer = styled.div<{ openSidebar: boolean }>`
   right: 0px;
   background: white;
   transition: right 300ms ease-in-out;
-  border: 1px solid green;
+  border: 1px solid #e7e7e7;
   width: ${({ openSidebar }) => (openSidebar ? "464px" : "72px")};
 `;
 
@@ -149,11 +154,19 @@ function DocumentPreview({
     },
   ];
 
+  // const docsNormal = documentDetails.map((obj) => ({ uri: obj.uri }));
+
   const [zoom, setZoom] = useState(1);
   const [openSidebar, setOpenSidebar] = useState(false);
   const [openDocDetails, setOpenDocDetails] = useState(false);
   const [openVersionHistory, setOpenVersionHistory] = useState(false);
+  const [documents, setDocuments] = useState([]);
   const [currentDocIndex, setCurrentDocIndex] = useState<number>(0);
+
+  // useEffect(() => {
+  //   const docsNormal = documentDetails.map((obj) => ({ uri: obj.uri }));
+  //   setDocuments(docsNormal);
+  // }, []);
 
   const toggleDocDetailAccordion = () => {
     setOpenDocDetails(!openDocDetails);
@@ -182,15 +195,16 @@ function DocumentPreview({
   };
 
   const MyHeader: IHeaderOverride = (state, previousDocument, nextDocument) => {
-    console.log("=============", state);
     if (!state.currentDocument || state.config?.header?.disableFileName) {
       return null;
     }
     const currentFileNo = state.currentFileNo;
 
-    useEffect(() => {
-      setCurrentDocIndex(currentFileNo);
-    }, [currentFileNo]);
+    console.log("========sadsad=    ", currentFileNo, state);
+
+    // useEffect(() => {
+    //   setCurrentDocIndex(currentFileNo);
+    // }, [currentFileNo]);
 
     return (
       <>
@@ -222,21 +236,6 @@ function DocumentPreview({
                   </Text>
                 </FlexContainer>
               </div>
-              {/* <div>{state.currentDocument.uri || ""}</div>
-          <div>
-            <button
-              onClick={previousDocument}
-              disabled={state.currentFileNo === 0}
-            >
-              Previous Document
-            </button>
-            <button
-              onClick={nextDocument}
-              disabled={state.currentFileNo >= state.documents.length - 1}
-            >
-              Next Document
-            </button>
-          </div> */}
             </DocInfoContainer>
 
             <FlexContainerDocActions>
@@ -306,21 +305,23 @@ function DocumentPreview({
 
   return (
     <>
-      <DocViewer
-        config={{
-          header: {
-            overrideComponent: MyHeader,
-          },
-          pdfVerticalScrollByDefault: true,
-          pdfZoom: {
-            defaultZoom: zoom,
-            zoomJump: 0.1,
-          },
-        }}
-        documents={docsNormal}
-        prefetchMethod="GET"
-        pluginRenderers={DocViewerRenderers}
-      />
+      <DocPreviewContainer>
+        <DocViewer
+          config={{
+            header: {
+              overrideComponent: MyHeader,
+            },
+            pdfVerticalScrollByDefault: true,
+            pdfZoom: {
+              defaultZoom: zoom,
+              zoomJump: 0.1,
+            },
+          }}
+          documents={docsNormal}
+          prefetchMethod="GET"
+          pluginRenderers={DocViewerRenderers}
+        />
+      </DocPreviewContainer>
 
       <Drawer openSidebar={openSidebar}>
         {" "}
@@ -337,26 +338,30 @@ function DocumentPreview({
               </div>
             )}
           </FlexContainer>
-          <Accordion
-            title="Document details"
-            isOpen={openDocDetails}
-            toggleAccordion={toggleDocDetailAccordion}
-          >
-            <DocumentDetails
-              documentDetails={documentDetails[currentDocIndex]}
-            />
-          </Accordion>
-          <Accordion
-            title="Version history"
-            isOpen={openVersionHistory}
-            toggleAccordion={toggleVersionHistoryAccordion}
-          >
-            <StyledHr />
-            <DocumentList
-              onClickDownload={handleDownload}
-              data={documentDetails[currentDocIndex].versionData}
-            />
-          </Accordion>
+          {openSidebar && (
+            <>
+              <Accordion
+                title="Document details"
+                isOpen={openDocDetails}
+                toggleAccordion={toggleDocDetailAccordion}
+              >
+                <DocumentDetails
+                  documentDetails={documentDetails[currentDocIndex]}
+                />
+              </Accordion>
+              <Accordion
+                title="Version history"
+                isOpen={openVersionHistory}
+                toggleAccordion={toggleVersionHistoryAccordion}
+              >
+                <StyledHr />
+                <DocumentList
+                  onClickDownload={handleDownload}
+                  data={documentDetails[currentDocIndex].versionHistory}
+                />
+              </Accordion>
+            </>
+          )}
         </InfoIconStyles>
       </Drawer>
     </>
