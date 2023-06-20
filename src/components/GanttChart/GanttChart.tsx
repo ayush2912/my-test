@@ -170,7 +170,8 @@ export const GanttChart = ({
       })),
     );
 
-    setCalendar(memoizedCalendarData(projectEngagementData));
+    const calendarData = memoizedCalendarData(projectEngagementData);
+    setCalendar(calendarData);
 
     setEngagements(
       projectEngagementData.flatMap((project) =>
@@ -181,7 +182,7 @@ export const GanttChart = ({
             engagement.completedDate
               ? new Date(engagement.completedDate)
               : null,
-            calendar.earliestStartDate,
+            calendarData.earliestStartDate,
           );
 
           return {
@@ -198,7 +199,7 @@ export const GanttChart = ({
                 new Date(task.startDate),
                 new Date(task.dueDate),
                 task.completedDate ? new Date(task.completedDate) : null,
-                calendar.earliestStartDate,
+                calendarData.earliestStartDate,
               ),
             })),
           };
