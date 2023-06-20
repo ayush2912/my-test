@@ -6,13 +6,13 @@ export default { component: Input };
 
 export const Large = {
   render: () => {
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState<string | number>();
     return (
       <Input
         placeholder="This is an input field that is quite long"
         label="Field label"
         iconName="file"
-        onChangeValue={(val) => setValue(val)}
+        onChangeValue={(val: string | number) => setValue(val)}
         value={value}
       />
     );
@@ -21,12 +21,12 @@ export const Large = {
 
 export const LargeWithError = {
   render: () => {
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState<string | number>();
     return (
       <Input
         placeholder="This is an input field that is quite long"
         label="Field label"
-        onChangeValue={(val) => setValue(val)}
+        onChangeValue={(val: string | number) => setValue(val)}
         isError
         errorMessage="Invalid input text"
         value={value}
@@ -37,13 +37,13 @@ export const LargeWithError = {
 
 export const LargeWithErrorWithIcon = {
   render: () => {
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState<string | number>();
     return (
       <Input
         placeholder="This is an input field that is quite long"
         label="Field label"
         iconName="file"
-        onChangeValue={(val) => setValue(val)}
+        onChangeValue={(val: string | number) => setValue(val)}
         isError
         errorMessage="Invalid input text"
         value={value}
@@ -54,12 +54,12 @@ export const LargeWithErrorWithIcon = {
 
 export const LargeDisabled = {
   render: () => {
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState<string | number>();
     return (
       <Input
         placeholder="This is an input field that is quite long"
         label="Field label"
-        onChangeValue={(val) => setValue(val)}
+        onChangeValue={(val: string | number) => setValue(val)}
         disabled
         value={value}
       />
@@ -69,13 +69,13 @@ export const LargeDisabled = {
 
 export const LargeDisabledWithIcon = {
   render: () => {
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState<string | number>();
     return (
       <Input
         placeholder="This is an input field that is quite long"
         label="Field label"
         iconName="file"
-        onChangeValue={(val) => setValue(val)}
+        onChangeValue={(val: string | number) => setValue(val)}
         disabled
         value={value}
       />
@@ -84,11 +84,11 @@ export const LargeDisabledWithIcon = {
 };
 export const LargeWithoutLabel = {
   render: () => {
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState<string | number>();
     return (
       <Input
         placeholder="This is an input field that is quite long"
-        onChangeValue={(val) => setValue(val)}
+        onChangeValue={(val: string | number) => setValue(val)}
         value={value}
       />
     );
@@ -96,12 +96,12 @@ export const LargeWithoutLabel = {
 };
 export const LargeWithoutLabelWithIcon = {
   render: () => {
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState<string | number>();
     return (
       <Input
         placeholder="This is an input field that is quite long"
         iconName="file"
-        onChangeValue={(val) => setValue(val)}
+        onChangeValue={(val: string | number) => setValue(val)}
         value={value}
       />
     );
@@ -110,11 +110,11 @@ export const LargeWithoutLabelWithIcon = {
 
 export const LargeWithoutLabelError = {
   render: () => {
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState<string | number>();
     return (
       <Input
         placeholder="This is an input field that is quite long"
-        onChangeValue={(val) => setValue(val)}
+        onChangeValue={(val: string | number) => setValue(val)}
         isError
         errorMessage="Invalid input text"
         value={value}
@@ -124,12 +124,12 @@ export const LargeWithoutLabelError = {
 };
 export const LargeWithoutLabelErrorWithIcon = {
   render: () => {
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState<string | number>();
     return (
       <Input
         placeholder="This is an input field that is quite long"
         iconName="file"
-        onChangeValue={(val) => setValue(val)}
+        onChangeValue={(val: string | number) => setValue(val)}
         isError
         errorMessage="Invalid input text"
         value={value}
@@ -139,11 +139,11 @@ export const LargeWithoutLabelErrorWithIcon = {
 };
 export const LargeWithoutLabelDisabled = {
   render: () => {
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState<string | number>();
     return (
       <Input
         placeholder="This is an input field that is quite long"
-        onChangeValue={(val) => setValue(val)}
+        onChangeValue={(val: string | number) => setValue(val)}
         disabled
         value={value}
       />
@@ -153,12 +153,12 @@ export const LargeWithoutLabelDisabled = {
 
 export const LargeWithoutLabelDisabledWithIcon = {
   render: () => {
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState<string | number>();
     return (
       <Input
         placeholder="This is an input field that is quite long"
         iconName="file"
-        onChangeValue={(val) => setValue(val)}
+        onChangeValue={(val: string | number) => setValue(val)}
         disabled
         value={value}
       />
@@ -168,14 +168,14 @@ export const LargeWithoutLabelDisabledWithIcon = {
 
 export const Small = {
   render: () => {
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState<string | number>();
     return (
       <Input
         placeholder="This is an input field that is quite long"
         label="Field label"
         iconName="file"
         size="small"
-        onChangeValue={(val) => setValue(val)}
+        onChangeValue={(val: string | number) => setValue(val)}
         value={value}
       />
     );
@@ -184,12 +184,12 @@ export const Small = {
 
 export const SmallWithError = {
   render: () => {
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState<string | number>();
     return (
       <Input
         placeholder="This is an input field that is quite long"
         label="Field label"
-        onChangeValue={(val) => setValue(val)}
+        onChangeValue={(val: string | number) => setValue(val)}
         isError
         errorMessage="Invalid input text"
         size="small"
@@ -201,13 +201,13 @@ export const SmallWithError = {
 
 export const SmallWithErrorWithIcon = {
   render: () => {
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState<string | number>();
     return (
       <Input
         placeholder="This is an input field that is quite long"
         label="Field label"
         iconName="file"
-        onChangeValue={(val) => setValue(val)}
+        onChangeValue={(val: string | number) => setValue(val)}
         isError
         errorMessage="Invalid input text"
         size="small"
@@ -219,12 +219,12 @@ export const SmallWithErrorWithIcon = {
 
 export const SmallDisabled = {
   render: () => {
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState<string | number>();
     return (
       <Input
         placeholder="This is an input field that is quite long"
         label="Field label"
-        onChangeValue={(val) => setValue(val)}
+        onChangeValue={(val: string | number) => setValue(val)}
         disabled
         size="small"
         value={value}
@@ -235,13 +235,13 @@ export const SmallDisabled = {
 
 export const SmallDisabledWithIcon = {
   render: () => {
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState<string | number>();
     return (
       <Input
         placeholder="This is an input field that is quite long"
         label="Field label"
         iconName="file"
-        onChangeValue={(val) => setValue(val)}
+        onChangeValue={(val: string | number) => setValue(val)}
         disabled
         size="small"
         value={value}
@@ -251,11 +251,11 @@ export const SmallDisabledWithIcon = {
 };
 export const SmallWithoutLabel = {
   render: () => {
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState<string | number>();
     return (
       <Input
         placeholder="This is an input field that is quite long"
-        onChangeValue={(val) => setValue(val)}
+        onChangeValue={(val: string | number) => setValue(val)}
         size="small"
         value={value}
       />
@@ -264,12 +264,12 @@ export const SmallWithoutLabel = {
 };
 export const SmallWithoutLabelWithIcon = {
   render: () => {
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState<string | number>();
     return (
       <Input
         placeholder="This is an input field that is quite long"
         iconName="file"
-        onChangeValue={(val) => setValue(val)}
+        onChangeValue={(val: string | number) => setValue(val)}
         size="small"
         value={value}
       />
@@ -279,11 +279,11 @@ export const SmallWithoutLabelWithIcon = {
 
 export const SmallWithoutLabelError = {
   render: () => {
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState<string | number>();
     return (
       <Input
         placeholder="This is an input field that is quite long"
-        onChangeValue={(val) => setValue(val)}
+        onChangeValue={(val: string | number) => setValue(val)}
         size="small"
         isError
         errorMessage="Invalid input text"
@@ -294,12 +294,12 @@ export const SmallWithoutLabelError = {
 };
 export const SmallWithoutLabelErrorWithIcon = {
   render: () => {
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState<string | number>();
     return (
       <Input
         placeholder="This is an input field that is quite long"
         iconName="file"
-        onChangeValue={(val) => setValue(val)}
+        onChangeValue={(val: string | number) => setValue(val)}
         size="small"
         isError
         errorMessage="Invalid input text"
@@ -310,11 +310,11 @@ export const SmallWithoutLabelErrorWithIcon = {
 };
 export const SmallWithoutLabelDisabled = {
   render: () => {
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState<string | number>();
     return (
       <Input
         placeholder="This is an input field that is quite long"
-        onChangeValue={(val) => setValue(val)}
+        onChangeValue={(val: string | number) => setValue(val)}
         size="small"
         disabled
         value={value}
@@ -325,12 +325,12 @@ export const SmallWithoutLabelDisabled = {
 
 export const SmallWithoutLabelDisabledWithIcon = {
   render: () => {
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState<string | number>();
     return (
       <Input
         placeholder="This is an input field that is quite long"
         iconName="file"
-        onChangeValue={(val) => setValue(val)}
+        onChangeValue={(val: string | number) => setValue(val)}
         size="small"
         disabled
         value={value}
