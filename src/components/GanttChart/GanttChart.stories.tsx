@@ -1,19 +1,23 @@
 import type { Meta } from "@storybook/react";
 import { StoryFn } from "@storybook/react";
-import { useMemo, useState } from "react";
+import { withRouter } from "storybook-addon-react-router-v6";
 
 import { GanttChart } from "./GanttChart";
 import { ProjectEngagement } from "./GanttChart.types";
-import { getBarInfo, memoizedCalendarData } from "../../utils/calendarHelper";
-import Select from "../Select";
 
 interface GanttChartProps {
   projectEngagementData: ProjectEngagement[];
 }
 
 const meta: Meta = {
-  title: "Gantt Chart/ Chart",
   component: GanttChart,
+  decorators: [withRouter],
+  parameters: {
+    reactRouter: {
+      routePath: "/projects/*",
+      browserPath: "/projects/12345",
+    },
+  },
 };
 
 export default meta;
@@ -21,50 +25,6 @@ export default meta;
 const Template: StoryFn<GanttChartProps> = ({
   projectEngagementData,
 }: GanttChartProps) => {
-  const [selectedProjectId, setSelectedProjectId] = useState("");
-  const calendar = memoizedCalendarData(projectEngagementData);
-
-  const projectIdOptions = projectEngagementData.map((v) => ({
-    value: v.id,
-    label: v.name,
-  }));
-
-  const mappedProjectEngagements = projectEngagementData.flatMap((project) =>
-    project.engagements.map((engagement) => {
-      const engagementBar = getBarInfo(
-        new Date(engagement.startDate),
-        new Date(engagement.dueDate),
-        engagement.completedDate ? new Date(engagement.completedDate) : null,
-        calendar.earliestStartDate,
-      );
-
-      return {
-        ...engagement,
-        projectName: project.name,
-        bar: engagementBar,
-        onViewClick: (id: string) =>
-          console.log(`navigate to project details ${id}`),
-        tasks: engagement.tasks.map((task) => ({
-          ...task,
-          bar: getBarInfo(
-            new Date(task.startDate),
-            new Date(task.dueDate),
-            task.completedDate ? new Date(task.completedDate) : null,
-            calendar.earliestStartDate,
-          ),
-        })),
-      };
-    }),
-  );
-
-  const selectedEngagements = useMemo(() => {
-    if (!selectedProjectId) return [];
-
-    return mappedProjectEngagements.filter(
-      (v) => v.projectId === selectedProjectId,
-    );
-  }, [selectedProjectId, mappedProjectEngagements]);
-
   return (
     <div
       style={{
@@ -74,16 +34,7 @@ const Template: StoryFn<GanttChartProps> = ({
         height: 600,
       }}
     >
-      <Select
-        selected={selectedProjectId}
-        isPrimary={true}
-        options={projectIdOptions}
-        placeholder="Placeholder"
-        onSelect={(val) => {
-          setSelectedProjectId(val);
-        }}
-      />
-      <GanttChart engagements={selectedEngagements} calendar={calendar} />
+      <GanttChart projectEngagementData={projectEngagementData} />
     </div>
   );
 };

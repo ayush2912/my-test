@@ -9,10 +9,9 @@ import { ReactComponent as PptFileIcon } from "../../../assets/icons/fileTypes/p
 import { ReactComponent as PptxFileIcon } from "../../../assets/icons/fileTypes/pptxFileIcon.svg";
 import { ReactComponent as XlsFileIcon } from "../../../assets/icons/fileTypes/xlsFileIcon.svg";
 import { ReactComponent as XlsxFileIcon } from "../../../assets/icons/fileTypes/xlsxFileIcon.svg";
-import { ReactComponent as DownloadIcon } from "../../../assets/icons/generic/download.svg";
 import { ReactComponent as FileIcon } from "../../../assets/icons/generic/file.svg";
-import { ReactComponent as InfoIcon } from "../../../assets/icons/generic/info.svg";
 import Button from "../../../components/Button";
+import Icon from "../../../components/Icon";
 import Text from "../../../components/Text";
 import { convertToDateTimeFormat } from "../../../utils/dateTimeFormatter";
 
@@ -113,16 +112,20 @@ export default function DocumentListItem({
         {onGetInfo && (
           <Button
             type="secondary"
-            isIcon={true}
+            isIconButton={true}
+            size="large"
+            lightBorderColor
             onClick={() => onGetInfo(documentInfo.id)}
           >
-            <InfoIcon />
+            <Icon name="information" size="xsmall" />
           </Button>
         )}
 
         <Button
           type="secondary"
-          isIcon={true}
+          isIconButton={true}
+          lightBorderColor
+          size="large"
           onClick={() =>
             onClickDownload(
               documentInfo.id,
@@ -131,7 +134,7 @@ export default function DocumentListItem({
             )
           }
         >
-          <DownloadIcon />
+          <Icon name="download" size="xsmall" />
         </Button>
       </FlexBox>
     </DocumentItemContainer>

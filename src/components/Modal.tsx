@@ -55,10 +55,8 @@ const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
           )}
           <Content>{children}</Content>
           <Footer>
-            <Button large onClick={onClose}>
-              <Text type="button" color="white">
-                Close
-              </Text>
+            <Button size="large" onClick={onClose}>
+              Close
             </Button>
           </Footer>
         </Card>

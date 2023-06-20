@@ -25,6 +25,7 @@ export const StyledCalendarBackground = styled.div<CalendarBackgroundProps>`
   display: flex;
   flex-direction: column;
   height: fit-content;
+  min-height: 100%;
   position: relative;
   width: ${({ width }) => width}px;
   background-color: #ffffff;
