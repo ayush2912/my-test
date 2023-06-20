@@ -225,19 +225,18 @@ export const GanttChart = ({
     if (selectedProjectId) setSelectedEngagementId("");
   };
 
-  const engagementOptions = useMemo(
-    () =>
-      engagements
-        .filter((v) => v.projectId === selectedProjectId)
-        .map((v) => ({
-          value: v.id,
-          label: v.type,
-          sublabel: `(${convertToMonthNameFormat(
-            v.startDate,
-          )} - ${convertToMonthNameFormat(v.dueDate)})`,
-        })),
-    [selectedProjectId],
-  );
+  const engagementOptions = useMemo(() => {
+    if (!selectedProjectId) return [];
+    return engagements
+      .filter((v) => v.projectId === selectedProjectId)
+      .map((v) => ({
+        value: v.id,
+        label: v.type,
+        sublabel: `(${convertToMonthNameFormat(
+          v.startDate,
+        )} - ${convertToMonthNameFormat(v.dueDate)})`,
+      }));
+  }, [selectedProjectId]);
 
   const handleSelectEngagement = (engagementId: string) => {
     setSelectedEngagementId(engagementId);
@@ -263,7 +262,7 @@ export const GanttChart = ({
       <GanttChartWrapper>
         <Card>
           <GanttChartControls
-            selectedEngagementId={selectedEngagement?.id || ""}
+            selectedEngagementId={selectedEngagementId || ""}
             engagementOptions={engagementOptions}
             onSelectEngagement={handleSelectEngagement}
             onTodayButtonClick={focusToday}
