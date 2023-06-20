@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 
 import { EngagementBar } from "./Bar/EngagementBar";
@@ -143,20 +143,16 @@ export const GanttChart = ({
 }) => {
   const { view, onScroll, changeView } = useGanttChartControls();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [projectOptions, setProjectOptions] = useState<
     { label: string; value: string }[]
   >([]);
 
-  const [selectedProjectId, setSelectedProjectId] = useSearchParamsState(
-    "project",
-    "",
-  );
+  const [selectedProjectId, setSelectedProjectId] = useState("");
 
   const [engagements, setEngagements] = useState<IMappedEngagements>([]);
-  const [selectedEngagementId, setSelectedEngagementId] = useSearchParamsState(
-    "engagement",
-    "",
-  );
+  const [selectedEngagementId, setSelectedEngagementId] = useState("");
   const [engagementOptions, setEngagementOptions] = useState<
     {
       label: string;
@@ -232,6 +228,8 @@ export const GanttChart = ({
           )} - ${convertToMonthNameFormat(v.dueDate)})`,
         }));
       setEngagementOptions(options);
+      searchParams.set("project", selectedProjectId);
+      setSearchParams(searchParams);
     }
   }, [selectedProjectId, engagements]);
 
@@ -261,8 +259,13 @@ export const GanttChart = ({
       const selected =
         engagements?.find((v) => v.id === selectedEngagementId) ||
         ({} as IMappedEngagement);
+
       setSelectedEngagement(selected);
+      searchParams.set("engagement", selectedEngagementId);
+      setSearchParams(searchParams);
     } else {
+      searchParams.delete("engagement");
+      setSearchParams(searchParams);
       setSelectedEngagement({} as IMappedEngagement);
     }
   }, [selectedEngagementId, engagements]);
@@ -282,7 +285,6 @@ export const GanttChart = ({
       <GanttChartWrapper>
         <Card>
           <GanttChartControls
-            key={selectedProjectId}
             selectedEngagementId={selectedEngagementId}
             engagementOptions={engagementOptions}
             onSelectEngagement={handleSelectEngagement}
