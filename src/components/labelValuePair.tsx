@@ -24,7 +24,7 @@ export default function LabelValue({ label, value, type }: LabelValueType) {
       {
         {
           url: (
-            <a href={value.toString()} target="blank">
+            <a href={String(value)} target="blank">
               <Text type="body" color="primary">
                 {value ? value : "-"}
               </Text>
