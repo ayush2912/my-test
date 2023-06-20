@@ -282,6 +282,7 @@ export const GanttChart = ({
             engagementOptions={engagementOptions}
             onSelectEngagement={handleSelectEngagement}
             onTodayButtonClick={focusToday}
+            selectedProjectId={selectedProjectId}
           />
           {selectedEngagement ? (
             <Container

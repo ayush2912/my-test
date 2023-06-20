@@ -53,13 +53,14 @@ export const GanttChartControls = ({
     <ButtonContainer>
       <div>
         <SelectBox>
-          {engagementOptions.length > 0 ? (
+          {selectedProjectId ? (
             <Select
               selected={selectedEngagementId}
               isPrimary={false}
               options={engagementOptions}
               placeholder="Select an engagement"
               onSelect={onSelectEngagement}
+              disabled={engagementOptions.length === 0}
             />
           ) : (
             <Tooltip
