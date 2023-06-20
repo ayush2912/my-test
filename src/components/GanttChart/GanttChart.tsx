@@ -7,7 +7,11 @@ import { TaskBar } from "./Bar/TaskBar";
 import { CalendarBackground } from "./Calendar/CalendarBackground";
 import { CalendarHeader } from "./Calendar/CalendarHeader";
 import { EngagementListItem } from "./EngagementListItem";
-import { IMappedEngagements, ProjectEngagement } from "./GanttChart.types";
+import {
+  IMappedEngagement,
+  IMappedEngagements,
+  ProjectEngagement,
+} from "./GanttChart.types";
 import { GanttChartControls } from "./GanttChartControls";
 import { TaskListItem } from "./TaskListItem";
 import { TodayFocus } from "./TodayFocus";
@@ -153,6 +157,14 @@ export const GanttChart = ({
     "engagement",
     "",
   );
+  const [engagementOptions, setEngagementOptions] = useState<
+    {
+      label: string;
+      value: string;
+    }[]
+  >([]);
+  const [selectedEngagement, setSelectedEngagement] =
+    useState<IMappedEngagement>({} as IMappedEngagement);
 
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [calendar, setCalendar] = useState<any>([]);
@@ -208,6 +220,23 @@ export const GanttChart = ({
     );
   }, [projectEngagementData]);
 
+  useEffect(() => {
+    if (selectedProjectId === "") {
+      setEngagementOptions([]);
+    } else {
+      const options = engagements
+        .filter((v) => v.projectId === selectedProjectId)
+        .map((v) => ({
+          value: v.id,
+          label: v.type,
+          sublabel: `(${convertToMonthNameFormat(
+            v.startDate,
+          )} - ${convertToMonthNameFormat(v.dueDate)})`,
+        }));
+      setEngagementOptions(options);
+    }
+  }, [selectedProjectId]);
+
   const focusToday = () => {
     changeView("monthly");
     setTimeout(() => {
@@ -225,27 +254,20 @@ export const GanttChart = ({
     if (selectedProjectId) setSelectedEngagementId("");
   };
 
-  const engagementOptions = useMemo(() => {
-    if (!selectedProjectId) return [];
-    return engagements
-      .filter((v) => v.projectId === selectedProjectId)
-      .map((v) => ({
-        value: v.id,
-        label: v.type,
-        sublabel: `(${convertToMonthNameFormat(
-          v.startDate,
-        )} - ${convertToMonthNameFormat(v.dueDate)})`,
-      }));
-  }, [selectedProjectId]);
-
   const handleSelectEngagement = (engagementId: string) => {
     setSelectedEngagementId(engagementId);
   };
 
-  const selectedEngagement = useMemo(() => {
-    if (selectedEngagementId === "") return null;
-    return engagements?.find((v) => v.id === selectedEngagementId);
-  }, [selectedEngagementId]);
+  useEffect(() => {
+    if (selectedEngagementId === "") {
+      setSelectedEngagement({} as IMappedEngagement);
+    } else {
+      const selected =
+        engagements?.find((v) => v.id === selectedEngagementId) ||
+        ({} as IMappedEngagement);
+      setSelectedEngagement(selected);
+    }
+  }, [selectedEngagementId, engagements]);
 
   return (
     <div>
@@ -262,7 +284,8 @@ export const GanttChart = ({
       <GanttChartWrapper>
         <Card>
           <GanttChartControls
-            selectedEngagementId={selectedEngagementId || ""}
+            key={selectedProjectId}
+            selectedEngagementId={selectedEngagementId}
             engagementOptions={engagementOptions}
             onSelectEngagement={handleSelectEngagement}
             onTodayButtonClick={focusToday}
