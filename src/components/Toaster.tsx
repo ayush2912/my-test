@@ -1,6 +1,7 @@
-// import Icon from "assets/icons/Icon";
-
 import styled from "styled-components";
+
+import Icon from "./Icon";
+import Text from "./Text";
 
 type ToasterType = "success" | "warning" | "error" | "information";
 
@@ -13,17 +14,23 @@ interface IToasterProps {
 
 const ToasterContainer = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: flex-start;
   padding: 12px 16px;
-  gap: 12px;
   box-shadow: 0px 8px 24px -6px rgba(0, 0, 0, 0.16);
   border-radius: 4px;
   position: fixed;
   width: fit-content;
-  transform: translateX(50%);
   z-index: 100;
-  top: 38px;
+  top: 8px;
+  transform: translateX(-50%);
+  left: 50%;
+`;
+
+const Content = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+  gap: 12px;
 `;
 
 const Toaster = ({ title, subTitle, type, onDismiss }: IToasterProps) => {
@@ -34,27 +41,42 @@ const Toaster = ({ title, subTitle, type, onDismiss }: IToasterProps) => {
     information: "#8992A3",
   }[type];
 
+  const iconName: string = {
+    success: "toasterSuccess",
+    warning: "toasterWarning",
+    error: "toasterError",
+    information: "toasterInformation",
+  }[type];
+
   return (
-    <ToasterContainer
-      style={{ backgroundColor: bgColor }}
-      className=" top-[8px] left-2/4 -translate-x-1/2 py-3 px-4 rounded w-fit"
-    >
-      <div className="flex justify-evenly space-x-3.5 items-center  ">
-        {/* <Icon name={type} height="22" width="22" color="white" /> */}
-        <p className="text-[#FFFFFF] text-base font-semibold leading-6">
-          {title}
-        </p>
+    <ToasterContainer style={{ backgroundColor: bgColor }}>
+      <Content>
+        <Icon name={iconName} />
+        <div
+          style={{
+            display: "flex",
+            alignItems: "start",
+            flexDirection: "column",
+          }}
+        >
+          <div>
+            <Text color="white" type="bodyBold">
+              {title}
+            </Text>
+          </div>
+          <div>
+            {subTitle && (
+              <Text color="white" type="caption">
+                {subTitle}
+              </Text>
+            )}
+          </div>
+        </div>
+
         <div onClick={onDismiss} className="cursor-pointer">
-          {/* <Icon name="cross" height="22" width="22" color="white" thickness="2" /> */}
+          <Icon name="close" strokeWidth="3" strokeColor="white" size="small" />
         </div>
-      </div>
-      {subTitle && (
-        <div>
-          <p className="text-[#FFFFFF] text-sm font-normal  text-center leading-4">
-            {subTitle}
-          </p>
-        </div>
-      )}
+      </Content>
     </ToasterContainer>
   );
 };

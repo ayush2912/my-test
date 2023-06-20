@@ -69,12 +69,17 @@ import { ReactComponent as WatchIcon } from "../assets/icons/generic/watch.svg";
 import { ReactComponent as BidsIcon } from "../assets/icons/menu/bids.svg";
 import { ReactComponent as ProjectsIcon } from "../assets/icons/menu/projects.svg";
 import { ReactComponent as UserManagementIcon } from "../assets/icons/menu/user-management.svg";
+import { ReactComponent as ToasterErrorIcon } from "../assets/icons/toasterIcons/error.svg";
+import { ReactComponent as ToasterInformationIcon } from "../assets/icons/toasterIcons/information.svg";
+import { ReactComponent as ToasterSuccessIcon } from "../assets/icons/toasterIcons/success.svg";
+import { ReactComponent as ToasterWarningIcon } from "../assets/icons/toasterIcons/warning.svg";
 
 interface IconProps {
   size: "xsmall" | "small" | "big";
   color?: string;
   hoverColor?: string;
   strokecolor?: string;
+  strokeWidth?: string;
 }
 
 const svgStyles = ({
@@ -82,6 +87,7 @@ const svgStyles = ({
   color,
   hoverColor,
   strokecolor,
+  strokeWidth,
 }: IconProps): CSSObject => {
   return {
     height: `${{ xsmall: 16, small: 24, big: 40 }[size]}px`,
@@ -89,6 +95,7 @@ const svgStyles = ({
     "& path": {
       stroke: strokecolor,
       fill: color,
+      strokeWidth: strokeWidth ?? "1",
     },
     "&:hover path": {
       stroke: hoverColor,
@@ -170,6 +177,10 @@ const icons = {
   projects: ProjectsIcon,
   userManagement: UserManagementIcon,
   alarmClock: AlarmClockIcon,
+  toasterSuccess: ToasterSuccessIcon,
+  toasterError: ToasterErrorIcon,
+  toasterWarning: ToasterWarningIcon,
+  toasterInformation: ToasterInformationIcon,
 };
 export const IconNames = Object.keys(icons) as Array<IconNameType>;
 export type IconNameType = keyof typeof icons;
@@ -183,11 +194,13 @@ export default function Icon({
   size = "small",
   color,
   strokeColor,
+  strokeWidth,
 }: {
   name: IconNameType;
   size?: "xsmall" | "small" | "big";
   color?: string;
   strokeColor?: string;
+  strokeWidth?: string;
 }) {
   const SelectedIcon = icons[name];
 
@@ -197,6 +210,7 @@ export default function Icon({
       size={size}
       color={color}
       strokecolor={strokeColor}
+      strokeWidth={strokeWidth}
     />
   );
 }
