@@ -72,6 +72,7 @@ import { ReactComponent as UserManagementIcon } from "../assets/icons/menu/user-
 import { ReactComponent as ToasterErrorIcon } from "../assets/icons/toasterIcons/error.svg";
 import { ReactComponent as ToasterInformationIcon } from "../assets/icons/toasterIcons/information.svg";
 import { ReactComponent as ToasterSuccessIcon } from "../assets/icons/toasterIcons/success.svg";
+import { ReactComponent as ToasterCloseIcon } from "../assets/icons/toasterIcons/toasterClose.svg";
 import { ReactComponent as ToasterWarningIcon } from "../assets/icons/toasterIcons/warning.svg";
 
 interface IconProps {
@@ -181,6 +182,7 @@ const icons = {
   toasterError: ToasterErrorIcon,
   toasterWarning: ToasterWarningIcon,
   toasterInformation: ToasterInformationIcon,
+  toasterClose: ToasterCloseIcon,
 };
 export const IconNames = Object.keys(icons) as Array<IconNameType>;
 export type IconNameType = keyof typeof icons;
