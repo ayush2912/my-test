@@ -214,6 +214,12 @@ export const GanttChart = ({
         }),
       ),
     );
+
+    const projectId = searchParams.get("project");
+    const engagementId = searchParams.get("engagement");
+    console.log(projectId, engagementId);
+    if (projectId) setSelectedProjectId(projectId);
+    if (engagementId) setSelectedEngagementId(engagementId);
   }, [projectEngagementData]);
 
   useEffect(() => {
@@ -231,7 +237,7 @@ export const GanttChart = ({
       searchParams.set("project", selectedProjectId);
       setSearchParams(searchParams);
     }
-  }, [selectedProjectId, engagements]);
+  }, [selectedProjectId]);
 
   const focusToday = () => {
     changeView("monthly");
@@ -268,7 +274,7 @@ export const GanttChart = ({
       setSearchParams(searchParams);
       setSelectedEngagement({} as IMappedEngagement);
     }
-  }, [selectedEngagementId, engagements]);
+  }, [selectedEngagementId]);
 
   return (
     <div>
