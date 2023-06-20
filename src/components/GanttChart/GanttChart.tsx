@@ -222,11 +222,8 @@ export const GanttChart = ({
 
   const handleSelectProject = (projectId: string) => {
     setSelectedProjectId(projectId);
+    if (selectedProjectId) setSelectedEngagementId("");
   };
-
-  useEffect(() => {
-    setSelectedEngagementId("");
-  }, [selectedProjectId]);
 
   const engagementOptions = useMemo(
     () =>
