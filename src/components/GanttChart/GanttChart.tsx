@@ -286,7 +286,7 @@ export const GanttChart = ({
             onSelectEngagement={handleSelectEngagement}
             onTodayButtonClick={focusToday}
           />
-          {selectedEngagement ? (
+          {selectedEngagement.id ? (
             <Container
               onWheel={(e: any) => {
                 onScroll(e);
