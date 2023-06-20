@@ -7,7 +7,7 @@ type ToasterType = "success" | "warning" | "error" | "information";
 
 interface IToasterProps {
   title: string;
-  subTitle: string;
+  subTitle?: string;
   type: ToasterType;
   onDismiss: () => void;
 }
