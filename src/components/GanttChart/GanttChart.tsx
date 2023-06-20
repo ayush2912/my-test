@@ -221,9 +221,7 @@ export const GanttChart = ({
   }, [projectEngagementData]);
 
   useEffect(() => {
-    if (selectedProjectId === "") {
-      setEngagementOptions([]);
-    } else {
+    if (Boolean(selectedProjectId) && engagements.length) {
       const options = engagements
         .filter((v) => v.projectId === selectedProjectId)
         .map((v) => ({
@@ -235,7 +233,7 @@ export const GanttChart = ({
         }));
       setEngagementOptions(options);
     }
-  }, [selectedProjectId]);
+  }, [selectedProjectId, engagements]);
 
   const focusToday = () => {
     changeView("monthly");
@@ -259,9 +257,7 @@ export const GanttChart = ({
   };
 
   useEffect(() => {
-    if (selectedEngagementId === "") {
-      setSelectedEngagement({} as IMappedEngagement);
-    } else {
+    if (Boolean(selectedEngagementId) && engagements) {
       const selected =
         engagements?.find((v) => v.id === selectedEngagementId) ||
         ({} as IMappedEngagement);
