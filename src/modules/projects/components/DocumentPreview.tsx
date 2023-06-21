@@ -29,7 +29,7 @@ import Icon from "../../../components/Icon";
 import Text from "../../../components/Text";
 import { convertToDateTimeFormat } from "../../../utils/dateTimeFormatter";
 
-interface DocumentInfo {
+export interface DocumentInfo {
   fileFormat: string;
   date: string;
   source?: string;
@@ -134,7 +134,18 @@ function DocumentPreview({
   documentDetails: IDocumentDetails[];
   handleDownload: () => void;
 }) {
-  const fileFormatIcon = {
+  type FileFormat =
+    | "png"
+    | "doc"
+    | "docx"
+    | "jpg"
+    | "jpeg"
+    | "ppt"
+    | "pptx"
+    | "xls"
+    | "xlsx"
+    | "pdf";
+  const fileFormatIcon: Record<FileFormat, JSX.Element> = {
     png: <PngFileIcon />,
     doc: <DocFileIcon />,
     docx: <DocXFileIcon />,
@@ -209,6 +220,7 @@ function DocumentPreview({
       return null;
     }
     const currentFileNo = state.currentFileNo;
+    const currentFormat = documentDetails[currentFileNo].fileFormat;
 
     useEffect(() => {
       setCurrentDocIndex(currentFileNo);
@@ -220,9 +232,7 @@ function DocumentPreview({
           <FlexContainer openSidebar={false}>
             <DocInfoContainer>
               <div>
-                {fileFormatIcon[documentDetails[currentFileNo].fileFormat] || (
-                  <FileIcon />
-                )}
+                {fileFormatIcon[currentFormat as FileFormat] || <FileIcon />}
               </div>
               <div>
                 <Text type="bodyBold" color="default">
