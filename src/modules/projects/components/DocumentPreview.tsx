@@ -2,7 +2,7 @@ import DocViewer, {
   DocViewerRenderers,
   IHeaderOverride,
 } from "@cyntler/react-doc-viewer";
-import { useEffect, useState } from "react";
+import { useEffect, useState, memo } from "react";
 import styled from "styled-components";
 
 import DocumentDetails from "./DocumentDetails";
@@ -123,6 +123,7 @@ const Drawer = styled.div<{ openSidebar: boolean }>`
   background: white;
   transition: right 300ms ease-in-out;
   border: 1px solid #e7e7e7;
+  /* overflow-y: scroll; */
   width: ${({ openSidebar }) => (openSidebar ? "464px" : "72px")};
 `;
 
@@ -146,28 +147,36 @@ function DocumentPreview({
     pdf: <PdfFileIcon />,
   };
 
-  const docsNormal = [
-    {
-      uri: "https://upload.wikimedia.org/wikipedia/commons/1/1f/Analytics_Quarterly_Review_Q2_2013_%28Research_and_Data%29.pdf",
-    },
-    {
-      uri: "https://upload.wikimedia.org/wikipedia/commons/3/36/Battling_Browser_Bugs_for_Fun_and_Non-Profit_%28LCA_2015%29.pdf",
-    },
-  ];
+  // const docsNormal = [
+  //   {
+  //     uri: "https://upload.wikimedia.org/wikipedia/commons/1/1f/Analytics_Quarterly_Review_Q2_2013_%28Research_and_Data%29.pdf",
+  //   },
+  //   {
+  //     uri: "https://upload.wikimedia.org/wikipedia/commons/3/36/Battling_Browser_Bugs_for_Fun_and_Non-Profit_%28LCA_2015%29.pdf",
+  //   },
+  // ];
 
   // const docsNormal = documentDetails.map((obj) => ({ uri: obj.uri }));
+
+  useEffect(() => {
+    document.body.style.background = "rgb(241 242 244 / 0.5)";
+
+    return () => {
+      document.body.style.background = "white";
+    };
+  });
 
   const [zoom, setZoom] = useState(1);
   const [openSidebar, setOpenSidebar] = useState(false);
   const [openDocDetails, setOpenDocDetails] = useState(false);
   const [openVersionHistory, setOpenVersionHistory] = useState(false);
-  const [documents, setDocuments] = useState([]);
+  const [documents, setDocuments] = useState<{ uri: string | null }[]>([]);
   const [currentDocIndex, setCurrentDocIndex] = useState<number>(0);
 
-  // useEffect(() => {
-  //   const docsNormal = documentDetails.map((obj) => ({ uri: obj.uri }));
-  //   setDocuments(docsNormal);
-  // }, []);
+  useEffect(() => {
+    const docsNormal = documentDetails.map((obj) => ({ uri: obj.uri }));
+    setDocuments(docsNormal);
+  }, []);
 
   const toggleDocDetailAccordion = () => {
     setOpenDocDetails(!openDocDetails);
@@ -275,7 +284,7 @@ function DocumentPreview({
                 <FullScreenIcon />
               </Button>
               <Text type="body" color="subdued">
-                {`Document 1/50`}
+                {`Document ${currentFileNo + 1}/${state.documents.length}`}
               </Text>
               <Button
                 type="secondary"
@@ -302,8 +311,35 @@ function DocumentPreview({
     );
   };
 
+  // const MemoizedComponent = memo(function DocPreview({
+  //   zoom,
+  //   documents,
+  //   currentDocIndex,
+  // }) {
+  //   return (
+  //     <DocPreviewContainer>
+  //       <DocViewer
+  //         config={{
+  //           header: {
+  //             overrideComponent: MyHeader,
+  //           },
+  //           pdfVerticalScrollByDefault: true,
+  //           pdfZoom: {
+  //             defaultZoom: zoom,
+  //             zoomJump: 0.1,
+  //           },
+  //         }}
+  //         documents={documents}
+  //         prefetchMethod="GET"
+  //         pluginRenderers={DocViewerRenderers}
+  //         initialActiveDocument={documents[currentDocIndex]}
+  //       />
+  //     </DocPreviewContainer>
+  //   );
+  // });
+
   return (
-    <>
+    <div>
       <DocPreviewContainer>
         <DocViewer
           config={{
@@ -316,10 +352,10 @@ function DocumentPreview({
               zoomJump: 0.1,
             },
           }}
-          documents={docsNormal}
+          documents={documents}
           prefetchMethod="GET"
           pluginRenderers={DocViewerRenderers}
-          initialActiveDocument={docsNormal[currentDocIndex]}
+          initialActiveDocument={documents[currentDocIndex]}
         />
       </DocPreviewContainer>
 
@@ -336,38 +372,40 @@ function DocumentPreview({
             <Icon name="information" />
 
             {openSidebar && (
-              <div>
-                <Text type="heading3">{"Document information"}</Text>
-              </div>
+              // <div>
+              <Text type="heading3">{"Document information"}</Text>
+              // </div>
             )}
           </FlexContainer>
-          {openSidebar && (
-            <>
-              <Accordion
-                title="Document details"
-                isOpen={openDocDetails}
-                toggleAccordion={toggleDocDetailAccordion}
-              >
-                <DocumentDetails
-                  documentDetails={documentDetails[currentDocIndex]}
-                />
-              </Accordion>
-              <Accordion
-                title="Version history"
-                isOpen={openVersionHistory}
-                toggleAccordion={toggleVersionHistoryAccordion}
-              >
-                <StyledHr />
-                <DocumentList
-                  onClickDownload={handleDownload}
-                  data={documentDetails[currentDocIndex].versionHistory}
-                />
-              </Accordion>
-            </>
-          )}
+          <div>
+            {openSidebar && (
+              <>
+                <Accordion
+                  title="Document details"
+                  isOpen={openDocDetails}
+                  toggleAccordion={toggleDocDetailAccordion}
+                >
+                  <DocumentDetails
+                    documentDetails={documentDetails[currentDocIndex]}
+                  />
+                </Accordion>
+                <Accordion
+                  title="Version history"
+                  isOpen={openVersionHistory}
+                  toggleAccordion={toggleVersionHistoryAccordion}
+                >
+                  <StyledHr />
+                  <DocumentList
+                    onClickDownload={handleDownload}
+                    data={documentDetails[currentDocIndex].versionHistory}
+                  />
+                </Accordion>
+              </>
+            )}
+          </div>
         </InfoIconStyles>
       </Drawer>
-    </>
+    </div>
   );
 }
 
