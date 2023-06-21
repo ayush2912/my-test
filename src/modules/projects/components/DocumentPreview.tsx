@@ -94,13 +94,14 @@ const DotDivider = styled.div`
   margin: 0 4px;
 `;
 
-const ChevronIconStyles = styled.div`
+const ChevronIconStyles = styled.div<{ openSidebar: boolean }>`
   background-color: #fff;
   border-radius: 50%;
   display: flex;
   position: absolute;
   top: 50px;
   left: -13px;
+  transform: ${(props) => (props.openSidebar ? `rotate(180deg)` : "")};
   box-shadow: 1px 1px 4px rgba(0, 30, 53, 0.1);
   cursor: pointer;
 `;
@@ -200,11 +201,9 @@ function DocumentPreview({
     }
     const currentFileNo = state.currentFileNo;
 
-    console.log("========sadsad=    ", currentFileNo, state);
-
-    // useEffect(() => {
-    //   setCurrentDocIndex(currentFileNo);
-    // }, [currentFileNo]);
+    useEffect(() => {
+      setCurrentDocIndex(currentFileNo);
+    }, [currentFileNo]);
 
     return (
       <>
@@ -320,12 +319,16 @@ function DocumentPreview({
           documents={docsNormal}
           prefetchMethod="GET"
           pluginRenderers={DocViewerRenderers}
+          initialActiveDocument={docsNormal[currentDocIndex]}
         />
       </DocPreviewContainer>
 
       <Drawer openSidebar={openSidebar}>
         {" "}
-        <ChevronIconStyles onClick={handleChevronClick}>
+        <ChevronIconStyles
+          onClick={handleChevronClick}
+          openSidebar={openSidebar}
+        >
           <Icon name="chevronsLeft" />
         </ChevronIconStyles>
         <InfoIconStyles>
