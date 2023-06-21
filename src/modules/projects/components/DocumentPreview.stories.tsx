@@ -26,7 +26,7 @@ interface IDocumentDetails {
   size: string | null;
   source: string | null;
   registryApprovalDate: Date | string;
-  uri: string | null;
+  uri: string;
   versionHistory: DocumentInfo[];
 }
 

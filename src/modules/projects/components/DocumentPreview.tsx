@@ -48,7 +48,7 @@ interface IDocumentDetails {
   size: string | null;
   source: string | null;
   registryApprovalDate: Date | string;
-  uri: string | null;
+  uri: string;
   versionHistory: DocumentInfo[];
 }
 
@@ -181,7 +181,7 @@ function DocumentPreview({
   const [openSidebar, setOpenSidebar] = useState(false);
   const [openDocDetails, setOpenDocDetails] = useState(false);
   const [openVersionHistory, setOpenVersionHistory] = useState(false);
-  const [documents, setDocuments] = useState<{ uri: string | null }[]>([]);
+  const [documents, setDocuments] = useState<{ uri: string }[]>([]);
   const [currentDocIndex, setCurrentDocIndex] = useState<number>(0);
 
   useEffect(() => {
