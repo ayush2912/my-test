@@ -119,9 +119,13 @@ const LeftPanelHeader = styled.div<{ isCollapsed: boolean }>`
   overflow: hidden;
   background: white;
   border-top: 1px solid #e1e4e8;
-  border-bottom: 1px solid #e1e4e8;
+  border-bottom: ${(props) => (props.isCollapsed ? "0px" : "1px")} solid #e1e4e8;
   border-right: 1px solid #e1e4e8;
-  box-shadow: 2px 0px 4px rgba(0, 0, 0, 0.1);
+  ${(props) =>
+    props.isCollapsed
+      ? " box-shadow: 2px -3px 4px rgba(0, 0, 0, 0.1);"
+      : "box-shadow: 2px 0px 4px rgba(0, 0, 0, 0.1);"};
+
   transition: width 0.3s ease-in-out;
 `;
 const ListItemContainer = styled.div<{ isCollapsed: boolean }>`
