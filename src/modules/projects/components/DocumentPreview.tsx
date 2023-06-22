@@ -2,7 +2,7 @@ import DocViewer, {
   DocViewerRenderers,
   IHeaderOverride,
 } from "@cyntler/react-doc-viewer";
-import { useEffect, useState, memo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import styled from "styled-components";
 
 import DocumentDetails from "./DocumentDetails";
@@ -123,9 +123,33 @@ const Drawer = styled.div<{ openSidebar: boolean }>`
   background: white;
   transition: right 300ms ease-in-out;
   border: 1px solid #e7e7e7;
-  /* overflow-y: scroll; */
+  overflow-y: scroll;
   width: ${({ openSidebar }) => (openSidebar ? "464px" : "72px")};
 `;
+
+type FileFormat =
+  | "png"
+  | "doc"
+  | "docx"
+  | "jpg"
+  | "jpeg"
+  | "ppt"
+  | "pptx"
+  | "xls"
+  | "xlsx"
+  | "pdf";
+const fileFormatIcon: Record<FileFormat, JSX.Element> = {
+  png: <PngFileIcon />,
+  doc: <DocFileIcon />,
+  docx: <DocXFileIcon />,
+  jpg: <JpgFileIcon />,
+  jpeg: <JpgFileIcon />,
+  ppt: <PptFileIcon />,
+  pptx: <PptxFileIcon />,
+  xls: <XlsFileIcon />,
+  xlsx: <XlsxFileIcon />,
+  pdf: <PdfFileIcon />,
+};
 
 function DocumentPreview({
   documentDetails,
@@ -134,41 +158,6 @@ function DocumentPreview({
   documentDetails: IDocumentDetails[];
   handleDownload: () => void;
 }) {
-  type FileFormat =
-    | "png"
-    | "doc"
-    | "docx"
-    | "jpg"
-    | "jpeg"
-    | "ppt"
-    | "pptx"
-    | "xls"
-    | "xlsx"
-    | "pdf";
-  const fileFormatIcon: Record<FileFormat, JSX.Element> = {
-    png: <PngFileIcon />,
-    doc: <DocFileIcon />,
-    docx: <DocXFileIcon />,
-    jpg: <JpgFileIcon />,
-    jpeg: <JpgFileIcon />,
-    ppt: <PptFileIcon />,
-    pptx: <PptxFileIcon />,
-    xls: <XlsFileIcon />,
-    xlsx: <XlsxFileIcon />,
-    pdf: <PdfFileIcon />,
-  };
-
-  // const docsNormal = [
-  //   {
-  //     uri: "https://upload.wikimedia.org/wikipedia/commons/1/1f/Analytics_Quarterly_Review_Q2_2013_%28Research_and_Data%29.pdf",
-  //   },
-  //   {
-  //     uri: "https://upload.wikimedia.org/wikipedia/commons/3/36/Battling_Browser_Bugs_for_Fun_and_Non-Profit_%28LCA_2015%29.pdf",
-  //   },
-  // ];
-
-  // const docsNormal = documentDetails.map((obj) => ({ uri: obj.uri }));
-
   useEffect(() => {
     document.body.style.background = "rgb(241 242 244 / 0.5)";
 
@@ -215,7 +204,11 @@ function DocumentPreview({
     setOpenSidebar(!openSidebar);
   };
 
-  const MyHeader: IHeaderOverride = (state, previousDocument, nextDocument) => {
+  const DocumentPreviewHeader: IHeaderOverride = (
+    state,
+    previousDocument,
+    nextDocument,
+  ) => {
     if (!state.currentDocument || state.config?.header?.disableFileName) {
       return null;
     }
@@ -321,47 +314,24 @@ function DocumentPreview({
     );
   };
 
-  // const MemoizedComponent = memo(function DocPreview({
-  //   zoom,
-  //   documents,
-  //   currentDocIndex,
-  // }) {
-  //   return (
-  //     <DocPreviewContainer>
-  //       <DocViewer
-  //         config={{
-  //           header: {
-  //             overrideComponent: MyHeader,
-  //           },
-  //           pdfVerticalScrollByDefault: true,
-  //           pdfZoom: {
-  //             defaultZoom: zoom,
-  //             zoomJump: 0.1,
-  //           },
-  //         }}
-  //         documents={documents}
-  //         prefetchMethod="GET"
-  //         pluginRenderers={DocViewerRenderers}
-  //         initialActiveDocument={documents[currentDocIndex]}
-  //       />
-  //     </DocPreviewContainer>
-  //   );
-  // });
+  const configMemoObj = useMemo(() => {
+    return {
+      header: {
+        overrideComponent: DocumentPreviewHeader,
+      },
+      pdfVerticalScrollByDefault: true,
+      pdfZoom: {
+        defaultZoom: zoom,
+        zoomJump: 0.1,
+      },
+    };
+  }, [zoom]);
 
   return (
     <div>
       <DocPreviewContainer>
         <DocViewer
-          config={{
-            header: {
-              overrideComponent: MyHeader,
-            },
-            pdfVerticalScrollByDefault: true,
-            pdfZoom: {
-              defaultZoom: zoom,
-              zoomJump: 0.1,
-            },
-          }}
+          config={configMemoObj}
           documents={documents}
           prefetchMethod="GET"
           pluginRenderers={DocViewerRenderers}
@@ -382,9 +352,7 @@ function DocumentPreview({
             <Icon name="information" />
 
             {openSidebar && (
-              // <div>
               <Text type="heading3">{"Document information"}</Text>
-              // </div>
             )}
           </FlexContainer>
           <div>
