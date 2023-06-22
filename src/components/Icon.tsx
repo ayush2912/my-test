@@ -19,6 +19,7 @@ import { ReactComponent as ChevronsUp } from "../assets/icons/arrows/chevrons-up
 import { ReactComponent as Discontinued } from "../assets/icons/feedback/discontinued.svg";
 import { ReactComponent as ErrorIcon } from "../assets/icons/feedback/error.svg";
 import { ReactComponent as InProgressIcon } from "../assets/icons/feedback/in-progress.svg";
+import { ReactComponent as LoaderIcon } from "../assets/icons/feedback/loader.svg";
 import { ReactComponent as NotStartedIcon } from "../assets/icons/feedback/not-started.svg";
 import { ReactComponent as SuccessIcon } from "../assets/icons/feedback/success.svg";
 import { ReactComponent as WaitingFeedBackIcon } from "../assets/icons/feedback/waiting.svg";
@@ -137,6 +138,7 @@ const icons = {
   discontinued: Discontinued,
   error: ErrorIcon,
   waitingFeedback: WaitingFeedBackIcon,
+  loading: LoaderIcon,
   // alertNotication: AlertNoticationIcon,
   alert: AlertIcon,
   calendarTime: CalendarTimeIcon,

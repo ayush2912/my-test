@@ -3,7 +3,7 @@ import DocViewer, {
   IHeaderOverride,
 } from "@cyntler/react-doc-viewer";
 import { useEffect, useState, useMemo } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 import DocumentDetails from "./DocumentDetails";
 import { DocumentList } from "./DocumentList";
@@ -24,6 +24,7 @@ import { ReactComponent as FileIcon } from "../../../assets/icons/generic/file.s
 import { ReactComponent as FullScreenIcon } from "../../../assets/icons/generic/full-screen.svg";
 import { ReactComponent as ZoomInIcon } from "../../../assets/icons/generic/zoom-in.svg";
 import { ReactComponent as ZoomOutIcon } from "../../../assets/icons/generic/zoom-out.svg";
+import docLoadError from "../../../assets/images/EmptyDocument.png";
 import Button from "../../../components/Button";
 import Icon from "../../../components/Icon";
 import Text from "../../../components/Text";
@@ -112,6 +113,36 @@ const InfoIconStyles = styled.div`
 
 const DocPreviewContainer = styled.div`
   width: 90%;
+`;
+
+const spinAnimation = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+`;
+
+const LoaderContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+`;
+
+const FlexColumnContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+const LoadingIconContainer = styled.div`
+  animation: ${spinAnimation} 1s linear infinite;
 `;
 
 const Drawer = styled.div<{ openSidebar: boolean }>`
@@ -314,10 +345,65 @@ function DocumentPreview({
     );
   };
 
+  const DocumentRenderer = () => {
+    const [showText, setShowText] = useState(false);
+
+    useEffect(() => {
+      const timer = setTimeout(() => {
+        setShowText(true);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }, []);
+
+    return (
+      <LoaderContainer>
+        <LoadingIconContainer>
+          {" "}
+          <Icon name="loading" />
+        </LoadingIconContainer>
+        <br />
+        {showText && (
+          <div>
+            <Text type="caption" color="subdued">
+              {"This is taking some time... Hang on"}
+            </Text>
+
+            <Text type="caption" color="subdued">
+              {"while this finishes loading"}
+            </Text>
+          </div>
+        )}
+      </LoaderContainer>
+    );
+  };
+
+  const EmptyState = () => {
+    return (
+      <LoaderContainer>
+        {" "}
+        <img src={docLoadError} />
+        <FlexColumnContainer>
+          <Text type="heading3" color="default">
+            {"Document preview unavailable"}
+          </Text>
+          <Text type="body" color="subdued">
+            {"Try downloading the document to view"}
+          </Text>
+        </FlexColumnContainer>
+      </LoaderContainer>
+    );
+  };
+
   const configMemoObj = useMemo(() => {
     return {
       header: {
         overrideComponent: DocumentPreviewHeader,
+      },
+      loadingRenderer: {
+        overrideComponent: DocumentRenderer,
+      },
+      noRenderer: {
+        overrideComponent: EmptyState,
       },
       pdfVerticalScrollByDefault: true,
       pdfZoom: {
