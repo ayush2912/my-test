@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import Icon from "./Icon";
+import Icon, { IconNameType } from "./Icon";
 import Text from "./Text";
 
 type ToasterType = "success" | "warning" | "error" | "information";
@@ -41,12 +41,12 @@ const Toaster = ({ title, subTitle, type, onDismiss }: IToasterProps) => {
     information: "#8992A3",
   }[type];
 
-  const iconName: string = {
+  const iconName = {
     success: "toasterSuccess",
     warning: "toasterWarning",
     error: "toasterError",
     information: "toasterInformation",
-  }[type];
+  }[type] as IconNameType;
 
   return (
     <ToasterContainer style={{ backgroundColor: bgColor }}>
