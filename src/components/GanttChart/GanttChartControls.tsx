@@ -1,3 +1,4 @@
+import { useState } from "react";
 import styled from "styled-components";
 
 import { TemporalView } from "./Calendar/Calendar.types";
@@ -7,6 +8,7 @@ import Button from "../Button";
 import Dropdown from "../Dropdown";
 import Icon from "../Icon";
 import Select from "../Select";
+import Toaster from "../Toaster";
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -41,7 +43,14 @@ export const GanttChartControls = ({
   onTodayButtonClick: () => void;
 }) => {
   const { view, changeView, temporalViewOptions } = useGanttChartControls();
-
+  const [showToaster, setShowToaster] = useState(false);
+  const copyUrl = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setShowToaster(true);
+    setTimeout(() => {
+      setShowToaster(false);
+    }, 3000);
+  };
   const handleDropdownChange = (value: string) => {
     changeView(value as TemporalView);
   };
@@ -82,15 +91,21 @@ export const GanttChartControls = ({
         <Button
           size="large"
           type="secondary"
-          onClick={() => {
-            navigator.clipboard.writeText(window.location.href);
-          }}
+          onClick={copyUrl}
           isIconButton
           lightBorderColor
         >
           <Icon name="linkCopy" />
         </Button>
       </div>
+
+      {showToaster && (
+        <Toaster
+          title="Copied Page URL"
+          type="success"
+          onDismiss={() => setShowToaster(false)}
+        />
+      )}
     </ButtonContainer>
   );
 };
