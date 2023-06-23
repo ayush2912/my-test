@@ -41,7 +41,7 @@ const documentDetailsData: IDocumentDetails[] = [
     size: "1.1 MB",
     source: "Consulant",
     registryApprovalDate: new Date(),
-    uri: "https://upload.wikimedia.org/wikipedia/commons/1/1f/Analytics_Quarterly_Review_Q2_2013_%28Research_and_Data%29.pdf",
+    uri: "https://dev-documents.offsetmax.digital/documents/648686da6902cd12fa662588/download",
     versionHistory: [
       {
         fileFormat: "pdf",
@@ -71,7 +71,7 @@ const documentDetailsData: IDocumentDetails[] = [
     size: "2.3 MB",
     source: "Client",
     registryApprovalDate: new Date(),
-    uri: "https://upload.wikimedia.org/wikipedia/commons/3/36/Battling_Browser_Bugs_for_Fun_and_Non-Profit_%28LCA_2015%29.pdf",
+    uri: "https://dev-documents.offsetmax.digital/documents/648686da6902cd12fa662586/download",
     versionHistory: [
       {
         fileFormat: "pdf",

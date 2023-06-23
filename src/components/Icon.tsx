@@ -19,6 +19,7 @@ import { ReactComponent as ChevronsUp } from "../assets/icons/arrows/chevrons-up
 import { ReactComponent as Discontinued } from "../assets/icons/feedback/discontinued.svg";
 import { ReactComponent as ErrorIcon } from "../assets/icons/feedback/error.svg";
 import { ReactComponent as InProgressIcon } from "../assets/icons/feedback/in-progress.svg";
+import { ReactComponent as LoaderIcon } from "../assets/icons/feedback/loader.svg";
 import { ReactComponent as NotStartedIcon } from "../assets/icons/feedback/not-started.svg";
 import { ReactComponent as SuccessIcon } from "../assets/icons/feedback/success.svg";
 import { ReactComponent as WaitingFeedBackIcon } from "../assets/icons/feedback/waiting.svg";
@@ -49,6 +50,7 @@ import { ReactComponent as EyeIcon } from "../assets/icons/generic/eyeIcon.svg";
 import { ReactComponent as FilePdfIcon } from "../assets/icons/generic/file-pdf.svg";
 import { ReactComponent as FileIcon } from "../assets/icons/generic/file.svg";
 import { ReactComponent as FiltersIcon } from "../assets/icons/generic/filters.svg";
+import { ReactComponent as FullScreenIcon } from "../assets/icons/generic/full-screen.svg";
 import { ReactComponent as HomeIcon } from "../assets/icons/generic/home.svg";
 import { ReactComponent as InformationIcon } from "../assets/icons/generic/information.svg";
 import { ReactComponent as LinkCopy } from "../assets/icons/generic/link-copy.svg";
@@ -145,6 +147,7 @@ const icons = {
   discontinued: Discontinued,
   error: ErrorIcon,
   waitingFeedback: WaitingFeedBackIcon,
+  loading: LoaderIcon,
   // alertNotication: AlertNoticationIcon,
   alert: AlertIcon,
   calendarTime: CalendarTimeIcon,
@@ -178,6 +181,7 @@ const icons = {
   projects: ProjectsIcon,
   userManagement: UserManagementIcon,
   alarmClock: AlarmClockIcon,
+  fullScreen: FullScreenIcon,
   toasterSuccess: ToasterSuccessIcon,
   toasterError: ToasterErrorIcon,
   toasterWarning: ToasterWarningIcon,
