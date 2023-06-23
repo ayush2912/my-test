@@ -29,7 +29,7 @@ const Tooltip: FunctionComponent<TooltipProps> = ({ text, children }) => {
   );
   const [showTooltip, setShowTooltip] = useState(false);
   const { styles, attributes } = usePopper(referenceElement, popperElement, {
-    placement: "top",
+    placement: "top-end",
     modifiers: [
       {
         name: "offset",
