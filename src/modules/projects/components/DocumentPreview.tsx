@@ -2,7 +2,7 @@ import DocViewer, {
   DocViewerRenderers,
   IHeaderOverride,
 } from "@cyntler/react-doc-viewer";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import styled from "styled-components";
 
 import DocumentDetails from "./DocumentDetails";
@@ -29,7 +29,7 @@ import Icon from "../../../components/Icon";
 import Text from "../../../components/Text";
 import { convertToDateTimeFormat } from "../../../utils/dateTimeFormatter";
 
-interface DocumentInfo {
+export interface DocumentInfo {
   fileFormat: string;
   date: string;
   source?: string;
@@ -48,7 +48,7 @@ interface IDocumentDetails {
   size: string | null;
   source: string | null;
   registryApprovalDate: Date | string;
-  uri: string | null;
+  uri: string;
   versionHistory: DocumentInfo[];
 }
 
@@ -94,13 +94,14 @@ const DotDivider = styled.div`
   margin: 0 4px;
 `;
 
-const ChevronIconStyles = styled.div`
+const ChevronIconStyles = styled.div<{ openSidebar: boolean }>`
   background-color: #fff;
   border-radius: 50%;
   display: flex;
   position: absolute;
   top: 50px;
   left: -13px;
+  transform: ${(props) => (props.openSidebar ? `rotate(180deg)` : "")};
   box-shadow: 1px 1px 4px rgba(0, 30, 53, 0.1);
   cursor: pointer;
 `;
@@ -122,8 +123,33 @@ const Drawer = styled.div<{ openSidebar: boolean }>`
   background: white;
   transition: right 300ms ease-in-out;
   border: 1px solid #e7e7e7;
+  overflow-y: scroll;
   width: ${({ openSidebar }) => (openSidebar ? "464px" : "72px")};
 `;
+
+type FileFormat =
+  | "png"
+  | "doc"
+  | "docx"
+  | "jpg"
+  | "jpeg"
+  | "ppt"
+  | "pptx"
+  | "xls"
+  | "xlsx"
+  | "pdf";
+const fileFormatIcon: Record<FileFormat, JSX.Element> = {
+  png: <PngFileIcon />,
+  doc: <DocFileIcon />,
+  docx: <DocXFileIcon />,
+  jpg: <JpgFileIcon />,
+  jpeg: <JpgFileIcon />,
+  ppt: <PptFileIcon />,
+  pptx: <PptxFileIcon />,
+  xls: <XlsFileIcon />,
+  xlsx: <XlsxFileIcon />,
+  pdf: <PdfFileIcon />,
+};
 
 function DocumentPreview({
   documentDetails,
@@ -132,41 +158,25 @@ function DocumentPreview({
   documentDetails: IDocumentDetails[];
   handleDownload: () => void;
 }) {
-  const fileFormatIcon = {
-    png: <PngFileIcon />,
-    doc: <DocFileIcon />,
-    docx: <DocXFileIcon />,
-    jpg: <JpgFileIcon />,
-    jpeg: <JpgFileIcon />,
-    ppt: <PptFileIcon />,
-    pptx: <PptxFileIcon />,
-    xls: <XlsFileIcon />,
-    xlsx: <XlsxFileIcon />,
-    pdf: <PdfFileIcon />,
-  };
+  useEffect(() => {
+    document.body.style.background = "rgb(241 242 244 / 0.5)";
 
-  const docsNormal = [
-    {
-      uri: "https://upload.wikimedia.org/wikipedia/commons/1/1f/Analytics_Quarterly_Review_Q2_2013_%28Research_and_Data%29.pdf",
-    },
-    {
-      uri: "https://upload.wikimedia.org/wikipedia/commons/3/36/Battling_Browser_Bugs_for_Fun_and_Non-Profit_%28LCA_2015%29.pdf",
-    },
-  ];
-
-  // const docsNormal = documentDetails.map((obj) => ({ uri: obj.uri }));
+    return () => {
+      document.body.style.background = "white";
+    };
+  });
 
   const [zoom, setZoom] = useState(1);
   const [openSidebar, setOpenSidebar] = useState(false);
   const [openDocDetails, setOpenDocDetails] = useState(false);
   const [openVersionHistory, setOpenVersionHistory] = useState(false);
-  const [documents, setDocuments] = useState([]);
+  const [documents, setDocuments] = useState<{ uri: string }[]>([]);
   const [currentDocIndex, setCurrentDocIndex] = useState<number>(0);
 
-  // useEffect(() => {
-  //   const docsNormal = documentDetails.map((obj) => ({ uri: obj.uri }));
-  //   setDocuments(docsNormal);
-  // }, []);
+  useEffect(() => {
+    const docsNormal = documentDetails.map((obj) => ({ uri: obj.uri }));
+    setDocuments(docsNormal);
+  }, []);
 
   const toggleDocDetailAccordion = () => {
     setOpenDocDetails(!openDocDetails);
@@ -194,17 +204,20 @@ function DocumentPreview({
     setOpenSidebar(!openSidebar);
   };
 
-  const MyHeader: IHeaderOverride = (state, previousDocument, nextDocument) => {
+  const DocumentPreviewHeader: IHeaderOverride = (
+    state,
+    previousDocument,
+    nextDocument,
+  ) => {
     if (!state.currentDocument || state.config?.header?.disableFileName) {
       return null;
     }
     const currentFileNo = state.currentFileNo;
+    const currentFormat = documentDetails[currentFileNo].fileFormat;
 
-    console.log("========sadsad=    ", currentFileNo, state);
-
-    // useEffect(() => {
-    //   setCurrentDocIndex(currentFileNo);
-    // }, [currentFileNo]);
+    useEffect(() => {
+      setCurrentDocIndex(currentFileNo);
+    }, [currentFileNo]);
 
     return (
       <>
@@ -212,9 +225,7 @@ function DocumentPreview({
           <FlexContainer openSidebar={false}>
             <DocInfoContainer>
               <div>
-                {fileFormatIcon[documentDetails[currentFileNo].fileFormat] || (
-                  <FileIcon />
-                )}
+                {fileFormatIcon[currentFormat as FileFormat] || <FileIcon />}
               </div>
               <div>
                 <Text type="bodyBold" color="default">
@@ -276,7 +287,7 @@ function DocumentPreview({
                 <FullScreenIcon />
               </Button>
               <Text type="body" color="subdued">
-                {`Document 1/50`}
+                {`Document ${currentFileNo + 1}/${state.documents.length}`}
               </Text>
               <Button
                 type="secondary"
@@ -303,29 +314,37 @@ function DocumentPreview({
     );
   };
 
+  const configMemoObj = useMemo(() => {
+    return {
+      header: {
+        overrideComponent: DocumentPreviewHeader,
+      },
+      pdfVerticalScrollByDefault: true,
+      pdfZoom: {
+        defaultZoom: zoom,
+        zoomJump: 0.1,
+      },
+    };
+  }, [zoom]);
+
   return (
-    <>
+    <div>
       <DocPreviewContainer>
         <DocViewer
-          config={{
-            header: {
-              overrideComponent: MyHeader,
-            },
-            pdfVerticalScrollByDefault: true,
-            pdfZoom: {
-              defaultZoom: zoom,
-              zoomJump: 0.1,
-            },
-          }}
-          documents={docsNormal}
+          config={configMemoObj}
+          documents={documents}
           prefetchMethod="GET"
           pluginRenderers={DocViewerRenderers}
+          initialActiveDocument={documents[currentDocIndex]}
         />
       </DocPreviewContainer>
 
       <Drawer openSidebar={openSidebar}>
         {" "}
-        <ChevronIconStyles onClick={handleChevronClick}>
+        <ChevronIconStyles
+          onClick={handleChevronClick}
+          openSidebar={openSidebar}
+        >
           <Icon name="chevronsLeft" />
         </ChevronIconStyles>
         <InfoIconStyles>
@@ -333,38 +352,38 @@ function DocumentPreview({
             <Icon name="information" />
 
             {openSidebar && (
-              <div>
-                <Text type="heading3">{"Document information"}</Text>
-              </div>
+              <Text type="heading3">{"Document information"}</Text>
             )}
           </FlexContainer>
-          {openSidebar && (
-            <>
-              <Accordion
-                title="Document details"
-                isOpen={openDocDetails}
-                toggleAccordion={toggleDocDetailAccordion}
-              >
-                <DocumentDetails
-                  documentDetails={documentDetails[currentDocIndex]}
-                />
-              </Accordion>
-              <Accordion
-                title="Version history"
-                isOpen={openVersionHistory}
-                toggleAccordion={toggleVersionHistoryAccordion}
-              >
-                <StyledHr />
-                <DocumentList
-                  onClickDownload={handleDownload}
-                  data={documentDetails[currentDocIndex].versionHistory}
-                />
-              </Accordion>
-            </>
-          )}
+          <div>
+            {openSidebar && (
+              <>
+                <Accordion
+                  title="Document details"
+                  isOpen={openDocDetails}
+                  toggleAccordion={toggleDocDetailAccordion}
+                >
+                  <DocumentDetails
+                    documentDetails={documentDetails[currentDocIndex]}
+                  />
+                </Accordion>
+                <Accordion
+                  title="Version history"
+                  isOpen={openVersionHistory}
+                  toggleAccordion={toggleVersionHistoryAccordion}
+                >
+                  <StyledHr />
+                  <DocumentList
+                    onClickDownload={handleDownload}
+                    data={documentDetails[currentDocIndex].versionHistory}
+                  />
+                </Accordion>
+              </>
+            )}
+          </div>
         </InfoIconStyles>
       </Drawer>
-    </>
+    </div>
   );
 }
 

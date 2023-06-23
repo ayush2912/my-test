@@ -1,5 +1,6 @@
 import styled from "styled-components";
 
+import { DocumentInfo } from "./DocumentPreview";
 import Text from "../../../components/Text";
 import { convertToMonthNameFormat } from "../../../utils/dateTimeFormatter";
 
@@ -9,10 +10,12 @@ export interface IDocumentDetails {
   engagement: string | null;
   documentName: string | null;
   state: string | null;
-  fileFormat: string | null;
+  fileFormat: string;
   size: string | null;
   source: string | null;
-  registryApprovalDate: Date | null;
+  registryApprovalDate: Date | string;
+  uri: string | null;
+  versionHistory: DocumentInfo[];
 }
 
 const DocDetailParameter = styled.div`

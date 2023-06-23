@@ -1,13 +1,11 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryFn } from "@storybook/react";
 
 import DocumentPreview from "./DocumentPreview";
 
-const meta: Meta<typeof DocumentPreview> = {
+export default {
+  title: "modules/projects/components/DocumentPreview",
   component: DocumentPreview,
-};
-
-export default meta;
-type Story = StoryObj<typeof DocumentPreview>;
+} as Meta;
 
 interface DocumentInfo {
   fileFormat: string;
@@ -28,7 +26,7 @@ interface IDocumentDetails {
   size: string | null;
   source: string | null;
   registryApprovalDate: Date | string;
-  uri: string | null;
+  uri: string;
   versionHistory: DocumentInfo[];
 }
 
@@ -37,7 +35,7 @@ const documentDetailsData: IDocumentDetails[] = [
     name: "Project for Conservation",
     projectId: 12345,
     engagement: "Feasibility Study",
-    documentName: "Detailed project report",
+    documentName: "Research & Data",
     state: "Active",
     fileFormat: "pdf",
     size: "1.1 MB",
@@ -67,7 +65,7 @@ const documentDetailsData: IDocumentDetails[] = [
     name: "Test Project",
     projectId: 12345,
     engagement: "Carbon Shop",
-    documentName: "Test Doc",
+    documentName: "Tales from Trenches",
     state: "Active",
     fileFormat: "pdf",
     size: "2.3 MB",
@@ -99,11 +97,11 @@ const handleDownload = () => {
   console.log("DOWNLOADING !!!");
 };
 
-export const Default: Story = {
-  render: () => (
-    <DocumentPreview
-      documentDetails={documentDetailsData}
-      handleDownload={handleDownload}
-    />
-  ),
+const Template: StoryFn<{
+  documentDetails: IDocumentDetails[];
+}> = (args) => <DocumentPreview {...args} handleDownload={handleDownload} />;
+
+export const Default = Template.bind({});
+Default.args = {
+  documentDetails: documentDetailsData,
 };
