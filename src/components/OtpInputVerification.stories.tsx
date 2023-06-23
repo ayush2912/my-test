@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import OtpInputVerification from "./OtpInputVerification";
 import Text from "./Text";
@@ -8,10 +8,6 @@ export default { component: OtpInputVerification };
 export const DefaultOtpInput = {
   render: () => {
     const [otp, setOtp] = useState("");
-    useEffect(() => {
-      alert("your otp is 123456");
-    }, []);
-
     return (
       <>
         <OtpInputVerification
