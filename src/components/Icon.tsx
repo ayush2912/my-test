@@ -50,6 +50,7 @@ import { ReactComponent as EyeIcon } from "../assets/icons/generic/eyeIcon.svg";
 import { ReactComponent as FilePdfIcon } from "../assets/icons/generic/file-pdf.svg";
 import { ReactComponent as FileIcon } from "../assets/icons/generic/file.svg";
 import { ReactComponent as FiltersIcon } from "../assets/icons/generic/filters.svg";
+import { ReactComponent as FullScreenIcon } from "../assets/icons/generic/full-screen.svg";
 import { ReactComponent as HomeIcon } from "../assets/icons/generic/home.svg";
 import { ReactComponent as InformationIcon } from "../assets/icons/generic/information.svg";
 import { ReactComponent as LinkCopy } from "../assets/icons/generic/link-copy.svg";
@@ -70,7 +71,6 @@ import { ReactComponent as WatchIcon } from "../assets/icons/generic/watch.svg";
 import { ReactComponent as BidsIcon } from "../assets/icons/menu/bids.svg";
 import { ReactComponent as ProjectsIcon } from "../assets/icons/menu/projects.svg";
 import { ReactComponent as UserManagementIcon } from "../assets/icons/menu/user-management.svg";
-
 interface IconProps {
   size: "xsmall" | "small" | "big";
   color?: string;
@@ -172,6 +172,7 @@ const icons = {
   projects: ProjectsIcon,
   userManagement: UserManagementIcon,
   alarmClock: AlarmClockIcon,
+  fullScreen: FullScreenIcon,
 };
 export const IconNames = Object.keys(icons) as Array<IconNameType>;
 export type IconNameType = keyof typeof icons;

@@ -21,7 +21,6 @@ import { ReactComponent as XlsFileIcon } from "../../../assets/icons/fileTypes/x
 import { ReactComponent as XlsxFileIcon } from "../../../assets/icons/fileTypes/xlsxFileIcon.svg";
 import { ReactComponent as DownloadIcon } from "../../../assets/icons/generic/download.svg";
 import { ReactComponent as FileIcon } from "../../../assets/icons/generic/file.svg";
-import { ReactComponent as FullScreenIcon } from "../../../assets/icons/generic/full-screen.svg";
 import { ReactComponent as ZoomInIcon } from "../../../assets/icons/generic/zoom-in.svg";
 import { ReactComponent as ZoomOutIcon } from "../../../assets/icons/generic/zoom-out.svg";
 import docLoadError from "../../../assets/images/EmptyDocument.png";
@@ -108,7 +107,7 @@ const ChevronIconStyles = styled.div<{ openSidebar: boolean }>`
 `;
 
 const InfoIconStyles = styled.div`
-  margin: 50px 0 0 23px;
+  padding: 50px 24px 0 24px;
 `;
 
 const DocPreviewContainer = styled.div`
@@ -156,6 +155,7 @@ const Drawer = styled.div<{ openSidebar: boolean }>`
   border: 1px solid #e7e7e7;
   overflow-y: scroll;
   width: ${({ openSidebar }) => (openSidebar ? "464px" : "72px")};
+  box-shadow: 0px 8px 24px -6px rgba(0, 0, 0, 0.16);
 `;
 
 type FileFormat =
@@ -252,95 +252,97 @@ function DocumentPreview({
 
     return (
       <>
-        <HeaderContainer>
-          <FlexContainer openSidebar={false}>
-            <DocInfoContainer>
-              <div>
-                {fileFormatIcon[currentFormat as FileFormat] || <FileIcon />}
-              </div>
-              <div>
-                <Text type="bodyBold" color="default">
-                  {documentDetails[currentFileNo].documentName}
-                </Text>
-                <FlexContainer openSidebar={false}>
-                  <Text type="caption" color="subdued">
-                    {documentDetails[currentFileNo].size}
+        <div>
+          <HeaderContainer>
+            <FlexContainer openSidebar={false}>
+              <DocInfoContainer>
+                <div>
+                  {fileFormatIcon[currentFormat as FileFormat] || <FileIcon />}
+                </div>
+                <div>
+                  <Text type="bodyBold" color="default">
+                    {documentDetails[currentFileNo].documentName}
                   </Text>
-                  <DotDivider />
-                  <Text type="caption" color="subdued">
-                    {convertToDateTimeFormat(
-                      documentDetails[currentFileNo].registryApprovalDate,
-                    )}
-                  </Text>
-                  <DotDivider />
-                  <Text type="caption" color="subdued">
-                    {documentDetails[currentFileNo].source}
-                  </Text>
-                </FlexContainer>
-              </div>
-            </DocInfoContainer>
+                  <FlexContainer openSidebar={false}>
+                    <Text type="caption" color="subdued">
+                      {documentDetails[currentFileNo].size}
+                    </Text>
+                    <DotDivider />
+                    <Text type="caption" color="subdued">
+                      {convertToDateTimeFormat(
+                        documentDetails[currentFileNo].registryApprovalDate,
+                      )}
+                    </Text>
+                    <DotDivider />
+                    <Text type="caption" color="subdued">
+                      {documentDetails[currentFileNo].source}
+                    </Text>
+                  </FlexContainer>
+                </div>
+              </DocInfoContainer>
 
-            <FlexContainerDocActions>
-              <Button
-                type="secondary"
-                isIconButton={true}
-                lightBorderColor
-                size="large"
-                onClick={handleDownload}
-              >
-                <DownloadIcon />
-              </Button>
-              <Button
-                type="secondary"
-                isIconButton={true}
-                lightBorderColor
-                size="large"
-                onClick={onClickZoomOut}
-              >
-                <ZoomOutIcon />
-              </Button>
-              <Button
-                type="secondary"
-                isIconButton={true}
-                lightBorderColor
-                size="large"
-                onClick={onClickZoomIn}
-              >
-                <ZoomInIcon />
-              </Button>
-              <Button
-                type="secondary"
-                isIconButton={true}
-                lightBorderColor
-                size="large"
-                onClick={onClickFit}
-              >
-                <FullScreenIcon />
-              </Button>
-              <Text type="body" color="subdued">
-                {`Document ${currentFileNo + 1}/${state.documents.length}`}
-              </Text>
-              <Button
-                type="secondary"
-                isIconButton={true}
-                lightBorderColor
-                size="large"
-                onClick={previousDocument}
-              >
-                <ArrowLeftIcon />
-              </Button>
-              <Button
-                type="secondary"
-                isIconButton={true}
-                lightBorderColor
-                size="small"
-                onClick={nextDocument}
-              >
-                <ArrowRightIcon />
-              </Button>
-            </FlexContainerDocActions>
-          </FlexContainer>
-        </HeaderContainer>
+              <FlexContainerDocActions>
+                <Button
+                  type="secondary"
+                  isIconButton={true}
+                  lightBorderColor
+                  size="large"
+                  onClick={handleDownload}
+                >
+                  <DownloadIcon />
+                </Button>
+                <Button
+                  type="secondary"
+                  isIconButton={true}
+                  lightBorderColor
+                  size="large"
+                  onClick={onClickZoomOut}
+                >
+                  <ZoomOutIcon />
+                </Button>
+                <Button
+                  type="secondary"
+                  isIconButton={true}
+                  lightBorderColor
+                  size="large"
+                  onClick={onClickZoomIn}
+                >
+                  <ZoomInIcon />
+                </Button>
+                <Button
+                  type="secondary"
+                  isIconButton={true}
+                  lightBorderColor
+                  size="small"
+                  onClick={onClickFit}
+                >
+                  <Icon name="fullScreen" />
+                </Button>
+                <Text type="body" color="subdued">
+                  {`Document ${currentFileNo + 1}/${state.documents.length}`}
+                </Text>
+                <Button
+                  type="secondary"
+                  isIconButton={true}
+                  lightBorderColor
+                  size="large"
+                  onClick={previousDocument}
+                >
+                  <ArrowLeftIcon />
+                </Button>
+                <Button
+                  type="secondary"
+                  isIconButton={true}
+                  lightBorderColor
+                  size="small"
+                  onClick={nextDocument}
+                >
+                  <ArrowRightIcon />
+                </Button>
+              </FlexContainerDocActions>
+            </FlexContainer>
+          </HeaderContainer>
+        </div>
       </>
     );
   };
@@ -415,15 +417,17 @@ function DocumentPreview({
 
   return (
     <div>
-      <DocPreviewContainer>
-        <DocViewer
-          config={configMemoObj}
-          documents={documents}
-          prefetchMethod="GET"
-          pluginRenderers={DocViewerRenderers}
-          initialActiveDocument={documents[currentDocIndex]}
-        />
-      </DocPreviewContainer>
+      <div>
+        <DocPreviewContainer>
+          <DocViewer
+            config={configMemoObj}
+            documents={documents}
+            prefetchMethod="GET"
+            pluginRenderers={DocViewerRenderers}
+            initialActiveDocument={documents[currentDocIndex]}
+          />
+        </DocPreviewContainer>
+      </div>
 
       <Drawer openSidebar={openSidebar}>
         {" "}
