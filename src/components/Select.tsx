@@ -103,6 +103,7 @@ const Select = ({
   placeholder,
 }: {
   isPrimary?: boolean;
+  disabled?: boolean;
   selected: string;
   options?: ISelectOption[];
   placeholder?: string;

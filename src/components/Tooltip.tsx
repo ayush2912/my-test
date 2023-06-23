@@ -1,4 +1,5 @@
-import { FunctionComponent, ReactNode } from "react";
+import { FunctionComponent, ReactNode, useState } from "react";
+import { usePopper } from "react-popper";
 import styled from "styled-components";
 
 import Text from "./Text";
@@ -8,13 +9,7 @@ interface TooltipProps {
   children: ReactNode;
 }
 
-const TooltipContainer = styled.div`
-  position: relative;
-  display: flex;
-`;
-
-const TooltipCard = styled.span`
-  visibility: hidden;
+const TooltipContent = styled.div`
   background-color: ${(props) => props.theme.colors.background.card};
   box-shadow: ${(props) => props.theme.shadow.sm};
 
@@ -23,31 +18,50 @@ const TooltipCard = styled.span`
 
   border-radius: 8px;
   padding: 4px 8px;
-
-  position: absolute;
-  z-index: 1;
-
-  bottom: 125%;
-  left: 50%;
-  transform: translateX(-50%);
-
-  opacity: 0;
-  transition: opacity 0.3s;
-
-  ${TooltipContainer}:hover & {
-    visibility: visible;
-    opacity: 1;
-  }
+  height: 24px;
 `;
 
 const Tooltip: FunctionComponent<TooltipProps> = ({ text, children }) => {
+  const [referenceElement, setReferenceElement] =
+    useState<HTMLDivElement | null>(null);
+  const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(
+    null,
+  );
+  const [showTooltip, setShowTooltip] = useState(false);
+  const { styles, attributes } = usePopper(referenceElement, popperElement, {
+    placement: "top",
+    modifiers: [
+      {
+        name: "offset",
+        options: {
+          offset: [0, 4],
+        },
+      },
+    ],
+  });
+
   return (
-    <TooltipContainer>
-      {children}
-      <TooltipCard>
-        <Text type="smallTextBold">{text}</Text>
-      </TooltipCard>
-    </TooltipContainer>
+    <>
+      <div
+        ref={setReferenceElement}
+        onMouseEnter={() => setShowTooltip(true)}
+        onMouseLeave={() => {
+          setShowTooltip(false);
+        }}
+      >
+        {children}
+      </div>
+
+      {showTooltip && (
+        <TooltipContent
+          ref={setPopperElement}
+          style={styles.popper}
+          {...attributes.popper}
+        >
+          <Text type="smallTextBold">{text}</Text>
+        </TooltipContent>
+      )}
+    </>
   );
 };
 
