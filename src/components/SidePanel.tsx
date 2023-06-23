@@ -21,6 +21,7 @@ export const Drawer = styled.div<{ isOn: boolean }>`
   width: 672px;
   background: white;
   transition: right 300ms ease-in-out;
+  border: 1px solid green;
 
   ${({ isOn }) =>
     !isOn &&
@@ -40,9 +41,9 @@ export const SidePanel = ({
 }) => {
   return (
     <>
-      <div onClick={onClose}>
+      {/* <div onClick={onClose}>
         <Overlay isOpen={isOn} />
-      </div>
+      </div> */}
       <Drawer isOn={isOn}>{children}</Drawer>
     </>
   );

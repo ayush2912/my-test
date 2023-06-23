@@ -1,3 +1,4 @@
+import { useState } from "react";
 import styled from "styled-components";
 
 import { TemporalView } from "./Calendar/Calendar.types";
@@ -7,7 +8,7 @@ import Button from "../Button";
 import Dropdown from "../Dropdown";
 import Icon from "../Icon";
 import Select from "../Select";
-import Text from "../Text";
+import Toaster from "../Toaster";
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -31,25 +32,27 @@ const DropDownBox = styled.div`
   width: 121px;
 `;
 export const GanttChartControls = ({
+  selectedEngagementId,
+  engagementOptions,
+  onSelectEngagement,
   onTodayButtonClick,
 }: {
+  selectedEngagementId: string;
+  engagementOptions: { label: string; value: string }[];
+  onSelectEngagement: (engagementId: string) => void;
   onTodayButtonClick: () => void;
 }) => {
-  const {
-    view,
-    changeView,
-    temporalViewOptions,
-    engagementOptions,
-    selectedEngagement,
-    setSelectedEngagement,
-  } = useGanttChartControls();
-
+  const { view, changeView, temporalViewOptions } = useGanttChartControls();
+  const [showToaster, setShowToaster] = useState(false);
+  const copyUrl = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setShowToaster(true);
+    setTimeout(() => {
+      setShowToaster(false);
+    }, 3000);
+  };
   const handleDropdownChange = (value: string) => {
     changeView(value as TemporalView);
-  };
-
-  const handleSelectEngagement = (engagementId: string) => {
-    setSelectedEngagement(engagementId);
   };
 
   return (
@@ -57,11 +60,11 @@ export const GanttChartControls = ({
       <div>
         <SelectBox>
           <Select
-            selected={selectedEngagement.id}
+            selected={selectedEngagementId}
             isPrimary={false}
             options={engagementOptions}
             placeholder="Select an engagement"
-            onSelect={handleSelectEngagement}
+            onSelect={onSelectEngagement}
           />
         </SelectBox>
         <GanttChartLengend />
@@ -88,15 +91,21 @@ export const GanttChartControls = ({
         <Button
           size="large"
           type="secondary"
-          onClick={() => {
-            navigator.clipboard.writeText(window.location.href);
-          }}
+          onClick={copyUrl}
           isIconButton
           lightBorderColor
         >
           <Icon name="linkCopy" />
         </Button>
       </div>
+
+      {showToaster && (
+        <Toaster
+          title="Copied Page URL"
+          type="success"
+          onDismiss={() => setShowToaster(false)}
+        />
+      )}
     </ButtonContainer>
   );
 };

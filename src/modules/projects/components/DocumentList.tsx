@@ -9,7 +9,7 @@ export const DocumentList = ({
 }: {
   data: IDocumentList;
   onClickDownload: (id: string, name: string, extension: string) => void;
-  onGetInfo: (id: string) => void;
+  onGetInfo?: (id: string) => void;
 }) => {
   return (
     <>
