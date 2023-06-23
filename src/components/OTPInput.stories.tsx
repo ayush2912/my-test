@@ -1,16 +1,16 @@
 import { useState } from "react";
 
-import OtpInputVerification from "./OtpInputVerification";
+import OTPInput from "./OTPInput";
 import Text from "./Text";
 
-export default { component: OtpInputVerification };
+export default { component: OTPInput };
 
 export const DefaultOtpInput = {
   render: () => {
     const [otp, setOtp] = useState("");
     return (
       <>
-        <OtpInputVerification
+        <OTPInput
           isError={otp.length === 6 && otp !== "123456"}
           setOtp={(val: string) => setOtp(val)}
           otp={otp}
@@ -29,7 +29,7 @@ export const ErrorOtpInput = {
   render: () => {
     const [otp, setOtp] = useState("123456");
     return (
-      <OtpInputVerification
+      <OTPInput
         isError={true}
         setOtp={(val: string) => setOtp(val)}
         otp={otp}
