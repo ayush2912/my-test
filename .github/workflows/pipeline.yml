@@ -20,14 +20,15 @@ jobs:
         run: |
           git config --global user.email "ayushvashistha567@gmail.com"
           git config --global user.name "ayush2912"
-
       - uses: actions/setup-node@v3
         with:
           node-version: 16
           registry-url: https://npm.pkg.github.com/
 
       - run: npm ci
-      - run: npm version patch
+
+      - name: Update version
+        run: npm version prepatch --no-git-tag-version
 
       - run: npm publish
         env:
