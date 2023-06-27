@@ -17,7 +17,9 @@ jobs:
         with:
           node-version: 16
           registry-url: https://npm.pkg.github.com/
+      - run: git config --global user.email "ayushvashistha567@gmail.com"
+      - run: git config --global user.name "ayush2912"
       - run: npm install
       - run: npm run build
         env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
