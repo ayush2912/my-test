@@ -1,7 +1,8 @@
 name: Publish package to GitHub Packages
 on:
-  release:
-    types: [published]
+  push:
+    branches:
+      - web-new
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -21,5 +22,6 @@ jobs:
       - run: npm run build
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
 
