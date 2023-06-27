@@ -1,26 +1,25 @@
-name: Node.js Package
-
+name: Publish package to GitHub Packages
 on:
-  push:
-    branches:
-      - web-new
-
+  release:
+    types: [published]
 jobs:
-  publish-gpr:
+  build:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
     steps:
       - uses: actions/checkout@v3
+      # Setup .npmrc file to publish to GitHub Packages
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
-          registry-url: https://npm.pkg.github.com/
-      - run: git config --global user.email "ayushvashistha567@gmail.com"
-      - run: git config --global user.name "ayush2912"
+          node-version: '16.x'
+          registry-url: 'https://npm.pkg.github.com'
+          # Defaults to the user or organization that owns the workflow file
+          scope: '@ayush2912'
       - run: npm install
       - run: npm run build
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
