@@ -20,6 +20,7 @@ jobs:
           scope: '@ayush2912'
 
       - run: npm install
+      - run: npm version
       - run: npm run build
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
