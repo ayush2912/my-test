@@ -17,15 +17,10 @@ jobs:
         with:
           node-version: '16.x'
           registry-url: 'https://npm.pkg.github.com'
+          scope: '@ayush2912'
 
-      - run: npm ci
-      - run: npm version patch 
-
-      - name: Set Git identity and publish
-        run: |
-          git config --global user.email "ayushvashistha567@gmail.com"
-          git config --global user.name "ayush2912"
-          npm publish
+      - run: npm install
+      - run: npm run build
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
