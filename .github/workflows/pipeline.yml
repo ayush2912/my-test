@@ -17,9 +17,12 @@ jobs:
           node-version: '16.x'
           registry-url: 'https://npm.pkg.github.com'
           # Defaults to the user or organization that owns the workflow file
-          scope: '@ayush2912'
       - run: npm ci
       - run: npm version patch 
+      - name: Set Git identity
+        run: |
+          git config --global user.email "ayushvashistha567@gmail.com"
+          git config --global user.name "ayush2912"
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
