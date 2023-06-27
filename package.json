@@ -3,7 +3,7 @@
   "private": false,
   "version": "1.1.91",
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/@ayush2912"
+    "registry": "https://npm.pkg.github.com/"
   },
   "repository": "https://github.com/ayush2912/my-test.git",
   "scripts": {
