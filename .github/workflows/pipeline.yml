@@ -16,6 +16,7 @@ jobs:
         with:
           clean: true
           fetch-depth: 0
+      - run: git reset --hard HEAD
   # Perform a clean checkout to ensure a clean working directory
       - uses: actions/setup-node@v3
         with:
