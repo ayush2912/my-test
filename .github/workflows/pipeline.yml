@@ -20,7 +20,7 @@ jobs:
           scope: '@ayush2912'
       - run: git config --global user.email "ayushvashistha567@gmail.com"
       - run: git config --global user.name "ayush2912"
-      - run: npm version major
+      - run: npm version patch
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
