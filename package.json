@@ -8,7 +8,7 @@
   "repository": "https://github.com/ayush2912/my-test.git",
   "scripts": {
     "dev": "vite",
-    "version-bump": "node version-bump.js",
+    "version-bump": "npm version patch",
     "build": "./bin/clean && ./bin/build && npm version patch && npm publish",
     "test": "vitest",
     "preview": "vite preview",
