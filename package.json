@@ -1,7 +1,7 @@
 {
   "name": "@ayush2912/my-test-new",
   "private": false,
-  "version": "1.0.0",
+  "version": "1.0.5",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
