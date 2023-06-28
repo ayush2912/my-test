@@ -1,23 +1,26 @@
-name: Node.js Package
-
+name: Enter Your Workflow Name Here
 on:
   push:
     branches:
-      - web-new
-
+      - web-test
 jobs:
-  publish-gpr:
+  publish: 
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
     steps:
       - uses: actions/checkout@v3
+      - name: Set up Git
+        run: |
+          git config user.email "ayushvashistha567@gmail.com"
+          git config user.name "ayush2912"
       - uses: actions/setup-node@v3
         with:
           node-version: 16
           registry-url: https://npm.pkg.github.com/
+          scope: '@ayush2912'
       - run: npm install
       - run: npm run build
         env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
