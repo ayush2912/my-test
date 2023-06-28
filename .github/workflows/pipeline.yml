@@ -1,10 +1,8 @@
-name: Publish package to GitHub Packages
-
+name: Enter Your Workflow Name Here
 on:
   push:
     branches:
-      - web-new
-
+      - master
 jobs:
   publish: 
     runs-on: ubuntu-latest
@@ -13,20 +11,12 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v3
-        with:
-          clean: true
-          fetch-depth: 0
-      - run: git reset --hard HEAD
-  # Perform a clean checkout to ensure a clean working directory
       - uses: actions/setup-node@v3
         with:
           node-version: 16
           registry-url: https://npm.pkg.github.com/
           scope: '@ayush2912'
-      - run: git config --global user.email "ayushvashistha567@gmail.com"
-      - run: git config --global user.name "ayush2912"
-      - run: npm install
-      - run: npm run build
+      - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
