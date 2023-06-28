@@ -11,10 +11,6 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Git
-        run: |
-          git config user.email "ayushvashistha567@gmail.com"
-          git config user.name "ayush2912"
       - uses: actions/setup-node@v3
         with:
           node-version: 16
