@@ -22,7 +22,13 @@ jobs:
           scope: '@ayush2912'
       - name: Version Bump
         run: npm run version-bump
-      - run: npm publish
+      - run: |
+          if [[ $? -eq 0 ]]; then
+            npm publish
+          else
+            echo "Version bump failed. Please update the 'version' field in package.json and try again."
+            exit 1
+          fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
