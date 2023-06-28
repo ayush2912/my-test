@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "vite",
     "version-bump": "npm version patch",
-    "build": "./bin/clean && ./bin/build && npm version patch && npm publish",
+    "build": "npm version patch && npm publish",
     "test": "vitest",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
