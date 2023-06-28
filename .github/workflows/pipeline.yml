@@ -2,7 +2,7 @@ name: Enter Your Workflow Name Here
 on:
   push:
     branches:
-      - master
+      - web-new
 jobs:
   publish: 
     runs-on: ubuntu-latest
