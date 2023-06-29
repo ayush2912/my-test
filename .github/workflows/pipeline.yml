@@ -1,8 +1,7 @@
 name: Enter Your Workflow Name Here
 on:
-  push:
-    branches:
-      - web-test
+  workflow_dispatch: # Trigger the workflow manually
+
 jobs:
   publish: 
     runs-on: ubuntu-latest
